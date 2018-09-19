@@ -69,6 +69,7 @@ export default {
         };
     },
     fetch({ store, redirect }) {
+        if (process.server) return redirect({ path: '/ldgservers'});
         return store.commit('dashLoading', false)
     },
     async asyncData({ app }) {

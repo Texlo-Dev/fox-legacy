@@ -73,7 +73,7 @@ module.exports = {
     redirect: {
       login: '/login',
       logout: '/',
-      home: '/ldgservers',
+      home: '/servers',
       callback: '/callback'
     },
       strategies: {
