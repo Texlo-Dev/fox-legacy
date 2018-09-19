@@ -26,7 +26,7 @@ module.exports = {
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#f37934', height: '4px' },
+  loading: { color: '#61bd4f', height: '3px' },
 
   /*
   ** Global CSS
@@ -106,7 +106,6 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-burger-menu'],
     /*
     ** You can extend webpack config here
     */
