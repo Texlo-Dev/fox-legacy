@@ -7,8 +7,9 @@
 <script>
 export default {
     created() {
-        this.$auth.loginWith('discord');
+        this.$router.push('/servers');
     }
+
 }
 </script>
 

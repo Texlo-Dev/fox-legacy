@@ -13,13 +13,9 @@
 					An intelligent, wise, and rather cunning multipurpose bot for <strong>Discord</strong>.
 				</p>
 				<div align="center" style="margin-top: 10px;">
-					<nuxt-link v-if="$auth.loggedIn" class="button is-medium is-black is-inverted is-outlined" to="/servers">
+					<nuxt-link class="button is-medium is-black is-inverted is-outlined" to="/servers">
 						<span><font-awesome-icon size="s" :icon="['fab', 'discord']"/></span>
-						<span>&nbsp;Manage</span>
-					</nuxt-link>
-					<nuxt-link v-if="!$auth.loggedIn" class="button is-medium is-black is-inverted is-outlined" to="/login">
-						<span><font-awesome-icon size="s" :icon="['fab', 'discord']"/></span>
-						<span>&nbsp;Add to your Server</span>
+						<span>&nbsp;Manage Servers</span>
 					</nuxt-link>
 				</div>
 			</div>
