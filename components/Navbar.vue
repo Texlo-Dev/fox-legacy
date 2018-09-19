@@ -131,7 +131,7 @@
 export default {
 	methods: {
 		tokifyUser() {
-			this.$router.push({ path : '/login'});
+			this.$auth.loginWith('discord');
 		}
 	}
 }
