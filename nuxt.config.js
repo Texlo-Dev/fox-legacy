@@ -79,6 +79,7 @@ module.exports = {
             response_type: 'token',
             token_type: 'Bearer',
             client_id: process.env.CLIENTID,
+            redirect_uri: '/callback',
             client_secret: process.env.CLIENTSECRET,
             token_key:  'access_token',
             redirect: {
