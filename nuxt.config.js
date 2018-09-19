@@ -78,13 +78,14 @@ module.exports = {
             scope: ['identify', 'guilds'],
             response_type: 'token',
             token_type: 'Bearer',
-            redirect_uri: process.env.REDIRECTURI,
             client_id: process.env.CLIENTID,
             client_secret: process.env.CLIENTSECRET,
             token_key:  'access_token',
             redirect: {
               login: '/login',
               logout: '/',
+              home: '/servers',
+              user: '/servers',
               callback: '/callback'
             },
             resetOnError: true
