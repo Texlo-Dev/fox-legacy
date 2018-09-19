@@ -4,13 +4,13 @@
 			<h1 class="title has-text-white">
 				Select A Server
 			</h1>
-			<div v-show="guilds" v-for="guild in guilds" class="container" align="center">
+			<div v-show="guilds" v-for="guild in guilds" :key="guild.id" class="container" align="center">
 				<b-tooltip :label="guild.name" type="is-light" position="is-right">
 					<figure v-show="guild.canManage && guild.icon" class="image is-128x128">
-					<img @click="enterDash(guild)" class="is-rounded" :src="guild.iconURL">
+					    <img @click="enterDash(guild)" class="is-rounded" :src="guild.iconURL">
 					</figure>
 					<a v-show="guild.canManage && !guild.icon" class="image is-128x128">
-					<div @click="enterDash(guild)" class="icon">{{ getInitials(guild.name) }}</div>
+					    <div @click="enterDash(guild)" class="icon">{{ getInitials(guild.name) }}</div>
 					</a>
 					<figure v-show="!guild.canManage && guild.icon" class="image is-128x128">
 						<a @click="popup(guild)"><img class="is-rounded" :src="guild.iconURL"></a>
@@ -20,11 +20,7 @@
 				<br>
 				<br>
 			</div>
-            <div v-show="!guilds" class="container">
-                <h1 class="subtitle has-text-centered">
-                    No servers. Make sure you are the owner of a server or have the Manage Server Permission to use the dashboard.
-                </h1>
-            </div>
+            
 		</section>
 	</body>
 </template>
