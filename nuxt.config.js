@@ -86,7 +86,6 @@ module.exports = {
               login: '/login',
               logout: '/',
               home: '/servers',
-              user: '/servers',
               callback: '/callback'
             },
             resetOnError: true
