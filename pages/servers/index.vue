@@ -68,12 +68,10 @@ export default {
             guilds: null
         };
     },
-    fetch({ store }) {
-        store.commit('dashLoading', false)
+    fetch({ store, redirect }) {
+        return store.commit('dashLoading', false)
     },
-    async asyncData({ app, redirect }) {
-        if (process.server) return redirect({ path: '/ldgservers'})
-            
+    async asyncData({ app }) {
         const token = app.$auth.getToken('discord');
         const { data: guilds } = await app.$axios.get(`/api/userGuilds`, { headers: { Authorization: secrets.encrypt(token.split('Bearer')[1].trim()) } })
             return {

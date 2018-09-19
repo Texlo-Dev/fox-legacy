@@ -140,11 +140,6 @@
 
 <script>
 export default {
-	auth: false,
-	head() {
-		return {
-			title: 'Mr.Fox Bot - Home'
-		}
-	}
+	auth: false
 }
 </script>
