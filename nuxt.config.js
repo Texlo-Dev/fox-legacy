@@ -70,6 +70,12 @@ module.exports = {
   ** Discord Oauth
   */
   auth:  {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      home: '/servers',
+      callback: '/callback'
+    },
       strategies: {
           discord: {
             _scheme: 'oauth2',
@@ -82,12 +88,6 @@ module.exports = {
             client_id: process.env.CLIENTID,
             client_secret: process.env.CLIENTSECRET,
             token_key:  'access_token',
-            redirect: {
-              login: '/login',
-              logout: '/',
-              home: '/servers',
-              callback: '/callback'
-            },
             resetOnError: true
           },
       }
