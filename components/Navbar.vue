@@ -39,7 +39,6 @@
 										</span>
 									</a>
 								</slide>
-
 								</no-ssr>
 							</div>
 						</div>
@@ -102,7 +101,7 @@
 						</div>
 						<div class="navbar-end">
 							<div class="navbar-item">
-								<b-dropdown :hoverable="true" :mobile-modal="false" v-if="this.$auth.loggedIn">
+								<b-dropdown :hoverable="true" :mobile-modal="false" v-if="$auth.loggedIn">
 									<button class="button is-grey" slot="trigger">
 										<!--<figure class="image is-24x24">
 											<img :src="user.avatarURL" class="is-rounded">
@@ -115,9 +114,9 @@
 									</b-dropdown-item>
 									<b-dropdown-item @click="$auth.logout()">Log Out</b-dropdown-item>
 								</b-dropdown>
-								<a v-if="!$auth.loggedIn" class="button is-grey" @click="tokifyUser()">
+								<button v-if="!$auth.loggedIn" class="button is-grey" @click="tokifyUser()">
 									Log In
-								</a>
+								</button>
 							</div>
 						</div>
 					</div>

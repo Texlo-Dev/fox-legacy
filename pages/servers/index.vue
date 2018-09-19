@@ -4,23 +4,23 @@
 			<h1 class="title has-text-white">
 				Select A Server
 			</h1>
-			<div v-if="guilds" v-for="guild in guilds" class="container" align="center">
+			<div v-show="guilds" v-for="guild in guilds" class="container" align="center">
 				<b-tooltip :label="guild.name" type="is-light" position="is-right">
-					<figure v-if="guild.canManage && guild.icon" class="image is-128x128">
+					<figure v-show="guild.canManage && guild.icon" class="image is-128x128">
 					<img @click="enterDash(guild)" class="is-rounded" :src="guild.iconURL">
 					</figure>
-					<a v-else-if="guild.canManage && !guild.icon" class="image is-128x128">
+					<a v-show="guild.canManage && !guild.icon" class="image is-128x128">
 					<div @click="enterDash(guild)" class="icon">{{ getInitials(guild.name) }}</div>
 					</a>
-					<figure v-else-if="guild.icon" class="image is-128x128">
+					<figure v-show="!guild.canManage && guild.icon" class="image is-128x128">
 						<a @click="popup(guild)"><img class="is-rounded" :src="guild.iconURL"></a>
 					</figure>
-					<a v-else @click="popup(guild)"><div class="icon">{{ getInitials(guild.name) }}</div></a>
+					<a v-show="!guild.canManage && !guild.icon" @click="popup(guild)"><div class="icon">{{ getInitials(guild.name) }}</div></a>
 				</b-tooltip>
 				<br>
 				<br>
 			</div>
-            <div v-else class="container">
+            <div v-show="!guilds" class="container">
                 <h1 class="subtitle has-text-centered">
                     No servers. Make sure you are the owner of a server or have the Manage Server Permission to use the dashboard.
                 </h1>
