@@ -1,7 +1,7 @@
 <template>
   <div>
     <navbar />
-	<dashtabs v-if="isDash && $route.params.guildid" />
+	  <dashtabs v-if="isDash && $route.params.guildid" />
     <nuxt/>
   </div>
 </template>

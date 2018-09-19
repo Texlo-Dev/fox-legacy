@@ -10,7 +10,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'Mr.Fox Bot',
+    title: 'Mr.Fox - The multipurpose, cunning Discord Bot.',
     meta: [
       { charset: 'utf-8' },
       { property: 'og:image', content: '/assets/FoxLogov2.png'},

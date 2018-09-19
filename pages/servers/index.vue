@@ -1,6 +1,6 @@
 <template>
 	<body>
-		<section v-if="!loading" class="section">
+		<section class="section">
 			<h1 class="title has-text-white">
 				Select A Server
 			</h1>
