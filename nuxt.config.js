@@ -13,7 +13,7 @@ module.exports = {
     title: 'Mr.Fox - The multipurpose, cunning Discord Bot.',
     meta: [
       { charset: 'utf-8' },
-      { property: 'og:image', content: '/assets/FoxLogov2.png'},
+      { property: 'og:image', content: '/FoxLogov2.png'},
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: `Mr.Fox is a fully-modular, multipurpose Discord bot that is sure to fit your server needs. Included with Fox, you are given very powerful moderation, music, leveling, and automoderator features at your fingertips. Oh, and he's very cunning, too. Who doesn't like a cunning bot?` }
     ],
