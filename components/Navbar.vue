@@ -48,7 +48,7 @@
 								<br>
 								<br>
 								<br>
-								<a v-if="!$auth.loggedIn" class="button is-grey" @click="$auth.loginWith('discord')">
+								<a v-if="!$auth.loggedIn" class="button is-grey" @click="tokifyUser()">
 									Log In
 								</a>
 								<b-dropdown :mobile-modal="false" v-if="$auth.loggedIn">
