@@ -17,7 +17,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.3.1",
     "@fortawesome/free-solid-svg-icons": "^5.3.1",
     "@fortawesome/vue-fontawesome": "^0.1.1",
-    "@nuxtjs/auth": "github:nuxt-community/auth-module#master",
+    "@nuxtjs/auth": "github:nuxt-community/auth-module",
     "@nuxtjs/axios": "^5.0.0",
     "@nuxtjs/dotenv": "^1.1.1",
     "bulma-extensions": "^3.0.0",

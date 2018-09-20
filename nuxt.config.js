@@ -84,7 +84,7 @@ module.exports = {
             scope: ['identify', 'guilds'],
             response_type: 'token',
             token_type: 'Bearer',
-            redirect_uri: process.env.REDIRECTURI,
+            redirect_uri: undefined,
             client_id: process.env.CLIENTID,
             client_secret: process.env.CLIENTSECRET,
             token_key:  'access_token',
