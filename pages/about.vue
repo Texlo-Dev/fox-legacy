@@ -96,7 +96,7 @@
 					So what are you waiting for? Try Mr.Fox in your server today.
 				</h1>
 				<div align="center">
-					<button @click="$auth.login()" class="button is-link">Get Started</button>
+					<nuxt-link class="button is-link" to="/servers">Get Started</nuxt-link>
 				</div>
 			</div>
 
@@ -108,6 +108,9 @@
 <script>
 export default {
 	auth: false,
+	asyncData({ app }) {
+		if (process.server) return console.log(`Discord User is:\n ${app.$auth.user}`);
+	},
 	head() {
 		return {
 			title: 'Mr.Fox Bot - About',
