@@ -1,7 +1,8 @@
-const pkg = require('./package');
 require('dotenv').config();
 
 module.exports = {
+  
+
   mode: 'universal',
   router: {
     middleware: ['auth']
