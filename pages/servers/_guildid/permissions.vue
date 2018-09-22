@@ -88,8 +88,8 @@ export default {
 			title: 'Mr.Fox Bot - Server Permissions',	
 		}
 	},
-    async asyncData({ app, params, route }) {
-        const page = route.path.split(params.guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+    async asyncData({ app, params: { guildid }, route }) {
+        const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
         let { data: permissions } = await app.$axios.get(`/api/permissions`);
         const array = [];
         for (const key of Object.keys(permissions)) {
@@ -98,8 +98,8 @@ export default {
             }
         }
         permissions = array.sort();
-		const { data: channels } =  await app.$axios.get(`/api/guilds/${params.guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-        const { data: roles } =  await app.$axios.get(`/api/guilds/${params.guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+        const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
         return {
             permissions, 
             roles, 

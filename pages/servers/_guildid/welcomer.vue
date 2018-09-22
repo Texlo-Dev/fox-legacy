@@ -140,20 +140,20 @@ export default {
 			title: 'Mr.Fox Bot - Welcomer',	
 		}
 	},
-    async fetch({ store, app, params }) {
+    async fetch({ store, app, params: { guildid } }) {
 		if (store.state.cachedGuild) return;
         const token = app.$auth.getToken('discord');
-		const { data: guild } = await await app.$axios.get(`/api/guilds/${params.guildid}`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		const { data: guild } = app.$axios.get(`/api/guilds/${guildid}`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
        
 		store.commit('cacheGuild', guild);
 		store.commit('toggleDash', true);
     },
-    async asyncData({ app, route, params }) {
-		const page = route.path.split(params.guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-		const { data: commands } = await app.$axios.get(`/api/commands/${page}?guildID=${params.guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: config } =  await app.$axios.get(`/api/guilds/${params.guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: channels } =  await app.$axios.get(`/api/guilds/${params.guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: roles } =  await app.$axios.get(`/api/guilds/${params.guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+    async asyncData({ app, route, params: { guildid } }) {
+		const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+		const { data: commands } = await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		const { data: config } =  await app.$axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
 		roles.forEach(r => r.color = `#${r.color.toString(16).padStart(6, "0")}`);
         return {
             commands,

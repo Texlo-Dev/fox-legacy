@@ -44,15 +44,15 @@ export default {
 			title: 'Mr.Fox Bot - Dashboard',	
 		}
 	},
-	async fetch({ store, app, params }) {
+	async fetch({ store, app, params: { guildid } }) {
 		if (store.state.cachedGuild) return;
         const token = app.$auth.getToken('discord');
-        const { data: guild } = await app.$axios.get(`/api/guilds/${params.guildid}`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id)} })
+        const { data: guild } = await app.$axios.get(`/api/guilds/${guildid}`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id)} })
        
         return store.commit('cacheGuild', guild);
     },
-	async asyncData({ app, params, store }) {
-		const { data: packages } = await app.$axios.get(`/api/guilds/${params.guildid}/packages`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id) } });
+	async asyncData({ app, params: { guildid }, store }) {
+		const { data: packages } = await app.$axios.get(`/api/guilds/${guildid}/packages`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id) } });
 		await store.commit('dashLoading', true);
 		await store.commit('toggleDash', true);
 		return {
@@ -76,7 +76,7 @@ export default {
             });
 		},
 		togglePackage(pkg, option) {
-            this.$axios.patch(`/api/guilds/${params.guildid}/packages`, {
+            this.$axios.patch(`/api/guilds/${this.$route.params.guildid}/packages`, {
                 pkg,
                 guildID: this.$route.params.guildid,
                 enabled: option
