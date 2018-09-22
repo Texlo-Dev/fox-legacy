@@ -69,12 +69,12 @@ export default {
         };
     },
     fetch({ store, redirect }) {
-        if (process.server) return redirect({ path: '/ldgservers'});
+        //if (process.server) return redirect({ path: '/ldgservers'});
         return store.commit('dashLoading', false)
     },
     async asyncData({ app }) {
         const token = app.$auth.getToken('discord');
-        const { data: guilds } = await app.$axios.get(`/api/userGuilds`, { headers: { Authorization: secrets.encrypt(token.split('Bearer')[1].trim()) } })
+        const { data: guilds } = await app.$axios.get(`/api/guilds`, { headers: { Authorization: secrets.encrypt(token.split('Bearer')[1].trim()) } })
             return {
                 guilds
              }

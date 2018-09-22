@@ -98,8 +98,8 @@ export default {
             }
         }
         permissions = array.sort();
-		const { data: channels } =  await app.$axios.get(`/api/channels`, { params: { guildID: params.guildid } });
-        const { data: roles } =  await app.$axios.get(`/api/roles`, { params: { guildID: params.guildid } });
+		const { data: channels } =  await app.$axios.get(`/api/guilds/${params.guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+        const { data: roles } =  await app.$axios.get(`/api/guilds/${params.guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
         return {
             permissions, 
             roles, 

@@ -109,6 +109,7 @@
 export default {
 	auth: false,
 	asyncData({ app }) {
+		app.$axios.onRequest(console.log);
 		if (process.server) return console.log(`Discord User is:\n ${app.$auth.user}`);
 	},
 	head() {

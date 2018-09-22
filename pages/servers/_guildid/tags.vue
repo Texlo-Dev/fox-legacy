@@ -93,18 +93,17 @@ export default {
     async fetch({ store, app, params }) {
 		if (store.state.cachedGuild) return;
         const token = app.$auth.getToken('discord');
-        const { data: guilds } = await app.$axios.get(`/api/userGuilds`, { headers: { Authorization: secret.encrypt(token.split('Bearer')[1].trim())} })
-        const thisguild = guilds.filter(g => g.id === params.guildid)[0];
-		store.commit('cacheGuild', thisguild);
+        const { data: guild } = await app.$axios.get(`/api/guilds/${params.guildid}`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		store.commit('cacheGuild', guild);
 		store.commit('toggleDash', true);
     },
     async asyncData({ app, route, params }) {
 		const page = route.path.split(params.guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 		const { data: commands } = await app.$axios.get(`/api/commands/${page}?guildID=${params.guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: config } =  await app.$axios.get(`/api/guildConfig/${params.guildid}`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })
-		const { data: channels } =  await app.$axios.get(`/api/channels`, { params: { guildID: params.guildid } });
-        const { data: roles } =  await app.$axios.get(`/api/roles`, { params: { guildID: params.guildid } });
-        const { data: tags } =  await app.$axios.get(`/api/guildTags`, { params: { guildID: params.guildid }, headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		const { data: config } =  await app.$axios.get(`/api/guilds/${params.guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		const { data: channels } =  await app.$axios.get(`/api/guilds/${params.guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+        const { data: roles } =  await app.$axios.get(`/api/guilds/${params.guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+        const { data: tags } =  await app.$axios.get(`/api/guilds/${params.guildid}/tags`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
 		roles.forEach(r => r.color = `#${r.color.toString(16).padStart(6, "0")}`);
         return {
             commands,
@@ -136,9 +135,9 @@ export default {
                 confirmText: "Delete",
                 type: "is-success",
                 onConfirm: async () => {
-                    this.tags.splice(this.tags.indexOf(tag), 1);
                     try {
                         await this.addTag(this.tags);
+                        this.tags.splice(this.tags.indexOf(tag), 1);
                     } catch (error) {
                         this.$toast.open({
                             message: `Error deleting rank. ${error}`,

@@ -34,8 +34,9 @@
     "vuesax": "^3.3.6"
   },
   "devDependencies": {
-    "cross-env": "^5.0.1",
+    "@types/dotenv": "^4.0.3",
     "babel-eslint": "^8.2.1",
+    "cross-env": "^5.0.1",
     "eslint": "^5.0.1",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-vue": "^4.0.0",

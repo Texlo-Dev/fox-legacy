@@ -47,12 +47,12 @@ export default {
 	async fetch({ store, app, params }) {
 		if (store.state.cachedGuild) return;
         const token = app.$auth.getToken('discord');
-        const { data: guilds } = await app.$axios.get(`/api/userGuilds`, { headers: { Authorization: secrets.encrypt(token.split('Bearer')[1].trim())} })
-        const thisguild = guilds.filter(g => g.id === params.guildid)[0];
-        store.commit('cacheGuild', thisguild);
+        const { data: guild } = await app.$axios.get(`/api/guilds/${params.guildid}`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id)} })
+       
+        return store.commit('cacheGuild', guild);
     },
 	async asyncData({ app, params, store }) {
-		const { data: packages } = await app.$axios.get(`/api/getPackages/${params.guildid}`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id) } });
+		const { data: packages } = await app.$axios.get(`/api/guilds/${params.guildid}/packages`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id) } });
 		await store.commit('dashLoading', true);
 		await store.commit('toggleDash', true);
 		return {
@@ -63,6 +63,40 @@ export default {
 		return {
 			packages: null
 		}
+	},
+	methods: {
+		confirmPkg(pkg) {
+            this.$dialog.confirm({
+                title: "Enable Package",
+                message: `Are you sure that you want to enable the package ${pkg}?`,
+                cancelText: "Cancel",
+                confirmText: "Enable",
+                type: "is-success",
+                onConfirm: () => this.togglePackage(pkg, true)
+            });
+		},
+		togglePackage(pkg, option) {
+            this.$axios.patch(`/api/guilds/${params.guildid}/packages`, {
+                pkg,
+                guildID: this.$route.params.guildid,
+                enabled: option
+            },
+            { headers: { Authorization: secrets.encrypt(this.$auth.user.id)} }).then(() => {
+                document.getElementById(`${pkg}-button`).className = 'button is-success';
+                document.getElementById(`${pkg}-button`).innerHTML = 'Enabled';
+                this.$router.push({ path: `/servers/${this.$route.params.guildid}/${pkg.toLowerCase()}` });
+            }).catch(error => {
+                this.$dialog.alert({
+                    title: "Error",
+                    message: `There was an error enabling this package.\n"${error.message}"`,
+                    type: "is-danger",
+                    hasIcon: true,
+                    icon: "times-circle",
+                    iconPack: "fa"
+                });
+            });
+        }
+
 	}
 }
 </script>
