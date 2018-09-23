@@ -265,4 +265,8 @@ export default {
 }
 </script>
 
-
+<style>
+    .selectExample .input-select {
+        color: #242424;
+    }
+</style>

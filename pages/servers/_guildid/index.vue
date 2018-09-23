@@ -1,6 +1,5 @@
 <template>
-    <div>
-        <section class="section">
+    <section class="section">
 			<div class="container">
 				<div class="columns is-multiline">
 					<div v-for="p of packages" class="column is-one-quarter">
@@ -31,8 +30,6 @@
 
 			</div>
 		</section>
-
-    </div>
 </template>
 
 <script>
