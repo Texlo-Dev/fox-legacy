@@ -67,8 +67,8 @@
 							</div>
 						</div>
 					</nav>
-					<br class="is-hidden-mobile"><br class="is-hidden-mobile"><br class="is-hidden-mobile"><br class="is-hidden-mobile">
-					<div class="navbar-brand is-hidden-mobile">
+					<br class="is-hidden-touch"><br class="is-hidden-touch"><br class="is-hidden-touch"><br class="is-hidden-touch">
+					<div class="navbar-brand is-hidden-touch">
 						<nuxt-link class="navbar-item" to="/">
 							<img id="foxlogo" :src="require('../assets/FoxLogov2.png')">
 							<h1 class="subtitle">Fox</h1>
