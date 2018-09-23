@@ -91,7 +91,10 @@ module.exports = {
             token_key:  'access_token',
             resetOnError: true
           },
-      }
+      },
+      plugins: [
+        '~/plugins/auth' 
+      ]
   },
   /*
   ** Axios module configuration

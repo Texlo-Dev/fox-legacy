@@ -53,9 +53,9 @@
 								</a>
 								<b-dropdown :mobile-modal="false" v-if="$auth.loggedIn">
 									<button class="button is-grey" slot="trigger">
-										<!--<figure class="image is-24x24">
-											<img :src="user.avatarURL" class="is-rounded">
-										</figure>-->
+										<figure class="image is-24x24">
+											<img :src="getAvatar()" class="is-rounded">
+										</figure>
 										<span>&nbsp;&nbsp;{{ $auth.user.username }}</span>
 										<font-awesome-icon size="1x" pull="right" icon="angle-down" />
 									</button>
@@ -103,9 +103,9 @@
 							<div class="navbar-item">
 								<b-dropdown :hoverable="true" :mobile-modal="false" v-if="$auth.loggedIn">
 									<button class="button is-grey" slot="trigger">
-										<!--<figure class="image is-24x24">
-											<img :src="user.avatarURL" class="is-rounded">
-										</figure>-->
+										<figure class="image is-24x24">
+											<img :src="getAvatar()" class="is-rounded">
+										</figure>
 										<span>&nbsp;&nbsp;{{ $auth.user.username }}</span>
 										&nbsp;<font-awesome-icon size="1x" pull="right" icon="angle-down" />
 									</button>
@@ -131,6 +131,11 @@ export default {
 	methods: {
 		tokifyUser() {
 			this.$auth.loginWith('discord');
+		},
+		getAvatar() {
+			const auth = this.$auth;
+			if (auth.user.avatar) return `https://cdn.discordapp.com/avatars/${auth.user.id}/${auth.user.avatar}.${auth.user.avatar.startsWith("a_") ? "gif" : "png"}?size=2048`;
+			else return `https://discordapp.com/assets/dd4dbc0016779df1378e7812eabaa04d.png`
 		}
 	}
 }
