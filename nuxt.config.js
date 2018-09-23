@@ -97,7 +97,8 @@ module.exports = {
   ** Axios module configuration
   */
   axios: {
-    proxy: true
+    proxy: true,
+    proxyHeaders: false
     // See https://github.com/nuxt-community/axios-module#options
   },
   proxy: {
