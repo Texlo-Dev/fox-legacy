@@ -62,7 +62,7 @@
                                 Current Reaction Roles
                             </h1>
                             <div class="columns is-multiline">
-                               <div v-if="config.reactionRoles" :key="role.id" v-for="role of config.reactionRoles" class="column is-half">
+                               <div v-if="config.reactionRoles" :key="role.id" v-for="role of config.reactionRoles" class="column is-one-third">
                                 <div class="box" style="background-color: #34383c">
                                 <div class="content">
                                     <p class="subtitle has-text-white">Message Name: {{ role.alias }}</p>
