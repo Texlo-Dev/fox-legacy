@@ -39,6 +39,9 @@ export default {
 	head() {
 		return {
 			title: 'Mr.Fox Bot - Dashboard',	
+			meta: [
+				{ hid: 'description', name: 'description', content: 'Configure Mr.Fox Bot for your Discord servers with this user-friendly dashboard.' }
+			]
 		}
 	},
 	async fetch({ store, app, params: { guildid } }) {
