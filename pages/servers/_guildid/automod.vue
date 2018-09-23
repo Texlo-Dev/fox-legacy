@@ -315,36 +315,6 @@ export default {
                 this.isLoading = false;
             }
         },
-        /*async getCommands() {
-            this.loading = true;
-            this.$vs.loading({
-                type: "sound",
-                background: "#34383c",
-                color: "#ee0a55",
-                container: "#loader"
-            });
-            try {
-                this.commands = (await app.$axios.get(`/api/api/commands/Automod?guildID=${this.$route.params.guildid}`, { headers: { Authorization: app.$auth.user.id } })).data;
-                this.config = await API.guildConfig(this.$route.params.guildid, app.$auth.user.id);
-                this.channels = await API.channels(this.$route.params.guildid);
-                this.roles = await API.roles(this.$route.params.guildid);
-                this.roles.forEach(r => r.color = `#${r.color.toString(16).padStart(6, "0")}`);
-            } catch (error) {
-                await this.$vs.loading.close("#loader > .vs-con-loading__container");
-                this.$dialog.alert({
-                    message: `Unable to edit this package: ${error}`,
-                    type: "is-danger",
-                    onConfirm: () => {
-                        this.loading = false;
-                        this.$router.push({ name: "dashboard", params: this.$route.params.guildid });
-                    }
-                });
-            } finally {
-                this.$vs.loading.close("#loader > .con-vs-loading");
-                this.loading = false;
-                this.loaded = true;
-            }
-        },*/
         confirmPkg(pkg) {
             this.$dialog.confirm({
                 title: "Disable Package",
@@ -355,17 +325,15 @@ export default {
                 onConfirm: () => this.togglePackage(pkg, false)
             });
         },
-        async togglePackage(pkg, option) {
-            try {
-                await API.pkgUpdate(pkg, this.$route.params.guildid, option, this.$auth.user.id);
-                this.$router.push({ name: `dashboard`, params: { guildID: this.$route.params.guildid } });
-                await this.$toast.open({
-                    message: `Successfuly disabled the ${pkg} package.`,
-                    type: "is-success",
-                    duration: 4000
-                });
-                this.$router.push({ name: `dashboard`, params: { guildID: this.$route.params.guildid } });
-            } catch (error) {
+        togglePackage(pkg, option) {
+            this.$axios.patch(`/api/guilds/${this.$route.params.guildid}/packages`, {
+                pkg,
+                guildID: this.$route.params.guildid,
+                enabled: option
+            },
+            { headers: { Authorization: secret.encrypt(this.$auth.user.id) } }).then(() => {
+                this.$router.push({ path: `/servers/${this.$route.params.guildid}` });
+            }).catch(error => {
                 this.$dialog.alert({
                     title: "Error",
                     message: `There was an error disabling this package.\n"${error.message}"`,
@@ -374,7 +342,7 @@ export default {
                     icon: "times-circle",
                     iconPack: "fa"
                 });
-            }
+            });
         }
     },
     /*mounted() {

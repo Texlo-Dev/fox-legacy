@@ -142,6 +142,35 @@ export default {
             } finally {
                 this.isLoading = false;
             }
+        },
+        confirmPkg(pkg) {
+            this.$dialog.confirm({
+                title: "Disable Package",
+                message: `Are you sure that you want to disable the package ${pkg}?`,
+                cancelText: "Cancel",
+                confirmText: "Disable",
+                type: "is-danger",
+                onConfirm: () => this.togglePackage(pkg, false)
+            });
+        },
+        togglePackage(pkg, option) {
+            this.$axios.patch(`/api/guilds/${this.$route.params.guildid}/packages`, {
+                pkg,
+                guildID: this.$route.params.guildid,
+                enabled: option
+            },
+            { headers: { Authorization: secret.encrypt(this.$auth.user.id) } }).then(() => {
+                this.$router.push({ path: `/servers/${this.$route.params.guildid}` });
+            }).catch(error => {
+                this.$dialog.alert({
+                    title: "Error",
+                    message: `There was an error disabling this package.\n"${error.message}"`,
+                    type: "is-danger",
+                    hasIcon: true,
+                    icon: "times-circle",
+                    iconPack: "fa"
+                });
+            });
         }
     }
 }

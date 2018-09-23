@@ -181,12 +181,12 @@ export default {
             });
         },
         togglePackage(pkg, option) {
-            this.$axios.post(`${secret.apiURL}/api/pkgUpdate`, {
+            this.$axios.patch(`/api/guilds/${this.$route.params.guildid}/packages`, {
                 pkg,
                 guildID: this.$route.params.guildid,
                 enabled: option
             },
-            { headers: { Authorization: this.encryptedID } }).then(() => {
+            { headers: { Authorization: secret.encrypt(this.$auth.user.id) } }).then(() => {
                 this.$router.push({ path: `/servers/${this.$route.params.guildid}` });
             }).catch(error => {
                 this.$dialog.alert({

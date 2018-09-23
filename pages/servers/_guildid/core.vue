@@ -5,9 +5,6 @@
 					<div class="level-left">
 						<h1 class="title has-text-white has-text-left">&nbsp;Core</h1>
 					</div>
-					<div class="level-left">
-						<a class="button is-danger" @click="confirmPkg('Core')">Disable</a>
-					</div>
 				</nav>
 				<div class="is-divider"></div>
 			</div>
