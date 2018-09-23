@@ -61,7 +61,7 @@
                             <h1 class="title has-text-white has-text-left">
                                 Current Reaction Roles
                             </h1>
-                            <div class="columns">
+                            <div class="columns is-multiline">
                                <div v-if="config.reactionRoles" :key="role.id" v-for="role of config.reactionRoles" class="column is-half">
                                 <div class="box" style="background-color: #34383c">
                                 <div class="content">
