@@ -75,11 +75,11 @@ export default class API {
     }
 
     static levelingUpdate(key, value, guildID, token) {
-        return API._request(`guilds/${id}/leveling`, { method: "PATCH", data: { key, value, guildID }, headers: { Authorization: API.encrypt(token, process.env.CLIENTSECRET) } });
+        return API._request(`guilds/${guildID}/leveling`, { method: "PATCH", data: { key, value, guildID }, headers: { Authorization: API.encrypt(token, process.env.CLIENTSECRET) } });
     }
 
     static bankingUpdate(key, value, guildID, token, options = { bool: true }) {
-        return API._request(`guilds/${id}/banking`, { method: "PATCH", data: { key, value, guildID, bool: options.bool }, headers: { Authorization: API.encrypt(token, process.env.CLIENTSECRET) } });
+        return API._request(`guilds/${guildID}/banking`, { method: "PATCH", data: { key, value, guildID, bool: options.bool }, headers: { Authorization: API.encrypt(token, process.env.CLIENTSECRET) } });
     }
 
     static guildBanking(id, token) {
