@@ -87,7 +87,15 @@ export default {
 		return {
 			title: 'Mr.Fox Bot - Server Permissions',	
 		}
-	},
+    },
+    async fetch({ store, app, params: { guildid } }) {
+		if (store.state.cachedGuild) return;
+        const token = app.$auth.getToken('discord');
+        const { data: guild } = await app.$axios.get(`/api/guilds/${guildid}`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+       
+		store.commit('cacheGuild', guild);
+		store.commit('toggleDash', true);
+    },
     async asyncData({ app, params: { guildid }, route }) {
         const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
         let { data: permissions } = await app.$axios.get(`/api/permissions`);

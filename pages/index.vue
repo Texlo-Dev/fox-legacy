@@ -33,7 +33,7 @@
 				</div>
 			</section>
 		</section>
-		<section class="section hero is-black">
+		<section class="section hero is-grey">
 			<div class="hero-body">
 				<div class="container">
 					<h1 class="title has-text-left">
@@ -45,7 +45,7 @@
 			</div>
 		</section>
 
-		<section class="section hero is-grey">
+		<section class="section hero is-black">
 			<div class="hero-body">
 				<div class="container">
 					<div class="columns">
@@ -57,7 +57,7 @@
 						</div>
 						<div class="column is-half">
 							<figure class="image">
-								<img style="border: 5px solid #242424;" :src="require('../assets/modgif.gif')">
+								<img style="border: 5px solid #34383c;" :src="require('../assets/modgif.gif')">
 							</figure>
 						</div>
 					</div>
@@ -65,13 +65,13 @@
 			</div>
 		</section>
 
-		<section class="section hero is-black">
+		<section class="section hero is-grey">
 			<div class="hero-body">
 				<div class="container">
 					<div class="columns">
 						<div class="column is-half">
 							<figure class="image">
-								<img style="border: 5px solid #34383c;" :src="require('../assets/music.gif')">
+								<img style="border: 5px solid #242424;" :src="require('../assets/music.gif')">
 							</figure>
 						</div>
 						<div class="column is-half">
@@ -84,7 +84,7 @@
 				</div>
 			</div>
 		</section>
-		<section class="section hero is-grey">
+		<section class="section hero is-black">
 			<div class="hero-body">
 				<div class="container">
 					<div class="columns">
@@ -96,14 +96,14 @@
 						</div>
 						<div class="column is-half">
 							<figure class="image">
-								<img style="border: 5px solid #242424;" :src="require('../assets/level.gif')">
+								<img style="border: 5px solid #34383c;" :src="require('../assets/level.gif')">
 							</figure>
 						</div>
 					</div>
 				</div>
 			</div>
 		</section>
-		<section class="section hero is-black">
+		<section class="section hero is-grey">
 			<div class="hero-body">
 				<div class="container">
 					<div class="columns">
@@ -127,7 +127,7 @@
 				</div>
 			</div>
 		</section>
-		<footer class="footer is-grey">
+		<footer class="footer" style="background-color: #242424">
 			<div class="content has-text-centered">
 				<p>
 					© 2017-2018 Fox Dev Team. All rights reserved.

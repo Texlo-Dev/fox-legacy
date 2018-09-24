@@ -7,6 +7,12 @@ module.exports = {
   router: {
     middleware: ['auth']
   },
+  messages: {
+    server_error: 'A server error has occurred.',
+    nuxtjs: 'Mr.Fox',
+    back_to_home: 'Return to safety',
+    server_error_details: 'Fox is having an off day. We all have them.',
+},
   /*
   ** Headers of the page
   */
