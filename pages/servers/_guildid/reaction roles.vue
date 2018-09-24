@@ -13,7 +13,7 @@
 			</div>
         <div class="container">
             <div class="columns">
-                <div class="column is-one-third">
+                <div class="column is-one-quarter">
                     <div class="box">
                         <div class="content">
                             <h1 class="title has-text-white has-text-left">
@@ -55,17 +55,18 @@
                     </div>
 
                 </div>
-                <div class="column is-two-thirds is-multiline">
+                <div class="is-divider-vertical"></div>
+                <div class="column is-one-half is-multiline">
                     <div class="box is-small">
                         <div class="content">
                             <h1 class="title has-text-white has-text-left">
                                 Current Reaction Roles
                             </h1>
                             <div class="columns is-multiline">
-                               <div v-if="config.reactionRoles" :key="role.id" v-for="role of config.reactionRoles" class="column is-one-third">
+                               <div v-if="config.reactionRoles" :key="role.id" v-for="role of config.reactionRoles" class="column is-one-quarter">
                                 <div class="box" style="background-color: #34383c">
                                 <div class="content">
-                                    <p class="subtitle has-text-white">Message Name: {{ role.alias }}</p>
+                                    <p class="subtitle has-text-white">Message: {{ role.alias }}</p>
                                     <span>Emoji: {{ role.emoji.name }} </span><span><img align="center" :src="role.emoji.url" height="25" width="25"></span>
                                     <br>
                                     Role: @{{ role.name }}
