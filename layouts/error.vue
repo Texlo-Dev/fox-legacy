@@ -2,7 +2,7 @@
   <div class="container has-text-centered">
     <section class="section" v-if="error.statusCode === 404">
 
-        <img align="center" :src="require('../static/FoxLogov2.png')"><br>
+        <img align="center" style="border-radius: 75%;" :src="require('../static/Fox404.png')"><br>
         <img align="center" width="256" height="128" :src="require('../static/404.png')">
         <h1 class="title has-text-white has-text-bold">Sorry, Fox couldn't find this page!</h1>
         <nuxt-link to="/" class="button is-link is-large"><p>Take me home!</p></nuxt-link>
