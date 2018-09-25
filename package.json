@@ -31,7 +31,7 @@
     "sass-loader": "^7.1.0",
     "vue-burger-menu": "^1.0.2",
     "vue-no-ssr": "^1.0.0",
-    "vuesax": "^3.4.1"
+    "vuesax": "^3.4.4"
   },
   "devDependencies": {
     "@types/dotenv": "^4.0.3",

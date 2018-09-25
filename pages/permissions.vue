@@ -45,15 +45,17 @@
                   <div class="column">
                      <p class="subtitle has-text-white">Web Dashboard (Recommended)</p>
                     <b-message type="is-success">
-                      <p>To configure permissions on the dashboard, simply log in, select your server, and navigate to the <strong class="has-text-white">Permissions</strong> tab. Currently,the user scope is not available from the dashboard.</p>
+                      <p>To configure permissions on the dashboard, simply log in, select your server, and navigate to the <strong class="has-text-white">Permissions</strong> tab.</p>
                      <br>
                      <p><strong class="has-text-white">Available Scopes:</strong></p>
-                     <p>user = only one person will have the permission. </p>
-                     <p>role = Everyone who has the role will have the permission.</p>
-                     <p>channeluser = a user will only have the permission in the current channel.</p>
-                     <p>channelrole= People with the role will have the only have the permission in a certain channel.</p>
-                      </b-message>
-                     <br>
+                     <p>User = The user person will be allowed/denied the permission server-wide.</p>
+                     <p>Role = Everyone who has the specified role will will be allowed/denied the permission server-wide.</p>
+                     <p>User (Channel Exclusive) = The user will be allowed/denied the permission in the current channel.</p>
+                     <p>Role (Channel Exclusive) = People with the specifed role will be allowed/denied the permission in a certain channel.</p>
+                    </b-message>
+                    <b-message type="is-warning">
+                        <p class="has-text-white">At this time, the User scope is not available from the dashboard, and must be configured in-server.</p>
+                    </b-message>
                   </div>
                   <div class="column">
                      <img id="columnimg" :src="require('../assets/permselector.png')">		

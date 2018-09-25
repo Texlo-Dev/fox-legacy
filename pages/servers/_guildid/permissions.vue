@@ -8,14 +8,20 @@
 		</div>
 		<div class="container">
 			<h3 class="has-text-white title">Set Permission</h3>
-			<div class="columns is-centered is-multiline">
-				<div class="column is-half">
+			<div class="columns is-multiline">
+				<div class="column is-one-third">
 					<section>
 						<p class="subtitle has-text-white">Select Permission(s)</p>
 						<b-field>
-							<vs-select vs-multiple class="selectExample" label="Figuras" v-model="selected.names">
-								<vs-select-item :key="perm" :vs-value="perm" :vs-text="perm" v-for="perm of permissions" />
-							</vs-select>
+                            <vs-select vs-multiple v-model="selected.names">
+                                <div :key="category" v-for="(key, category) in permissions">
+                                     <vs-select-group :title="category">
+                                        <vs-select-item :key="perm.name" :vs-value="perm.name" :vs-text="perm.name" v-for="perm of permissions[category]"/>
+                                    </vs-select-group>
+                                </div>     
+                            </vs-select>
+                          
+							
 						</b-field>
 					</section>
 					<br>
@@ -65,10 +71,12 @@
 					<br>
 					<button v-if="selected.names.length && selected.scope && selected.value !== null" class="button is-success has-text-centered" @click="setPerm(selected)">Set Permission</button>
 				</div>
-				<div class="column is-half">
-					<p>Refer to the documentation for detailed information on each permission.</p>
-					<p>As of now, assigning permissions to users is only available by running the setperm command in-server.</p>
+				<div class="column is-narrow">
+                    <b-message type="is-success">
+                        <p>Refer to the documentation <nuxt-link to="/permissions">here</nuxt-link> for detailed information on each permission.</p>
+					    <p>As of now, assigning permissions to users is only available by running the setperm command in-server.</p>
 
+                    </b-message>
 				</div>
 
 			</div>
@@ -99,13 +107,6 @@ export default {
     async asyncData({ app, params: { guildid }, route }) {
         const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
         let { data: permissions } = await app.$axios.get(`/api/permissions`);
-        const array = [];
-        for (const key of Object.keys(permissions)) {
-            for (const perm of permissions[key]) {
-                array.push(perm.name);
-            }
-        }
-        permissions = array.sort();
 		const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
         const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
         return {
@@ -175,3 +176,9 @@ export default {
     }
 };
 </script>
+
+<style>
+.message-body {
+    background-color: #242424
+}
+</style>
