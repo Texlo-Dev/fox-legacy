@@ -21,9 +21,9 @@
       <br>
       <br>
    </div>
-   <div v-show="!guilds" class="container">
-      <h1 class="subtitle has-text-centered">
-         No servers. Make sure you are the owner of a server or have the Manage Server Permission to use the dashboard.
+   <div v-show="!guilds.length" class="container">
+      <h1 class="subtitle has-text-centered has-text-white">
+         No servers. Make sure you are the owner of at least one server, or have the Manage Server Permission to use the dashboard.
       </h1>
    </div>
 </section>
