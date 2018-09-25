@@ -8,11 +8,16 @@
 				<div class="is-divider"></div>
 			</div>
 			<div class="container">
-				<p>Once you have clicked on the bot's invite link and accepted the invite, you should recieve a message in your server that looks like this:</p>
-				<br>
-				<img src="https://s22.postimg.cc/k0ys0b49t/foxgettingstarted.jpg">
-				<br>
-				<p>This message contains helpful information for the Server Owner, such as our Discord Server Invite. It is important that you read this message carefully, so that you understand what you need to do to configure Fox.</p>
+				<div class="columns">
+					<div class="column is-half">
+						<p>Once you have clicked on the bot's invite link and accepted the invite, you should recieve a message in your server, like the one here.</p>
+						<p>This message contains helpful information for the Server Owner, such as our Discord Server Invite. It is important that you read this message carefully, so that you understand what you need to do to configure Fox.</p>
+					</div>
+					<div class="column is-half">
+						<img id="columnimg" :src="require('../assets/welcomeimg.png')">
+					</div>
+				</div>
+				
 			</div>
 		</section>
 		<section class="section">
@@ -39,6 +44,13 @@
 		</section>
 	</body>
 </template>
+
+<style>
+#columnimg {
+	border-radius: 25px;
+	border: 5px solid #242424
+}
+</style>
 
 <script>
 export default {

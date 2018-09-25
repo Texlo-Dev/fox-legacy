@@ -1,5 +1,6 @@
 <template>
 	<div>
+		
 		<section class="section">
 			<div class="container">
 				<h1 class="title has-text-white">
@@ -10,7 +11,7 @@
 					indicates required arguments.
 				</p>
 				<p class="has-text-centered">
-					[ ] indicates optional arguments.
+					[] indicates optional arguments.
 				</p>
 				<p class="has-text-centered">
 					| separates multiple possible arguments.

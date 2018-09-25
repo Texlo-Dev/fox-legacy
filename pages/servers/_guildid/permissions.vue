@@ -2,7 +2,7 @@
 <section class="section">
 		<div class="container">
 			<h1 class="title has-text-white has-text-left">
-				Server Permissions (BETA)
+				Server Permissions
 			</h1>
 			<div class="is-divider"></div>
 		</div>
