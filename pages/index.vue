@@ -36,10 +36,14 @@
 		<section class="section hero is-grey">
 			<div class="hero-body">
 				<div class="container">
-					<h1 class="title has-text-left">
+					<h1 class="title has-text-centered">
 						The Fox has arrived, and he's more cunning than ever.
 					</h1>
 					<p>Mr.Fox comes packed with various utilites to improve your server. With modularity in mind, Mr.Fox allows you to customize him to your liking. From guild settings, to custom permissions, you have a plethora of commands and function at your fingertips.</p>
+					<br>
+				</div>
+				<div class="container has-text-centered">
+					<img id="headerimg" class="has-text-centered" style="border: 5px solid #242424" align="center" :src="require('../assets/helplist.png')">
 				</div>
 
 			</div>
@@ -137,6 +141,13 @@
   </div>
 
 </template>
+
+<style>
+#headerimg {
+	border-radius: 25px
+}
+</style>
+
 
 <script>
 export default {
