@@ -44,13 +44,15 @@
                <div class="columns">
                   <div class="column">
                      <p class="subtitle has-text-white">Web Dashboard (Recommended)</p>
-                     <p>To configure permissions on the dashboard, simply log in, select your server, and navigate to the <strong class="has-text-white">Permissions</strong> tab. Currently,the user scope is not available from the dashboard.</p>
+                    <b-message type="is-success">
+                      <p>To configure permissions on the dashboard, simply log in, select your server, and navigate to the <strong class="has-text-white">Permissions</strong> tab. Currently,the user scope is not available from the dashboard.</p>
                      <br>
                      <p><strong class="has-text-white">Available Scopes:</strong></p>
                      <p>user = only one person will have the permission. </p>
                      <p>role = Everyone who has the role will have the permission.</p>
                      <p>channeluser = a user will only have the permission in the current channel.</p>
                      <p>channelrole= People with the role will have the only have the permission in a certain channel.</p>
+                      </b-message>
                      <br>
                   </div>
                   <div class="column">
@@ -62,7 +64,8 @@
                <div class="columns">
                   <div class="column">
                      <p class="subtitle has-text-white">In-server</p>
-                     <p>To configure permissions from your Discord server, you can make use of the <strong class="has-text-white">setperm</strong> command. You will need the core.manageperm command to do so.</p>
+                     <b-message type="is-success">
+                           <p>To configure permissions from your Discord server, you can make use of the <strong class="has-text-white">setperm</strong> command. You will need the core.manageperm command to do so.</p>
                      <br>
                      <p>
                         <strong class='has-text-white'>permission</strong> - The permission code for the permission you want. We'll use <strong class='has-text-white'>mod.kickboot</strong>.
@@ -75,9 +78,10 @@
                      <p>
                         <strong class='has-text-white'>target</strong> - The specific user or role that you want to assign the permission to. Can be a role/user name, a mention, or an ID.
                      </p>
-                     <br>
+                     </b-message>
                   </div>
                   <div class="column">
+                      <br><br>
                      <img id="columnimg" :src="require('../assets/setpermcmd.png')">		
                   </div>
                </div>
@@ -116,5 +120,9 @@ export default {
 #columnimg {
 	border-radius: 25px;
 	border: 5px solid #242424
+}
+
+.message-body {
+    background-color: #242424
 }
 </style>
