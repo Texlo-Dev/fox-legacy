@@ -118,6 +118,14 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    babel: {
+      presets: [
+          [
+              '@nuxtjs/babel-preset-app',
+              {targets: {ie: '11'}}
+          ]
+      ]
+    },
     /*
     ** You can extend webpack config here
     */
