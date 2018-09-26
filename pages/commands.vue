@@ -32,8 +32,8 @@
 							<div class="content">
 								<b-table :paginated="willPaginate(activeCat)"
                                 per-page="7"
-                                current-page.sync="1"
-                                pagination-simple="true" class="has-text-white" :data="commands[activeCat]" :columns="columns"></b-table>	
+                                :current-page.sync="activePage"
+                                :pagination-simple="true" class="has-text-white" :data="commands[activeCat]" :columns="columns"></b-table>	
 							</div>
 						</div>
 					</div>
@@ -96,6 +96,7 @@ export default {
         return {
 			commands: null,
 			activeCat: 'Automod',
+			activePage: 1,
 			columns: [{
 				field: 'name',
 				label: 'Name'
@@ -132,6 +133,7 @@ export default {
 		},
 		scrollTo(category) {
 			this.activeCat = category;
+			this.activePage = 1;
         	window.scrollTo(window.height / 1000, window.innerWidth / 1000);           
         }
 	}
