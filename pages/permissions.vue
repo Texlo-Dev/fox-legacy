@@ -14,24 +14,35 @@
       </section>
       <section class="section">
          <div class='container'>
-            <h1 class="title has-text-left has-text-white">Permissions List</h1>
+            <h1 class="title has-text-centered has-text-white">Permissions List</h1>
             <div class="is-divider"></div>
-            <h1 v-for="(cmd, category) of permissions" class="subtitle has-text-left has-text-grey">
-               {{ category }}
-               <br><br>
-               <div class="columns is-multiline">
-                  <div v-for="perm of permissions[category]" class="column is-one-quarter">
-                     <div class="box">
-                        <div class="content">
-                           <h4 class="subtitle has-text-white has-text-left">
-                              {{ perm.name }}
-                           </h4>
-                           <p class='has-text-left has-text-white'>{{ perm.description }}</p>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </h1>
+            <div class="columns is-centered">
+					<div class="column is-half">
+						<div class="box">
+							<h1 class="subtitle has-text-white has">
+								{{ activeCat }}
+							</h1>
+							<div class="content">
+								<b-table class="has-text-black" :data="permissions[activeCat]" :columns="columns"></b-table>	
+							</div>
+						</div>
+					</div>
+					<div class="column is-one-third">	
+						<div class="box">
+							<h1 class="title has-text-white">
+							Select Category
+						</h1>
+							<aside class="menu">
+								<ul class="menu-list">
+    							<li class="has-text-centered" :key="category" v-for="(cmd, category) of permissions"><a @click="activeCat = category" :class="{ 'is-active':  activeCat === category }"><p class="has-text-white">{{ category }} </p></a></li>
+  								</ul>
+							</aside>
+						</div>
+
+					
+							
+					</div>
+				</div>
          </div>
       </section>
       <section class="section">
@@ -106,6 +117,14 @@ export default {
 	},
     data() {
         return {
+            activeCat: 'Automod',
+            columns: [{
+				field: 'name',
+				label: 'Name'
+			}, {
+				field: 'description',
+				label: 'Description',	
+			}],
             permissions: null
         };
     },

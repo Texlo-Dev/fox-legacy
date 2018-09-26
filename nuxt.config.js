@@ -77,6 +77,7 @@ module.exports = {
   ** Discord Oauth
   */
   auth:  {
+    rewriteRedirects: true,
     redirect: {
       login: '/login',
       logout: '/',

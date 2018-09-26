@@ -129,6 +129,8 @@ $modal-card-head-border-bottom: 0px;
 $modal-card-foot-border-top: 0px;
 $modal-card-body-background-color: #34383c;
 $modal-card-title-color: #eff0eb;
+$menu-item-active-background-color: $success;
+$menu-item-hover-background-color: $grey;
 
 // Import Bulma and Buefy styles
 @import "~bulma";

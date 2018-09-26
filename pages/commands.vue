@@ -8,7 +8,7 @@
 				</h1>
 				<br>
 				<p class="has-text-centered">
-					indicates required arguments.
+					&#60;&#62; indicates required arguments.
 				</p>
 				<p class="has-text-centered">
 					[] indicates optional arguments.
@@ -22,7 +22,34 @@
 		<section class="section">
 
 			<div class="container">
-				<h1 v-for="(cmd, category) in commands" class="subtitle has-text-white">
+				<div class="columns">
+					<div class="column is-two-thirds">
+						<div class="box">
+							<h1 class="subtitle has-text-white has">
+								{{ activeCat }}
+							</h1>
+							<div class="content">
+								<b-table class="has-text-black" :data="commands[activeCat]" :columns="columns"></b-table>	
+							</div>
+						</div>
+					</div>
+					<div class="column is-one-third">	
+						<div class="box">
+							<h1 class="title has-text-white">
+							Select Category
+						</h1>
+							<aside class="menu">
+								<ul class="menu-list">
+    							<li class="has-text-centered" :key="category" v-for="(cmd, category) of commands"><a @click="activeCat = category" :class="{ 'is-active':  activeCat === category }"><p class="has-text-white">{{ category }} </p></a></li>
+  								</ul>
+							</aside>
+						</div>
+
+					
+							
+					</div>
+				</div>
+				<!--<h1 v-for="(cmd, category) in commands" class="subtitle has-text-white">
 					{{ category }}
 					<br><br>
 					<div class="columns is-multiline ">
@@ -39,7 +66,7 @@
 							</div>
 						</div>
 					</div>
-				</h1>
+				</h1>-->
 			</div>
 
 		</section>
@@ -63,15 +90,40 @@ export default {
     name: "Commands",
     data() {
         return {
-            commands: null
+			commands: null,
+			activeCat: 'Automod',
+			columns: [{
+				field: 'name',
+				label: 'Name'
+			}, {
+				field: 'description',
+				label: 'Description'
+			}, {
+				field: 'usage',
+				label: 'Usage'
+			}, {
+				field: 'requiredPerms',
+				label: 'Required Permission(s)'
+			}]
         };
     },
     async asyncData({ params, app }) {
-        const { data: commands } = await app.$axios.get('/api/commands');
+		const { data: commands } = await app.$axios.get('/api/commands');
+		for (const val in commands) {
+			for (const cmd of commands[val]) {
+				cmd.usage =  `${cmd.name} ${cmd.usage ? cmd.usage : ''}`;
+				cmd.requiredPerms = `${cmd.reqPermString != false ? cmd.reqPermString.join(', ') : 'None'}`;
+			}
+		}
         return {
             commands
         }
-    },
+	},
+	methods: {
+		makeActive(data) {
+			this.commands[data].active = true;
+		}
+	}
     /*methods: {
         async getCommands() {
             this.loading = true;
@@ -110,4 +162,31 @@ export default {
 .vs-label {
 	font-size: large
 }
+th {
+    background-color: #34383c
+}
+
+td {
+    background-color: #34383c
+    
+}
+
+ td span {
+     color: #eff
+        
+    }
+
+.th-wrap {
+   color: #eff
+        
+    }
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.input-select {
+        color: #242424;
+    }
 </style>
