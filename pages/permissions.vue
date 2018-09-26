@@ -17,19 +17,6 @@
             <h1 class="title has-text-centered has-text-white">Permissions List</h1>
             <div class="is-divider"></div>
             <div class="columns is-centered">
-					<div class="column is-half">
-						<div class="box">
-							<h1 class="subtitle has-text-white has">
-								{{ activeCat }}
-							</h1>
-							<div class="content">
-								<b-table :paginated="willPaginate(activeCat)"
-                                per-page="7"
-                                :current-page.sync="activePage"
-                                :pagination-simple="true" class="has-text-black" :data="permissions[activeCat]" :columns="columns"></b-table>	
-							</div>
-						</div>
-					</div>
 					<div class="column is-one-third">	
 						<div class="box">
 							<h1 class="title has-text-white">
@@ -44,6 +31,19 @@
 
 					
 							
+					</div>
+                    <div class="column is-half">
+						<div class="box">
+							<h1 class="subtitle has-text-white has">
+								{{ activeCat }}
+							</h1>
+							<div class="content">
+								<b-table :mobile-cards="false" :paginated="willPaginate(activeCat)"
+                                per-page="7"
+                                :current-page.sync="activePage"
+                                :pagination-simple="true" class="has-text-black" :data="permissions[activeCat]" :columns="columns"></b-table>	
+							</div>
+						</div>
 					</div>
 				</div>
          </div>
@@ -144,8 +144,7 @@ export default {
         },
         scrollTo(category) {
             this.activeCat = category;
-            this.activePage = 1;
-            window.scrollTo(window.height / 1.21, window.innerWidth / 1.21);     
+            this.activePage = 1; 
         }
     }
 }
@@ -179,4 +178,13 @@ td {
    color: #eff
         
     }
+    .content table td {
+    border-color: #242424
+    
+}
+
+.content table th {
+    border-color: #242424
+}
+
 </style>

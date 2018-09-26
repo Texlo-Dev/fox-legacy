@@ -24,20 +24,7 @@
 
 			<div class="container">
 				<div class="columns">
-					<div class="column is-two-thirds">
-						<div class="box">
-							<h1 class="subtitle has-text-white has">
-								{{ activeCat }}
-							</h1>
-							<div class="content">
-								<b-table :paginated="willPaginate(activeCat)"
-                                per-page="7"
-                                :current-page.sync="activePage"
-                                :pagination-simple="true" class="has-text-white" :data="commands[activeCat]" :columns="columns"></b-table>	
-							</div>
-						</div>
-					</div>
-					<div class="column is-one-third">	
+                    <div class="column is-one-quarter">	
 						<div class="box">
 							<h1 class="title has-text-white">
 							Select Category
@@ -52,6 +39,20 @@
 					
 							
 					</div>
+					<div class="column is-three-quarters">
+						<div class="box">
+							<h1 class="subtitle has-text-white has">
+								{{ activeCat }}
+							</h1>
+							<div class="content">
+								<b-table :paginated="willPaginate(activeCat)"
+                                per-page="7"
+                                :current-page.sync="activePage"
+                                :pagination-simple="true" class="has-text-white" :data="commands[activeCat]" :columns="columns"></b-table>	
+							</div>
+						</div>
+					</div>
+					
 				</div>
 				<!--<h1 v-for="(cmd, category) in commands" class="subtitle has-text-white">
 					{{ category }}
@@ -134,7 +135,7 @@ export default {
 		scrollTo(category) {
 			this.activeCat = category;
 			this.activePage = 1;
-        	window.scrollTo(window.height / 1000, window.innerWidth / 1000);           
+        	//window.scrollTo(window.height / 1000, window.innerWidth / 1000);           
         }
 	}
     /*methods: {
