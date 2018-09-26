@@ -137,7 +137,7 @@ export default {
     methods: {
         scrollTo(category) {
 			this.activeCat = category;
-            window.scrollTo(250,250);
+            window.scrollTo(window.height / 1.21, window.innerWidth / 1.21);     
         }
     }
 }
