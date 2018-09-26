@@ -185,6 +185,20 @@ td {
     
 }
 
+.content table td {
+    border-color: #242424
+    
+}
+
+.content table th {
+    border-color: #242424
+}
+
+
+.table.has-mobile-cards tr td {
+     border-color: #242424
+}
+
  td span {
      color: #eff
         
