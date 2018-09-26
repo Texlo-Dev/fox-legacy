@@ -23,7 +23,10 @@
 								{{ activeCat }}
 							</h1>
 							<div class="content">
-								<b-table class="has-text-black" :data="permissions[activeCat]" :columns="columns"></b-table>	
+								<b-table :paginated="willPaginate(activeCat)"
+                                per-page="7"
+                                current-page.sync="1"
+                                pagination-simple="true" class="has-text-black" :data="permissions[activeCat]" :columns="columns"></b-table>	
 							</div>
 						</div>
 					</div>
@@ -135,6 +138,9 @@ export default {
         }
     },
     methods: {
+        willPaginate(category) {
+            return this.permissions[category].length >=7;
+        },
         scrollTo(category) {
 			this.activeCat = category;
             window.scrollTo(window.height / 1.21, window.innerWidth / 1.21);     

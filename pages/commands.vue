@@ -30,7 +30,10 @@
 								{{ activeCat }}
 							</h1>
 							<div class="content">
-								<b-table class="has-text-white" :data="commands[activeCat]" :columns="columns"></b-table>	
+								<b-table :paginated="willPaginate(activeCat)"
+                                per-page="7"
+                                current-page.sync="1"
+                                pagination-simple="true" class="has-text-white" :data="commands[activeCat]" :columns="columns"></b-table>	
 							</div>
 						</div>
 					</div>
@@ -121,6 +124,9 @@ export default {
         }
 	},
 	methods: {
+		willPaginate(category) {
+            return this.commands[category].length >=7;
+        },
 		makeActive(data) {
 			this.commands[data].active = true;
 		},
