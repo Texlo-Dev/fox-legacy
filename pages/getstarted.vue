@@ -1,5 +1,5 @@
 <template>
-    <body>
+    <div>
         <section class="section">
             <div class='container'>
                 <h1 class="title has-text-white has-text-left">
@@ -60,7 +60,7 @@
 
             </div>
         </section>
-    </body>
+    </div>
 </template>
 
 <style>
