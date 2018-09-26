@@ -6,6 +6,7 @@
 				<h1 class="title has-text-white">
 					Commands
 				</h1>
+				<div class="is-divider"></div>
 				<br>
 				<p class="has-text-centered">
 					&#60;&#62; indicates required arguments.
@@ -29,7 +30,7 @@
 								{{ activeCat }}
 							</h1>
 							<div class="content">
-								<b-table class="has-text-black" :data="commands[activeCat]" :columns="columns"></b-table>	
+								<b-table class="has-text-white" :data="commands[activeCat]" :columns="columns"></b-table>	
 							</div>
 						</div>
 					</div>
@@ -40,7 +41,7 @@
 						</h1>
 							<aside class="menu">
 								<ul class="menu-list">
-    							<li class="has-text-centered" :key="category" v-for="(cmd, category) of commands"><a @click="activeCat = category" :class="{ 'is-active':  activeCat === category }"><p class="has-text-white">{{ category }} </p></a></li>
+    							<li class="has-text-centered" :key="category" v-for="(cmd, category) of commands"><a @click="scrollTo(category)" :class="{ 'is-active':  activeCat === category }"><p class="has-text-white">{{ category }} </p></a></li>
   								</ul>
 							</aside>
 						</div>
@@ -122,7 +123,11 @@ export default {
 	methods: {
 		makeActive(data) {
 			this.commands[data].active = true;
-		}
+		},
+		scrollTo(category) {
+			this.activeCat = category;
+            window.scrollTo(1000,1000);
+        }
 	}
     /*methods: {
         async getCommands() {
@@ -167,7 +172,8 @@ th {
 }
 
 td {
-    background-color: #34383c
+    background-color: #34383c;
+	color: #eff;
     
 }
 

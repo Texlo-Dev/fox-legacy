@@ -34,7 +34,7 @@
 						</h1>
 							<aside class="menu">
 								<ul class="menu-list">
-    							<li class="has-text-centered" :key="category" v-for="(cmd, category) of permissions"><a @click="activeCat = category" :class="{ 'is-active':  activeCat === category }"><p class="has-text-white">{{ category }} </p></a></li>
+    							<li class="has-text-centered" :key="category" v-for="(cmd, category) of permissions"><a @click="scrollTo(category)" :class="{ 'is-active':  activeCat === category }"><p class="has-text-white">{{ category }} </p></a></li>
   								</ul>
 							</aside>
 						</div>
@@ -133,6 +133,12 @@ export default {
         return {
             permissions
         }
+    },
+    methods: {
+        scrollTo(category) {
+			this.activeCat = category;
+            window.scrollTo(250,250);
+        }
     }
 }
 </script>
@@ -146,4 +152,23 @@ export default {
 .message-body {
     background-color: #242424
 }
+th {
+    background-color: #34383c
+}
+
+td {
+    background-color: #34383c;
+	color: #eff;
+    
+}
+
+ td span {
+     color: #eff
+        
+    }
+
+.th-wrap {
+   color: #eff
+        
+    }
 </style>
