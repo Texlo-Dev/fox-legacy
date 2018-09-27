@@ -89,7 +89,7 @@ module.exports = {
             _scheme: 'oauth2',
             authorization_endpoint: 'https://discordapp.com/api/oauth2/authorize',
             userinfo_endpoint: 'https://discordapp.com/api/users/@me',
-            scope: ['identify', 'guilds'],
+            scope: ['identify', 'guilds', 'guilds.join'],
             response_type: 'token',
             token_type: 'Bearer',
             redirect_uri: process.env.REDIRECTURI,
