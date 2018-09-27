@@ -3,16 +3,16 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 		<section class="section hero is-black is-small">
 			<div class="hero-body"></div>
-			<div class="container">
-				<img id="foxlogo" class="fox-logo center" width="200" height="200" :src="require('../assets/FoxLogov2.png')">
+			<div class="container has-text-centered">
+				<img id="foxlogo" class="fox-logo" width="200" height="200" :src="require('../assets/FoxLogov2.png')">
 				<br>
 				<h1 class="title">
 					Welcome to Mr.Fox.
 				</h1>
-				<p class="subtitle has-text-centered">
+				<p class="subtitle">
 					An intelligent, wise, and rather cunning multipurpose bot for <strong>Discord</strong>.
 				</p>
-				<div align="center" style="margin-top: 10px;">
+				<div style="margin-top: 10px;">
 					<nuxt-link class="button is-medium is-black is-inverted is-outlined" to="/servers">
 						<span><font-awesome-icon size="s" :icon="['fab', 'discord']"/></span>
 						<span>&nbsp;Manage Servers</span>

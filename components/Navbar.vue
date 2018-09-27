@@ -84,9 +84,9 @@
 									<h1 class="subtitle">Documentation</h1>
 								</a>
 								<div class="navbar-dropdown is-boxed">
-									<nuxt-link class="navbar-item" to="/getstarted">
+									<router-link class="navbar-item" to="/getstarted">
 										<p class='has-text-black'>Getting Started</p>
-									</nuxt-link>
+									</router-link>
 									<nuxt-link class="navbar-item" to="/commands">
 										<p class='has-text-black'>Commands</p>
 									</nuxt-link>
