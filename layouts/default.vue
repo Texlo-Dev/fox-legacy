@@ -103,6 +103,7 @@ $tabs-link-hover-border-bottom-color: $red;
 $tabs-link-hover-color: #eff0eb;
 $tabs-border-bottom-width: 0.5px;
 $body-background-color: $grey;
+$table-background-color: $black;
 $footer-background-color: $grey;
 $control-border-width: 2px;
 $input-border-color: #363636;
