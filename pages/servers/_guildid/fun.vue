@@ -37,7 +37,6 @@
 import API from "~/API.js";
 import secret from '~/secrets.js';
 import { mapGetters } from "vuex";
-import axios from "axios";
 
 export default {
     head() {
@@ -56,9 +55,9 @@ export default {
     async asyncData({ app, route, params: { guildid } }) {
 		const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 		const { data: commands } = await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: config } =  await axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })
-        const { data: channels } =  await axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: roles } =  await axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		const { data: config } =  await app.$axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })
+        const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
 		roles.forEach(r => r.color = `#${r.color.toString(16).padStart(6, "0")}`);
         return {
             commands,

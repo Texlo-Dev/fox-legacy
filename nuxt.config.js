@@ -47,7 +47,8 @@ module.exports = {
   */
   plugins: [
     { src: '~/plugins/slide', ssr: false },
-    { src: '~/plugins/vuesax' }
+    { src: '~/plugins/vuesax' },
+    { src: '~/plugins/moment'}
   ],
 
   /*
