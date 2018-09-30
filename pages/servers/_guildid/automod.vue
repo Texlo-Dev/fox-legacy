@@ -52,7 +52,7 @@
 											type="is-success">
 										</b-switch>
 										<button class="button is-rounded is-small is-grey" @click="bwModalActive = true">
-											Settings
+											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
 										</button>
 									</span>
 									<span v-else>
@@ -76,7 +76,7 @@
 											type="is-success">
 										</b-switch>
 										<button class="button is-rounded is-small is-grey" @click="massModalActive = true">
-											Settings
+											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
 										</button>
 									</span>
 									<span v-else>

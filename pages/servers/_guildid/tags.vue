@@ -13,25 +13,14 @@
 			</div>
 			<div class="container">
 				<div class="columns">
-					<div class="column is-one-third">
+					<div class="column">
 						<div class="box">
 							<div class="content">
-								<h1 class="title has-text-white has-text-left">Add Tag</h1>
-								<b-field label="Tag Name" custom-class="has-text-white">
-									<b-input v-model="currentag.name" maxlength=15></b-input>
-								</b-field>
-								<b-field label="Tag Content" custom-class="has-text-white">
-									<b-input v-model="currentag.content" type="textarea" maxlength=1980></b-input>
-								</b-field>
-								<button @click="addTag(currentag)" class="button is-success">Add</button>
-							</div>
-						</div>
-					</div>
-					<div class="is-divider-vertical"></div>
-					<div class="column is-half">
-						<div class="box">
-							<div class="content">
-								<h1 class="title has-text-white has-text-left">Tag List</h1>
+								<h1 class="title has-text-white has-text-left">Tag List
+                                    <button class="button is-grey is-rounded" @click="toggleAdd = true">
+                                        Add Tag <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                                    </button>
+                                </h1>
 								<b-taglist>
 									<b-tag  v-for="tag of tags" v-if="tags.length" :key="tag"
 										type="is-grey"
@@ -74,6 +63,25 @@
 				</div>
 
 			</div>
+            <b-modal :active.sync="toggleAdd" has-modal-card>
+         <div class="modal-card">
+            <header class="modal-card-head">
+               <p class="modal-card-title">New Tag</p>
+            </header>
+            <section class="modal-card-body">
+               <b-field label="Tag Name" custom-class="has-text-white">
+                  <b-input maxlength="20" v-model="currentag.name"></b-input>
+               </b-field>
+               <b-field label="Tag Content" custom-class="has-text-white">
+                  <b-input maxlength="4" v-model="currentag.content"></b-input>
+               </b-field>
+            </section>
+            <footer class="modal-card-foot">
+               <button class="button" type="button" @click="toggleAdd= false">Close</button>
+               <button class="button is-success" type="button" @click="addTag(currentag)">Add</button>
+            </footer>
+         </div>
+      </b-modal>
 
 		</section>
 </template>
@@ -119,6 +127,7 @@ export default {
             commands: null,
             config: null,
             tags: null,
+            toggleAdd: false,
             currentag: {
                 name: null,
                 content: null
@@ -156,6 +165,7 @@ export default {
             if (tag instanceof Array) {
                 try {
                     this.tags = await API.addTag(this.$route.params.guildid, "None", "", this.$auth.user.id, tag);
+                    this.toggleAdd = false;
                     this.$toast.open({
                         message: `Successfully edited tags.`,
                         type: "is-success",

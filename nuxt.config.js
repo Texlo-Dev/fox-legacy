@@ -68,7 +68,7 @@ module.exports = {
         },
         {
           set: '@fortawesome/free-solid-svg-icons',
-          icons: ['faAngleDown']
+          icons: ['faAngleDown', 'faPlus', 'faEdit', 'faWrench', 'faCogs']
         }
       ]
       

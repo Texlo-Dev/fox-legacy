@@ -1,127 +1,116 @@
 <template>
-    <section class="section">
-        <div class="container">
-				<nav class="level is-mobile">
-					<div class="level-left">
-						<h1 class="title has-text-white has-text-left">&nbsp;Giveaways</h1>
-					</div>
-					<div class="level-left">
-						<a class="button is-danger" @click="confirmPkg('Giveaways')">Disable</a>
-					</div>
-				</nav>
-				<div class="is-divider"></div>
-			</div>
-            <div class="container">
-                <div class="columns">
-                    <div class="column is-one-quarter">
-                        <div class="box">
-                            <div class="content">
-                                <p class="title has-text-white has-text-left">Start Giveaway</p>
-                            <p class="has-text-white">
-                                Giveaway Name
-                            </p>
-                            <b-field>
-                                <b-input maxlength="20" v-model="gw.name"></b-input>
-                            </b-field>
-                            <p class="has-text-white">
-                                Duration
-                            </p>
-                            <b-field>
-                                <b-input maxlength="4" v-model="gw.time"></b-input>
-                            </b-field>
-                            <p class="has-text-white">
-                                Maximum # of Winners
-                            </p>
-                            <b-field>
-                                <b-input type="number" min=1 max=10 v-model="gw.maxWinners"></b-input>
-                            </b-field>
-                            <p class="has-text-white">
-                                Select Channel
-                            </p>
-                            <b-field>
-							<vs-select class="selectExample" label="Figuras" v-model="gw.channel">
-								<vs-select-item :key="channel.id" :vs-value="channel" :vs-text="channel.name" v-for="channel of channels" />
-							</vs-select>
-						    </b-field>
-                            <p class="has-text-white">
-                                Select Emoji (If blank)
-                            </p>
-                            <b-field>
-							<vs-select class="selectExample" label="Figuras" v-model="gw.emoji">
-								<vs-select-item :key="emoji.id" :vs-value="emoji" :vs-text="emoji.name" v-for="emoji of emojis" />
-							</vs-select>
-						    </b-field>
-                            <p class="control">
-                                <button class="button is-success" @click="saveGw(gw)">Save</button>
-                            </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="is-divider-vertical"></div>
-                    <div class="column is-three-quarters is-multiline">
-                        <div class="box">
-                            <h1 class="title has-text-white has-text-left">Giveaway History</h1>
-                            <div v-if="giveaways.length" class="columns is-multiline">
-                                <div v-for="gw of giveaways" :key="gw.name" class="column is-half">
-                                    <div class="box" style="background-color: #34383c">
-                                        <div class="content">
-                                            <span>
-                                                <p class="subtitle has-text-white">{{ gw.name }}
-                                                    <b-tag v-if="gw.running" class="is-success">Running</b-tag>
-                                                    <b-tag v-else-if="!gw.running" class="is-pink">Ended</b-tag>
-                                                    &nbsp;<button v-if="!gw.running" class="button is-link is-small" @click="gwAction(gw, 'reroll')">Reroll</button>
-                                                    <button v-if="!gw.running" @click="gwAction(gw, 'delete')" class="button is-small is-danger">Delete</button>
-                                                    <!--&nbsp;<button v-if="gw.running" class="button is-warning is-small" @click="gwAction(gw, 'pause')">Pause</button>-->
-                                                    <button v-if="gw.running" class="button is-primary is-small" @click="gwAction(gw, 'end')">End</button>
-                                                    
-                                                </p>
-                                            </span>
-                                            <span v-if="gw.running">
-                                                - Ends: {{ [gw.timeRemaining, 'milliseconds'] | duration('humanize', true) }}
-                                                <br>
-                                                - Max Winners: {{ gw.maxWinners }}
-                                                <br>
-                                                - Channel: #{{ gw.channel.name }}
-                                            </span>
-                                            <span v-else>
-                                                - Ended: {{ new Date(gw.endDate) | moment('MM/DD/YY [at] h:mm A') }}
-                                                 <br>
-                                                - Channel: #{{ gw.channel.name }}
-                                                <br>
-                                                - Winners: {{ gw.winners.map(w => `${w.username}#${w.discriminator}`).join(', ') || 'None' }}
-                                            </span>
-                                            <br><br>
-
-                                        </div>
-            
-                                    </div>
-                                </div>
-                            </div>
-                            <div v-else>
-                                <p>No giveaway history found.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="is-divider"></div>
+   <section class="section">
+      <div class="container">
+         <nav class="level is-mobile">
+            <div class="level-left">
+               <h1 class="title has-text-white has-text-left">&nbsp;Giveaways</h1>
             </div>
-            <div class="container" style="position: relative">
-				<h1 class="title has-text-white has-text-left">Commands</h1>
-				<div v-for="command of commands" class="box">
-					<div class="content">
-						<h1 class="has-text-white has-text-left">
-							{{ command.name }}
-							<b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled"
-								type="is-success">
-							</b-switch>
-						</h1>
-
-						<p>{{ command.description }}</p>
-					</div>
-				</div>
-			</div>
-    </section>
-    
+            <div class="level-left">
+               <a class="button is-danger" @click="confirmPkg('Giveaways')">Disable</a>
+            </div>
+         </nav>
+         <div class="is-divider"></div>
+      </div>
+      <div class="container">
+         <div class="columns">
+            <div class="column is-multiline">
+               <div class="box">
+                  <h1 class="title has-text-white has-text-left">
+                    Recent Giveaways
+                     <button class="button is-grey is-rounded" @click="toggleAdd = true">
+                        Add Giveaway
+                        <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                     </button>
+                  </h1>
+                  <div v-if="giveaways.length" class="columns is-multiline">
+                     <div v-for="gw of giveaways" :key="gw.name" class="column is-one-third">
+                        <div class="box" style="background-color: #34383c">
+                           <div class="content">
+                              <span>
+                                 <p class="subtitle has-text-white">
+                                    {{ gw.name }}
+                                    <b-tag v-if="gw.running" class="is-success">Running</b-tag>
+                                    <b-tag v-else-if="!gw.running" class="is-pink">Ended</b-tag>
+                                    &nbsp;<button v-if="!gw.running" class="button is-link is-small" @click="gwAction(gw, 'reroll')">Reroll</button>
+                                    <button v-if="!gw.running" @click="gwAction(gw, 'delete')" class="button is-small is-danger">Delete</button>
+                                    <!--&nbsp;<button v-if="gw.running" class="button is-warning is-small" @click="gwAction(gw, 'pause')">Pause</button>-->
+                                    <button v-if="gw.running" class="button is-primary is-small" @click="gwAction(gw, 'end')">End</button>
+                                 </p>
+                              </span>
+                              <span v-if="gw.running">
+                              - Ends: {{ [gw.timeRemaining, 'milliseconds'] | duration('humanize', true) }}
+                              <br>
+                              - Max Winners: {{ gw.maxWinners }}
+                              <br>
+                              - Channel: #{{ gw.channel.name }}
+                              </span>
+                              <span v-else>
+                              - Ended: {{ new Date(gw.endDate) | moment('MM/DD/YY [at] h:mm A') }}
+                              <br>
+                              - Channel: #{{ gw.channel.name }}
+                              <br>
+                              - Winners: {{ gw.winners.map(w => `${w.username}#${w.discriminator}`).join(', ') || 'None' }}
+                              </span>
+                              <br><br>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div v-else>
+                     <p>No giveaways found. Click the "Add Giveaway" button to start a giveaway.</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="is-divider"></div>
+      </div>
+      <div class="container" style="position: relative">
+         <h1 class="title has-text-white has-text-left">Commands</h1>
+         <div v-for="command of commands" class="box">
+            <div class="content">
+               <h1 class="has-text-white has-text-left">
+                  {{ command.name }}
+                  <b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled"
+                     type="is-success">
+                  </b-switch>
+               </h1>
+               <p>{{ command.description }}</p>
+            </div>
+         </div>
+      </div>
+      <b-modal :active.sync="toggleAdd" has-modal-card>
+         <div class="modal-card">
+            <header class="modal-card-head">
+               <p class="modal-card-title">New Giveaway</p>
+            </header>
+            <section class="modal-card-body">
+               <b-field label="Giveaway name" custom-class="has-text-white">
+                  <b-input maxlength="20" v-model="gw.name"></b-input>
+               </b-field>
+               <b-field label="Duration" custom-class="has-text-white">
+                  <b-input maxlength="4" v-model="gw.time"></b-input>
+               </b-field>
+               <b-field label="Maximum # of Winners" custom-class="has-text-white">
+                  <b-input type="number" min=1 max=10 v-model="gw.maxWinners"></b-input>
+               </b-field>
+               <b-field label="Select Channel" custom-class="has-text-white">
+                  <vs-select class="selectExample" label="Figuras" v-model="gw.channel">
+                     <vs-select-item :key="channel.id" :vs-value="channel" :vs-text="channel.name" v-for="channel of channels" />
+                  </vs-select>
+               </b-field>
+               <b-field label="Select Emoji" custom-class="has-text-white">
+                  <vs-select class="selectExample" label="Figuras" v-model="gw.emoji">
+                     <vs-select-item :key="emoji.id" :vs-value="emoji" :vs-text="emoji.name" v-for="emoji of emojis" />
+                  </vs-select>
+               </b-field>
+            </section>
+            <footer class="modal-card-foot">
+               <button class="button" type="button" @click="toggleAdd= false">Close</button>
+               <button class="button is-success" type="button" @click="saveGw(gw)">Add</button>
+            </footer>
+         </div>
+      </b-modal>
+   </section>
 </template>
 
 <script>
@@ -163,6 +152,7 @@ export default {
             config: null,
             channels: null,
             emojis: null,
+            toggleAdd: false,
             gw: {
                 name: null,
                 time: null,
@@ -234,6 +224,8 @@ export default {
                 }, {
                     headers: { Authorization: secret.encrypt(this.$auth.user.id) }
                 }));
+                this.toggleAdd = false;
+                for (const item in gw) { gw[item] = null };
                 this.$toast.open({
                     message: 'Successfully started giveaway.',
                     type: 'is-success'

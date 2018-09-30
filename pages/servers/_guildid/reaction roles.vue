@@ -13,56 +13,17 @@
 			</div>
         <div class="container">
             <div class="columns">
-                <div class="column is-one-quarter">
-                    <div class="box">
-                        <div class="content">
-                            <h1 class="title has-text-white has-text-left">
-                                Add Reaction Role
-                            </h1>
-                            <p class="has-text-white">
-                                Message Name
-                            </p>
-                            <b-field>
-                                <b-input maxlength="20" v-model="roleData.alias"></b-input>
-                            </b-field>
-                            <p class="has-text-white">
-                                Base Message ID (Right click message > Copy ID)
-                            </p>
-                            <b-field>
-                                <b-input maxlength="19" v-model="roleData.messageID"></b-input>
-                            </b-field>
-                            <p class="has-text-white">
-                                Select Role
-                            </p>
-                            <b-field>
-							<vs-select class="selectExample" label="Figuras" v-model="roleData.role">
-								<vs-select-item :key="role.id" :vs-value="role" :vs-text="role.name" v-for="role of roles" />
-							</vs-select>
-						    </b-field>
-                            <p class="has-text-white">
-                                Select Emoji
-                            </p>
-                            <b-field>
-							<vs-select class="selectExample" label="Figuras" v-model="roleData.emoji">
-								<vs-select-item :key="emoji.id" :vs-value="emoji" :vs-text="emoji.name" v-for="emoji of emojis" />
-							</vs-select>
-						    </b-field>
-                            <p class="control">
-                                <button class="button is-success" @click="toggleRole(roleData)">Save</button>
-                            </p>
-
-                        </div>
-                    </div>
-
-                </div>
-                <div class="is-divider-vertical"></div>
                 <div class="column is-one-half is-multiline">
                     <div class="box is-small">
                         <div class="content">
                             <h1 class="title has-text-white has-text-left">
                                 Current Reaction Roles
+                                <button class="button is-grey is-rounded" @click="toggleAdd = true">
+                                    Add Role
+                                    <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                                </button>
                             </h1>
-                            <div class="columns is-multiline">
+                            <div v-if="config.reactionRoles.length" class="columns is-multiline">
                                <div v-if="config.reactionRoles" :key="role.id" v-for="role of config.reactionRoles" class="column is-one-quarter">
                                 <div class="box" style="background-color: #34383c">
                                 <div class="content">
@@ -78,9 +39,9 @@
                                     
                             </div> 
                             </div>
-                            <p v-if="!config.reactionRoles.length" class='has-text-white'>
-                                No Reaction Roles currently added.
-                            </p>
+                            <div v-else>
+                                <p>No Reaction Roles found. Click the "Add Role" button to get started.</p>
+                            </div>
                         </div>
 
                     </div>
@@ -89,6 +50,35 @@
             </div>
 
         </div>
+        <b-modal :active.sync="toggleAdd" has-modal-card>
+         <div class="modal-card">
+            <header class="modal-card-head">
+               <p class="modal-card-title">New ReactionRole</p>
+            </header>
+            <section class="modal-card-body">
+               <b-field label="Message name" custom-class="has-text-white">
+                  <b-input maxlength="20" v-model="roleData.alias"></b-input>
+               </b-field>
+               <b-field label="Base Message ID" custom-class="has-text-white">
+                  <b-input maxlength="21" v-model="roleData.messageID"></b-input>
+               </b-field>
+               <b-field label="Select Role" custom-class="has-text-white">
+                   <vs-select class="selectExample" label="Figuras" v-model="roleData.role">
+				        <vs-select-item :key="role.id" :vs-value="role" :vs-text="role.name" v-for="role of roles" />
+				    </vs-select>
+               </b-field>
+               <b-field label="Select Emoji" custom-class="has-text-white">
+                  <vs-select class="selectExample" label="Figuras" v-model="roleData.emoji">
+                     <vs-select-item :key="emoji.id" :vs-value="emoji" :vs-text="emoji.name" v-for="emoji of emojis" />
+                  </vs-select>
+               </b-field>
+            </section>
+            <footer class="modal-card-foot">
+               <button class="button" type="button" @click="toggleAdd = false">Close</button>
+               <button class="button is-success" type="button" @click="toggleRole(roleData)">Add</button>
+            </footer>
+         </div>
+      </b-modal>
     </section>
 </template>
 
@@ -126,8 +116,7 @@ export default {
             channels: null,
             roles: null,
             filteredRoles: this.roles,
-            bwModalActive: false,
-            massModalActive: false,
+            toggleAdd: false,
             originalState: true,
             roleData: {
                 role: null,
@@ -197,6 +186,7 @@ export default {
                     const settingUpd = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
                     this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
                     this.config[key] = obj[key];
+                    this.toggleAdd = false;
                 }
                 this.$toast.open({
                     message: `Successfully saved settings.`,
