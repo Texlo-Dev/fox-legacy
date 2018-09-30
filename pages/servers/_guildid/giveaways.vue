@@ -186,14 +186,14 @@ export default {
                             ({ data: this.giveaways } = await this.$axios.patch(`/api/guilds/${this.$route.params.guildid}/giveaways/${gw.name}`, { 
                                 action
                             }, { headers: { Authorization: secret.encrypt(this.$auth.user.id) } }))
-                            this.$toast.open({
-                                message: 'Successfully deleted giveaway.',
-                                type: 'is-success'
-                            });
                         } else {
                             ({ data: this.giveaways } = await this.$axios.delete(`/api/guilds/${this.$route.params.guildid}/giveaways/${gw.name}`, { 
                                 headers: { Authorization: secret.encrypt(this.$auth.user.id) }
                             }));
+                            this.$toast.open({
+                                message: 'Successfully deleted giveaway.',
+                                type: 'is-success'
+                            });
                         }
                     } catch (error) {
                         this.$dialog.alert({
