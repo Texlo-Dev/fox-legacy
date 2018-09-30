@@ -78,6 +78,7 @@ $grey:#34383c;
 $grey-invert: findColorInvert($grey);
 $primary: #8c67ef;
 $primary-invert: findColorInvert($primary);
+$pink-invert: findColorInvert($pink);
 
 
   // Update Bulma's global variables
@@ -87,6 +88,7 @@ $colors: (
   "warning": ($warning, $warning-invert),
   "black": ($black, $black-invert),
   "danger": ($red, $red-invert),
+  "pink": ($pink, $pink-invert),
   "grey": ($grey, $grey-invert),
   "primary": ($primary, $primary-invert),
   "success": ($success, $success-invert),

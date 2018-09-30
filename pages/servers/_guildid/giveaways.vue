@@ -68,9 +68,9 @@
                                             <span>
                                                 <p class="subtitle has-text-white">{{ gw.name }}
                                                     <b-tag v-if="gw.running" class="is-success">Running</b-tag>
-                                                    <b-tag v-else-if="!gw.running" class="is-danger">Ended</b-tag>
+                                                    <b-tag v-else-if="!gw.running" class="is-pink">Ended</b-tag>
                                                     &nbsp;<button v-if="!gw.running" class="button is-link is-small" @click="gwAction(gw, 'reroll')">Reroll</button>
-                                                    &nbsp;<button v-if="gw.running" class="button is-warning is-small" @click="gwAction(gw, 'pause')">Pause</button>
+                                                    <!--&nbsp;<button v-if="gw.running" class="button is-warning is-small" @click="gwAction(gw, 'pause')">Pause</button>-->
                                                     <button v-if="gw.running" class="button is-primary is-small" @click="gwAction(gw, 'end')">End</button>
                                                     
                                                 </p>
@@ -83,13 +83,16 @@
                                                 - Channel: #{{ gw.channel.name }}
                                             </span>
                                             <span v-else>
-                                                - Ended At: {{ new Date(gw.endDate) | moment("calendar") }}
+                                                - Ended: {{ new Date(gw.endDate) | moment('MM/DD/YY [at] h:mm A') }}
                                                  <br>
                                                 - Channel: #{{ gw.channel.name }}
                                                 <br>
                                                 - Winners: {{ gw.winners.map(w => `${w.username}#${w.discriminator}`).join(', ') || 'None' }}
                                             </span>
+                                            <br><br>
+                                            <button @click="gwAction(gw, 'delete')" class="button is-danger">Delete</button>
                                         </div>
+            
                                     </div>
                                 </div>
                             </div>
@@ -155,6 +158,7 @@ export default {
     data() {
         return {
             commands: null,
+            currentPage: 1,
             config: null,
             channels: null,
             emojis: null,
@@ -175,22 +179,21 @@ export default {
                 message: `Are you sure that you'd like to ${action} this giveaway?`,
                 cancelText: "No",
                 confirmText: "Yes",
-                type: 'is-success',
+                type: action === 'delete' ? 'is-danger' : 'is-success',
                 onConfirm: async () => {
                     try {
                         if (action !== 'delete') {
-                            await this.$axios.patch(`/api/guilds/${this.$route.params.guildid}/giveaways/${gw.name}`, { 
+                            ({ data: this.giveaways } = await this.$axios.patch(`/api/guilds/${this.$route.params.guildid}/giveaways/${gw.name}`, { 
                                 action
-                            }, { headers: { Authorization: secret.encrypt(this.$auth.user.id) } })
-                            const { data: newGw } = await this.$axios.get(`/api/guilds/${this.$route.params.guildid}/giveaways`, { headers: { Authorization: secret.encrypt(this.$auth.user.id) } });
-                            action === 'end' ? newGw.find(n => n.name === gw.name).running = false : null;
-                            this.giveaways = newGw;
-                        } else {
-                            await this.$axios.delete(`/api/guilds/${this.$route.params.guild.id}/giveaways/${gw.name}`, null, {
-                                headers: { Authorization: secret.encrypt(this.$auth.user.id) }
+                            }, { headers: { Authorization: secret.encrypt(this.$auth.user.id) } }))
+                            this.$toast.open({
+                                message: 'Successfully deleted giveaway.',
+                                type: 'is-success'
                             });
-                            const { data: newGw } = await this.$axios.get(`/api/guilds/${this.$route.params.guildid}/giveaways`, { headers: { Authorization: secret.encrypt(this.$auth.user.id) } });
-                            this.giveaways = newGw;
+                        } else {
+                            ({ data: this.giveaways } = await this.$axios.delete(`/api/guilds/${this.$route.params.guildid}/giveaways/${gw.name}`, { 
+                                headers: { Authorization: secret.encrypt(this.$auth.user.id) }
+                            }));
                         }
                     } catch (error) {
                         this.$dialog.alert({
@@ -221,7 +224,7 @@ export default {
                     actionText: 'Ok',
                 })
             try {
-                await this.$axios.post(`/api/guilds/${this.$route.params.guildid}/giveaways`, {
+                ({ data: this.giveaways } = await this.$axios.post(`/api/guilds/${this.$route.params.guildid}/giveaways`, {
                     name: gw.name,
                     time: gw.time,
                     channel: gw.channel,
@@ -229,9 +232,7 @@ export default {
                     reactionEmote: gw.emoji
                 }, {
                     headers: { Authorization: secret.encrypt(this.$auth.user.id) }
-                });
-                const { data: newGw } = await this.$axios.get(`/api/guilds/${this.$route.params.guildid}/giveaways`, { headers: { Authorization: secret.encrypt(this.$auth.user.id) } });
-                this.giveaways = newGw;
+                }));
                 this.$toast.open({
                     message: 'Successfully started giveaway.',
                     type: 'is-success'
