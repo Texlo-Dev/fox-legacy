@@ -34,29 +34,44 @@
                               <span>
                                  <p class="subtitle has-text-white">
                                     {{ gw.name }}
-                                    <b-tag v-if="gw.running" class="is-success">Running</b-tag>
+                                    <b-tag v-if="gw.paused" class="is-warning">Paused</b-tag>
+                                    <b-tag v-else-if="gw.running" class="is-success">Running</b-tag>
                                     <b-tag v-else-if="!gw.running" class="is-pink">Ended</b-tag>
-                                    &nbsp;<button v-if="!gw.running" class="button is-link is-small" @click="gwAction(gw, 'reroll')">Reroll</button>
-                                    <button v-if="!gw.running" @click="gwAction(gw, 'delete')" class="button is-small is-danger">Delete</button>
-                                    <!--&nbsp;<button v-if="gw.running" class="button is-warning is-small" @click="gwAction(gw, 'pause')">Pause</button>-->
-                                    <button v-if="gw.running" class="button is-primary is-small" @click="gwAction(gw, 'end')">End</button>
+                                    &nbsp;<button v-if="!gw.running" class="button is-link is-small" @click="gwAction(gw, 'reroll')">
+                                        Reroll <font-awesome-icon size="0.8x" pull="right" icon="redo"/>
+                                    </button>
+                                    <button v-if="!gw.running" @click="gwAction(gw, 'delete')" class="button is-small is-danger">
+                                        Delete <font-awesome-icon size="0.8x" pull="right" icon="trash-alt"/>
+                                    </button>
+                                    <button v-if="gw.running && !gw.paused" class="button is-warning is-small" @click="gwAction(gw, 'pause')">
+                                        Pause <font-awesome-icon size="0.8x" pull="right" icon="pause"/>
+                                    </button>
+                                    <button v-if="gw.paused" class="button is-success is-small" @click="gwAction(gw, 'resume')">
+                                        Resume <font-awesome-icon size="0.8x" pull="right" icon="play"/>
+                                    </button>
+                                    <button v-if="gw.running" class="button is-danger is-small" @click="gwAction(gw, 'end')">
+                                        End <font-awesome-icon size="0.8x" pull="right" icon="ban"/>
+                                    </button>
                                  </p>
                               </span>
-                              <span v-if="gw.running">
+                              <br>
+                              <span v-if="!gw.paused && gw.running">
                               - Ends: {{ [gw.timeRemaining, 'milliseconds'] | duration('humanize', true) }}
                               <br>
                               - Max Winners: {{ gw.maxWinners }}
                               <br>
-                              - Channel: #{{ gw.channel.name }}
+                              - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
+                              </span>
+                              <span v-else-if="gw.paused"> 
+                                - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
                               </span>
                               <span v-else>
                               - Ended: {{ new Date(gw.endDate) | moment('MM/DD/YY [at] h:mm A') }}
                               <br>
-                              - Channel: #{{ gw.channel.name }}
+                               - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
                               <br>
                               - Winners: {{ gw.winners.map(w => `${w.username}#${w.discriminator}`).join(', ') || 'None' }}
                               </span>
-                              <br><br>
                            </div>
                         </div>
                      </div>
@@ -175,7 +190,7 @@ export default {
                 message: `Are you sure that you'd like to ${action} this giveaway?`,
                 cancelText: "No",
                 confirmText: "Yes",
-                type: action === 'delete' ? 'is-danger' : 'is-success',
+                type: action === 'delete' || action === 'end' ? 'is-danger' : 'is-success',
                 onConfirm: async () => {
                     this.$nuxt.$loading.start();
                     try {
@@ -183,12 +198,10 @@ export default {
                             ({ data: this.giveaways } = await this.$axios.patch(`/api/guilds/${this.$route.params.guildid}/giveaways/${gw.name}`, { 
                                 action
                             }, { progress: false, headers: { Authorization: secret.encrypt(this.$auth.user.id) } }));
-                            this.$nuxt.$loading.finish();
                         } else {
                             ({ data: this.giveaways } = await this.$axios.delete(`/api/guilds/${this.$route.params.guildid}/giveaways/${gw.name}`, { 
                                 headers: { Authorization: secret.encrypt(this.$auth.user.id) }
                             }));
-                            this.$nuxt.$loading.finish();
                             this.$toast.open({
                                 message: 'Successfully deleted giveaway.',
                                 type: 'is-success'
@@ -201,7 +214,7 @@ export default {
                             message: `There was an error performing this action. "${error.message}"`,
                             type: "is-danger"
                         });
-                    }
+                    } finally { this.$nuxt.$loading.finish() }
                 }
             })
 
@@ -241,7 +254,6 @@ export default {
                     message: 'Successfully started giveaway.',
                     type: 'is-success'
                 });
-                this.$nuxt.$loading.finish();
             } catch (error) {
                 this.$nuxt.$loading.fail();
                 this.$dialog.alert({
@@ -249,7 +261,7 @@ export default {
                     message: `There was an error starting this giveaway. "${error.message}"`,
                     type: "is-danger"
                 });
-            }      
+            } finally { this.$nuxt.$loading.finish() }      
         },
         async toggleCommand(data, bool) {
             if (!data) return;
@@ -332,5 +344,12 @@ export default {
 <style>
     .selectExample .input-select {
         color: #242424;
+    }
+    #channel  {
+        background-color: rgba(114,137,218,.1);
+        color: #7289da;
+    }
+    #channel:hover { 
+        background-color: rgba(114, 137, 218, 0.701961); color: rgb(255, 255, 255); 
     }
 </style>
