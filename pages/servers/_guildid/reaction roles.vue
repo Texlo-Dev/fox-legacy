@@ -58,7 +58,7 @@
         <b-modal :active.sync="toggleAdd" has-modal-card>
          <div class="modal-card">
             <header class="modal-card-head">
-               <p class="modal-card-title">New ReactionRole</p>
+               <p class="modal-card-title">New Reaction Role</p>
             </header>
             <section class="modal-card-body">
                <b-field label="Message name" custom-class="has-text-white">
