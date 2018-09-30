@@ -84,7 +84,7 @@
                </b-field>
             </section>
             <footer class="modal-card-foot">
-               <button class="button" type="button" @click="toggleAdd= false">Close</button>
+               <button class="button" type="button" @click="toggleAdd = false">Close</button>
                <button class="button is-success" type="button" @click="addTag(currentag)">Add</button>
             </footer>
          </div>
@@ -172,12 +172,12 @@ export default {
             if (tag instanceof Array) {
                 try {
                     this.tags = await API.addTag(this.$route.params.guildid, "None", "", this.$auth.user.id, tag);
-                    this.toggleAdd = false;
                     this.$toast.open({
                         message: `Successfully edited tags.`,
                         type: "is-success",
                         duration: 3800
                     });
+                    this.toggleAdd = false;
                 } catch (error) {
                     this.$toast.open({
                         message: `Unable to edit tags. ${error}`,
@@ -193,6 +193,7 @@ export default {
                         type: "is-success",
                         duration: 3800
                     });
+                    this.toggleAdd = false;
                     this.currentag.name = null;
                     this.currentag.content = null;
                 } catch (error) {

@@ -177,21 +177,25 @@ export default {
                 confirmText: "Yes",
                 type: action === 'delete' ? 'is-danger' : 'is-success',
                 onConfirm: async () => {
+                    this.$nuxt.$loading.start();
                     try {
                         if (action !== 'delete') {
                             ({ data: this.giveaways } = await this.$axios.patch(`/api/guilds/${this.$route.params.guildid}/giveaways/${gw.name}`, { 
                                 action
-                            }, { headers: { Authorization: secret.encrypt(this.$auth.user.id) } }))
+                            }, { progress: false, headers: { Authorization: secret.encrypt(this.$auth.user.id) } }));
+                            this.$nuxt.$loading.finish();
                         } else {
                             ({ data: this.giveaways } = await this.$axios.delete(`/api/guilds/${this.$route.params.guildid}/giveaways/${gw.name}`, { 
                                 headers: { Authorization: secret.encrypt(this.$auth.user.id) }
                             }));
+                            this.$nuxt.$loading.finish();
                             this.$toast.open({
                                 message: 'Successfully deleted giveaway.',
                                 type: 'is-success'
                             });
                         }
                     } catch (error) {
+                        this.$nuxt.$loading.fail();
                         this.$dialog.alert({
                             title: "Error",
                             message: `There was an error performing this action. "${error.message}"`,
@@ -220,6 +224,7 @@ export default {
                     actionText: 'Ok',
                 })
             try {
+                this.$nuxt.$loading.start();
                 ({ data: this.giveaways } = await this.$axios.post(`/api/guilds/${this.$route.params.guildid}/giveaways`, {
                     name: gw.name,
                     time: gw.time,
@@ -227,6 +232,7 @@ export default {
                     maxWinners: parseInt(gw.maxWinners),
                     reactionEmote: gw.emoji
                 }, {
+                    progress: false,
                     headers: { Authorization: secret.encrypt(this.$auth.user.id) }
                 }));
                 this.toggleAdd = false;
@@ -235,7 +241,9 @@ export default {
                     message: 'Successfully started giveaway.',
                     type: 'is-success'
                 });
+                this.$nuxt.$loading.finish();
             } catch (error) {
+                this.$nuxt.$loading.fail();
                 this.$dialog.alert({
                     title: "Error",
                     message: `There was an error starting this giveaway. "${error.message}"`,
