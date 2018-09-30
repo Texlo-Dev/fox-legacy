@@ -70,6 +70,7 @@
                                                     <b-tag v-if="gw.running" class="is-success">Running</b-tag>
                                                     <b-tag v-else-if="!gw.running" class="is-pink">Ended</b-tag>
                                                     &nbsp;<button v-if="!gw.running" class="button is-link is-small" @click="gwAction(gw, 'reroll')">Reroll</button>
+                                                    <button v-if="!gw.running" @click="gwAction(gw, 'delete')" class="button is-small is-danger">Delete</button>
                                                     <!--&nbsp;<button v-if="gw.running" class="button is-warning is-small" @click="gwAction(gw, 'pause')">Pause</button>-->
                                                     <button v-if="gw.running" class="button is-primary is-small" @click="gwAction(gw, 'end')">End</button>
                                                     
@@ -90,7 +91,7 @@
                                                 - Winners: {{ gw.winners.map(w => `${w.username}#${w.discriminator}`).join(', ') || 'None' }}
                                             </span>
                                             <br><br>
-                                            <button @click="gwAction(gw, 'delete')" class="button is-danger">Delete</button>
+
                                         </div>
             
                                     </div>
