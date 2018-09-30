@@ -16,11 +16,18 @@
 					<div class="column">
 						<div class="box">
 							<div class="content">
-								<h1 class="title has-text-white has-text-left">Tag List
-                                    <button class="button is-grey is-rounded" @click="toggleAdd = true">
-                                        Add Tag <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
-                                    </button>
-                                </h1>
+                                <nav class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <h1 class="title has-text-left has-text-white">Tag List</h1>
+                                        </div>
+                                        <div class="level-item">
+                                            <button class="button is-grey is-rounded" @click="toggleAdd = true">
+                                                Add Tag <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </nav>
 								<b-taglist>
 									<b-tag  v-for="tag of tags" v-if="tags.length" :key="tag"
 										type="is-grey"

@@ -16,13 +16,18 @@
                 <div class="column is-one-half is-multiline">
                     <div class="box is-small">
                         <div class="content">
-                            <h1 class="title has-text-white has-text-left">
-                                Current Reaction Roles
-                                <button class="button is-grey is-rounded" @click="toggleAdd = true">
-                                    Add Role
-                                    <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
-                                </button>
-                            </h1>
+                            <nav class="level">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <h1 class="title has-text-left has-text-white">Current Reaction Roles</h1>
+                                        </div>
+                                        <div class="level-item">
+                                            <button class="button is-grey is-rounded" @click="toggleAdd = true">
+                                                Add Role <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </nav>
                             <div v-if="config.reactionRoles.length" class="columns is-multiline">
                                <div v-if="config.reactionRoles" :key="role.id" v-for="role of config.reactionRoles" class="column is-one-quarter">
                                 <div class="box" style="background-color: #34383c">
