@@ -255,8 +255,7 @@ export default {
         async settingUpdate(key, value, options) {
             this.isLoading = true;
             try {
-                await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
-                this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
+                this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 this.$toast.open({
                     message: `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
                     type: "is-success",
@@ -275,14 +274,12 @@ export default {
         async settingArrayUpdate(obj) {
             try {
                 for (const key of Object.keys(obj)) {
-                    const settingUpd = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
-                    this.config[key] = obj[key];
+                    this.config = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
                 }
                 this.$toast.open({
                     message: `Successfully saved settings.`,
                     type: "is-success"
                 });
-                this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
                 this.bwModalActive = false;
                 this.massModalActive = false;
             } catch (error) {
@@ -300,10 +297,6 @@ export default {
             try {
                 await API.toggleCommand(data, this.$route.params.guildid, bool, this.$auth.user.id);
                 this.commands = await API.pkgCommands("Automod", this.$route.params.guildid, this.$auth.user.id);
-                this.$toast.open({
-                    message: `Toggled ${data} to ${bool ? "On" : "Off"}`,
-                    type: "is-success"
-                });
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this command: API_ERROR`,

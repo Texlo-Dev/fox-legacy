@@ -38,7 +38,7 @@
 												</button>
 												<b-dropdown-item @click="dropdownSave('messageLocation', 'Level Message location', 'DM')">DM</b-dropdown-item>
 												<b-dropdown-item @click="dropdownSave('messageLocation', 'Level Message location', 'Current Channel')">Current Channel</b-dropdown-item>
-												<b-dropdown-item  v-for="channel of channels" :value="channel.name" @click="dropdownSave('messageLocation', 'Level Message Location', channel, false)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
+												<b-dropdown-item  v-if="channels" v-for="channel of channels" :value="channel.name" @click="dropdownSave('messageLocation', 'Level Message Location', channel, false)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
 											</b-dropdown>
 										</section>
 										<section>
@@ -251,7 +251,8 @@ export default {
             config: null,
             channels: null,
             leveling: null,
-            roles: null,
+			roles: null,
+			filteredChannels: this.channels,
             filteredRoles: this.roles,
             promoModal: false,
             selectedRole: null,
@@ -291,7 +292,7 @@ export default {
             }
             role.rank = parseInt(rank);
             try {
-                this.leveling.promoRoles.push(role);
+				this.leveling.promoRoles.push(role);
                 await this.levelingUpdate("promoRoles", this.leveling.promoRoles, { bool: false });
                 this.promoModal = false;
             } catch (error) {
@@ -311,9 +312,7 @@ export default {
         async levelingUpdate(key, value, options) {
             this.isLoading = true;
             try {
-                await API.levelingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
-                this.leveling = await API.guildLeveling(this.$route.params.guildid, this.$auth.user.id);
-                this.leveling[key] = value;
+                this.leveling = await API.levelingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 this.$toast.open({
                     message: value instanceof Object ? options.meta ? `Saved ${options.meta} as ${value.name}` : `Saved settings.` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
                     type: "is-success",
@@ -331,8 +330,7 @@ export default {
         },
         async settingUpdate(key, value, options) {
             try {
-                await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
-                this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
+                this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 this.$toast.open({
                     message: `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
                     type: "is-success",
@@ -349,14 +347,12 @@ export default {
         async settingArrayUpdate(obj) {
             try {
                 for (const key of Object.keys(obj)) {
-                    const settingUpd = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
-                    this.config[key] = obj[key];
+                    this.config = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
                 }
                 this.$toast.open({
                     message: `Successfully saved settings.`,
                     type: "is-success"
                 });
-                this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
                 this.bwModalActive = false;
                 this.massModalActive = false;
             } catch (error) {
@@ -374,10 +370,6 @@ export default {
             try {
                 await API.toggleCommand(data, this.$route.params.guildid, bool, this.$auth.user.id);
                 this.commands = await API.pkgCommands("Leveling", this.$route.params.guildid, this.$auth.user.id);
-                this.$toast.open({
-                    message: `Toggled ${data} to ${bool ? "On" : "Off"}`,
-                    type: "is-success"
-                });
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this command: API_ERROR`,

@@ -72,7 +72,7 @@
                     </b-message>
                   </div>
                   <div class="column">
-                     <img id="columnimg" :src="require('../assets/permselector.png')">		
+                     <img align="right" id="columnimg" :src="require('../assets/permselector.png')">		
                   </div>
                </div>
             </section>

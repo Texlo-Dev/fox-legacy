@@ -28,7 +28,7 @@
                                         </div>
                                     </div>
                                 </nav>
-								<b-taglist>
+								<b-taglist v-if="tags.length">
 									<b-tag  v-for="tag of tags" v-if="tags.length" :key="tag"
 										type="is-grey"
 										closable
@@ -37,6 +37,7 @@
 										{{ tag }}
 									</b-tag>
 								</b-taglist>
+                                <p v-else>No tags added. To add a tag, click the "Add Tag" button.</p>
 							</div>
 						</div>
 						<div class="box">
@@ -80,7 +81,7 @@
                   <b-input maxlength="20" v-model="currentag.name"></b-input>
                </b-field>
                <b-field label="Tag Content" custom-class="has-text-white">
-                  <b-input maxlength="4" v-model="currentag.content"></b-input>
+                  <b-input type="textarea" maxlength="2000" v-model="currentag.content"></b-input>
                </b-field>
             </section>
             <footer class="modal-card-foot">
@@ -145,22 +146,25 @@ export default {
     methods: {
         async confirmDelete(tag) {
             this.$dialog.confirm({
-                title: "Delete tag",
+                title: "Delete Tag",
                 message: `Are you sure that you'd like to remove the tag "${tag}"?`,
                 cancelText: "Cancel",
                 confirmText: "Delete",
                 type: "is-success",
                 onConfirm: async () => {
+                    this.$nuxt.$loading.start();
                     try {
-                        await this.addTag(this.tags);
-                        this.tags.splice(this.tags.indexOf(tag), 1);
+                        ({ data: this.tags } = await this.$axios.delete(`/api/guilds/${this.$route.params.guildid}/tags/${tag}`, { 
+                            headers: { Authorization: secret.encrypt(this.$auth.user.id) }
+                        }));
                     } catch (error) {
+                        this.$nuxt.$loading.fail();
                         this.$toast.open({
-                            message: `Error deleting rank. ${error}`,
+                            message: `Error deleting tag. ${error}`,
                             type: "is-danger",
                             duration: 3000
                         });
-                    }
+                    } finally { this.$nuxt.$loading.finish(); }
                 }
 
             });
@@ -169,51 +173,25 @@ export default {
             this.tags = await API.guildTags(this.$route.params.guildID, this.$auth.user.id);
         },
         async addTag(tag) {
-            if (tag instanceof Array) {
-                try {
-                    this.tags = await API.addTag(this.$route.params.guildid, "None", "", this.$auth.user.id, tag);
-                    this.$toast.open({
-                        message: `Successfully edited tags.`,
-                        type: "is-success",
-                        duration: 3800
-                    });
-                    this.toggleAdd = false;
-                } catch (error) {
-                    this.$toast.open({
-                        message: `Unable to edit tags. ${error}`,
-                        type: "is-danger",
-                        duration: 4000
-                    });
-                }
-            } else {
-                try {
-                    this.tags = await API.addTag(this.$route.params.guildid, tag.name, tag.content, this.$auth.user.id);
-                    this.$toast.open({
-                        message: `Successfully added the tag ${tag.name}`,
-                        type: "is-success",
-                        duration: 3800
-                    });
-                    this.toggleAdd = false;
-                    this.currentag.name = null;
-                    this.currentag.content = null;
-                } catch (error) {
-                    this.$toast.open({
-                        message: `Unable to add this tag: ${error}`,
-                        type: "is-danger",
-                        duration: 4000
-                    });
-                }
+            try {
+                ({ data: this.tags } = await this.$axios.post(`/api/guilds/${this.$route.params.guildid}/tags`, {
+                    tagName: tag.name,
+                    tagContent: tag.content
+                }, { headers: { Authorization: secret.encrypt(this.$auth.user.id) } }));
+                this.toggleAdd = false;
+                this.currentag.name = null;
+                this.currentag.content = null;
+            } catch (error) {
+                this.$toast.open({
+                    message: `Unable to add this tag: ${error}`,
+                    type: "is-danger",
+                    duration: 4000
+                });
             }
         },
         async settingUpdate(key, value, options) {
             try {
-                await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
-                this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
-                this.$toast.open({
-                    message: `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
-                    type: "is-success",
-                    duration: 3800
-                });
+                this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this setting: ${error}`,
@@ -222,27 +200,6 @@ export default {
                 this.$refs[`${key}-switch`][0].newValue = !value;
             } 
         },
-        async settingArrayUpdate(obj) {
-            try {
-                for (const key of Object.keys(obj)) {
-                    const settingUpd = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
-                    this.config[key] = obj[key];
-                }
-                this.$toast.open({
-                    message: `Successfully saved settings.`,
-                    type: "is-success"
-                });
-                this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
-                this.bwModalActive = false;
-                this.massModalActive = false;
-            } catch (error) {
-                this.$toast.open({
-                    message: `Unable to edit these settings: ${error}`,
-                    type: "is-danger",
-                    duration: 4000
-                });
-            }
-        },
         async toggleCommand(data, bool) {
             this.isLoading = true;
             if (!data) return;
@@ -250,13 +207,9 @@ export default {
             try {
                 await API.toggleCommand(data, this.$route.params.guildid, bool, this.$auth.user.id);
                 this.commands = await API.pkgCommands("Tags", this.$route.params.guildid, this.$auth.user.id);
-                this.$toast.open({
-                    message: `Toggled ${data} to ${bool ? "On" : "Off"}`,
-                    type: "is-success"
-                });
             } catch (error) {
                 this.$toast.open({
-                    message: `Unable to edit this command: API_ERROR`,
+                    message: `Unable to edit this command: ${error}`,
                     type: "is-danger"
                 });
                 this.$refs[`${data}-switch`][0].newValue = !bool;

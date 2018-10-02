@@ -269,10 +269,6 @@ export default {
             try {
                 await API.toggleCommand(data, this.$route.params.guildid, bool, this.$auth.user.id);
                 this.commands = await API.pkgCommands("Giveaways", this.$route.params.guildid, this.$auth.user.id);
-                this.$toast.open({
-                    message: `Toggled ${data} to ${bool ? "On" : "Off"}`,
-                    type: "is-success"
-                });
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this command: API_ERROR`,
