@@ -125,7 +125,7 @@ export default {
             originalState: true
 
         };
-    },
+	},
     methods: {
         getRoleNames(channel) {
             this.filteredRoles = this.roles.filter(option => `${option.name.toLowerCase()}`.indexOf(channel.toLowerCase()) >= 0);

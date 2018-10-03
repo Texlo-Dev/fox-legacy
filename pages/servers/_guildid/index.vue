@@ -1,4 +1,4 @@
-<template>
+<template v-ref="dashboard">
     <section class="section">
 			<div class="container">
 				<div class="columns is-multiline">
@@ -48,13 +48,12 @@ export default {
 		if (store.state.cachedGuild) return;
         const token = app.$auth.getToken('discord');
         const { data: guild } = await app.$axios.get(`/api/guilds/${guildid}`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id)} })
-       
         return store.commit('cacheGuild', guild);
     },
 	async asyncData({ app, params: { guildid }, store }) {
 		const { data: packages } = await app.$axios.get(`/api/guilds/${guildid}/packages`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id) } });
-		await store.commit('dashLoading', true);
-		await store.commit('toggleDash', true);
+		store.commit('toggleDash', true);
+		
 		return {
 			packages
 		}

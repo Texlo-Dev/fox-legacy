@@ -12,7 +12,9 @@
 				<div class="is-divider"></div>
 			</div>
 			<div v-if="!loading && config" class="container">
-				<h1 class="title has-text-white has-text-left">Available Self Roles</h1>
+				<div class="box">
+                    <div class="content">
+                        <h1 class="title has-text-white has-text-left">Available Self Roles</h1>
 				<b-field custom-class="has-text-white">
 					<b-taginput
 						v-model="config.selfRoles"
@@ -32,6 +34,8 @@
 						<button class="button is-success is-medium" @click="settingArrayUpdate({ selfRoles: config.selfRoles })">Save</button>
 					</p>
 				</b-field>
+                    </div>
+                </div>
 				<div class="is-divider"></div>
 
 			</div>

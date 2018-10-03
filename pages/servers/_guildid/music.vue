@@ -56,14 +56,12 @@ export default {
 		const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 		const { data: commands } = await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
 		const { data: config } =  await app.$axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+		/* nconst { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
 		const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		roles.forEach(r => r.color = `#${r.color.toString(16).padStart(6, "0")}`);
+		roles.forEach(r => r.color = `#${r.color.toString(16).padStart(6, "0")}`);*/
         return {
             commands,
             config,
-            channels, 
-            roles
         }
 
     },
@@ -71,10 +69,6 @@ export default {
         return {
             commands: null,
             config: null,
-            channels: null,
-            roles: null,
-            filteredChannels: this.channels,
-            filteredRoles: this.roles,
         };
     },
     methods: {
