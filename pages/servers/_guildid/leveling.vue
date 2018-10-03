@@ -260,6 +260,9 @@ export default {
         };
     },
     methods: {
+		dropdownSave(key, meta, item, bool) {
+			return this.levelingUpdate(key, item, { meta, bool })
+		},
         async confirmDelete(role) {
             this.$dialog.confirm({
                 title: "Delete Promotion Role",
