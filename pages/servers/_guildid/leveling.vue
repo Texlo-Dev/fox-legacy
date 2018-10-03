@@ -273,7 +273,7 @@ export default {
                 onConfirm: async () => {
                     this.leveling.promoRoles.splice(this.leveling.promoRoles.indexOf(role), 1);
                     try {
-                        await this.levelingUpdate("promoRoles", this.leveling.promoRoles, { bool: false });
+                        this.leveling = await this.levelingUpdate("promoRoles", this.leveling.promoRoles, { bool: false });
                     } catch (error) {
                         this.$toast.open({
                             message: `Error deleting rank. ${error}`,
@@ -296,7 +296,7 @@ export default {
             role.rank = parseInt(rank);
             try {
 				this.leveling.promoRoles.push(role);
-                await this.levelingUpdate("promoRoles", this.leveling.promoRoles, { bool: false });
+                this.leveling = await this.levelingUpdate("promoRoles", this.leveling.promoRoles, { bool: false });
                 this.promoModal = false;
             } catch (error) {
                 return this.$toast.open({
