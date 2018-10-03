@@ -36,6 +36,7 @@
 import API from '~/API.js';
 import secrets from '~/secrets.js';
 export default {
+	transition: 'fade',
 	head() {
 		return {
 			title: 'Mr.Fox Bot - Dashboard',	
@@ -48,11 +49,11 @@ export default {
 		if (store.state.cachedGuild) return;
         const token = app.$auth.getToken('discord');
         const { data: guild } = await app.$axios.get(`/api/guilds/${guildid}`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id)} })
-        return store.commit('cacheGuild', guild);
+		store.commit('cacheGuild', guild);
+		store.commit('toggleDash', true);
     },
 	async asyncData({ app, params: { guildid }, store }) {
 		const { data: packages } = await app.$axios.get(`/api/guilds/${guildid}/packages`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id) } });
-		store.commit('toggleDash', true);
 		
 		return {
 			packages
