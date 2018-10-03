@@ -46,6 +46,9 @@
 											<p class="subtitle title has-text-white has-text-left">Message</p>
 											<b-field>
 												<b-input type="textarea" v-model="config.levelMsg" maxlength="1980"></b-input>
+												<p class="control">
+													<button @click="settingUpdate('levelMsg', config.levelMsg, { bool: false })" class="button is-success">Save</button>
+												</p>
 											</b-field>
 											<p class="subtitle has-text-white"><code class="inlinecode has-text-grey has-background-black">{user}</code> = user name. <code class="has-background-black has-text-grey inlinecode">{level}</code> = user's new level.</p>
 										</section>
@@ -64,9 +67,9 @@
 						<div class="box">
 							<div class="content">
 								<h3 class="has-text-white">
-									Level Up Roles
+									Level Up Roles 
 									<button class="button is-rounded is-small is-grey" @click="promoModal = true">
-										Add Role
+										Add Role <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
 									</button>
 									<br><br>
 									<!--<vs-chip v-if="leveling.promoRoles.length" v-for="role of leveling.promoRoles" :key="role" :color="role.color" closable>
@@ -316,11 +319,6 @@ export default {
             this.isLoading = true;
             try {
                 this.leveling = await API.levelingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
-                this.$toast.open({
-                    message: value instanceof Object ? options.meta ? `Saved ${options.meta} as ${value.name}` : `Saved settings.` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
-                    type: "is-success",
-                    duration: 3800
-                });
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this setting: ${error}`,
@@ -352,10 +350,6 @@ export default {
                 for (const key of Object.keys(obj)) {
                     this.config = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
                 }
-                this.$toast.open({
-                    message: `Successfully saved settings.`,
-                    type: "is-success"
-                });
                 this.bwModalActive = false;
                 this.massModalActive = false;
             } catch (error) {
@@ -375,7 +369,7 @@ export default {
                 this.commands = await API.pkgCommands("Leveling", this.$route.params.guildid, this.$auth.user.id);
             } catch (error) {
                 this.$toast.open({
-                    message: `Unable to edit this command: API_ERROR`,
+                    message: `Unable to edit this command: ${error}`,
                     type: "is-danger"
                 });
                 this.$refs[`${data}-switch`][0].newValue = !bool;
