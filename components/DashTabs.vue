@@ -1,9 +1,9 @@
 <template>
    <div class="hero" style="background-color: #2b2f33">
-       <br>
+       <br><br>
          <div class="columns is-centered">
             <div class="column is-half">
-               <br><br>
+               <br>
                <nav class="level">
                   <div class="level-item">
                     <figure class="image is-48x48">
