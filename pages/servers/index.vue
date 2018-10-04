@@ -1,7 +1,7 @@
 <template>
 <section class="section">
    <h1 class="title has-text-white">
-      Select A Server
+      <br><br>Select A Server
    </h1>
    <div v-if="guilds" v-for="guild in guilds" :key="guild.id" class="container" align="center">
       <b-tooltip :label="guild.name" type="is-light" position="is-right">
