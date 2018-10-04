@@ -1,5 +1,6 @@
 <template>
     <div>
+        <br>
         <section class="section">
             <div class='container'>
                 <h1 class="title has-text-white has-text-left">
@@ -84,6 +85,7 @@ export default {
 	auth: false,
 	head() {
 		return {
+            bodyAttrs: { class: 'has-navbar-fixed-top'},
 			title: 'Mr.Fox Bot - Getting Started',
 			meta: [
 				{ hid: 'description', name: 'description', content: 'A quick-start guide to learning Mr.Fox Bot, and setting him up in your Discord server.' }

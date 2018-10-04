@@ -18,6 +18,7 @@ module.exports = {
   */
   head: {
     title: 'Mr.Fox - The multipurpose, cunning Discord Bot.',
+    bodyAttrs: { class: 'has-navbar-fixed-top'},
     meta: [
       { charset: 'utf-8' },
       { property: 'og:image', content: '/FoxLogov2.png'},

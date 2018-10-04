@@ -114,6 +114,7 @@ export default {
 	},
 	head() {
 		return {
+			bodyAttrs: { class: 'has-navbar-fixed-top'},
 			title: 'Mr.Fox Bot - About',
 			meta: [
 				{ hid: 'description', name: 'description', content: 'Meet the people behind Mr.Fox Bot, and learn more about Fox.' }

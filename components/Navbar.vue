@@ -1,7 +1,7 @@
 <template>
     <section class="hero is-black">
 		<div class="hero-footer">
-			<nav class="navbar is-transparent is-black">
+			<nav class="navbar has-background-black is-black is-fixed-top">
 				<div class="container">
 					<nav class="level is-hidden-desktop is-mobile">
 						<div class="level-left">
@@ -102,7 +102,7 @@
 						<div class="navbar-end">
 							<div class="navbar-item">
 								<b-dropdown :hoverable="true" :mobile-modal="false" v-if="$auth.loggedIn">
-									<button class="button is-grey" slot="trigger">
+									<button class="button is-black is-outlined is-inverted" slot="trigger">
 										<figure class="image is-24x24">
 											<img :src="getAvatar()" class="is-rounded">
 										</figure>
@@ -114,7 +114,7 @@
 									</b-dropdown-item>
 									<b-dropdown-item @click="$auth.logout()">Log Out</b-dropdown-item>
 								</b-dropdown>
-								<button v-if="!$auth.loggedIn" class="button is-grey" @click="tokifyUser()">
+								<button v-if="!$auth.loggedIn" class="button is-rounded is-black is-inverted is-outlined" @click="tokifyUser()">
 									Log In
 								</button>
 							</div>

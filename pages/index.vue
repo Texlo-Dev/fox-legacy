@@ -151,6 +151,7 @@
 
 <script>
 export default {
+	head: { bodyAttrs: { class: 'has-navbar-fixed-top'}},
 	auth: false
 }
 </script>

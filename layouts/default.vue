@@ -2,7 +2,7 @@
   <div>
     <navbar />
 	  <dashtabs v-if="isDash && $route.params.guildid" />
-    <nuxt/>
+    <nuxt class="has-navbar-fixed-top"/>
   </div>
 </template>
 
