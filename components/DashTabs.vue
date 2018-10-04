@@ -1,6 +1,6 @@
 <template>
    <div class="hero" style="background-color: #2b2f33">
-       <br><br>
+       <br>
          <div class="columns is-centered">
             <div class="column is-half">
                <br><br>
