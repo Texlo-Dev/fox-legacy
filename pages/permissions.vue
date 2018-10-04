@@ -1,6 +1,6 @@
 <template>
    <div>
-   <br>
+   <br><br>
       <section class='section'>
          <div class="container">
             <h1 class="title has-text-left has-text-white">
