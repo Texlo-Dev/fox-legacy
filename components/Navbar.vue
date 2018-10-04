@@ -47,10 +47,9 @@
 								<br>
 								<br>
 								<br>
-								<br>
-								<a v-if="!$auth.loggedIn" class="button is-grey" @click="tokifyUser()">
-									Log In
-								</a>
+								<button v-if="!$auth.loggedIn" class="button is-medium is-grey" @click="tokifyUser()">
+									Login
+								</button>
 								<b-dropdown :mobile-modal="false" v-if="$auth.loggedIn">
 									<button class="button is-grey" slot="trigger">
 										<figure class="image is-24x24">
@@ -115,7 +114,7 @@
 									<b-dropdown-item @click="$auth.logout()">Log Out</b-dropdown-item>
 								</b-dropdown>
 								<button v-if="!$auth.loggedIn" class="button is-rounded is-black is-inverted is-outlined" @click="tokifyUser()">
-									Log In
+									Login
 								</button>
 							</div>
 						</div>
