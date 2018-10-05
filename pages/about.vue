@@ -1,5 +1,6 @@
 <template>
-	<body>
+	<div>
+		<br>
 		<section class="section">
 			<div class="container">
 				<h1 class="has-text-white title">
@@ -102,7 +103,7 @@
 
 		</section>
 
-	</body>
+	</div>
 </template>
 
 <script>
