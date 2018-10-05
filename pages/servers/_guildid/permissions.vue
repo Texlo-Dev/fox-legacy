@@ -143,7 +143,7 @@ export default {
                     indefinite: true
                 });
             }
-            if (this.selected.scope === "everyone") data.target = data.guildid;
+            if (this.selected.scope === "everyone") data.target = data.guildID;
             if (this.selected.scope === "channelrole" && !this.selected.channel) {
                 return this.$snackbar.open({
                     message: "Please specify channel for scope.",
