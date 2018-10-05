@@ -44,14 +44,12 @@
 						</div>
 						<div class="level-right">
 							<div class="level-item">
-								<br>
-								<br>
-								<br>
-								<button v-if="!$auth.loggedIn" class="button is-medium is-grey" @click="tokifyUser()">
-									Login
+								<br><br><br>
+								<button v-if="!$auth.loggedIn" class="button is-rounded is-black is-inverted is-outlined" @click="tokifyUser()">
+									<font-awesome-icon size="s" pull="left" :icon="['fab', 'discord']"/> Login
 								</button>
 								<b-dropdown :mobile-modal="false" v-if="$auth.loggedIn">
-									<button class="button is-grey" slot="trigger">
+									<button class="button is-rounded is-black is-inverted is-outlined" slot="trigger">
 										<figure class="image is-24x24">
 											<img :src="getAvatar()" class="is-rounded">
 										</figure>
@@ -114,7 +112,7 @@
 									<b-dropdown-item @click="$auth.logout()">Log Out</b-dropdown-item>
 								</b-dropdown>
 								<button v-if="!$auth.loggedIn" class="button is-rounded is-black is-inverted is-outlined" @click="tokifyUser()">
-									Login
+									<font-awesome-icon size="s" pull="left" :icon="['fab', 'discord']"/> Login
 								</button>
 							</div>
 						</div>
@@ -139,3 +137,9 @@ export default {
 	}
 }
 </script>
+
+<style>
+ .bm-burger-button {
+	top: 25px;
+  }
+</style>
