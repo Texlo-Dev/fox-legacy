@@ -2,7 +2,7 @@
   <div>
     <navbar />
 	  <dashtabs v-if="isDash && $route.params.guildid" />
-    <nuxt class="has-navbar-fixed-top"/>
+    <nuxt/>
   </div>
 </template>
 
@@ -24,6 +24,14 @@ export default {
 
 
 <style>
+
+#channel  {
+        background-color: rgba(114,137,218,.1);
+        color: #7289da;
+    }
+    #channel:hover { 
+        background-color: rgba(114, 137, 218, 0.701961); color: rgb(255, 255, 255); 
+    }
 
     h2 {
     font-family: 'Raleway', 'sans-serif';

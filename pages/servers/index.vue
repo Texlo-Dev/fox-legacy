@@ -1,5 +1,6 @@
 <template>
-<section class="section">
+<div>
+    <section class="section">
    <h1 class="title has-text-white">
       <br>Select A Server
    </h1>
@@ -27,6 +28,7 @@
       </h1>
    </div>
 </section>
+</div>
 </template>
 
 <script>

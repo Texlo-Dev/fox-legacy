@@ -48,6 +48,7 @@ module.exports = {
   */
   plugins: [
     { src: '~/plugins/slide', ssr: false },
+    { src: '~/plugins/vuecharts', ssr: false },
     { src: '~/plugins/vuesax' },
     { src: '~/plugins/moment'}
   ],
@@ -69,7 +70,7 @@ module.exports = {
         },
         {
           set: '@fortawesome/free-solid-svg-icons',
-          icons: ['faAngleDown', 'faPlus', 'faEdit', 'faWrench', 'faCogs', 'faTrashAlt', 'faRedo', 'faBan', 'faPause', 'faPlay']
+          icons: ['faAngleDown', 'faPlus', 'faEdit', 'faWrench', 'faCogs', 'faTrashAlt', 'faRedo', 'faBan', 'faPause', 'faPlay', 'faStop']
         }
       ]
       

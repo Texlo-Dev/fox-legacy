@@ -341,11 +341,4 @@ export default {
     .selectExample .input-select {
         color: #242424;
     }
-    #channel  {
-        background-color: rgba(114,137,218,.1);
-        color: #7289da;
-    }
-    #channel:hover { 
-        background-color: rgba(114, 137, 218, 0.701961); color: rgb(255, 255, 255); 
-    }
 </style>

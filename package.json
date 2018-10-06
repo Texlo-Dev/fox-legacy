@@ -21,6 +21,7 @@
     "@nuxtjs/axios": "^5.0.0",
     "@nuxtjs/dotenv": "^1.1.1",
     "bulma-extensions": "^3.0.0",
+    "chart.js": "^2.7.2",
     "dotenv": "^6.0.0",
     "express": "^4.15.3",
     "material-icons": "^0.2.3",
@@ -31,7 +32,8 @@
     "sass-loader": "^7.1.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "vue-burger-menu": "^1.0.2",
+    "vue-burger-menu": "^1.0.7",
+    "vue-chartjs": "^3.4.0",
     "vue-moment": "^4.0.0",
     "vue-no-ssr": "^1.0.0",
     "vuesax": "^3.4.4"
