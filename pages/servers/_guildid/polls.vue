@@ -113,6 +113,7 @@
 						rounded
                         size="is-small"
                         maxtags="4"
+                        maxlength="35"
 						placeholder="Add Response"
 						custom-class="has-text-white">
 					</b-taginput>
