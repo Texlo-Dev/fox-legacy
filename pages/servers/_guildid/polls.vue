@@ -215,11 +215,16 @@ export default {
         async savePoll(poll) {
             if (poll.name.includes('?') || poll.name.includes('%')) return this.$dialog.alert({
                 title: "Prohibited Characters",
-                description: 'Prohibited character detected in poll name.'
+                message: 'Prohibited character detected in poll name.'
             });
             this.$nuxt.$loading.start();
             try {
-                if (!poll.responses.length) poll.responses = ['Yes <:checkmark:495362807731060757>', 'No <:nicexmark:495362785010647041>', 'Maybe 🤷'];
+                if (!poll.responses.length && poll.type === 'simple') poll.responses = ['Yes <:checkmark:495362807731060757>', 'No <:nicexmark:495362785010647041>', 'Maybe 🤷'];
+                else if (poll.responses.length < 2 && poll.type === 'open') return this.$dialog.alert({
+                    title: "No responses specified",
+                    type: "is-danger",
+                    message: 'You must specfify at least 2 responses.'
+                });
                 ({ data: this.polls } = await this.$axios.post(`/api/guilds/${this.$route.params.guildid}/polls`, {
                     name: poll.name.trim(),
                     type: poll.type,
