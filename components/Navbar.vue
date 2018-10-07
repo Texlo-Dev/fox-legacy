@@ -6,11 +6,17 @@
 					<nav class="level is-hidden-desktop is-mobile">
 						<div class="level-left">
 							<div class="level-item">
-								<no-ssr>
-									<slide class="is-hidden-desktop" noOverlay width="250">
+								<nuxt-link to="/">
+									<br><img id="foxlogo" width="85" height="85" :src="require('../assets/FoxLogov2.png')">
+								</nuxt-link>
+							</div>
+						</div>
+						<div class="level-right">
+							<no-ssr>
+									<slide right class="is-hidden-desktop" noOverlay width="250">
 									<nuxt-link to="/">
 										<span>
-											<h1 class="title">Fox</h1>
+											<h1 class="title">Mr.Fox</h1>
 										</span>
 									</nuxt-link>
 									<nuxt-link to="/about">
@@ -60,7 +66,6 @@
 								</slide>
 								<div class="is-divider-vertical"></div>
 								</no-ssr>
-							</div>
 						</div>
 					</nav>
 					<br class="is-hidden-touch"><br class="is-hidden-touch"><br class="is-hidden-touch"><br class="is-hidden-touch">
