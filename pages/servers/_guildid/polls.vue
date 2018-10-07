@@ -219,7 +219,7 @@ export default {
             });
             this.$nuxt.$loading.start();
             try {
-                if (!poll.responses.length && poll.type === 'simple') poll.responses = ['Yes <:checkmark:495362807731060757>', 'No <:nicexmark:495362785010647041>', 'Maybe 🤷'];
+                if (!poll.responses.length && poll.type === 'simple') poll.responses = ['Yes ✅', 'No ❌', 'Maybe 🤷'];
                 else if (poll.responses.length < 2 && poll.type === 'open') return this.$dialog.alert({
                     title: "No responses specified",
                     type: "is-danger",
@@ -264,7 +264,7 @@ export default {
             }
             for (const resp of poll.responses) {
                 chartData.labels.push(resp.name.split(' ')[0]);
-                chartData.datasets[0].backgroundColor = ['#3fb97c','#c34e4e', '#f37934'];
+                chartData.datasets[0].backgroundColor = ['#3fb97c','#c34e4e', '#f37934', '#7289da', '#c653ff'];
                 chartData.datasets[0].data.push(resp.count);
             };
 
