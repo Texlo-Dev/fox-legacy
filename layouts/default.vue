@@ -111,6 +111,7 @@ $tabs-border-bottom-color: #363636;
 $tabs-link-active-border-bottom-color: $red;
 $tabs-link-hover-border-bottom-color: $red;
 $tabs-link-hover-color: #eff0eb;
+$tabs-toggle-link-border-width: 3px;
 $tabs-border-bottom-width: 0.5px;
 $body-background-color: $grey;
 $table-background-color: $black;

@@ -2,7 +2,8 @@
    <div class="hero" style="background-color: #2b2f33">
        <br><br>
          <div class="hero-head">
-             <div class="columns is-centered">
+            <div class="container">
+                <div class="columns is-centered">
             <div class="column is-half">
                <br>
                <nav class="level">
@@ -27,11 +28,12 @@
                </b-tabs>
             </div>
          </div>
+            </div>
          </div>
       </div>
 </template>
 
-<style scoped>
+<style>
 .icon {
         border-radius: 128px;
         background-color: #2f3136;
@@ -44,6 +46,16 @@
         font-family: 'Raleway';
         font-size: small
     }
+
+    .tabs li.is-active a {
+    border-width: 3px
+
+}
+
+.tabs li a {
+    border-width: 3px
+
+}
 </style>
 
 
