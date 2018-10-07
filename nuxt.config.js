@@ -121,9 +121,6 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    extractCSS: {
-      allChunks: true
-    },
     babel: {
       presets: [
           [
