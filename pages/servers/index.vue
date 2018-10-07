@@ -1,23 +1,18 @@
 <template>
-<div>
-    <section class="section">
+<section class="section">
    <h1 class="title has-text-white">
       <br>Select A Server
    </h1>
-   <div v-if="guilds" v-for="guild in guilds" :key="guild.id" class="container" align="center">
-      <b-tooltip :label="guild.name" type="is-light" position="is-right">
+   <div v-if="guilds" v-for="guild in guilds" :key="guild.id" class="container has-text-centered">
+      <b-tooltip :label="guild.name" type="is-light" position="is-left">
          <figure v-if="guild.canManage && guild.icon" class="image is-128x128">
             <img @click="enterDash(guild)" class="is-rounded" :src="guild.iconURL">
          </figure>
-         <a v-else-if="guild.canManage && !guild.icon" class="image is-128x128">
-            <div @click="enterDash(guild)" class="icon"><span>{{ getInitials(guild.name) }}</span></div>
-         </a>
+         <a v-else-if="guild.canManage && !guild.icon" @click="enterDash(guild)" class="icon">{{ getInitials(guild.name) }}</a>
          <figure v-else-if="guild.icon" class="image is-128x128">
             <a @click="popup(guild)"><img class="is-rounded" :src="guild.iconURL"></a>
          </figure>
-         <a v-else @click="popup(guild)">
-            <div class="icon"><span>{{ getInitials(guild.name) }}</span></div>
-         </a>
+         <a v-else @click="popup(guild)" class="icon">{{ getInitials(guild.name) }}</a>
       </b-tooltip>
       <br>
       <br>
@@ -28,7 +23,6 @@
       </h1>
    </div>
 </section>
-</div>
 </template>
 
 <script>
@@ -84,8 +78,7 @@ export default {
         background-color: #2f3136;
         width: 128px;
         height: 128px;
-        display: flex;
-        justify-content: center;
+       
         align-items: center;
         color: white;
         font-family: 'Raleway';

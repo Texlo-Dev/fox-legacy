@@ -1,7 +1,7 @@
 <template>
     <section class="hero is-black">
 		<div class="hero-footer">
-			<nav class="navbar has-background-black is-black is-fixed-top">
+			<nav class="navbar has-background-black is-transparent is-black is-fixed-top">
 				<div class="container">
 					<nav class="level is-hidden-desktop is-mobile">
 						<div class="level-left">
@@ -139,7 +139,7 @@ export default {
 </script>
 
 <style>
- .bm-burger-button {
-	top: 25px;
+.bm-burger-button {
+    top: 25px;
   }
 </style>

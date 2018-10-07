@@ -109,13 +109,8 @@
 <script>
 export default {
 	auth: false,
-	asyncData({ app }) {
-		app.$axios.onRequest(console.log);
-		if (process.server) return console.log(`Discord User is:\n ${app.$auth.user}`);
-	},
 	head() {
 		return {
-			bodyAttrs: { class: 'has-navbar-fixed-top'},
 			title: 'Mr.Fox Bot - About',
 			meta: [
 				{ hid: 'description', name: 'description', content: 'Meet the people behind Mr.Fox Bot, and learn more about Fox.' }
