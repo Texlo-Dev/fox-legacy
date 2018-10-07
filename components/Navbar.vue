@@ -4,16 +4,16 @@
 			<nav class="navbar has-background-black is-transparent is-black is-fixed-top">
 				<div class="container">
 					<nav class="level is-hidden-desktop is-mobile">
-						<div class="level-left">
+						<!--<div class="level-left">
 							<div class="level-item">
 								<nuxt-link to="/">
 									<br><img id="foxlogo" width="85" height="85" :src="require('../assets/FoxLogov2.png')">
 								</nuxt-link>
 							</div>
-						</div>
-						<div class="level-right">
+						</div>-->
+						<div class="level-left">
 							<no-ssr>
-									<slide right class="is-hidden-desktop" noOverlay width="250">
+									<slide class="is-hidden-desktop" noOverlay width="250">
 									<nuxt-link to="/">
 										<span>
 											<h1 class="title">Mr.Fox</h1>
@@ -64,8 +64,12 @@
 
 									</div>
 								</slide>
-								<div class="is-divider-vertical"></div>
 								</no-ssr>
+						</div>
+						<div class="level-item">
+							<nuxt-link to="/">
+									<br><img id="foxlogo" align="center" width="85" height="85" :src="require('../assets/FoxLogov2.png')">
+								</nuxt-link>
 						</div>
 					</nav>
 					<br class="is-hidden-touch"><br class="is-hidden-touch"><br class="is-hidden-touch"><br class="is-hidden-touch">
@@ -143,7 +147,12 @@ export default {
 </script>
 
 <style>
+
 .bm-burger-button {
-    top: 25px;
+    height: 20px;
+    width: 25px;
+    top: 41px;
+	left: 20px
+
   }
 </style>
