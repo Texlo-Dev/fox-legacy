@@ -1,6 +1,6 @@
-<template v-ref="dashboard">
+<template>
     <section class="section">
-			<div class="container">
+		<div class="container">
 				<div class="columns is-multiline">
 					<div v-for="p of packages" class="column is-one-quarter">
 						<nuxt-link v-if="p.enabled" :to="{ path: `/servers/${$route.params.guildid}/${p.name.toLowerCase()}` }">
@@ -29,7 +29,8 @@
 				</div>
 
 			</div>
-		</section>
+			
+	</section>
 </template>
 
 <script>

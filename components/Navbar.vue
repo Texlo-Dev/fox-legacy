@@ -38,29 +38,28 @@
 											<p>Support Server</p>
 										</span>
 									</a>
+									<div v-if="$auth.loggedIn">
+										<span>
+											<figure class="image is-48x48">
+												<img :src="getAvatar()" class="is-rounded">
+											</figure>
+										</span>
+										<span>
+											<p class="has-text-weight-bold">{{ $auth.user.username }}</p>
+											<nuxt-link to="/servers"><p class="has-text-weight-light">Servers</p></nuxt-link>
+											<a @click="$auth.logout()"><p class="has-text-weight-light">Log Out</p></a>
+											
+										</span>
+									</div>
+									<div v-else>
+										<button v-if="!$auth.loggedIn" class="button is-rounded is-black is-inverted is-outlined" @click="tokifyUser()">
+											<font-awesome-icon size="s" pull="left" :icon="['fab', 'discord']"/> Login
+										</button>
+
+									</div>
 								</slide>
+								<div class="is-divider-vertical"></div>
 								</no-ssr>
-							</div>
-						</div>
-						<div class="level-right">
-							<div class="level-item">
-								<br><br><br>
-								<button v-if="!$auth.loggedIn" class="button is-rounded is-black is-inverted is-outlined" @click="tokifyUser()">
-									<font-awesome-icon size="s" pull="left" :icon="['fab', 'discord']"/> Login
-								</button>
-								<b-dropdown :mobile-modal="false" v-if="$auth.loggedIn">
-									<button class="button is-rounded is-black is-inverted is-outlined" slot="trigger">
-										<figure class="image is-24x24">
-											<img :src="getAvatar()" class="is-rounded">
-										</figure>
-										<span>&nbsp;&nbsp;{{ $auth.user.username }}</span>
-										<font-awesome-icon size="1x" pull="right" icon="angle-down" />
-									</button>
-									<b-dropdown-item has-link position="is-top-left">
-										<nuxt-link class="has-text-black" to="/servers">Servers</nuxt-link>
-									</b-dropdown-item>
-									<b-dropdown-item @click="$auth.logout()">Log Out</b-dropdown-item>
-								</b-dropdown>
 							</div>
 						</div>
 					</nav>
@@ -99,7 +98,7 @@
 						<div class="navbar-end">
 							<div class="navbar-item">
 								<b-dropdown :hoverable="true" :mobile-modal="false" v-if="$auth.loggedIn">
-									<button class="button is-rounded is-black is-outlined is-inverted" slot="trigger">
+									<button class="button is-rounded is-black" slot="trigger">
 										<figure class="image is-24x24">
 											<img :src="getAvatar()" class="is-rounded">
 										</figure>

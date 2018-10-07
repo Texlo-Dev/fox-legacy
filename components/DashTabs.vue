@@ -1,7 +1,8 @@
 <template>
    <div class="hero" style="background-color: #2b2f33">
        <br><br>
-         <div class="columns is-centered">
+         <div class="hero-head">
+             <div class="columns is-centered">
             <div class="column is-half">
                <br>
                <nav class="level">
@@ -25,6 +26,7 @@
                   </b-tab-item>
                </b-tabs>
             </div>
+         </div>
          </div>
       </div>
 </template>
