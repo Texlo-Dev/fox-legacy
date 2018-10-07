@@ -103,7 +103,7 @@
 						<div class="navbar-end">
 							<div class="navbar-item">
 								<b-dropdown :hoverable="true" :mobile-modal="false" v-if="$auth.loggedIn">
-									<button class="button is-rounded is-black" slot="trigger">
+									<button class="button is-medium is-rounded is-black" slot="trigger">
 										<figure class="image is-24x24">
 											<img :src="getAvatar()" class="is-rounded">
 										</figure>
