@@ -4,13 +4,6 @@
 			<nav class="navbar has-background-black is-transparent is-black is-fixed-top">
 				<div class="container">
 					<nav class="level is-hidden-desktop is-mobile">
-						<!--<div class="level-left">
-							<div class="level-item">
-								<nuxt-link to="/">
-									<br><img id="foxlogo" width="85" height="85" :src="require('../assets/FoxLogov2.png')">
-								</nuxt-link>
-							</div>
-						</div>-->
 						<div class="level-left">
 							<no-ssr>
 									<slide class="is-hidden-desktop" noOverlay width="250">

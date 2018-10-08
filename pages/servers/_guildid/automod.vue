@@ -160,7 +160,7 @@
 					</header>
 					<section class="modal-card-body">
 						<b-field custom-class="has-text-white" label="Mention Threshold (per-message)">
-							<b-input v-model="config.mentionLimit" type="number" min=10 max=100000></b-input>
+							<b-input v-model="config.mentionLimit" type="number" min=1 max=100000></b-input>
 						</b-field>
 						<h3 class="has-text-white">If a user exceeds the above limit, they will automatically be given the server muted role.</h3>
 						<br>

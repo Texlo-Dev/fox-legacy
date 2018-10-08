@@ -10,7 +10,7 @@
                   <div class="level-item">
                     <figure class="image is-48x48">
                         <img v-if="$store.state.cachedGuild.icon" class="is-rounded" :src="`https://cdn.discordapp.com/icons/${$store.state.cachedGuild.id}/${$store.state.cachedGuild.icon}.jpg?size=128`">
-                        <div v-if="!$store.state.cachedGuild.icon" class="icon">{{ getInitials($store.state.cachedGuild.name) }}</div>
+                        <div v-if="!$store.state.cachedGuild.icon" class="guildicon">{{ getInitials($store.state.cachedGuild.name) }}</div>
                      </figure>
                      <h1 class="subtitle has-text-centered has-text-light has-text-weight-bold has-text-left">
                         &nbsp; {{ $store.state.cachedGuild.name }}
@@ -34,7 +34,7 @@
 </template>
 
 <style>
-.icon {
+.guildicon {
         border-radius: 128px;
         background-color: #2f3136;
         width: 48px;
@@ -56,6 +56,7 @@
     border-width: 3px
 
 }
+
 </style>
 
 
