@@ -1,23 +1,23 @@
 <template>
-<section class="section">
-			<div class="container">
-				<nav class="level is-mobile">
-					<div class="level-left">
-						<h1 class="title has-text-white has-text-left">&nbsp;Moderation</h1>
-					</div>
-					<div class="level-left">
-						<a class="button is-danger" @click="confirmPkg('Moderation')">Disable</a>
-					</div>
-				</nav>
-				<div class="is-divider"></div>
-			</div>
-			<div class="container" v-if="!loading && config">
-				<h1 class="title has-text-white has-text-left">Package Settings</h1>
-				<div class="columns is-multiline">
-					<div class="column is-half">
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
+    <section class="section">
+        <div class="container">
+            <nav class="level is-mobile">
+                <div class="level-left">
+                    <h1 class="title has-text-white has-text-left">&nbsp;Moderation</h1>
+                </div>
+                <div class="level-left">
+                    <a class="button is-danger" @click="confirmPkg('Moderation')">Disable</a>
+                </div>
+            </nav>
+            <div class="is-divider"></div>
+        </div>
+        <div class="container" v-if="!loading && config">
+            <h1 class="title has-text-white has-text-left">Package Settings</h1>
+            <div class="columns is-multiline">
+                <div class="column is-half">
+                    <div class="box">
+                        <div class="content">
+                            <h3 class="has-text-white has-text-left">
 									Moderation Logging
 									<span v-if="config.modLogging">
 										<b-switch size='is-small' ref="modLogging-switch" :disabled="isLoading" @click.native="settingUpdate('modLogging', false)" value="true"
@@ -46,14 +46,14 @@
 										</b-switch>
 									</span>
 								</h3>
-								<p>Log all moderation actions to a designated server channel.</p>
-							</div>
-						</div>
-					</div>
-					<div class="column is-half">
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
+                            <p>Log all moderation actions to a designated server channel.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-half">
+                    <div class="box">
+                        <div class="content">
+                            <h3 class="has-text-white has-text-left">
 									Muted Role
 									<br><br>
 									<section>
@@ -72,58 +72,23 @@
 									</section>
 
 								</h3>
-								<p>Note: Mr.Fox will attempt to update the chat permissions for the specified role.</p>
-							</div>
-						</div>
-					</div>
-					<div class="column is-half">
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
-									Server Event Logging
+                            <p>Note: Mr.Fox will attempt to update the chat permissions for the specified role.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-half">
+                    <div class="box">
+                        <div class="content">
+                            <h3 class="has-text-white has-text-left">
+									Server Logging
 									<span v-if="config.serverLogging">
 										<b-switch size='is-small' ref="serverLogging-switch" :disabled="isLoading" @click.native="settingUpdate('serverLogging', false)" value="true"
 											type="is-success">
 										</b-switch>
-										<section>
-											<br>
-											<b-dropdown>
-												<button class="button is-grey" slot="trigger">
-													<template v-if="config.serverlogChannel">
-														{{ config.serverlogChannel.name }}
+										<button @click="modalActive = true" class="button is-small is-grey is-rounded">
+											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
 
-													</template>
-													<template v-else>
-														<span>None</span>
-													</template>
-													<font-awesome-icon size="1x" pull="right" icon="angle-down" />
-												</button>
-												<b-dropdown-item  v-for="channel of channels" :value="channel.name" @click="dropdownSave('serverlogChannel', 'Server-Log', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
-											</b-dropdown>
-										</section>
-										<section>
-											<br>
-											<p class="subtitle has-text-white">Ignored Channels</p>
-											<b-field custom-class="has-text-white">
-												<b-taginput
-													v-model="config.logExcluded"
-													ellipsis
-													attached
-													:data="filteredChannels"
-													field="name"
-													autocomplete
-													:allow-new="false"
-													type="is-grey"
-													placeholder="Add Channel"
-													@typing="getChannelNames"
-													custom-class="has-text-white">
-													<template slot="empty">
-														No Channels
-													</template>
-												</b-taginput>
-												<button @click="settingArrayUpdate({ logExcluded: config.logExcluded })" class="button is-success">Save</button>
-											</b-field>
-										</section>
+										</button>	
 									</span>
 									<span v-else>
 										<b-switch size='is-small' ref="serverLogging-switch" :disabled="isLoading" @click.native="settingUpdate('serverLogging', true)" value="false"
@@ -131,75 +96,137 @@
 										</b-switch>
 									</span>
 								</h3>
-								<p>Log important server events to a designated server channel.</p>
-							</div>
-						</div>
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
+                            <p>Log important server events to a designated server channel.</p>
+                        </div>
+                    </div>
+                    <div class="box">
+                        <div class="content">
+                            <h3 class="has-text-white has-text-left">
 									Settings
 								</h3>
-								<div class="field">
-									<b-checkbox @click.native="settingUpdate('delModCmds', !config.delModCmds)" type="is-grey" v-model="config.delModCmds">
-										<p>Delete Mod command after execution</p>
-									</b-checkbox>
-								</div>
-								<div class="field">
-									<b-checkbox @click.native="settingUpdate('msgAfterMod', !config.msgAfterMod)" type="is-grey" v-model="config.msgAfterMod">
-										<p>Message target after kick/ban/warn</p>
-									</b-checkbox>
-								</div>
+                            <div class="field">
+                                <b-checkbox @click.native="settingUpdate('delModCmds', !config.delModCmds)" type="is-grey" v-model="config.delModCmds">
+                                    <p>Delete Mod command after execution</p>
+                                </b-checkbox>
+                            </div>
+                            <div class="field">
+                                <b-checkbox @click.native="settingUpdate('msgAfterMod', !config.msgAfterMod)" type="is-grey" v-model="config.msgAfterMod">
+                                    <p>Message target after kick/ban/warn</p>
+                                </b-checkbox>
+                            </div>
 
-							</div>
-						</div>
-					</div>
-					<div class="column is-half">
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-half">
+                    <div class="box">
+                        <div class="content">
+                            <h3 class="has-text-white has-text-left">
 									Warning Points
 								</h3>
-								<p class="subtitle has-text-white">Automatic kick threshold</p>
-								<b-field>
-									<b-input v-model="config.kickPoints" type="number" min=10 max=100000></b-input>
-									<button @click="settingUpdate('kickPoints', config.kickPoints)" class="button is-success">Update</button>
-								</b-field>
-								<br>
-								<p class='subtitle has-text-white'>Automatic ban threshold</p>
-								<b-field>
-									<b-input v-model="config.banPoints" type="number" min=10 max=100000></b-input>
-									<button @click="settingUpdate('banPoints', config.banPoints)" class="button is-success">Update</button>
-								</b-field>
-							</div>
-						</div>
-					</div>
-				</div>
+                            <p class="subtitle has-text-white">Automatic kick threshold</p>
+                            <b-field>
+                                <b-input v-model="config.kickPoints" type="number" min=10 max=100000></b-input>
+                                <button @click="settingUpdate('kickPoints', config.kickPoints)" class="button is-success">Update</button>
+                            </b-field>
+                            <br>
+                            <p class='subtitle has-text-white'>Automatic ban threshold</p>
+                            <b-field>
+                                <b-input v-model="config.banPoints" type="number" min=10 max=100000></b-input>
+                                <button @click="settingUpdate('banPoints', config.banPoints)" class="button is-success">Update</button>
+                            </b-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-				<div class="is-divider"></div>
-			</div>
-			<div v-if="!loading" class="container" style="position: relative">
-				<h1 class="title has-text-white has-text-left">Commands</h1>
-				<div v-for="command of commands" class="box">
-					<div class="content">
-						<h1 class="has-text-white has-text-left">
+            <div class="is-divider"></div>
+        </div>
+        <div v-if="!loading" class="container" style="position: relative">
+            <h1 class="title has-text-white has-text-left">Commands</h1>
+            <div v-for="command of commands" class="box">
+                <div class="content">
+                    <h1 class="has-text-white has-text-left">
 							{{ command.name }}
 							<b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled"
 								type="is-success">
 							</b-switch>
 						</h1>
 
-						<p>{{ command.description }}</p>
-					</div>
-				</div>
+                    <p>{{ command.description }}</p>
+                </div>
+            </div>
 
-			</div>
+        </div>
+        <b-modal :active.sync="modalActive" size="is-large" has-modal-card>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Server Event Logs</p>
+                </header>
+                <section class="modal-card-body">
+                    <b-field custom-class='has-text-white' label="Channel">
+                        <b-dropdown>
+                            <button class="button is-black" slot="trigger">
+                                <template v-if="config.serverlogChannel">
+                                    {{ config.serverlogChannel.name }}
 
-		</section>
+                                </template>
+                                <template v-else>
+                                    <span>None</span>
+                                </template>
+                                <font-awesome-icon size="1x" pull="right" icon="angle-down" />
+                            </button>
+                            <b-dropdown-item v-for="channel of channels" :value="channel.name" @click="dropdownSave('serverlogChannel', 'Server-Log', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
+                        </b-dropdown>
+                    </b-field>
+                    <b-field label="Event List" custom-class="has-text-white">
+                        <section id="checkbox" class="has-text-centered has-background-black">
 
-    
+                            <div class="box">
+                                <div class="content">
+                                    <b-checkbox v-model="config.enabledEvents" native-value="guildMemberAdd">
+                                        <p>Member Join</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="guildMemberRemove">
+                                        <p>Member Leave</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="guildMemberUpdate">
+                                        <p>Member Detail Change</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="messageDelete">
+                                        <p>Message Deleted</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="messageUpdate">
+                                        <p>Message Updated</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="voiceStateUpdate">
+                                        <p>Member Voice State Change</p>
+                                    </b-checkbox>
+                                </div>
+                            </div>
+
+                        </section>
+
+                    </b-field>
+                    <b-field custom-class="has-text-white" label="Ignored Channels">
+                        <b-taginput v-model="config.logExcluded" ellipsis attached :data="filteredChannels" field="name" autocomplete :allow-new="false" type="is-grey" placeholder="Add Channel" @typing="getChannelNames" custom-class="has-text-white">
+                            <template slot="empty">
+                                No Channels
+                            </template>
+                        </b-taginput>
+                    </b-field>
+
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button" type="button" @click="modalActive = false">Close</button>
+                    <button class="button is-success" type="button" @click="settingArrayUpdate({ enabledEvents: config.enabledEvents, logExcluded: config.logExcluded })">Save</button>
+                </footer>
+            </div>
+        </b-modal>
+
+    </section>
+
 </template>
-
-
 <script>
 import API from "~/API.js";
 import secret from '~/secrets.js';
@@ -242,9 +269,8 @@ export default {
             channels: null,
             roles: null,
             filteredChannels: this.channels,
-            filteredRoles: this.roles,
-            bwModalActive: false,
-            massModalActive: false,
+			filteredRoles: this.roles,
+			modalActive: false,
             originalState: true
 
         };
@@ -284,15 +310,13 @@ export default {
             try {
                 for (const key of Object.keys(obj)) {
                     const settingUpd = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
-                    this.config[key] = obj[key];
                 }
                 this.$toast.open({
                     message: `Successfully saved settings.`,
                     type: "is-success"
                 });
                 this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
-                this.bwModalActive = false;
-                this.massModalActive = false;
+                this.modalActive = false;
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit these settings: ${error}`,
@@ -347,3 +371,10 @@ export default {
     }
 }
 </script>
+
+<style>
+.modal-card-body .has-background-black {
+    border-radius: 5px
+    
+}
+</style>
