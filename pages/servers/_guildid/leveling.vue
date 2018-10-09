@@ -179,7 +179,7 @@
 				<section class="modal-card-body">
 					<b-field custom-class="has-text-white" label="Select Role">
 						<b-dropdown>
-							<button class="button is-grey" slot="trigger">
+							<button class="button is-black" slot="trigger">
 								<template v-if="selectedRole">
 									<span>{{ selectedRole.name }}</span>
 								</template>
