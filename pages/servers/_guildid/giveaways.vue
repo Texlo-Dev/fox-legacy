@@ -46,7 +46,7 @@
                                     <button v-if="gw.running && !gw.paused" class="button is-warning is-small" @click="gwAction(gw, 'pause')">
                                         Pause <font-awesome-icon size="0.8x" pull="right" icon="pause"/>
                                     </button>
-                                    <button v-if="gw.paused" class="button is-success is-small" @click="gwAction(gw, 'resume')">
+                                    <button v-if="gw.paused" class="button is-primary is-small" @click="gwAction(gw, 'resume')">
                                         Resume <font-awesome-icon size="0.8x" pull="right" icon="play"/>
                                     </button>
                                     <button v-if="gw.running" class="button is-danger is-small" @click="gwAction(gw, 'end')">
@@ -91,7 +91,7 @@
                <h1 class="has-text-white has-text-left">
                   {{ command.name }}
                   <b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled"
-                     type="is-success">
+                     type="is-primary">
                   </b-switch>
                </h1>
                <p>{{ command.description }}</p>
@@ -126,7 +126,7 @@
             </section>
             <footer class="modal-card-foot">
                <button class="button" type="button" @click="toggleAdd= false">Close</button>
-               <button class="button is-success" type="button" @click="saveGw(gw)">Add</button>
+               <button class="button is-primary" type="button" @click="saveGw(gw)">Add</button>
             </footer>
          </div>
       </b-modal>
@@ -190,7 +190,7 @@ export default {
                 message: `Are you sure that you'd like to ${action} this giveaway?`,
                 cancelText: "No",
                 confirmText: "Yes",
-                type: action === 'delete' || action === 'end' ? 'is-danger' : 'is-success',
+                type: action === 'delete' || action === 'end' ? 'is-danger' : 'is-primary',
                 onConfirm: async () => {
                     this.$nuxt.$loading.start();
                     try {
@@ -204,7 +204,7 @@ export default {
                             }));
                             this.$toast.open({
                                 message: 'Successfully deleted giveaway.',
-                                type: 'is-success'
+                                type: 'is-primary'
                             });
                         }
                     } catch (error) {
@@ -252,7 +252,7 @@ export default {
                 for (const item in gw) { gw[item] = null };
                 this.$toast.open({
                     message: 'Successfully started giveaway.',
-                    type: 'is-success'
+                    type: 'is-primary'
                 });
             } catch (error) {
                 this.$nuxt.$loading.fail();

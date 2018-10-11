@@ -69,10 +69,10 @@
 
 					</section>
 					<br>
-					<button v-if="selected.names.length && selected.scope && selected.value !== null" class="button is-success has-text-centered" @click="setPerm(selected)">Set Permission</button>
+					<button v-if="selected.names.length && selected.scope && selected.value !== null" class="button is-primary has-text-centered" @click="setPerm(selected)">Set Permission</button>
 				</div>
 				<div class="column is-narrow">
-                    <b-message type="is-success">
+                    <b-message type="is-primary">
                         <p>Refer to the documentation <nuxt-link to="/permissions">here</nuxt-link> for detailed information on each permission.</p>
 					    <p>As of now, assigning permissions to users is only available by running the setperm command in-server.</p>
 
@@ -161,7 +161,7 @@ export default {
                 }
                 this.$toast.open({
                     message: `Successfully added permission.`,
-                    type: "is-success",
+                    type: "is-primary",
                     duration: 3800
                 });
                 this.selected.channel = null;

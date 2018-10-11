@@ -59,7 +59,7 @@
                <div class="columns">
                   <div class="column">
                      <p class="subtitle has-text-white">Web Dashboard (Recommended)</p>
-                    <b-message type="is-success">
+                    <b-message type="is-primary">
                       <p>To configure permissions on the dashboard, simply log in, select your server, and navigate to the <strong class="has-text-white">Permissions</strong> tab.</p>
                      <br>
                      <p><strong class="has-text-white">Available Scopes:</strong></p>
@@ -81,7 +81,7 @@
                <div class="columns">
                   <div class="column">
                      <p class="subtitle has-text-white">In-server</p>
-                     <b-message type="is-success">
+                     <b-message type="is-primary">
                            <p>To configure permissions from your Discord server, you can make use of the <strong class="has-text-white">setperm</strong> command. You will need the core.manageperm command to do so.</p>
                      <br>
                      <p>

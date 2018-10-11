@@ -25,6 +25,8 @@ export default {
 
 <style>
 
+
+
 #channel  {
         background-color: rgba(114,137,218,.1);
         color: #7289da;
@@ -84,7 +86,7 @@ $black: #23272A;
 $black-invert: findColorInvert($black);
 $grey:#34383c;
 $grey-invert: findColorInvert($grey);
-$primary: #8c67ef;
+$primary: #f37934;
 $primary-invert: findColorInvert($primary);
 $pink-invert: findColorInvert($pink);
 
@@ -121,7 +123,7 @@ $input-border-color: #363636;
 $input-shadow: none;
 $table-row-active-color: #242424;
 $table-cell-border-color: #242424;
-$box-background-color: $black;
+$box-background-color: #2b2f33;
 $box-color: #eff0eb;
 $switch-focus: none;
 $checkradio-focus: none;
@@ -142,7 +144,7 @@ $modal-card-head-border-bottom: 0px;
 $modal-card-foot-border-top: 0px;
 $modal-card-body-background-color: #34383c;
 $modal-card-title-color: #eff0eb;
-$menu-item-active-background-color: $success;
+$menu-item-active-background-color: $primary;
 $menu-item-hover-background-color: $grey;
 
 // Import Bulma and Buefy styles
@@ -197,4 +199,15 @@ html
   color: #fff;
   background-color: #35495e;
 }
+
+.input {
+  background-color: #2b2f33;
+  border-radius: 5px
+}
+
+.textarea {
+  background-color: #2b2f33;
+  border-radius: 10px;
+}
+
 </style>

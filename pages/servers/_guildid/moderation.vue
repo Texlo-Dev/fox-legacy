@@ -21,7 +21,7 @@
 									Moderation Logging
 									<span v-if="config.modLogging">
 										<b-switch size='is-small' ref="modLogging-switch" :disabled="isLoading" @click.native="settingUpdate('modLogging', false)" value="true"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 										<section>
 											<br>
@@ -42,7 +42,7 @@
 
 									<span v-else>
 										<b-switch size='is-small' ref="modLogging-switch" :disabled="isLoading" @click.native="settingUpdate('modLogging', true)" value="false"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 									</span>
 								</h3>
@@ -83,7 +83,7 @@
 									Server Logging
 									<span v-if="config.serverLogging">
 										<b-switch size='is-small' ref="serverLogging-switch" :disabled="isLoading" @click.native="settingUpdate('serverLogging', false)" value="true"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 										<button @click="modalActive = true" class="button is-small is-grey is-rounded">
 											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
@@ -92,7 +92,7 @@
 									</span>
 									<span v-else>
 										<b-switch size='is-small' ref="serverLogging-switch" :disabled="isLoading" @click.native="settingUpdate('serverLogging', true)" value="false"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 									</span>
 								</h3>
@@ -127,13 +127,13 @@
                             <p class="subtitle has-text-white">Automatic kick threshold</p>
                             <b-field>
                                 <b-input v-model="config.kickPoints" type="number" min=10 max=100000></b-input>
-                                <button @click="settingUpdate('kickPoints', config.kickPoints)" class="button is-success">Update</button>
+                                <button @click="settingUpdate('kickPoints', config.kickPoints)" class="button is-primary">Update</button>
                             </b-field>
                             <br>
                             <p class='subtitle has-text-white'>Automatic ban threshold</p>
                             <b-field>
                                 <b-input v-model="config.banPoints" type="number" min=10 max=100000></b-input>
-                                <button @click="settingUpdate('banPoints', config.banPoints)" class="button is-success">Update</button>
+                                <button @click="settingUpdate('banPoints', config.banPoints)" class="button is-primary">Update</button>
                             </b-field>
                         </div>
                     </div>
@@ -149,7 +149,7 @@
                     <h1 class="has-text-white has-text-left">
 							{{ command.name }}
 							<b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled"
-								type="is-success">
+								type="is-primary">
 							</b-switch>
 						</h1>
 
@@ -219,7 +219,7 @@
                 </section>
                 <footer class="modal-card-foot">
                     <button class="button" type="button" @click="modalActive = false">Close</button>
-                    <button class="button is-success" type="button" @click="settingArrayUpdate({ enabledEvents: config.enabledEvents, logExcluded: config.logExcluded })">Save</button>
+                    <button class="button is-primary" type="button" @click="settingArrayUpdate({ enabledEvents: config.enabledEvents, logExcluded: config.logExcluded })">Save</button>
                 </footer>
             </div>
         </b-modal>
@@ -295,7 +295,7 @@ export default {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 this.$toast.open({
                     message: value instanceof Object ? `Saved ${options.meta} as ${value.name}` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
-                    type: "is-success",
+                    type: "is-primary",
                     duration: 3800
                 });
             } catch (error) {
@@ -313,7 +313,7 @@ export default {
                 }
                 this.$toast.open({
                     message: `Successfully saved settings.`,
-                    type: "is-success"
+                    type: "is-primary"
                 });
                 this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
                 this.modalActive = false;

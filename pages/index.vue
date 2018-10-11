@@ -113,7 +113,7 @@
 					<div class="columns">
 						<div class="column is-half">
 							<figure class="image">
-								<img style="border: 3px solid #eff" :src="require('../assets/dashpic.png')">
+								<img id="dashimage" :src="require('../assets/dashpic.png')">
 							</figure>
 						</div>
 						<div class="column is-half">
@@ -145,6 +145,12 @@
 <style>
 #headerimg {
 	border-radius: 25px
+}
+
+#dashimage {
+	border-radius: 10px;
+	border: 3px solid #2b2f33;
+
 }
 </style>
 

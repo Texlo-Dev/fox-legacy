@@ -18,9 +18,9 @@
 						<div class="box">
 							<div class="content">
 								<h3 class="has-text-white has-text-left">
-									Spam Protection (BETA)
+									<b-tag class="button is-small is-rounded is-pink">Deprecated</b-tag> Spam Protection
 									<b-switch size='is-small' ref="spamProtected-switch" @input="settingUpdate('spamProtected', !config.spamProtected)" :disabled="isLoading" :value="config.spamProtected"
-										type="is-success">
+										type="is-primary">
 									</b-switch>
 								</h3>
 								<p>Helps protects against server members sending text at a very fast rate.</p>
@@ -34,7 +34,7 @@
 								<h3 class="has-text-white has-text-left">
 									Invite Protection
 									<b-switch size='is-small' ref="invProtected-switch" @input="settingUpdate('invProtected', !config.invProtected)" :disabled="isLoading" :value="config.invProtected"
-										type="is-success">
+										type="is-primary">
 									</b-switch>
 								</h3>
 								<p>Prevents unauthorized users from sending Discord invites from other servers.</p>
@@ -49,7 +49,7 @@
 									Bad Words
 									<span v-if="config.bwProtected">
 										<b-switch size='is-small' ref="bwProtected-switch" :disabled="isLoading" @click.native="settingUpdate('bwProtected', false)" value="true"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 										<button class="button is-rounded is-small is-grey" @click="bwModalActive = true">
 											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
@@ -57,7 +57,7 @@
 									</span>
 									<span v-else>
 										<b-switch size='is-small' ref="bwProtected-switch" :disabled="isLoading" @click.native="settingUpdate('bwProtected', true)" value="false"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 									</span>
 								</h3>
@@ -73,7 +73,7 @@
 									Mass Mentioning
 									<span v-if="config.massProtected">
 										<b-switch size='is-small' ref="massProtected-switch" :disabled="isLoading" @click.native="settingUpdate('massProtected', false)" value="true"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 										<button class="button is-rounded is-small is-grey" @click="massModalActive = true">
 											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
@@ -81,7 +81,7 @@
 									</span>
 									<span v-else>
 										<b-switch size='is-small' ref="massProtected-switch" :disabled="isLoading" @click.native="settingUpdate('massProtected', true)" value="false"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 									</span>
 								</h3>
@@ -101,7 +101,7 @@
 						<h1 class="has-text-white has-text-left">
 							{{ command.name }}
 							<b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled"
-								type="is-success">
+								type="is-primary">
 							</b-switch>
 						</h1>
 
@@ -148,7 +148,7 @@
 					</section>
 					<footer class="modal-card-foot">
 						<button class="button" type="button" @click="bwModalActive = false">Close</button>
-						<button class="button is-success" type="button" @click="settingArrayUpdate({ badWords: config.badWords, allowedBwChannels: config.allowedBwChannels })">Save</button>
+						<button class="button is-primary" type="button" @click="settingArrayUpdate({ badWords: config.badWords, allowedBwChannels: config.allowedBwChannels })">Save</button>
 					</footer>
 				</div>
 
@@ -185,7 +185,7 @@
 					</section>
 					<footer class="modal-card-foot">
 						<button class="button" type="button" @click="massModalActive = false">Close</button>
-						<button class="button is-success" type="button" @click="settingArrayUpdate({ mentionLimit: parseFloat(config.mentionLimit), allowedMentionChannels: config.allowedMentionChannels })">Save</button>
+						<button class="button is-primary" type="button" @click="settingArrayUpdate({ mentionLimit: parseFloat(config.mentionLimit), allowedMentionChannels: config.allowedMentionChannels })">Save</button>
 					</footer>
 				</div>
 
@@ -258,7 +258,7 @@ export default {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 this.$toast.open({
                     message: `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
-                    type: "is-success",
+                    type: "is-primary",
                     duration: 3800
                 });
             } catch (error) {
@@ -278,7 +278,7 @@ export default {
                 }
                 this.$toast.open({
                     message: `Successfully saved settings.`,
-                    type: "is-success"
+                    type: "is-primary"
                 });
                 this.bwModalActive = false;
                 this.massModalActive = false;

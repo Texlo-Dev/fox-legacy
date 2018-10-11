@@ -72,7 +72,7 @@
 				<div class="content">
 					<h1 class="has-text-white has-text-left">
 						{{ command.name }}
-						<b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled" type="is-success">
+						<b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled" type="is-primary">
 						</b-switch>
 					</h1>
 
@@ -121,7 +121,7 @@
             </section>
             <footer class="modal-card-foot">
                <button class="button" type="button" @click="toggleAdd = false">Close</button>
-               <button class="button is-success" type="button" @click="savePoll(plData)">Add</button>
+               <button class="button is-primary" type="button" @click="savePoll(plData)">Add</button>
             </footer>
          </div>
       </b-modal>
@@ -183,7 +183,7 @@ export default {
                 message: `Are you sure that you'd like to ${action} this poll?`,
                 cancelText: "No",
                 confirmText: "Yes",
-                type: action === 'delete' || action === 'end' ? 'is-danger' : 'is-success',
+                type: action === 'delete' || action === 'end' ? 'is-danger' : 'is-primary',
                 onConfirm: async () => {
                     this.$nuxt.$loading.start();
                     try {
@@ -197,7 +197,7 @@ export default {
                             }));
                             this.$toast.open({
                                 message: 'Successfully deleted poll.',
-                                type: 'is-success'
+                                type: 'is-primary'
                             });
                         }
                     } catch (error) {

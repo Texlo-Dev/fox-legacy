@@ -80,7 +80,7 @@
             </section>
             <footer class="modal-card-foot">
                <button class="button" type="button" @click="toggleAdd = false">Close</button>
-               <button class="button is-success" type="button" @click="toggleRole(roleData)">Add</button>
+               <button class="button is-primary" type="button" @click="toggleRole(roleData)">Add</button>
             </footer>
          </div>
       </b-modal>
@@ -173,7 +173,7 @@ export default {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 this.$toast.open({
                     message: `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
-                    type: "is-success",
+                    type: "is-primary",
                     duration: 3800
                 });
             } catch (error) {
@@ -192,7 +192,7 @@ export default {
                 }
                 this.$toast.open({
                     message: `Successfully saved settings.`,
-                    type: "is-success"
+                    type: "is-primary"
                 });
             } catch (error) {
                 this.$toast.open({

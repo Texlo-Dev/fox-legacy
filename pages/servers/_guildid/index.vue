@@ -4,17 +4,17 @@
 				<div class="columns is-multiline">
 					<div v-for="p of packages" class="column is-one-quarter">
 						<nuxt-link v-if="p.enabled" :to="{ path: `/servers/${$route.params.guildid}/${p.name.toLowerCase()}` }">
-							<div class="box">
+							<div class="box" id="pkgbox">
 								<div class="content">
 									<h2 class="title has-text-left has-text-white">{{ p.name }}</h2>
 									<p class="subtitle has-text-grey">{{ p.description }}</p>
 									<br>
-									<a class="button is-success" :href="p.name.toLowerCase()">Enabled</a>
+									<a class="button is-primary" :href="p.name.toLowerCase()">Enabled</a>
 								</div>
 							</div>
 						</nuxt-link>
 						<a v-else>
-							<div class="box">
+							<div class="box" id="pkgbox">
 								<div class="content">
 									<h2 class="title has-text-left has-text-white">{{ p.name }}</h2>
 									<p class="subtitle has-text-grey">{{ p.description }}</p>
@@ -73,7 +73,7 @@ export default {
                 message: `Are you sure that you want to enable the package ${pkg}?`,
                 cancelText: "Cancel",
                 confirmText: "Enable",
-                type: "is-success",
+                type: "is-primary",
                 onConfirm: () => this.togglePackage(pkg, true)
             });
 		},
@@ -84,7 +84,7 @@ export default {
                 enabled: option
             },
             { headers: { Authorization: secrets.encrypt(this.$auth.user.id)} }).then(() => {
-                document.getElementById(`${pkg}-button`).className = 'button is-success';
+                document.getElementById(`${pkg}-button`).className = 'button is-primary';
                 document.getElementById(`${pkg}-button`).innerHTML = 'Enabled';
                 this.$router.push({ path: `/servers/${this.$route.params.guildid}/${pkg.toLowerCase()}` });
             }).catch(error => {
@@ -102,3 +102,9 @@ export default {
 	}
 }
 </script>
+
+<style>
+#pkgbox {
+	height: 200px;
+}
+</style>

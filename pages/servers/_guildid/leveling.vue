@@ -21,7 +21,7 @@
 									Level-Up Messaging
 									<span v-if="config.levelMessaging">
 										<b-switch size='is-small' ref="levelMessaging-switch" :disabled="isLoading" @click.native="settingUpdate('levelMessaging', false)" value="true"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 										<section>
 											<br>
@@ -47,7 +47,7 @@
 											<b-field>
 												<b-input type="textarea" v-model="config.levelMsg" maxlength="1980"></b-input>
 												<p class="control">
-													<button @click="settingUpdate('levelMsg', config.levelMsg, { bool: false })" class="button is-success">Save</button>
+													<button @click="settingUpdate('levelMsg', config.levelMsg, { bool: false })" class="button is-primary">Save</button>
 												</p>
 											</b-field>
 											<p class="subtitle has-text-white"><code class="inlinecode has-text-grey has-background-black">{user}</code> = user name. <code class="has-background-black has-text-grey inlinecode">{level}</code> = user's new level.</p>
@@ -55,7 +55,7 @@
 									</span>
 									<span v-else>
 										<b-switch size='is-small' ref="levelMessaging-switch" :disabled="isLoading" @click.native="settingUpdate('levelMessaging', true)" value="false"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 									</span>
 								</h3>
@@ -121,7 +121,7 @@
 											custom-class="has-text-white">
 										</b-taginput>
 										<p class="control">
-											<button class="button is-success" @click="levelingUpdate('excludedChannels', leveling.excludedChannels, { bool: false })">Save</button>
+											<button class="button is-primary" @click="levelingUpdate('excludedChannels', leveling.excludedChannels, { bool: false })">Save</button>
 										</p>
 									</b-field>
 								</h3>
@@ -143,7 +143,7 @@
 											custom-class="has-text-white">
 										</b-taginput>
 										<p class="control">
-											<button class="button is-success" @click="levelingUpdate('excludedRoles', leveling.excludedRoles, { bool: false })">Save</button>
+											<button class="button is-primary" @click="levelingUpdate('excludedRoles', leveling.excludedRoles, { bool: false })">Save</button>
 										</p>
 									</b-field>
 								</h3>
@@ -161,7 +161,7 @@
 						<h1 class="has-text-white has-text-left">
 							{{ command.name }}
 							<b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled"
-								type="is-success">
+								type="is-primary">
 							</b-switch>
 						</h1>
 
@@ -198,7 +198,7 @@
 				</section>
 				<footer class="modal-card-foot">
 					<button class="button" type="button" @click="promoModal = false">Close</button>
-					<button v-if="selectedRole" class="button is-success" type="button" @click="addPromoRole(selectedRole, selectedRank)">Save</button>
+					<button v-if="selectedRole" class="button is-primary" type="button" @click="addPromoRole(selectedRole, selectedRank)">Save</button>
 				</footer>
 			</div>
 
@@ -272,7 +272,7 @@ export default {
                 message: `Are you sure that you'd like to remove the role "${role.name}"?`,
                 cancelText: "Cancel",
                 confirmText: "Delete",
-                type: "is-success",
+                type: "is-primary",
                 onConfirm: async () => {
                     this.leveling.promoRoles.splice(this.leveling.promoRoles.indexOf(role), 1);
                     try {
@@ -334,7 +334,7 @@ export default {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 this.$toast.open({
                     message: `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
-                    type: "is-success",
+                    type: "is-primary",
                     duration: 3800
                 });
             } catch (error) {

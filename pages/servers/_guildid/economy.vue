@@ -18,7 +18,7 @@
 						<h1 class="has-text-white has-text-left">
 							{{ command.name }}
 							<b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled"
-								type="is-success">
+								type="is-primary">
 							</b-switch>
 						</h1>
 
@@ -88,7 +88,7 @@ export default {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 this.$toast.open({
                     message: `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
-                    type: "is-success",
+                    type: "is-primary",
                     duration: 3800
                 });
             } catch (error) {
@@ -106,7 +106,7 @@ export default {
                 }
                 this.$toast.open({
                     message: `Successfully saved settings.`,
-                    type: "is-success"
+                    type: "is-primary"
                 });
                 this.bwModalActive = false;
                 this.massModalActive = false;

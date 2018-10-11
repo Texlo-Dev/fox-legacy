@@ -21,12 +21,12 @@
 									Welcome Message
 									<span v-if="config.welcomeEnabled">
 										<b-switch size='is-small' ref="welcomeEnabled-switch" :disabled="isLoading" @click.native="settingUpdate('welcomeEnabled', false)" value="true"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 									</span>
 									<span v-else>
 										<b-switch size='is-small' ref="welcomeEnabled-switch" :disabled="isLoading" @click.native="settingUpdate('welcomeEnabled', true)" value="false"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 									</span>
 								</h3>
@@ -35,7 +35,7 @@
 										<b-input type="textarea" v-model="config.welcomeMsg" maxlength="1980"></b-input>
 									</b-field>
 									<p><code class="inlinecode has-text-grey has-background-black">{user}</code>= user name. <code class="has-background-black has-text-grey inlinecode">{server}</code>= server name. <code class="has-background-black has-text-grey inlinecode">{position}</code>= server join position.</p>
-									<button @click="settingUpdate('welcomeMsg', config.welcomeMsg, { bool: false })" class="button is-success">Save</button>
+									<button @click="settingUpdate('welcomeMsg', config.welcomeMsg, { bool: false })" class="button is-primary">Save</button>
 								</section>
 								<section v-else>
 									<p>Send a friendly message to a member when they join your server.</p>
@@ -49,12 +49,12 @@
 									Goodbye Message
 									<span v-if="config.goodbyeEnabled">
 										<b-switch size='is-small' ref="goodbyeEnabled-switch" :disabled="isLoading" @click.native="settingUpdate('goodbyeEnabled', false)" value="true"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 									</span>
 									<span v-else>
 										<b-switch size='is-small' ref="goodbyeEnabled-switch" :disabled="isLoading" @click.native="settingUpdate('goodbyeEnabled', true)" value="false"
-											type="is-success">
+											type="is-primary">
 										</b-switch>
 									</span>
 								</h3>
@@ -63,7 +63,7 @@
 										<b-input type="textarea" v-model="config.goodbyeMsg" maxlength="1980"></b-input>
 									</b-field>
 									<p><code class="inlinecode has-text-grey has-background-black">{user}</code>= user name. </p>
-									<button @click="settingUpdate('goodbyeMsg', config.goodbyeMsg, { bool: false })" class="button is-success">Save</button>
+									<button @click="settingUpdate('goodbyeMsg', config.goodbyeMsg, { bool: false })" class="button is-primary">Save</button>
 								</section>
 								<section v-else>
 									<p>Notify with a message when a user has left the server.</p>
@@ -192,7 +192,7 @@ export default {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 this.$toast.open({
                     message: value instanceof Object ? `Saved ${options.meta} as ${value.name}` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
-                    type: "is-success",
+                    type: "is-primary",
                     duration: 3800
                 });
             } catch (error) {
@@ -210,7 +210,7 @@ export default {
                 }
                 this.$toast.open({
                     message: `Successfully saved settings.`,
-                    type: "is-success"
+                    type: "is-primary"
                 });
                 this.bwModalActive = false;
                 this.massModalActive = false;

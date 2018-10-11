@@ -62,7 +62,7 @@
 						<h1 class="has-text-white has-text-left">
 							{{ command.name }}
 							<b-switch size='is-medium' :ref="`${command.name}-switch`" :disabled="isLoading" @input="toggleCommand(command.name, !command.enabled)" :value="command.enabled"
-								type="is-success">
+								type="is-primary">
 							</b-switch>
 						</h1>
 
@@ -86,7 +86,7 @@
             </section>
             <footer class="modal-card-foot">
                <button class="button" type="button" @click="toggleAdd = false">Close</button>
-               <button class="button is-success" type="button" @click="addTag(currentag)">Add</button>
+               <button class="button is-primary" type="button" @click="addTag(currentag)">Add</button>
             </footer>
          </div>
       </b-modal>
@@ -145,7 +145,7 @@ export default {
                 message: `Are you sure that you'd like to remove the tag "${tag}"?`,
                 cancelText: "Cancel",
                 confirmText: "Delete",
-                type: "is-success",
+                type: "is-primary",
                 onConfirm: async () => {
                     this.$nuxt.$loading.start();
                     try {
