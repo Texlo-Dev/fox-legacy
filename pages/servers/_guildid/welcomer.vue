@@ -14,7 +14,36 @@
 			<div v-if="!loading && config" class="container">
 				<h1 class="title has-text-white has-text-left">Package Settings</h1>
 				<div class="columns">
-					<div class="column is-half">
+					<div class="column is-one-third">
+						<div class="box">
+							<div class="content">
+								<h3 class="has-text-white has-text-left">
+									Automatic Roles
+									<br><br>
+									<b-field custom-class="has-text-white">
+										<b-taginput
+											v-model="config.autoRoles"
+											ellipsis
+											rounded
+											autocomplete
+											:allow-new="false"
+											:data="filteredRoles"
+											@typing="getRoleNames"
+											type="is-grey"
+											field="name"
+											placeholder="Add a Role"
+											custom-class="has-text-white">
+										</b-taginput>
+										<p class="control">
+											<button class="button is-primary" @click="settingArrayUpdate({ autoRoles: config.autoRoles })">Save</button>
+										</p>
+									</b-field>
+								</h3>
+								<p>Role(s) that will be given to all members upon joining your server.</p>
+							</div>
+						</div>
+					</div>
+					<div class="column is-one-third">
 						<div class="box">
 							<div class="content">
 								<h3 class="has-text-white has-text-left">
@@ -32,10 +61,12 @@
 								</h3>
 								<section v-if="config.welcomeEnabled">
 									<b-field>
-										<b-input type="textarea" v-model="config.welcomeMsg" maxlength="1980"></b-input>
+										<b-input type="textarea" v-model="config.welcomeMsg" maxlength="1980" expanded></b-input>
+										<p class="control">
+											<button @click="settingUpdate('welcomeMsg', config.welcomeMsg, { bool: false })" class="button is-primary">Save</button>
+										</p>
 									</b-field>
-									<p><code class="inlinecode has-text-grey has-background-black">{user}</code>= user name. <code class="has-background-black has-text-grey inlinecode">{server}</code>= server name. <code class="has-background-black has-text-grey inlinecode">{position}</code>= server join position.</p>
-									<button @click="settingUpdate('welcomeMsg', config.welcomeMsg, { bool: false })" class="button is-primary">Save</button>
+									<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class=" has-text-grey inlinecode">{server}</code>= Server name. <code id="vars" class="has-text-grey inlinecode">{position}</code>= Server join position.</p>
 								</section>
 								<section v-else>
 									<p>Send a friendly message to a member when they join your server.</p>
@@ -43,6 +74,9 @@
 
 							</div>
 						</div>
+						
+					</div>
+					<div class="column is-one-third">
 						<div class="box">
 							<div class="content">
 								<h3 class="has-text-white has-text-left">
@@ -60,10 +94,12 @@
 								</h3>
 								<section v-if="config.goodbyeEnabled">
 									<b-field>
-										<b-input type="textarea" v-model="config.goodbyeMsg" maxlength="1980"></b-input>
+										<b-input type="textarea" v-model="config.goodbyeMsg" maxlength="1980" expanded></b-input>
+										<p class="control">
+											<button @click="settingUpdate('welcomeMsg', config.welcomeMsg, { bool: false })" class="button is-primary">Save</button>
+										</p>
 									</b-field>
-									<p><code class="inlinecode has-text-grey has-background-black">{user}</code>= user name. </p>
-									<button @click="settingUpdate('goodbyeMsg', config.goodbyeMsg, { bool: false })" class="button is-primary">Save</button>
+									<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= user name. </p>
 								</section>
 								<section v-else>
 									<p>Notify with a message when a user has left the server.</p>
@@ -71,9 +107,7 @@
 
 							</div>
 						</div>
-					</div>
-					<div class="column is-half">
-						<div class="box">
+						<!--<div class="box">
 							<div class="content">
 								<h3 class="has-text-white has-text-left">
 									Welcome Message Location
@@ -118,7 +152,7 @@
 								</section>
 								<br>
 							</div>
-						</div>
+						</div>-->
 
 					</div>
 				</div>
@@ -272,3 +306,9 @@ export default {
     }
 }
 </script>
+
+<style>
+#vars {
+	background-color: #2b2f33;
+}
+</style>

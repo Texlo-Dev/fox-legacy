@@ -85,6 +85,8 @@ $red-invert: findColorInvert($red);
 $black: #23272A;
 $black-invert: findColorInvert($black);
 $grey:#34383c;
+$grey-darker: #2b2f33;
+$grey-darker-invert: findColorInvert($grey-darker);
 $grey-invert: findColorInvert($grey);
 $primary: #f37934;
 $primary-invert: findColorInvert($primary);
@@ -100,6 +102,7 @@ $colors: (
   "danger": ($red, $red-invert),
   "pink": ($pink, $pink-invert),
   "grey": ($grey, $grey-invert),
+  "grey-darker": ($grey-darker, $grey-darker-invert),
   "primary": ($primary, $primary-invert),
   "success": ($success, $success-invert),
   "light": ($light, $light-invert)

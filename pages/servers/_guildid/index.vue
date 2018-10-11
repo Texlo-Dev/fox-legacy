@@ -2,24 +2,28 @@
     <section class="section">
 		<div class="container">
 				<div class="columns is-multiline">
-					<div v-for="p of packages" class="column is-one-quarter">
+					<div v-for="p of packages" class="column is-one-third">
 						<nuxt-link v-if="p.enabled" :to="{ path: `/servers/${$route.params.guildid}/${p.name.toLowerCase()}` }">
-							<div class="box" id="pkgbox">
+							<div class="box">
 								<div class="content">
-									<h2 class="title has-text-left has-text-white">{{ p.name }}</h2>
+									<h2 class="title has-text-left has-text-white">{{ p.name }}
+										<b-tag type="is-primary">
+											ENABLED
+										</b-tag>
+									</h2>
 									<p class="subtitle has-text-grey">{{ p.description }}</p>
-									<br>
-									<a class="button is-primary" :href="p.name.toLowerCase()">Enabled</a>
 								</div>
 							</div>
 						</nuxt-link>
-						<a v-else>
-							<div class="box" id="pkgbox">
+						<a @click="confirmPkg(p.name)" v-else>
+							<div class="box" id="disabledbox">
 								<div class="content">
-									<h2 class="title has-text-left has-text-white">{{ p.name }}</h2>
+									<h2 class="title has-text-left has-text-white">{{ p.name }}
+										<b-tag>
+											DISABLED
+										</b-tag>
+									</h2>
 									<p class="subtitle has-text-grey">{{ p.description }}</p>
-									<br>
-									<a :id="`${p.name}-button`" @click="confirmPkg(p.name)" class="button is-light">Enable</a>
 								</div>
 							</div>
 						</a>
@@ -84,8 +88,6 @@ export default {
                 enabled: option
             },
             { headers: { Authorization: secrets.encrypt(this.$auth.user.id)} }).then(() => {
-                document.getElementById(`${pkg}-button`).className = 'button is-primary';
-                document.getElementById(`${pkg}-button`).innerHTML = 'Enabled';
                 this.$router.push({ path: `/servers/${this.$route.params.guildid}/${pkg.toLowerCase()}` });
             }).catch(error => {
                 this.$dialog.alert({
@@ -104,7 +106,8 @@ export default {
 </script>
 
 <style>
-#pkgbox {
-	height: 200px;
+#disabledbox {
+	background-color: #373b3f;
+	border-width: 5px;
 }
 </style>

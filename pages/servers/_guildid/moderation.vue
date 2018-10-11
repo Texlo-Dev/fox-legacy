@@ -166,9 +166,9 @@
                 <section class="modal-card-body">
                     <b-field custom-class='has-text-white' label="Channel">
                         <b-dropdown>
-                            <button class="button is-black" slot="trigger">
+                            <button class="button is-grey-darker" slot="trigger">
                                 <template v-if="config.serverlogChannel">
-                                    {{ config.serverlogChannel.name }}
+                                    #{{ config.serverlogChannel.name }}
 
                                 </template>
                                 <template v-else>

@@ -57,6 +57,11 @@
 
 }
 
+.label {
+    font-family: 'Raleway';
+}
+
+
 </style>
 
 

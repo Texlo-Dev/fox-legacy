@@ -18,11 +18,12 @@
 						<div class="box">
 							<div class="content">
 								<h3 class="has-text-white has-text-left">
-									<b-tag class="button is-small is-rounded is-pink">Deprecated</b-tag> Spam Protection
+								 	Spam Protection
 									<b-switch size='is-small' ref="spamProtected-switch" @input="settingUpdate('spamProtected', !config.spamProtected)" :disabled="isLoading" :value="config.spamProtected"
 										type="is-primary">
 									</b-switch>
 								</h3>
+								<b-tag type="is-pink" rounded>Deprecated</b-tag>
 								<p>Helps protects against server members sending text at a very fast rate.</p>
 
 							</div>

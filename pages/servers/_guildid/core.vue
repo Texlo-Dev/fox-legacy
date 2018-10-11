@@ -9,7 +9,7 @@
 				<div class="is-divider"></div>
 			</div>
 			<div class="container" style ="position:relative">
-				<h1 class="title has-text-white has-text-left">Package Settings</h1>
+				<h1 class="title has-text-white has-text-left">Settings</h1>
 				<div class="columns is-multiline">
 					<div class="column is-narrow">
 						<div class="box">
@@ -26,35 +26,6 @@
 									</b-field>
 								</h3>
 								<p>What all commands are prefixed (begin) with.</p>
-							</div>
-						</div>
-					</div>
-					<div class="column is-half">
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
-									Automatic Roles
-									<br><br>
-									<b-field custom-class="has-text-white">
-										<b-taginput
-											v-model="config.autoRoles"
-											ellipsis
-											rounded
-											autocomplete
-											:allow-new="false"
-											:data="filteredRoles"
-											@typing="getRoleNames"
-											type="is-grey"
-											field="name"
-											placeholder="Add a Role"
-											custom-class="has-text-white">
-										</b-taginput>
-										<p class="control">
-											<button class="button is-primary" @click="settingArrayUpdate({ autoRoles: config.autoRoles })">Save</button>
-										</p>
-									</b-field>
-								</h3>
-								<p>Role(s) that will be given to all members upon joining your server.</p>
 							</div>
 						</div>
 					</div>
