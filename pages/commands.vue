@@ -41,9 +41,9 @@
 					</div>
 					<div class="column is-three-quarters">
 						<div class="box">
-							<h1 class="subtitle has-text-white has">
+							<h3 class="title has-text-white has-text-centered">
 								{{ activeCat }}
-							</h1>
+							</h3>
 							<div class="content">
 								<b-table :paginated="willPaginate(activeCat)"
                                 per-page="7"

@@ -28,14 +28,11 @@
     							<li class="has-text-centered" :key="category" v-for="(cmd, category) of permissions"><a @click="scrollTo(category)" :class="{ 'is-active':  activeCat === category }"><p class="has-text-white">{{ category }} </p></a></li>
   								</ul>
 							</aside>
-						</div>
-
-					
-							
+						</div>			
 					</div>
                     <div class="column is-half">
 						<div class="box">
-							<h1 class="subtitle has-text-white has">
+							<h1 class="title has-text-white has-text-centered">
 								{{ activeCat }}
 							</h1>
 							<div class="content">
