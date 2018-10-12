@@ -44,7 +44,7 @@
 							<div class="content">
 								<h1 class="has-text-white has-text-left">Tag Settings</h1>
 								<div class="field">
-									<b-checkbox @click.native="settingUpdate('tacMode', !config.tacMode)" type="is-grey" v-model="config.tacMode">
+									<b-checkbox @click.native="settingUpdate('tacMode', !config.tacMode)" type="is-primary" v-model="config.tacMode">
 										<p>Use tag as command</p>
 									</b-checkbox>
 								</div>

@@ -45,7 +45,7 @@
 											<br>
 											<p class="subtitle title has-text-white has-text-left">Message</p>
 											<b-field>
-												<b-input type="textarea" v-model="config.levelMsg" maxlength="1980"></b-input>
+												<b-input type="textarea" v-model="config.levelMsg" maxlength="1980" expanded></b-input>
 												<p class="control">
 													<button @click="settingUpdate('levelMsg', config.levelMsg, { bool: false })" class="button is-primary">Save</button>
 												</p>
@@ -72,9 +72,6 @@
 										Add Role <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
 									</button>
 									<br><br>
-									<!--<vs-chip v-if="leveling.promoRoles.length" v-for="role of leveling.promoRoles" :key="role" :color="role.color" closable>
-                                        @{{ role.name }} - Rank {{ role.rank }}
-                                    </vs-chip>-->
 									<b-taglist>
 										<b-tag v-if="leveling.promoRoles.length" v-for="role of leveling.promoRoles" :key="role"
 											type="is-grey"
