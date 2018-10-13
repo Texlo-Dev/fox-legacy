@@ -1,23 +1,23 @@
 <template>
     <section class="section">
-			<div class="container">
-				<nav class="level is-mobile">
-					<div class="level-left">
-						<h1 class="title has-text-white has-text-left">&nbsp;Welcomer</h1>
-					</div>
-					<div class="level-left">
-						<a class="button is-danger" @click="confirmPkg('Welcomer')">Disable</a>
-					</div>
-				</nav>
-				<div class="is-divider"></div>
-			</div>
-			<div v-if="!loading && config" class="container">
-				<h1 class="title has-text-white has-text-left">Package Settings</h1>
-				<div class="columns">
-					<div class="column is-one-third">
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
+        <div class="container">
+            <nav class="level is-mobile">
+                <div class="level-left">
+                    <h1 class="title has-text-white has-text-left">&nbsp;Welcomer</h1>
+                </div>
+                <div class="level-left">
+                    <a class="button is-danger" @click="confirmPkg('Welcomer')">Disable</a>
+                </div>
+            </nav>
+            <div class="is-divider"></div>
+        </div>
+        <div v-if="!loading && config" class="container">
+            <h1 class="title has-text-white has-text-left">Package Settings</h1>
+            <div class="columns">
+                <div class="column is-one-third">
+                    <div class="box">
+                        <div class="content">
+                            <h3 class="has-text-white has-text-left">
 									Automatic Roles
 									<br><br>
 									<b-field custom-class="has-text-white">
@@ -39,19 +39,22 @@
 										</p>
 									</b-field>
 								</h3>
-								<p>Role(s) that will be given to all members upon joining your server.</p>
-							</div>
-						</div>
-					</div>
-					<div class="column is-one-third">
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
+                            <p>Role(s) that will be given to all members upon joining your server.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="column is-one-third">
+                    <div class="box">
+                        <div class="content">
+                            <h3 class="has-text-white has-text-left">
 									Welcome Message
 									<span v-if="config.welcomeEnabled">
 										<b-switch size='is-small' ref="welcomeEnabled-switch" :disabled="isLoading" @click.native="settingUpdate('welcomeEnabled', false)" value="true"
 											type="is-primary">
 										</b-switch>
+										<button class="button is-rounded is-small is-grey" @click="toggleAdd = true">
+											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
+										</button>
 									</span>
 									<span v-else>
 										<b-switch size='is-small' ref="welcomeEnabled-switch" :disabled="isLoading" @click.native="settingUpdate('welcomeEnabled', true)" value="false"
@@ -59,32 +62,24 @@
 										</b-switch>
 									</span>
 								</h3>
-								<section v-if="config.welcomeEnabled">
-									<b-field>
-										<b-input type="textarea" v-model="config.welcomeMsg" maxlength="1980" expanded></b-input>
-										<p class="control">
-											<button @click="settingUpdate('welcomeMsg', config.welcomeMsg, { bool: false })" class="button is-primary">Save</button>
-										</p>
-									</b-field>
-									<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class=" has-text-grey inlinecode">{server}</code>= Server name. <code id="vars" class="has-text-grey inlinecode">{position}</code>= Server join position.</p>
-								</section>
-								<section v-else>
-									<p>Send a friendly message to a member when they join your server.</p>
-								</section>
+								<p>Send a friendly message to a member when they join your server.</p>
 
-							</div>
-						</div>
-						
-					</div>
-					<div class="column is-one-third">
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
-									Goodbye Message
+                        </div>
+                    </div>
+
+                </div>
+                <div class="column is-one-third">
+                    <div class="box">
+                        <div class="content">
+                            <h3 class="has-text-white has-text-left">
+									Goodbye Messaging
 									<span v-if="config.goodbyeEnabled">
 										<b-switch size='is-small' ref="goodbyeEnabled-switch" :disabled="isLoading" @click.native="settingUpdate('goodbyeEnabled', false)" value="true"
 											type="is-primary">
 										</b-switch>
+										<button class="button is-rounded is-small is-grey" @click="toggleGoodbye = true">
+											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
+										</button>
 									</span>
 									<span v-else>
 										<b-switch size='is-small' ref="goodbyeEnabled-switch" :disabled="isLoading" @click.native="settingUpdate('goodbyeEnabled', true)" value="false"
@@ -92,73 +87,101 @@
 										</b-switch>
 									</span>
 								</h3>
-								<section v-if="config.goodbyeEnabled">
-									<b-field>
-										<b-input type="textarea" v-model="config.goodbyeMsg" maxlength="1980" expanded></b-input>
-										<p class="control">
-											<button @click="settingUpdate('welcomeMsg', config.welcomeMsg, { bool: false })" class="button is-primary">Save</button>
-										</p>
-									</b-field>
-									<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= user name. </p>
-								</section>
-								<section v-else>
-									<p>Notify with a message when a user has left the server.</p>
-								</section>
+								<p>Notify with a message when a user has left the server.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-							</div>
-						</div>
-						<!--<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
-									Welcome Message Location
-								</h3>
-								<section>
-									<b-dropdown>
-										<button class="button is-grey" slot="trigger">
-											<template v-if="config.welcomeLocation">
-												<span>{{ config.welcomeLocation.name ? config.welcomeLocation.name : config.welcomeLocation }}</span>
-											</template>
-											<template v-else>
-												<span>None</span>
-											</template>
-											<font-awesome-icon pull="right" icon="angle-down" />
-										</button>
-										<b-dropdown-item @click="dropdownSave('welcomeLocation', 'Welcome Channel', 'DM')">DM</b-dropdown-item>
-										<b-dropdown-item  v-for="channel of channels" :value="channel.name" @click="dropdownSave('welcomeLocation', 'Welcome Channel', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
-									</b-dropdown>
-								</section>
-								<br>
-								<p>Note: DM may not always work as a user can choose to disable their DMs.</p>
-							</div>
-						</div>
-						<div class="box">
-							<div class="content">
-								<h3 class="has-text-white has-text-left">
-									Goodbye Message Location
-								</h3>
-								<section>
-									<b-dropdown>
-										<button class="button is-grey" slot="trigger">
-											<template v-if="config.goodbyeChannel">
-												<span>#{{ config.goodbyeChannel.name }}</span>
-											</template>
-											<template v-else>
-												<span>None</span>
-											</template>
-											<font-awesome-icon pull="right" icon="angle-down" />
-										</button>
-										<b-dropdown-item  v-for="channel of channels" :value="channel.name" @click="dropdownSave('goodbyeChannel', 'Goodbye Channel', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
-									</b-dropdown>
-								</section>
-								<br>
-							</div>
-						</div>-->
+        </div>
+        <b-modal :active.sync="toggleGoodbye" has-modal-card>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Goodbye Messaging</p>
+                </header>
+                <section class="modal-card-body">
+					<b-field label="Message" custom-class="has-text-white">
+                        <b-input type="textarea" v-model="config.goodbyeMsg" maxlength="1980" expanded></b-input>
+                    </b-field>
+					<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= user name.</p>
+					<br>
+					<button class="button is-primary" @click="settingUpdate('goodbyeMsg', config.goodbyeMsg)" type="button">Save</button>
+					<br>
+					<br>
+                    <b-field label="Message Location" custom-class="has-text-white">
+                        <b-dropdown>
+                            <button class="button is-black" slot="trigger">
+                                <template v-if="config.goodbyeChannel">
+                                    <span>#{{ config.goodbyeChannel.name }}</span>
+                                </template>
+                                <template v-else>
+                                    <span>None</span>
+                                </template>
+                                <font-awesome-icon pull="right" icon="angle-down" />
+                            </button>
+							
+                            <b-dropdown-item v-for="channel of channels" :value="channel.name" @click="dropdownSave('goodbyeChannel', 'Goodbye Channel', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
+                        </b-dropdown>
 
-					</div>
-				</div>
+                    </b-field>
+					<br>
+                    <div class="field">
+                        <b-switch @click.native="settingUpdate('goodbyeEmbed', !config.goodbyeEmbed)" type="is-primary" v-model="config.goodbyeEmbed">
+                            <p class="has-text-white has-text-weight-bold">Embed Message</p>
+                        </b-switch>
+                    </div>
+                </section>
+				<footer class="modal-card-foot">
+					<button class="button" type="button" @click="toggleGoodbye = false">Close</button>
+				</footer>
+            </div>
 
-			</div>
-		</section>
+        </b-modal>
+		<b-modal :active.sync="toggleAdd" has-modal-card>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Welcome Messaging&nbsp;&nbsp;</p>
+                </header>
+                <section class="modal-card-body">
+					<b-field label="Message" custom-class="has-text-white">
+                        <b-input type="textarea" v-model="config.welcomeMsg" maxlength="1980" expanded></b-input>
+                    </b-field>
+					<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= user name.</p>
+					<br>
+					<button @click="settingUpdate('welcomeMsg', config.welcomeMsg)" class="button is-primary" type="button">Save</button>
+					<br>
+					<br>
+                    <b-field label="Message Location" custom-class="has-text-white">
+                        <b-dropdown>
+                            <button class="button is-black" slot="trigger">
+                                <template v-if="config.welcomeLocation">
+                                    <span>#{{ config.welcomeLocation.name }}</span>
+                                </template>
+                                <template v-else>
+                                    <span>None</span>
+                                </template>
+                                <font-awesome-icon pull="right" icon="angle-down" />
+                            </button>
+							<b-dropdown-item @click="dropdownSave('welcomeLocation', 'Welcome Channel', 'DM')">DM</b-dropdown-item>
+                            <b-dropdown-item v-for="channel of channels" :value="channel.name" @click="dropdownSave('welcomeLocation', 'Welcome Channel', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
+                        </b-dropdown>
+
+                    </b-field>
+					<br>
+                    <div class="field">
+                        <b-switch @click.native="settingUpdate('welcomerEmbed', !config.welcomerEmbed)" type="is-primary" v-model="config.welcomerEmbed">
+                            <p class="has-text-white has-text-weight-bold">Embed Message</p>
+                        </b-switch>
+                    </div>
+					
+                </section>
+				<footer class="modal-card-foot">
+					<button class="button" type="button" @click="toggleAdd = false">Close</button>
+				</footer>
+            </div>
+
+        </b-modal>
+    </section>
 </template>
 
 
@@ -201,10 +224,12 @@ export default {
         return {
             commands: null,
             config: null,
-            channels: null,
+			channels: null,
+			toggleAdd: false,
             roles: null,
             isLoading: false,
-            filteredRoles: this.roles,
+			filteredRoles: this.roles,
+			toggleGoodbye: false,
             bwModalActive: false,
             massModalActive: false,
             originalState: true
@@ -213,10 +238,7 @@ export default {
     },
     methods: {
         dropdownSave(key, meta, item) {
-            return this.settingUpdate(key, item, { meta })
-                .then(() => {
-                    if (key === "welcomeLocation") this.config.welcomeLocation = typeof key === String ? item : this.channels.find(c => c.name === item.name).name;
-                });
+            return this.settingUpdate(key, item, { meta });
         },
         getRoleNames(channel) {
             this.filteredRoles = this.roles.filter(option => `${option.name.toLowerCase()}`.indexOf(channel.toLowerCase()) >= 0);

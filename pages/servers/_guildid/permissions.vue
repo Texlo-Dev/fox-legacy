@@ -19,11 +19,6 @@
                             </h1>
                         <aside class="menu">
                             <ul class="menu-list">
-                                <!--<li class="has-text-centered">
-                                    <a :class="{ 'is-active':  activeTarget === '@everyone' }">
-                                        <p class="has-text-white">@everyone</p>
-                                    </a>
-                                </li>-->
                                 <li class="has-text-centered" :key="ow.name" v-for="ow of overwrites">
                                     <a @click="pointTarget(ow)" :class="{ 'is-active': activeTarget.id === ow.identifier.id }">
                                         <p class="has-text-white">{{ ow.identifier.name }}</p>
@@ -127,7 +122,7 @@ export default {
             overwrites: null,
             roles: null,
             activeOW: [],
-            activeTarget: { name: '@everyone', id: this.$route.params.guildid },
+            activeTarget: null,
             activeCat: 'Automod',
             channels: null,
             selected: {
@@ -139,6 +134,9 @@ export default {
             },
             commands: null
         };
+    },
+    created() {
+        this.pointTarget(this.overwrites[0]);
     },
     methods: {
         pointTarget(ow) {
