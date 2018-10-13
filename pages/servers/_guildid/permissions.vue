@@ -1,88 +1,90 @@
 <template>
-<section class="section">
-		<div class="container">
-			<h1 class="title has-text-white has-text-left">
+    <section class="section">
+        <div class="container">
+            <h1 class="title has-text-white has-text-left">
 				Server Permissions
 			</h1>
-			<div class="is-divider"></div>
-		</div>
-		<div class="container">
-			<h3 class="has-text-white title">Set Permission</h3>
-			<div class="columns is-multiline">
-				<div class="column is-one-third">
-					<section>
-						<p class="subtitle has-text-white">Select Permission(s)</p>
-						<b-field>
-                            <vs-select vs-multiple v-model="selected.names">
-                                <div :key="category" v-for="(key, category) in permissions">
-                                     <vs-select-group :title="category">
-                                        <vs-select-item :key="perm.name" :vs-value="perm.name" :vs-text="perm.name" v-for="perm of permissions[category]"/>
-                                    </vs-select-group>
-                                </div>     
-                            </vs-select>
-                          
-							
-						</b-field>
-					</section>
-					<br>
-
-					<section>
-						<p class="subtitle has-text-white">Select Scope</p>
-						<b-field>
-							<vs-select class="selectExample" label="Figuras" v-model="selected.scope">
-								<vs-select-item vs-value="role" vs-text="Role" />
-								<vs-select-item vs-value="channelrole" vs-text="Role (Channel Exclusive)" />
-								<vs-select-item vs-value="everyone" vs-text="Everyone" />
-							</vs-select>
-						</b-field>
-					</section>
-					<br v-if="selected.scope === 'role' || selected.scope === 'channelrole'">
-					<section v-if="selected.scope === 'role' || selected.scope === 'channelrole'">
-						<p class="subtitle has-text-white">Select Role</p>
-						<b-field>
-							<vs-select class="selectExample" label="Figuras" v-model="selected.target">
-								<vs-select-item :key="role" :vs-value="role.id" :vs-text="role.name" v-for="role of roles" />
-							</vs-select>
-
-						</b-field>
-					</section>
-					<br v-if="selected.scope === 'channelrole'">
-					<section v-if="selected.scope === 'channelrole'">
-						<p class="subtitle has-text-white">Select Channel</p>
-						<b-field>
-							<vs-select class="selectExample" label="Figuras" v-model="selected.channel">
-								<vs-select-item :key="channel" :vs-value="channel.id" :vs-text="channel.name" v-for="channel of channels" />
-							</vs-select>
-
-						</b-field>
-
-					</section>
-					<br>
-					<section>
-						<p class="subtitle has-text-white">Value</p>
-						<b-field>
-							<vs-select class="selectExample" label="Figuras" v-model="selected.value">
-								<vs-select-item :vs-value="true" vs-text="Allow" />
-								<vs-select-item :vs-value="false" vs-text="Deny" />
-							</vs-select>
-						</b-field>
-
-					</section>
-					<br>
-					<button v-if="selected.names.length && selected.scope && selected.value !== null" class="button is-primary has-text-centered" @click="setPerm(selected)">Set Permission</button>
-				</div>
-				<div class="column is-narrow">
-                    <b-message type="is-primary">
-                        <p>Refer to the documentation <nuxt-link to="/permissions">here</nuxt-link> for detailed information on each permission.</p>
-					    <p>As of now, assigning permissions to users is only available by running the setperm command in-server.</p>
-
-                    </b-message>
-				</div>
-
-			</div>
-		</div>
-	</section>
-    
+            <div class="is-divider"></div>
+        </div>
+        <div class="container">
+            <div class="columns is-multiline">
+                <div class="column is-2">
+                    <div class="box">
+                        <h1 class="title has-text-white">
+                                Roles
+                                <b-dropdown>
+                                    <button class="button is-grey is-rounded" slot="trigger"><font-awesome-icon size="0.8x" icon="plus"/></button>
+                                    <b-dropdown-item @click="createOverwrite(role)" v-for="role of roles" :value="role.name"  :key="role.name">{{ role.name }}</b-dropdown-item>
+                                </b-dropdown>
+                            </h1>
+                        <aside class="menu">
+                            <ul class="menu-list">
+                                <!--<li class="has-text-centered">
+                                    <a :class="{ 'is-active':  activeTarget === '@everyone' }">
+                                        <p class="has-text-white">@everyone</p>
+                                    </a>
+                                </li>-->
+                                <li class="has-text-centered" :key="ow.name" v-for="ow of overwrites">
+                                    <a @click="pointTarget(ow)" :class="{ 'is-active': activeTarget.id === ow.identifier.id }">
+                                        <p class="has-text-white">{{ ow.identifier.name }}</p>
+                                     </a>
+                                </li>
+                            </ul>
+                        </aside>
+                    </div>
+                </div>
+                <div class="column is-10">
+                    <div class="box">
+                        <div class="block">
+                            <b-radio v-model="activeCat" v-for="(cmd, category) of permissions" :key="category" :native-value="category">
+                                {{ category }}
+                            </b-radio>
+                        </div>
+                        <div class="is-divider"></div>
+                        <div class="content">
+                            <h3 class="title has-text-white">{{ activeCat }} Permissions</h3>
+                            <div v-for="perm of permissions[activeCat]" :key="perm.name">
+                                <nav class="level is-mobile">
+                                    <div class="level-left">
+                                        <div class="level-item">
+                                            <p class="subtitle has-text-white">
+                                                {{ perm.name }}
+                                            </p>
+                                        </div>
+                                        <div class="level-item">
+                                            <div class="group">
+                                                <button class="perm deny selected" v-if="activeOW.find(a => a.permission === perm.name) && activeOW.find(a => a.permission === perm.name).status === 'denied'">
+                                                    <img src="https://discordapp.com/assets/46eac82bb5b3ccd5049e8b3a96910327.svg">
+                                                </button>
+                                                <button @click="savePerm(perm.name, 'denied')" v-else class="perm deny">
+                                                    <img src="https://discordapp.com/assets/132b1ce1c085ff84256f3b16943bc782.svg">
+                                                </button>
+                                                <button class="perm pass selected" v-if="!activeOW.find(a => a.permission === perm.name) || activeOW.find(a => a.permission === perm.name).status === 'neutral'">
+                                                    <img src="https://discordapp.com/assets/f081fef9b7d9610309e65b5282bd0ca9.svg">
+                                                </button>
+                                                <button @click="savePerm(perm.name, 'neutral')" v-else class="perm pass">
+                                                    <img src="https://discordapp.com/assets/bbc9e257da833d4b7d22c82a1de8a0a0.svg">
+                                                </button>
+                                                <button class="perm allow selected" v-if="activeOW.find(a => a.permission === perm.name) && activeOW.find(a => a.permission === perm.name).status === 'allowed'">
+                                                    <img src="https://discordapp.com/assets/7b5b950896ff4214b058f76ba0e84a7b.svg">
+                                                </button>
+                                                <button @click="savePerm(perm.name, 'allowed')" v-else class="perm allow">
+                                                    <img src="https://discordapp.com/assets/ffeba954d48c1ac993679084cee38746.svg">
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </nav>
+                                <p>{{ perm.description }}</p>
+                                <br>
+                            </div>
+                            <button v-show="activeTarget.id !== $route.params.guildid" @click="permDelete(activeTarget)" class="button is-danger is-outlined">Remove {{ activeTarget.name }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -109,10 +111,12 @@ export default {
         let { data: permissions } = await app.$axios.get(`/api/permissions`);
 		const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
         const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+        const { data: overwrites } = await app.$axios.get(`/api/permissions/${guildid}`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
         return {
             permissions, 
             roles, 
-            channels
+            channels,
+            overwrites
         }
 
     },
@@ -120,7 +124,11 @@ export default {
         return {
             loading: false,
             permissions: null,
+            overwrites: null,
             roles: null,
+            activeOW: [],
+            activeTarget: { name: '@everyone', id: this.$route.params.guildid },
+            activeCat: 'Automod',
             channels: null,
             selected: {
                 names: [],
@@ -133,52 +141,138 @@ export default {
         };
     },
     methods: {
-        async setPerm(data) {
-            data.guildID = this.$route.params.guildid;
-            if (!this.selected.scope === "everyone" && !data.target) {
-                return this.$snackbar.open({
-                    message: "Please specify a target.",
-                    type: "is-danger",
-                    position: "is-top",
-                    indefinite: true
-                });
-            }
-            if (this.selected.scope === "everyone") data.target = data.guildID;
-            if (this.selected.scope === "channelrole" && !this.selected.channel) {
-                return this.$snackbar.open({
-                    message: "Please specify channel for scope.",
-                    type: "is-danger",
-                    position: "is-top",
-                    indefinite: true
-                });
-            }
-            data.target = data.channel ? data.channel + data.target : data.target;
-
-            try {
-                for (const name of data.names) {
-                    data.name = name;
-                    await API.setPermission(data, this.$auth.user.id);
+        pointTarget(ow) {
+            this.activeTarget = ow.identifier;
+            this.activeOW = ow.overwrites;
+        },
+        async permDelete(target) {
+            this.$dialog.confirm({
+                title: 'Delete Overwrites',
+                message: `Are you sure that you would like to delete ALL permission overwrites for ${target.name}?`,
+                cancelText: 'No',
+                confirmText: 'Delete',
+                type: 'is-danger',
+                onConfirm: async () => {
+                    try {
+                        ({ data: this.overwrites} = await this.$axios.delete(`/api/permissions/${this.$route.params.guildid}/${target.id}`, {
+                            headers: { Authorization: secret.encrypt(this.$auth.user.id)}
+                        }));
+                        this.pointTarget(this.overwrites[this.overwrites.length - 1]);
+                    } catch (error) {
+                        this.$dialog.alert({
+                            title: 'Error',
+                            message: `There was an error deleting this message. ${error.message}`,
+                            type: 'is-danger'
+                        })
+                    }
                 }
-                this.$toast.open({
-                    message: `Successfully added permission.`,
-                    type: "is-primary",
-                    duration: 3800
-                });
-                this.selected.channel = null;
+            })
+        },
+        async createOverwrite(target) {
+            try {
+                ({ data: this.overwrites } = await this.$axios.patch(`/api/permissions/${this.$route.params.guildid}`, {
+                    perm: 'automod.freespeech',
+                    status: 'neutral',
+                    target
+                }, { progress: false, headers: { Authorization: secret.encrypt(this.$auth.user.id) } }));
+                this.pointTarget(this.overwrites.find(o => o.identifier.id === target.id))
             } catch (error) {
-                this.$dialog.alert({
+                 this.$dialog.alert({
                     title: "Error",
-                    message: `There was an error adding this permission."${error.message}"`,
+                    message: `There was an error adding this overwrite. "${error.message}"`,
                     type: "is-danger"
                 });
             }
+        },
+        async savePerm(name, status) {
+            const ow = this.activeOW.find(o => o.permission === name);
+            try {
+                ({ data: this.overwrites } = await this.$axios.patch(`/api/permissions/${this.$route.params.guildid}`, {
+                    perm: name,
+                    target: this.activeTarget,
+                    status
+                }, { progress: false, headers: { Authorization: secret.encrypt(this.$auth.user.id) } }));
+            } catch (error) {
+                ({ data: this.overwrites } = await this.$axios.get(`/api/permissions/${this.$route.params.guildid}`, { 
+                    progress: false, headers: { Authorization: secret.encrypt(this.$auth.user.id) } }));
+                this.$dialog.alert({
+                    title: "Error",
+                    message: `There was an error setting this permission. "${error.message}"`,
+                    type: "is-danger"
+                });
+            } finally { this.pointTarget(this.overwrites.find(o => o.identifier.id === this.activeTarget.id)); }
         }
     }
 };
 </script>
 
 <style>
+.b-radio.radio .control-label:hover {
+    color: #f37934;
+    
+}
 .message-body {
     background-color: #242424
+}
+.group {
+  display: flex;
+}
+
+.group:first-child {
+  border-left-width: 1px;
+  border-radius: 3px 0 0 3px;
+}
+
+.perm {
+  cursor: pointer;
+  outline: none;
+  border-color: #18191c;
+  height: 28px;
+  width: 36px;
+  background: transparent;
+  border-style: solid;
+  border-width: 1px 1px 1px 0;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.perm.deny {
+  border-left-width: 1px;
+  border-radius: 3px 0 0 3px;
+}
+
+.perm.deny.selected {
+    background: url(https://discordapp.com/assets/bbc9e257da833d4b7d22c82a1de8a0a0.svg)
+
+}
+
+.perm.deny .perm.allow {
+  border-width: 1px;
+}
+
+.perm.pass {
+  border-left-width: 0;
+  border-right-width: 0;
+}
+
+.perm.pass.selected {
+  background: #747f8d;
+}
+
+.perm.allow.selected {
+  background: #43b581;
+  border-color: #43b581;
+}
+
+.perm.deny.selected {
+  border-color: #f04747;
+  background: #f04747;
+}
+
+.perm.allow {
+  border-radius: 0 3px 3px 0;
 }
 </style>
