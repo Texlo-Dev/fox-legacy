@@ -52,30 +52,30 @@
             <div class="is-divider"></div>
          </div>
          <div class="container">
-            <section class="section">
-               <div class="columns">
+            <div class="columns">
                   <div class="column">
                      <p class="subtitle has-text-white">Web Dashboard (Recommended)</p>
                     <b-message type="is-primary">
-                      <p>To configure permissions on the dashboard, simply log in, select your server, and navigate to the <strong class="has-text-white">Permissions</strong> tab.</p>
-                     <br>
-                     <p><strong class="has-text-white">Available Scopes:</strong></p>
-                     <p>User = The user person will be allowed/denied the permission server-wide.</p>
-                     <p>Role = Everyone who has the specified role will will be allowed/denied the permission server-wide.</p>
-                     <p>User (Channel Exclusive) = The user will be allowed/denied the permission in the current channel.</p>
-                     <p>Role (Channel Exclusive) = People with the specifed role will be allowed/denied the permission in a certain channel.</p>
+                    <p>To configure permissions on the dashboard, simply log in, select your server, and navigate to the <strong class="has-text-white">Permissions</strong> tab.</p>
+                    <br>
+                    <p>Here, add a new permissions role, or edit a permission role that you already have. From there, it's as simple as selecting your desired category, and choosing the option for your permission.</p>
+                    </b-message>
+                    <b-message type="is-warning">
+                        <p class="has-text-white">Note about permissions: Permissions assigned to a role will override any permissions that may be configured to the @everyone role.</p>
                     </b-message>
                     <b-message type="is-warning">
                         <p class="has-text-white">At this time, the User scope is not available from the dashboard, and must be configured in-server.</p>
                     </b-message>
                   </div>
                   <div class="column">
+                    <br><br>
                      <img align="right" id="columnimg" :src="require('../assets/permselector.png')">		
                   </div>
                </div>
-            </section>
-            <section class="section">
-               <div class="columns">
+         </div>
+         <br>
+         <div class="container">
+             <div class="columns">
                   <div class="column">
                      <p class="subtitle has-text-white">In-server</p>
                      <b-message type="is-primary">
@@ -96,10 +96,9 @@
                   </div>
                   <div class="column">
                       <br><br>
-                     <img id="columnimg" :src="require('../assets/setpermcmd.png')">		
+                     <img id="columnimg" align="right" :src="require('../assets/setpermcmd.png')">		
                   </div>
                </div>
-            </section>
          </div>
       </section>
    </div>
