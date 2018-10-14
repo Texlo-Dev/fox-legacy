@@ -20,7 +20,7 @@
             </div>
             <div class="column is-half">
                <br>
-               <b-tabs @input="redirect" size="is-medium" position="is-centered">
+               <b-tabs @input="redirect" v-model="selected" size="is-medium" position="is-centered">
                   <b-tab-item label="Packages">
                   </b-tab-item>
                   <b-tab-item label="Permissions">
@@ -71,7 +71,8 @@ import secrets from '~/secrets.js';
 export default {
     name: "DashTabs",
     data() {
-        return { selected: 0 };
+        if (this.$route.name === 'servers-guildid-permissions') return { selected: 1 };
+        else return { selected: 0 };
     },
     methods: {
         getInitials(word) {

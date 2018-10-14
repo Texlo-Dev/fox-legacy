@@ -103,10 +103,7 @@
 					<b-field label="Message" custom-class="has-text-white">
                         <b-input type="textarea" v-model="config.goodbyeMsg" maxlength="1980" expanded></b-input>
                     </b-field>
-					<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= user name.</p>
-					<br>
-					<button class="button is-primary" @click="settingUpdate('goodbyeMsg', config.goodbyeMsg)" type="button">Save</button>
-					<br>
+					<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User name.</p>
 					<br>
                     <b-field label="Message Location" custom-class="has-text-white">
                         <b-dropdown>
@@ -126,13 +123,14 @@
                     </b-field>
 					<br>
                     <div class="field">
-                        <b-switch @click.native="settingUpdate('goodbyeEmbed', !config.goodbyeEmbed)" type="is-primary" v-model="config.goodbyeEmbed">
+                        <b-switch @click.native="settingUpdate('goodbyeEmbed', !config.goodbyeEmbed, { hideToast: true })" type="is-primary" v-model="config.goodbyeEmbed">
                             <p class="has-text-white has-text-weight-bold">Embed Message</p>
                         </b-switch>
                     </div>
                 </section>
 				<footer class="modal-card-foot">
-					<button class="button" type="button" @click="toggleGoodbye = false">Close</button>
+					<button class="button is-red is-outlined" type="button" @click="toggleGoodbye = false">Close</button>
+                    <button class="button is-primary" @click="settingUpdate('goodbyeMsg', config.goodbyeMsg)" type="button">Save</button>
 				</footer>
             </div>
 
@@ -146,16 +144,13 @@
 					<b-field label="Message" custom-class="has-text-white">
                         <b-input type="textarea" v-model="config.welcomeMsg" maxlength="1980" expanded></b-input>
                     </b-field>
-					<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= user name.</p>
-					<br>
-					<button @click="settingUpdate('welcomeMsg', config.welcomeMsg)" class="button is-primary" type="button">Save</button>
-					<br>
+					<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class="inlinecode has-text-grey">{server}</code>= Server name. <code id="vars" class="inlinecode has-text-grey">{position}</code>= Join position.</p>
 					<br>
                     <b-field label="Message Location" custom-class="has-text-white">
                         <b-dropdown>
                             <button class="button is-black" slot="trigger">
                                 <template v-if="config.welcomeLocation">
-                                    <span>#{{ config.welcomeLocation.name }}</span>
+                                    <span>{{ config.welcomeLocation.name ? `#${config.welcomeLocation.name}`: config.welcomeLocation }}</span>
                                 </template>
                                 <template v-else>
                                     <span>None</span>
@@ -169,14 +164,15 @@
                     </b-field>
 					<br>
                     <div class="field">
-                        <b-switch @click.native="settingUpdate('welcomerEmbed', !config.welcomerEmbed)" type="is-primary" v-model="config.welcomerEmbed">
+                        <b-switch @click.native="settingUpdate('welcomerEmbed', !config.welcomerEmbed, { hideToast: true })" type="is-primary" v-model="config.welcomerEmbed">
                             <p class="has-text-white has-text-weight-bold">Embed Message</p>
                         </b-switch>
                     </div>
 					
                 </section>
 				<footer class="modal-card-foot">
-					<button class="button" type="button" @click="toggleAdd = false">Close</button>
+					<button class="button is-danger is-outlined" @click="toggleAdd = false">Close</button>
+                    <button @click="settingUpdate('welcomeMsg', config.welcomeMsg)" class="button is-primary" type="button">Save</button>
 				</footer>
             </div>
 
@@ -245,9 +241,9 @@ export default {
         },
         async settingUpdate(key, value, options) {
             try {
-                this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
-                this.$toast.open({
-                    message: value instanceof Object ? `Saved ${options.meta} as ${value.name}` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
+                this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, { bool: false });
+                if (options && !options.hideToast) this.$toast.open({
+                    message: value instanceof Object ? `Saved ${options.meta}.` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
                     type: "is-primary",
                     duration: 3800
                 });
@@ -331,6 +327,6 @@ export default {
 
 <style>
 #vars {
-	background-color: #2b2f33;
+	background-color: #34383c;
 }
 </style>
