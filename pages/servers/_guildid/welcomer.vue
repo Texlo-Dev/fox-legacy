@@ -247,6 +247,8 @@ export default {
                     type: "is-primary",
                     duration: 3800
                 });
+                this.toggleAdd = false;
+                this.toggleGoodbye = false;
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this setting: ${error}`,
@@ -264,8 +266,8 @@ export default {
                     message: `Successfully saved settings.`,
                     type: "is-primary"
                 });
-                this.bwModalActive = false;
-                this.massModalActive = false;
+                this.toggleAdd = false;
+                this.toggleGoodbye = false;
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit these settings: ${error}`,

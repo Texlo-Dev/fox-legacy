@@ -161,7 +161,7 @@
         <b-modal :active.sync="modalActive" size="is-large" has-modal-card>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Server Event Logs</p>
+                    <p class="modal-card-title">Server Logging</p>
                 </header>
                 <section class="modal-card-body">
                     <b-field custom-class='has-text-white' label="Channel">
@@ -169,7 +169,6 @@
                             <button class="button is-grey-darker" slot="trigger">
                                 <template v-if="config.serverlogChannel">
                                     #{{ config.serverlogChannel.name }}
-
                                 </template>
                                 <template v-else>
                                     <span>None</span>
@@ -218,7 +217,7 @@
 
                 </section>
                 <footer class="modal-card-foot">
-                    <button class="button" type="button" @click="modalActive = false">Close</button>
+                    <button class="button is-danger is-outlined" type="button" @click="modalActive = false">Close</button>
                     <button class="button is-primary" type="button" @click="settingArrayUpdate({ enabledEvents: config.enabledEvents, logExcluded: config.logExcluded })">Save</button>
                 </footer>
             </div>
