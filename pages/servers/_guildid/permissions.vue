@@ -8,27 +8,27 @@
         </div>
         <div class="container">
             <div class="columns is-multiline">
-                <div class="column is-2">
+                <div class="column is-3">
                     <div class="box">
-                        <h1 class="title has-text-white">
-                                Roles
+                        <h3 class="subtitle has-text-centered has-text-white">
+                                Roles/Members
                                 <b-dropdown>
-                                    <button class="button is-grey is-rounded" slot="trigger"><font-awesome-icon size="0.8x" icon="plus"/></button>
+                                    <button class="button is-small is-grey is-rounded" slot="trigger"><font-awesome-icon size="0.8x" icon="plus"/></button>
                                     <b-dropdown-item @click="createOverwrite(role)" v-for="role of roles" :value="role.name"  :key="role.name">{{ role.name }}</b-dropdown-item>
                                 </b-dropdown>
-                            </h1>
+                            </h3>
                         <aside class="menu">
                             <ul class="menu-list">
-                                <li class="has-text-centered" :key="ow.name" v-for="ow of overwrites">
+                                <li class="has-text-centered" :key="ow.id" v-for="ow of overwrites">
                                     <a @click="pointTarget(ow)" :class="{ 'is-active': activeTarget.id === ow.identifier.id }">
-                                        <p class="has-text-white">{{ ow.identifier.name }}</p>
+                                        <p class="has-text-white">{{ ow.identifier.name || ow.identifier.tag }}</p>
                                      </a>
                                 </li>
                             </ul>
                         </aside>
                     </div>
                 </div>
-                <div class="column is-10">
+                <div class="column is-9">
                     <div class="box">
                         <div class="block">
                             <b-radio v-model="activeCat" v-for="(cmd, category) of permissions" :key="category" :native-value="category">
