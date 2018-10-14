@@ -148,7 +148,7 @@
 						</b-field>
 					</section>
 					<footer class="modal-card-foot">
-						<button class="button" type="button" @click="bwModalActive = false">Close</button>
+						<button class="button is-danger is-outlined" type="button" @click="bwModalActive = false">Close</button>
 						<button class="button is-primary" type="button" @click="settingArrayUpdate({ badWords: config.badWords, allowedBwChannels: config.allowedBwChannels })">Save</button>
 					</footer>
 				</div>
@@ -185,7 +185,7 @@
 						</b-field>
 					</section>
 					<footer class="modal-card-foot">
-						<button class="button" type="button" @click="massModalActive = false">Close</button>
+						<button class="button is-danger is-outlined" type="button" @click="massModalActive = false">Close</button>
 						<button class="button is-primary" type="button" @click="settingArrayUpdate({ mentionLimit: parseFloat(config.mentionLimit), allowedMentionChannels: config.allowedMentionChannels })">Save</button>
 					</footer>
 				</div>

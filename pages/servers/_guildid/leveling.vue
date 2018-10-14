@@ -50,7 +50,7 @@
 													<button @click="settingUpdate('levelMsg', config.levelMsg, { bool: false })" class="button is-primary">Save</button>
 												</p>
 											</b-field>
-											<p class="subtitle has-text-white"><code class="inlinecode has-text-grey has-background-black">{user}</code> = user name. <code class="has-background-black has-text-grey inlinecode">{level}</code> = user's new level.</p>
+											<p style="font-size: 15px" class="subtitle has-text-white"><code id="vars" class="inlinecode has-text-white ">{user}</code>= User name. <code id="vars" class="has-text-white inlinecode">{level}</code>= User's new level.</p>
 										</section>
 									</span>
 									<span v-else>
@@ -176,7 +176,7 @@
 				<section class="modal-card-body">
 					<b-field custom-class="has-text-white" label="Select Role">
 						<b-dropdown>
-							<button class="button is-black" slot="trigger">
+							<button class="button is-grey-darker" slot="trigger">
 								<template v-if="selectedRole">
 									<span>{{ selectedRole.name }}</span>
 								</template>
@@ -194,7 +194,7 @@
 					</b-field>
 				</section>
 				<footer class="modal-card-foot">
-					<button class="button" type="button" @click="promoModal = false">Close</button>
+					<button class="button is-danger is-outlined" type="button" @click="promoModal = false">Close</button>
 					<button v-if="selectedRole" class="button is-primary" type="button" @click="addPromoRole(selectedRole, selectedRank)">Save</button>
 				</footer>
 			</div>
@@ -271,9 +271,9 @@ export default {
                 confirmText: "Delete",
                 type: "is-primary",
                 onConfirm: async () => {
-                    this.leveling.promoRoles.splice(this.leveling.promoRoles.indexOf(role), 1);
                     try {
-                        this.leveling = await this.levelingUpdate("promoRoles", this.leveling.promoRoles, { bool: false });
+						this.promoRoles.splice(this.promoRoles.indexOf(role, 1));
+                        this.leveling = await API.levelingUpdate("promoRoles", this.leveling.promoRoles, { bool: false });
                     } catch (error) {
                         this.$toast.open({
                             message: `Error deleting rank. ${error}`,
@@ -294,17 +294,9 @@ export default {
                 });
             }
             role.rank = parseInt(rank);
-            try {
-				this.leveling.promoRoles.push(role);
-                this.leveling = await this.levelingUpdate("promoRoles", this.leveling.promoRoles, { bool: false });
-                this.promoModal = false;
-            } catch (error) {
-                return this.$toast.open({
-                    message: `Error saving role. ${error}`,
-                    type: "is-danger",
-                    duration: 3000
-                });
-            }
+            this.leveling.promoRoles.push(role);
+			await this.levelingUpdate('promoRoles', this.leveling.promoRoles);
+            this.promoModal = false;
         },
         getChannelNames(channel) {
             this.filteredChannels = this.channels.filter(option => `${option.name.toLowerCase()}`.indexOf(channel.toLowerCase()) >= 0);
@@ -313,18 +305,16 @@ export default {
             this.filteredRoles = this.roles.filter(option => `${option.name.toLowerCase()}`.indexOf(channel.toLowerCase()) >= 0);
         },
         async levelingUpdate(key, value, options) {
-            this.isLoading = true;
             try {
                 this.leveling = await API.levelingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
             } catch (error) {
-                this.$toast.open({
-                    message: `Unable to edit this setting: ${error}`,
+                this.$dialog.alert({
+					title: 'Error',
+                    message: `Unable to edit this setting. ${error}`,
                     type: "is-danger"
                 });
                 this.$refs[`${key}-switch`][0].newValue = !value;
-            } finally {
-                this.isLoading = false;
-            }
+            } 
         },
         async settingUpdate(key, value, options) {
             try {
@@ -407,3 +397,9 @@ export default {
     }
 }
 </script>
+
+<style>
+#vars {
+	background-color: #2b2f33;
+}
+</style>

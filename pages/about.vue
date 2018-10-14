@@ -84,6 +84,10 @@
 							</div>
 						</div>
 					</div>
+					<br>
+					<div class="has-text-centered">
+						<img src="https://discordboats.xyz/api/widget/333985343445663749" alt="Discord Boats">
+					</div>
 				</div>
 
 			</div>

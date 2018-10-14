@@ -79,7 +79,7 @@
                </b-field>
             </section>
             <footer class="modal-card-foot">
-               <button class="button" type="button" @click="toggleAdd = false">Close</button>
+               <button class="button is-danger is-outlined" type="button" @click="toggleAdd = false">Close</button>
                <button class="button is-primary" type="button" @click="toggleRole(roleData)">Add</button>
             </footer>
          </div>
