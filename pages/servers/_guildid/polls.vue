@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         <div v-else>
-                            <p>No Polls found. Click the "Add Polls" button to get started.</p>
+                            <p>No Polls found. Click the "Add Poll" button to get started.</p>
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
         </div>
         <div class="is-divider"></div>
     </div>
-    <div v-if="!loading" class="container" style="position: relative">
+    <div class="container" style="position: relative">
 		<h1 class="title has-text-white has-text-left">Commands</h1>
 			<div v-for="command of commands" class="box">
 				<div class="content">
@@ -93,15 +93,38 @@
                   <b-input maxlength="75" v-model="plData.question"></b-input>
                </b-field>
                <b-field label="Select Channel" custom-class="has-text-white">
-                  <vs-select class="selectExample" label="Figuras" v-model="plData.channel">
-                     <vs-select-item :key="channel.id" :vs-value="channel" :vs-text="channel.name" v-for="channel of channels" />
-                  </vs-select>
+                  <b-dropdown v-model="plData.channel">
+                       <button class="button is-grey-darker" slot="trigger">
+                           <template v-if="plData.channel">
+                               <span>#{{ plData.channel.name }}</span>
+                           </template>
+                           <template v-else>
+                               <span>None</span>
+                           </template>
+                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
+                       </button>
+                       <b-dropdown-item :key="channel.id" v-for="channel of channels" :value="channel">
+                           {{ channel.name }}
+                       </b-dropdown-item>
+                   </b-dropdown>
                </b-field>
                <b-field label="Choose Type" custom-class="has-text-white">
-                  <vs-select class="selectExample" label="Figuras" v-model="plData.type">
-                      <vs-select-item vs-value="simple" vs-text="Simple" />
-                     <vs-select-item vs-value="open" vs-text="Open-Ended" />
-                  </vs-select>
+                   <b-dropdown v-model="plData.type">
+                       <button class="button is-grey-darker" slot="trigger">
+                           <template v-if="plData.type === 'open'">
+                               <span>Open-Ended</span>
+                           </template>
+                           <template v-else-if="plData.type === 'simple'">
+                               <span>Simple</span>
+                           </template>
+                           <template v-else>
+                               <span>None</span>
+                           </template>
+                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
+                       </button>
+                       <b-dropdown-item value="simple">Simple</b-dropdown-item>
+                       <b-dropdown-item value="open">Open</b-dropdown-item>
+                   </b-dropdown>
                </b-field>
                <b-field v-if="plData.type === 'open'">
                    <button class="button is-small is-rounded is-black" @click="respAdd = true">
@@ -263,7 +286,7 @@ export default {
                 }]
             }
             for (const resp of poll.responses) {
-                chartData.labels.push(resp.name.split(' ')[0]);
+                chartData.labels.push(resp.name);
                 chartData.datasets[0].backgroundColor = ['#3fb97c','#c34e4e', '#f37934', '#7289da', '#c653ff'];
                 chartData.datasets[0].data.push(resp.count);
             };

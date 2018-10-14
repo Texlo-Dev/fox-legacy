@@ -68,14 +68,39 @@
                   <b-input maxlength="21" v-model="roleData.messageID"></b-input>
                </b-field>
                <b-field label="Select Role" custom-class="has-text-white">
-                   <vs-select class="selectExample" label="Figuras" v-model="roleData.role">
-				        <vs-select-item :key="role.id" :vs-value="role" :vs-text="role.name" v-for="role of roles" />
-				    </vs-select>
+                   <b-dropdown v-model="roleData.role">
+                       <button class="button is-grey-darker" slot="trigger">
+                           <template v-if="roleData.role">
+                               <span>@{{ roleData.role.name }}</span>
+                           </template>
+                           <template v-else>
+                               <span>None</span>
+                           </template>
+                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
+                       </button>
+                       <b-dropdown-item :key="role.id" v-for="role of roles" :value="role">
+                           {{ role.name }}
+                       </b-dropdown-item>
+                   </b-dropdown>
                </b-field>
                <b-field label="Select Emoji" custom-class="has-text-white">
-                  <vs-select class="selectExample" label="Figuras" v-model="roleData.emoji">
-                     <vs-select-item :key="emoji.id" :vs-value="emoji" :vs-text="emoji.name" v-for="emoji of emojis" />
-                  </vs-select>
+                   <b-dropdown v-model="roleData.emoji">
+                       <button class="button is-grey-darker" slot="trigger">
+                           <template v-if="roleData.emoji">
+                               <figure class="image is-24x24">
+                                   <img :src="roleData.emoji.url" alt="emoji">
+                               </figure>
+                               <span>&nbsp;{{ roleData.emoji.name }}</span>
+                           </template>
+                           <template v-else>
+                               <span>None</span>
+                           </template>
+                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
+                       </button>
+                       <b-dropdown-item :key="emoji.id" v-for="emoji of emojis" :value="emoji">
+                           {{ emoji.name }}
+                       </b-dropdown-item>
+                   </b-dropdown>
                </b-field>
             </section>
             <footer class="modal-card-foot">

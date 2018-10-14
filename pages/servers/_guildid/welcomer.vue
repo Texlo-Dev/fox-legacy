@@ -47,7 +47,7 @@
                     <div class="box">
                         <div class="content">
                             <h3 class="has-text-white has-text-left">
-									Welcome Message
+									Welcome Messaging
 									<span v-if="config.welcomeEnabled">
 										<b-switch size='is-small' ref="welcomeEnabled-switch" :disabled="isLoading" @click.native="settingUpdate('welcomeEnabled', false)" value="true"
 											type="is-primary">
@@ -107,7 +107,7 @@
 					<br>
                     <b-field label="Message Location" custom-class="has-text-white">
                         <b-dropdown>
-                            <button class="button is-black" slot="trigger">
+                            <button class="button is-grey-darker" slot="trigger">
                                 <template v-if="config.goodbyeChannel">
                                     <span>#{{ config.goodbyeChannel.name }}</span>
                                 </template>
@@ -129,7 +129,7 @@
                     </div>
                 </section>
 				<footer class="modal-card-foot">
-					<button class="button is-red is-outlined" type="button" @click="toggleGoodbye = false">Close</button>
+					<button class="button is-danger is-outlined" type="button" @click="toggleGoodbye = false">Close</button>
                     <button class="button is-primary" @click="settingUpdate('goodbyeMsg', config.goodbyeMsg)" type="button">Save</button>
 				</footer>
             </div>
@@ -148,7 +148,7 @@
 					<br>
                     <b-field label="Message Location" custom-class="has-text-white">
                         <b-dropdown>
-                            <button class="button is-black" slot="trigger">
+                            <button class="button is-grey-darker" slot="trigger">
                                 <template v-if="config.welcomeLocation">
                                     <span>{{ config.welcomeLocation.name ? `#${config.welcomeLocation.name}`: config.welcomeLocation }}</span>
                                 </template>

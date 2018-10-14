@@ -213,4 +213,10 @@ html
   border-radius: 10px;
 }
 
+.modal-card {
+  overflow: visible;
+}
+ .modal-card-body {
+    overflow: visible;
+  }
 </style>
