@@ -21,6 +21,7 @@
                                 <h1 class="title has-text-left has-text-white">Recent Giveaways</h1>
                             </div>
                             <div class="level-item">
+                                <br>
                                 <button class="button is-grey is-rounded" @click="toggleAdd = true">
                                     Add Giveaway <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
                                 </button>

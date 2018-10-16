@@ -25,49 +25,40 @@ export default {
 
 <style>
 
-
-
-#channel  {
-        background-color: rgba(114,137,218,.1);
-        color: #7289da;
-    }
-    #channel:hover { 
-        background-color: rgba(114, 137, 218, 0.701961); color: rgb(255, 255, 255); 
-    }
-
-    h2 {
-    font-family: 'Raleway', 'sans-serif';
+ #channel {
+     background-color: rgba(114,137,218,.1);
+     color: #7289da;
 }
-
-   h3 {
-    font-family: 'Raleway', 'sans-serif';
+ #channel:hover {
+     background-color: rgba(114, 137, 218, 0.701961);
+     color: rgb(255, 255, 255);
 }
-
-h1 {
-  font-family: 'Raleway', 'sans serif';
-  text-align: center;
-  font-size: 100px;
+ h2 {
+     font-family: 'Work Sans', 'sans-serif';
 }
-
-p {
-    font-family: 'Raleway', sans-serif;
-    word-wrap: break-word;
-    color: #eff;
+ h3 {
+     font-family: 'Work Sans', 'sans-serif';
 }
-
-.fox-logo {
-    border-radius: 75%;
+ h1 {
+     font-family: 'Work Sans', 'sans serif';
+     text-align: center;
+     font-size: 100px;
 }
-.feature {
-  text-decoration: underline;
-
+ p {
+     font-family: 'Work Sans', sans-serif;
+     word-wrap: break-word;
+     color: #eff;
 }
-
-
-.center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+ .fox-logo {
+     border-radius: 75%;
+}
+ .feature {
+     text-decoration: underline;
+}
+ .center {
+     display: block;
+     margin-left: auto;
+     margin-right: auto;
 }
 </style>
 

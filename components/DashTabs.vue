@@ -21,9 +21,9 @@
             <div class="column is-half">
                <br>
                <b-tabs @input="redirect" v-model="selected" size="is-medium" position="is-centered">
-                  <b-tab-item label="Packages">
+                  <b-tab-item id="packages" label="Packages">
                   </b-tab-item>
-                  <b-tab-item label="Permissions">
+                  <b-tab-item id="permissions" label="Permissions">
                   </b-tab-item>
                </b-tabs>
             </div>
@@ -32,6 +32,12 @@
          </div>
       </div>
 </template>
+
+<style scoped>
+span {
+    font-family: 'Niramit'
+}
+</style>
 
 <style>
 .guildicon {
@@ -54,11 +60,14 @@
 
 .tabs li a {
     border-width: 3px
+}
 
+.tabs span {
+    font-family: 'Work Sans';
 }
 
 .label {
-    font-family: 'Raleway';
+    font-family: 'Work Sans';
 }
 
 

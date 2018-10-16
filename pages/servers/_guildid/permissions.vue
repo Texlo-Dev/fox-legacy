@@ -73,7 +73,7 @@
                                 <p>{{ perm.description }}</p>
                                 <br>
                             </div>
-                            <button v-show="activeTarget.id !== $route.params.guildid" @click="permDelete(activeTarget)" class="button is-danger is-outlined">Remove {{ activeTarget.name }}</button>
+                            <button v-show="activeTarget.id !== $route.params.guildid" @click="permDelete(activeTarget)" class="button is-danger is-outlined">Remove {{ activeTarget.name || activeTarget.tag }}</button>
                         </div>
                     </div>
                 </div>
@@ -146,7 +146,7 @@ export default {
         async permDelete(target) {
             this.$dialog.confirm({
                 title: 'Delete Overwrites',
-                message: `Are you sure that you would like to delete ALL permission overwrites for ${target.name}?`,
+                message: `Are you sure that you would like to delete ALL permission overwrites for ${target.name || target.tag}?`,
                 cancelText: 'No',
                 confirmText: 'Delete',
                 type: 'is-danger',

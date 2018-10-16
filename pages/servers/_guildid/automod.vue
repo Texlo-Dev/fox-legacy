@@ -53,7 +53,7 @@
 											type="is-primary">
 										</b-switch>
 										<button class="button is-rounded is-small is-grey" @click="bwModalActive = true">
-											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
+											Manage<font-awesome-icon size="1x" pull="right" icon="wrench"/>
 										</button>
 									</span>
 									<span v-else>
