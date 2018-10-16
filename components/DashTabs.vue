@@ -33,12 +33,6 @@
       </div>
 </template>
 
-<style scoped>
-span {
-    font-family: 'Niramit'
-}
-</style>
-
 <style>
 .guildicon {
         border-radius: 128px;
@@ -63,11 +57,11 @@ span {
 }
 
 .tabs span {
-    font-family: 'Work Sans';
+    font-family: 'Poppins';
 }
 
 .label {
-    font-family: 'Work Sans';
+    font-family: 'Poppins';
 }
 
 

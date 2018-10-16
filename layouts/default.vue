@@ -24,6 +24,12 @@ export default {
 
 
 <style>
+td span {
+    font-family: 'Poppins'
+}
+.th-wrap {
+    font-family: 'Poppins'
+}
 
  #channel {
      background-color: rgba(114,137,218,.1);
@@ -34,18 +40,18 @@ export default {
      color: rgb(255, 255, 255);
 }
  h2 {
-     font-family: 'Work Sans', 'sans-serif';
+     font-family: 'Poppins', 'sans-serif';
 }
  h3 {
-     font-family: 'Work Sans', 'sans-serif';
+     font-family: 'Poppins', 'sans-serif';
 }
  h1 {
-     font-family: 'Work Sans', 'sans serif';
+     font-family: 'Poppins', 'sans serif';
      text-align: center;
      font-size: 100px;
 }
  p {
-     font-family: 'Work Sans', sans-serif;
+     font-family: 'Poppins', sans-serif;
      word-wrap: break-word;
      color: #eff;
 }
@@ -110,7 +116,7 @@ $tabs-link-hover-color: #eff0eb;
 $tabs-toggle-link-border-width: 3px;
 $tabs-border-bottom-width: 0.5px;
 $body-background-color: $grey;
-$table-background-color: $black;
+$table-background-color: $grey-darker;
 $footer-background-color: $grey;
 $control-border-width: 2px;
 $input-border-color: #363636;

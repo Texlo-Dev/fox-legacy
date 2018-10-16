@@ -100,10 +100,8 @@
 							<div class="navbar-item">
 								<b-dropdown :hoverable="true" :mobile-modal="false" v-if="$auth.loggedIn">
 									<button class="button is-medium is-black is-rounded" slot="trigger">
-										<figure class="image is-24x24">
-											<img :src="getAvatar" class="is-rounded">
-										</figure>
-										&nbsp;&nbsp;<p class="has-text-weight-bold">{{ $auth.user.username }}</p>
+										<img :src="getAvatar" height="30" width="30" style="border-radius: 50px">
+										&nbsp;&nbsp;<p class="has-text-weight-semi-bold">{{ $auth.user.username }}</p>
 										&nbsp;<font-awesome-icon size="1x" pull="right" icon="angle-down" />
 									</button>
 									<b-dropdown-item has-link position="is-top-left">
@@ -128,7 +126,7 @@ export default {
 	computed: {
 		getAvatar() {
 			const auth = this.$auth;
-			if (auth.user.avatar) return `https://cdn.discordapp.com/avatars/${auth.user.id}/${auth.user.avatar}.${auth.user.avatar.startsWith("a_") ? "gif" : "png"}?size=2048`;
+			if (auth.user.avatar) return `https://cdn.discordapp.com/avatars/${auth.user.id}/${auth.user.avatar}.${auth.user.avatar.startsWith("a_") ? "gif" : "png"}?size=128`;
 			else return `https://discordapp.com/assets/dd4dbc0016779df1378e7812eabaa04d.png`;
 
 		}

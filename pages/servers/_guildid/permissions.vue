@@ -105,7 +105,7 @@ export default {
         const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
         let { data: permissions } = await app.$axios.get(`/api/permissions`);
 		const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-        const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+        const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles?all=true`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
         const { data: overwrites } = await app.$axios.get(`/api/permissions/${guildid}`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
         return {
             permissions, 

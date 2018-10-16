@@ -45,10 +45,12 @@
 								{{ activeCat }}
 							</h3>
 							<div class="content">
-								<b-table :paginated="willPaginate(activeCat)"
-                                per-page="7"
-                                :current-page.sync="activePage"
-                                :pagination-simple="true" class="has-text-white" :data="commands[activeCat]" :columns="columns"></b-table>	
+								<b-table 
+									:paginated="willPaginate(activeCat)"
+                                	per-page="7"
+                                	:current-page.sync="activePage"
+                                	:pagination-simple="true" class="has-text-white" :data="commands[activeCat]" :columns="columns">
+								</b-table>	
 							</div>
 						</div>
 					</div>

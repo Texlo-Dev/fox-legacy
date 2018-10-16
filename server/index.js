@@ -1,8 +1,8 @@
-const http = require("http");
-const { Nuxt, Builder } = require("nuxt");
+import { createServer } from "http";
+import { Nuxt, Builder } from "nuxt";
 const host = process.env.HOST || '127.0.0.1';
 const port = process.env.PORT || 3000;
-const config = require("../nuxt.config.js");
+import config from "../nuxt.config.js";
 
 (async () => {
     config.dev = !(process.env.NODE_ENV === 'production');
@@ -11,9 +11,8 @@ const config = require("../nuxt.config.js");
       const builder = new Builder(nuxt);
       await builder.build();
   }
-  const server = http.createServer(nuxt.render);
+  const server = createServer(nuxt.render);
   server.listen(port, () => {
       console.log('Server listening on http://' + host + ':' + port);
   });
-
 })();
