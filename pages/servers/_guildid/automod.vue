@@ -6,7 +6,7 @@
 						<h1 class="title has-text-white has-text-left">&nbsp;Automod</h1>
 					</div>
 					<div class="level-left">
-						<a class="button is-danger" @click="confirmPkg('Automod')">Disable</a>
+						<a class="button is-danger" @click="confirmPkg('Automod')"><p class="has-text-weight-bold">Disable</p></a>
 					</div>
 				</nav>
 				<div class="is-divider"></div>
@@ -19,7 +19,7 @@
 							<div class="content">
 								<h3 class="has-text-white has-text-left">
 								 	Spam Protection
-									<b-tag type="is-pink" rounded>Deprecated</b-tag>
+									<button class="button is-pink is-small is-rounded">Deprecated</button>
 									<b-switch size='is-small' ref="spamProtected-switch" @input="settingUpdate('spamProtected', !config.spamProtected)" :disabled="isLoading" :value="config.spamProtected"
 										type="is-primary">
 									</b-switch>

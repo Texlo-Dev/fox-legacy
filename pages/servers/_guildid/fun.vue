@@ -6,7 +6,7 @@
 						<h1 class="title has-text-white has-text-left">&nbsp;Fun</h1>
 					</div>
 					<div class="level-left">
-						<a class="button is-danger" @click="confirmPkg('Fun')">Disable</a>
+						<a class="button is-danger" @click="confirmPkg('Fun')"><p class="has-text-weight-bold">Disable</p></a>
 					</div>
 				</nav>
 				<div class="is-divider"></div>
