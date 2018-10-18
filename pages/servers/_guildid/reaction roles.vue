@@ -61,51 +61,38 @@
                <p class="modal-card-title">New Reaction Role</p>
             </header>
             <section class="modal-card-body">
-               <b-field label="Message name" custom-class="has-text-white">
-                  <b-input maxlength="20" v-model="roleData.alias"></b-input>
-               </b-field>
-               <b-field label="Base Message ID" custom-class="has-text-white">
-                  <b-input maxlength="21" v-model="roleData.messageID"></b-input>
-               </b-field>
-               <b-field label="Select Role" custom-class="has-text-white">
-                   <b-dropdown v-model="roleData.role">
-                       <button class="button is-grey-darker" slot="trigger">
-                           <template v-if="roleData.role">
-                               <span>@{{ roleData.role.name }}</span>
-                           </template>
-                           <template v-else>
-                               <span>None</span>
-                           </template>
-                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
-                       </button>
-                       <b-dropdown-item :key="role.id" v-for="role of roles" :value="role">
-                           {{ role.name }}
-                       </b-dropdown-item>
-                   </b-dropdown>
-               </b-field>
-               <b-field label="Select Emoji" custom-class="has-text-white">
-                   <b-dropdown v-model="roleData.emoji">
-                       <button class="button is-grey-darker" slot="trigger">
-                           <template v-if="roleData.emoji">
-                               <figure class="image is-24x24">
-                                   <img :src="roleData.emoji.url" alt="emoji">
-                               </figure>
-                               <span>&nbsp;{{ roleData.emoji.name }}</span>
-                           </template>
-                           <template v-else>
-                               <span>None</span>
-                           </template>
-                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
-                       </button>
-                       <b-dropdown-item :key="emoji.id" v-for="emoji of emojis" :value="emoji">
-                           {{ emoji.name }}
-                       </b-dropdown-item>
-                   </b-dropdown>
-               </b-field>
+                <form id="reactroles" @submit.prevent="validateForm">
+                    <b-field label="Message Name" :type="{ 'is-danger': errors.has('Message Name') }" :message="errors.first('Message Name')" custom-class="has-text-white">
+                        <b-input name="Message Name" v-validate="'required|max:15'" v-model="roleData.alias"></b-input>
+                    </b-field>
+                    <b-field label="Base Message ID" :type="{ 'is-danger': errors.has('Message ID') }" :message="errors.first('Message ID')" custom-class="has-text-white">
+                        <b-input name="Message ID" v-validate="'required|max:21'" v-model="roleData.messageID"></b-input>
+                    </b-field>
+                    <b-field :type="{ 'is-danger': errors.has('role') }" :message="errors.first('role')" label="Select Role" custom-class="has-text-white">
+                    <b-select name="role" v-validate="'required'" v-model="roleData.role" placeholder="None">
+                        <option
+                        v-for="role of roles"
+                        :value="role"
+                        :key="role.id">
+                        {{ role.name }}
+                        </option>
+                    </b-select>
+                    </b-field>
+                    <b-field :type="{ 'is-danger': errors.has('emoji') }" :message="errors.first('emoji')" label="Select Emoji" custom-class="has-text-white">
+                    <b-select name="emoji" v-validate="'required'" v-model="roleData.emoji" placeholder="None">
+                        <option
+                        v-for="emoji of emojis"
+                        :value="emoji"
+                        :key="emoji.id">
+                        {{ emoji.name }}
+                        </option>
+                    </b-select>
+                    </b-field>
+                </form>
             </section>
             <footer class="modal-card-foot">
                <button class="button is-danger is-outlined" type="button" @click="toggleAdd = false">Close</button>
-               <button class="button is-primary" type="button" @click="toggleRole(roleData)">Add</button>
+               <button class="button is-primary" type="submit" form="reactroles">Add</button>
             </footer>
          </div>
       </b-modal>
@@ -158,6 +145,10 @@ export default {
         };
     },
     methods: {
+        async validateForm() {
+            const result = await this.$validator.validateAll();
+            result ? this.toggleRole(this.roleData) : this.$toast.open('Incorrect parameters.');  
+        },
         async deleteRole(role) {
             this.$dialog.confirm({
                 title: 'Delete Reaction Role',
@@ -280,7 +271,17 @@ export default {
 </script>
 
 <style>
-    .selectExample .input-select {
-        color: #242424;
-    }
+.select select {
+background-color: #2b2f33;
+}
+
+.select.is-empty select {
+color: #eff;
+        
+}
+
+select {
+font-family: 'Poppins';
+}
+
 </style>

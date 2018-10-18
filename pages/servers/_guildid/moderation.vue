@@ -164,7 +164,18 @@
                     <p class="modal-card-title">Server Logging</p>
                 </header>
                 <section class="modal-card-body">
-                    <b-field custom-class='has-text-white' label="Channel">
+                    <form id="serverlog" @submit.prevent="logValidate">
+                        <b-field :type="{ 'is-danger': errors.has('channel') }" :message="errors.first('channel')" label="Select Channel" custom-class="has-text-white">
+                    <b-select name="channel" v-validate="'required'" v-model="config.serverlogChannel" :placeholder="config.serverlogChanel ? config.serverlogChannel.name : 'None'">
+                        <option
+                        v-for="channel of channels"
+                        :value="channel"
+                        :key="channel.id">
+                        #{{ channel.name }}
+                        </option>
+                    </b-select>
+               </b-field>
+                    <!--<b-field custom-class='has-text-white' label="Channel">
                         <b-dropdown>
                             <button class="button is-grey-darker" slot="trigger">
                                 <template v-if="config.serverlogChannel">
@@ -177,7 +188,7 @@
                             </button>
                             <b-dropdown-item v-for="channel of channels" :value="channel.name" @click="dropdownSave('serverlogChannel', 'Server-Log', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
                         </b-dropdown>
-                    </b-field>
+                    </b-field>-->
                     <b-field label="Event List" custom-class="has-text-white">
                         <section id="checkbox" class="has-text-centered has-background-black">
 
@@ -214,11 +225,12 @@
                             </template>
                         </b-taginput>
                     </b-field>
+                    </form>
 
                 </section>
                 <footer class="modal-card-foot">
                     <button class="button is-danger is-outlined" type="button" @click="modalActive = false">Close</button>
-                    <button class="button is-primary" type="button" @click="settingArrayUpdate({ enabledEvents: config.enabledEvents, logExcluded: config.logExcluded })">Save</button>
+                    <button class="button is-primary" type="submit" form="serverlog">Save</button>
                 </footer>
             </div>
         </b-modal>
@@ -275,6 +287,14 @@ export default {
         };
     },
     methods: {
+        async logValidate() {
+            const result = await this.$validator.validateAll();
+            if (result) {
+                await this.settingUpdate('serverlogChannel', this.config.serverlogChannel, { bool: false, hideToast: true });
+                return this.settingArrayUpdate({ enabledEvents: this.config.enabledEvents, logExcluded: this.config.logExcluded });
+            }
+            this.$toast.open('Incorrect parameters.');   
+        },
         dropdownSave(key, meta, item) {
             return this.settingUpdate(key, item, { meta })
                 .then(() => {
@@ -292,7 +312,7 @@ export default {
         async settingUpdate(key, value, options) {
             try {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
-                this.$toast.open({
+                if (!options.hideToast) this.$toast.open({
                     message: value instanceof Object ? `Saved ${options.meta} as ${value.name}` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
                     type: "is-primary",
                     duration: 3800

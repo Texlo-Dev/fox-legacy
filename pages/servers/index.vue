@@ -1,7 +1,8 @@
 <template>
 <section class="section">
+<br class='is-hidden-touch'>
    <h1 class="title has-text-white">
-      <br>Select A Server
+      Select A Server
    </h1>
    <div v-if="guilds" v-for="guild in guilds" :key="guild.id" class="container has-text-centered">
       <b-tooltip :label="guild.name" type="is-light" position="is-left">

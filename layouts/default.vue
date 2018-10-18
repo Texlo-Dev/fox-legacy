@@ -24,6 +24,7 @@ export default {
 
 
 <style>
+
 td span {
     font-family: 'Poppins'
 }

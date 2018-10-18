@@ -8,3 +8,20 @@
 .label {
     font-family: 'Raleway';
 }
+
+
+.selectExample .input-select {
+  color: #242424;
+}
+.select select {
+background-color: #2b2f33;
+}
+
+.select.is-empty select {
+color: #eff;
+        
+}
+
+select {
+font-family: 'Poppins';
+}

@@ -11,12 +11,19 @@
                 <div class="column is-3">
                     <div class="box">
                         <h3 class="subtitle has-text-centered has-text-white">
-                                Roles/Members
-                                <b-dropdown>
-                                    <button class="button is-small is-grey is-rounded" slot="trigger"><font-awesome-icon size="0.8x" icon="plus"/></button>
-                                    <b-dropdown-item @click="createOverwrite(role)" v-for="role of roles" :value="role.name"  :key="role.name">{{ role.name }}</b-dropdown-item>
-                                </b-dropdown>
-                            </h3>
+                            Roles/Members
+                            <button class="button is-small is-grey-darker is-rounded" @click="selectMenu = true" ><font-awesome-icon size="0.8x" pull="left" icon="plus"/></button>
+                        </h3>
+                        <b-select class="has-text-centered" @input="createOverwrite(selectedRole)" v-model="selectedRole" v-if="selectMenu" placeholder="None">
+                        <option
+                        v-for="role of roles"
+                        :value="role"
+                        @input="createOverwrite(role)"
+                        :key="role.id">
+                        {{ role.name }}
+                        </option>
+                        </b-select>
+                        <br v-if="selectMenu">
                         <aside class="menu">
                             <ul class="menu-list">
                                 <li class="has-text-centered" :key="ow.id" v-for="ow of overwrites">
@@ -122,8 +129,10 @@ export default {
             overwrites: null,
             roles: null,
             activeOW: [],
+            selectedRole: null,
             activeTarget: null,
             activeCat: 'Automod',
+            selectMenu: false,
             channels: null,
             selected: {
                 names: [],
@@ -174,6 +183,7 @@ export default {
                     target
                 }, { progress: false, headers: { Authorization: secret.encrypt(this.$auth.user.id) } }));
                 this.pointTarget(this.overwrites.find(o => o.identifier.id === target.id))
+                this.selectMenu = false;
             } catch (error) {
                  this.$dialog.alert({
                     title: "Error",
@@ -205,6 +215,19 @@ export default {
 </script>
 
 <style>
+.select select {
+background-color: #34383c;
+}
+
+.select.is-empty select {
+color: #eff;
+        
+}
+
+select {
+font-family: 'Poppins';
+}
+
 .b-radio.radio .control-label:hover {
     color: #f37934;
     

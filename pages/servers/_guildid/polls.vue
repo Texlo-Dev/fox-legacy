@@ -86,7 +86,43 @@
                <p class="modal-card-title">New Poll</p>
             </header>
             <section class="modal-card-body">
-               <b-field label="Poll Name" custom-class="has-text-white">
+                <form id="polls" @submit.prevent="validateForm">
+                    <b-field label="Poll Name" :type="{ 'is-danger': errors.has('poll name') }" :message="errors.first('poll name')" custom-class="has-text-white">
+                        <b-input name="poll name" v-validate="'required|max:20'" v-model="plData.name"></b-input>
+                    </b-field>
+                    <b-field label="Question" :type="{ 'is-danger': errors.has('question') }" :message="errors.first('question')" custom-class="has-text-white">
+                        <b-input name="giveaway name" v-validate="'required|max:75'" v-model="plData.question"></b-input>
+                    </b-field>
+                    <b-field :type="{ 'is-danger': errors.has('channel') }" :message="errors.first('channel')" label="Select Channel" custom-class="has-text-white">
+                    <b-select name="channel" v-validate="'required'" v-model="plData.channel" placeholder="None">
+                        <option
+                        v-for="channel of channels"
+                        :value="channel"
+                        :key="channel.id">
+                        #{{ channel.name }}
+                        </option>
+                    </b-select>
+                    </b-field>
+                    <b-field :type="{ 'is-danger': errors.has('channel') }" :message="errors.first('channel')" label="Select Type" custom-class="has-text-white">
+                    <b-select name="type" v-validate="'required'" v-model="plData.type" placeholder="None">
+                        <option value="simple">Simple</option>
+                        <option value="open">Open-Ended</option>
+                    </b-select>
+               </b-field>
+               <b-field v-if="plData.type === 'open'">
+                    <b-taginput
+						v-model="plData.responses"
+						ellipsis
+						rounded
+                        size="is-small"
+                        maxtags="4"
+                        maxlength="35"
+						placeholder="Add Response"
+						custom-class="has-text-white">
+					</b-taginput>
+               </b-field>
+                </form>
+               <!--<b-field label="Poll Name" custom-class="has-text-white">
                   <b-input maxlength="20" v-model="plData.name"></b-input>
                </b-field>
                <b-field label="Question" custom-class="has-text-white">
@@ -140,11 +176,11 @@
 						placeholder="Add Response"
 						custom-class="has-text-white">
 					</b-taginput>
-               </b-field>
+               </b-field>-->
             </section>
             <footer class="modal-card-foot">
                <button class="button is-danger is-outlined" type="button" @click="toggleAdd = false">Close</button>
-               <button class="button is-primary" type="button" @click="savePoll(plData)">Add</button>
+               <button class="button is-primary" type="submit" form="polls">Add</button>
             </footer>
          </div>
       </b-modal>
@@ -200,6 +236,10 @@ export default {
         this.showChart = true;
     },
     methods: {
+        async validateForm() {
+            const result = await this.$validator.validateAll();
+            result ? this.savePoll(this.plData) : this.$toast.open('Incorrect parameters.');  
+        },
         async pollAction(poll, action) {
             this.$dialog.confirm({
                 title: `${action.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())} Poll`,
@@ -327,5 +367,17 @@ export default {
 </script>
 
 <style>
+.select select {
+background-color: #2b2f33;
+}
+
+.select.is-empty select {
+color: #eff;
+        
+}
+
+select {
+font-family: 'Poppins';
+}
 
 </style>

@@ -77,16 +77,18 @@
                <p class="modal-card-title">New Tag</p>
             </header>
             <section class="modal-card-body">
-               <b-field label="Tag Name" custom-class="has-text-white">
-                  <b-input maxlength="20" v-model="currentag.name"></b-input>
-               </b-field>
-               <b-field label="Tag Content" custom-class="has-text-white">
-                  <b-input type="textarea" maxlength="2000" v-model="currentag.content"></b-input>
-               </b-field>
+                <form id="tag" @submit.prevent="validateForm">
+                    <b-field label="Tag Name" :type="{ 'is-danger': errors.has('Tag Name') }" :message="errors.first('Tag Name')" custom-class="has-text-white">
+                        <b-input name="Tag Name" v-validate="'required|max:20'" v-model="currentag.name"></b-input>
+                    </b-field>
+                    <b-field label="Tag Content" :type="{ 'is-danger': errors.has('Tag Content') }" :message="errors.first('Tag Content')" custom-class="has-text-white">
+                        <b-input type="textarea" name="Tag Content" v-validate="'required|max:1980'" v-model="currentag.content"></b-input>
+                    </b-field>
+                </form>
             </section>
             <footer class="modal-card-foot">
                <button class="button is-danger is-outlined" type="button" @click="toggleAdd = false">Close</button>
-               <button class="button is-primary" type="button" @click="addTag(currentag)">Add</button>
+               <button class="button is-primary" type="submit" form="tag">Add</button>
             </footer>
          </div>
       </b-modal>
@@ -139,6 +141,10 @@ export default {
         };
     },
     methods: {
+        async validateForm() {
+            const result = await this.$validator.validateAll();
+            result ? this.addTag(this.currentag) : this.$toast.open('Incorrect parameters.');  
+        },
         async confirmDelete(tag) {
             this.$dialog.confirm({
                 title: "Delete Tag",
@@ -245,3 +251,4 @@ export default {
     }
 }
 </script>
+

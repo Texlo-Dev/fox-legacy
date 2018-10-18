@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
+global.File = typeof window === 'undefined' ? Object : window.File;
 export default {
   mode: 'universal',
   router: {
@@ -39,7 +40,7 @@ export default {
   ** Global CSS
   */
   css: [
-    '~/assets/global.css'
+    '@/assets/global.css'
   ],
 
   /*
@@ -58,9 +59,13 @@ export default {
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios',
+    '@nuxtjs/sitemap',
     '@nuxtjs/dotenv',
     '@nuxtjs/auth',
     'nuxt-buefy',
+    ['nuxt-validate', {
+      lang: 'en'
+    }],
     ['nuxt-fontawesome', {
       imports: [      
         {

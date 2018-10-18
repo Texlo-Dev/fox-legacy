@@ -160,8 +160,9 @@
 						<p class="modal-card-title">Mass Mentioning</p>
 					</header>
 					<section class="modal-card-body">
-						<b-field custom-class="has-text-white" label="Mention Threshold (per-message)">
-							<b-input v-model="config.mentionLimit" type="number" min=1 max=100000></b-input>
+						<form id="massform" @submit.prevent="validateForm">
+							<b-field custom-class="has-text-white" :type="{ 'is-danger': errors.has('mentionlimit') }" :message="errors.first('mentionlimit')" label="Mention Threshold (per-message)">
+							<b-input v-model="config.mentionLimit" name="mentionlimit" type="number" v-validate="'required|integer|between:1,10'"></b-input>
 						</b-field>
 						<h3 class="has-text-white">If a user exceeds the above limit, they will automatically be given the server muted role.</h3>
 						<br>
@@ -183,10 +184,11 @@
 								</template>
 							</b-taginput>
 						</b-field>
+						</form>	
 					</section>
 					<footer class="modal-card-foot">
 						<button class="button is-danger is-outlined" type="button" @click="massModalActive = false">Close</button>
-						<button class="button is-primary" type="button" @click="settingArrayUpdate({ mentionLimit: parseFloat(config.mentionLimit), allowedMentionChannels: config.allowedMentionChannels })">Save</button>
+						<button class="button is-primary" form="massform" type="submit">Save</button>
 					</footer>
 				</div>
 
@@ -250,6 +252,10 @@ export default {
         };
     },
     methods: {
+		async validateForm() {
+			const result = await this.$validator.validateAll();
+			result ? this.settingArrayUpdate({ mentionLimit: parseFloat(this.config.mentionLimit), allowedMentionChannels: this.config.allowedMentionChannels }) : this.$toast.open('Incorrect parameters.');
+		},
         getChannelNames(channel) {
             this.filteredChannels = this.channels.filter(option => `${option.name}`.indexOf(channel.toLowerCase()) >= 0);
         },

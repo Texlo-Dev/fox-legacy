@@ -1,6 +1,6 @@
 <template>
     <div>
-        <br><br>
+        <br class='is-hidden-touch'>
         <section class="section">
             <div class='container'>
                 <h1 class="title has-text-white has-text-left">

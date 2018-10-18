@@ -105,54 +105,41 @@
                <p class="modal-card-title">New Giveaway</p>
             </header>
             <section class="modal-card-body">
-               <b-field label="Giveaway name" custom-class="has-text-white">
-                  <b-input maxlength="20" v-model="gw.name"></b-input>
+               <form id="gw" @submit.prevent="validateForm">
+                <b-field label="Giveaway name" :type="{ 'is-danger': errors.has('giveaway name') }" :message="errors.first('giveaway name')" custom-class="has-text-white">
+                  <b-input name="giveaway name" v-validate="'required|max:20'" v-model="gw.name"></b-input>
                </b-field>
-               <b-field label="Duration" custom-class="has-text-white">
-                  <b-input maxlength="4" v-model="gw.time"></b-input>
+               <b-field :type="{ 'is-danger': errors.has('duration') }" :message="errors.first('duration')" label="Duration" custom-class="has-text-white">
+                  <b-input name="duration" v-validate="'required|max:4'" v-model="gw.time"></b-input>
                </b-field>
-               <b-field label="Maximum # of Winners" custom-class="has-text-white">
-                  <b-input type="number" min=1 max=10 v-model="gw.maxWinners"></b-input>
+               <b-field :type="{ 'is-danger': errors.has('max winners') }" :message="errors.first('max winners')" label="Maximum # of Winners" custom-class="has-text-white">
+                  <b-input type="number" name="max winners" v-validate="'required|integer|between:1,10'" v-model="gw.maxWinners"></b-input>
                </b-field>
-               <b-field label="Select Channel" custom-class="has-text-white">
-                  <b-dropdown v-model="gw.channel">
-                       <button class="button is-grey-darker" slot="trigger">
-                           <template v-if="gw.channel">
-                               <span>#{{ gw.channel.name }}</span>
-                           </template>
-                           <template v-else>
-                               <span>None</span>
-                           </template>
-                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
-                       </button>
-                       <b-dropdown-item :key="channel.id" v-for="channel of channels" :value="channel">
-                           {{ channel.name }}
-                       </b-dropdown-item>
-                   </b-dropdown>
+               <b-field :type="{ 'is-danger': errors.has('channel') }" :message="errors.first('channel')" label="Select Channel" custom-class="has-text-white">
+                    <b-select name="channel" v-validate="'required'" v-model="gw.channel" placeholder="None">
+                        <option
+                        v-for="channel of channels"
+                        :value="channel"
+                        :key="channel.id">
+                        #{{ channel.name }}
+                        </option>
+                    </b-select>
                </b-field>
-               <b-field label="Select Emoji" custom-class="has-text-white">
-                  <b-dropdown v-model="gw.emoji">
-                       <button class="button is-grey-darker" slot="trigger">
-                           <template v-if="gw.emoji">
-                               <figure class="image is-24x24">
-                                   <img :src="gw.emoji.url" height="25" width="25" alt="emoji">
-                               </figure>
-                               <span>&nbsp;{{ gw.emoji.name }}</span>
-                           </template>
-                           <template v-else>
-                               <span>None</span>
-                           </template>
-                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
-                       </button>
-                       <b-dropdown-item :key="emoji.id" v-for="emoji of emojis" :value="emoji">
-                           {{ emoji.name }}
-                       </b-dropdown-item>
-                   </b-dropdown>
+               <b-field :type="{ 'is-danger': errors.has('emoji') }" :message="errors.first('emoji')" label="Select Emoji" custom-class="has-text-white">
+                   <b-select name="emoji" v-validate="'required'" v-model="gw.emoji" placeholder="None">
+                        <option
+                        v-for="emoji of emojis"
+                        :value="emoji"
+                        :key="emoji.id">
+                        {{ emoji.name }}
+                        </option>
+                    </b-select>
                </b-field>
+               </form>
             </section>
             <footer class="modal-card-foot">
                <button class="button is-danger is-outlined" type="button" @click="toggleAdd= false">Close</button>
-               <button class="button is-primary" type="button" @click="saveGw(gw)">Add</button>
+               <button class="button is-primary" type="submit" form="gw">Add</button>
             </footer>
          </div>
       </b-modal>
@@ -210,6 +197,10 @@ export default {
         }
     },
     methods: {
+        async validateForm() {
+            const result = await this.$validator.validateAll();
+            result ? this.saveGw(this.gw) : this.$toast.open('Incorrect parameters.');  
+        },
         async gwAction(gw, action) {
             this.$dialog.confirm({
                 title: `${action.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())} Giveaway`,
@@ -246,15 +237,6 @@ export default {
 
         },
         async saveGw(gw) {
-            for (const item in gw) {
-                if (!gw[item]) return this.$snackbar.open({
-                    indefinite: true,
-                    message: `Missing option: ${item}`,
-                    type: 'is-warning',
-                    position: 'is-top',
-                    actionText: 'Ok',
-                })
-            }
             if (!this.spanMs(gw.time)) return this.$snackbar.open({
                     indefinite: true,
                     message: `Invalid time format. Format is number + span. Ex: 40m or 5w`,
