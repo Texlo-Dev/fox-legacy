@@ -40,20 +40,33 @@
 							</a>
 						</div>
 						<div class="navbar-end">
-							<div class="navbar-item">
+							<div class="navbar-item" id="userbutton" v-if="$auth.loggedIn">
+								<img :src="getAvatar" height="30" width="30" style="border-radius: 50px">&nbsp;&nbsp;
 								<b-dropdown v-if="$auth.loggedIn">
-									<button class="button is-medium is-black" slot="trigger">
-										<img :src="getAvatar" height="30" width="30" style="border-radius: 50px">
-										&nbsp;&nbsp;<p class="has-text-weight-semi-bold">{{ $auth.user.username }}</p>
-										&nbsp;<font-awesome-icon size="1x" pull="right" icon="angle-down" />
-									</button>
+									<p class="subtitle has-text-weight-semi-bold" slot="trigger">
+										{{ $auth.user.username }}
+										&nbsp;<font-awesome-icon size="1x" icon="angle-down" />
+									</p>
 									<b-dropdown-item @click="showNav = !showNav" has-link>
-										<nuxt-link class="has-text-black" to="/servers">Servers</nuxt-link>
+										<nuxt-link to="/servers">
+											<p class="has-text-primary has-text-centered">
+												<font-awesome-icon size="1x" icon="server" />
+												Servers
+											</p>
+										</nuxt-link>
 									</b-dropdown-item>
-									<b-dropdown-item @click="logout()">Log Out</b-dropdown-item>
+									<b-dropdown-item @click="logout()">
+										<p class="has-text-danger has-text-centered">
+											<font-awesome-icon size="1x" icon="sign-out-alt" />
+											Log Out
+										</p>
+									</b-dropdown-item>
 								</b-dropdown>
+							</div>
+							<div class="navbar-item" v-else>
 								<button v-if="!$auth.loggedIn" class="button is-rounded is-black is-inverted is-outlined" @click="$auth.loginWith('discord')">
-									<font-awesome-icon size="s" pull="left" :icon="['fab', 'discord']"/>Login
+									<font-awesome-icon size="s" pull="left" :icon="['fab', 'discord']"/>
+									<p>Login</p>
 								</button>
 							</div>
 						</div>
@@ -84,12 +97,8 @@ export default {
 </script>
 
 <style>
-
-.bm-burger-button {
-    height: 20px;
-    width: 25px;
-    top: 41px;
-	left: 20px
-
-  }
+#userbutton {
+    cursor: pointer;
+    
+}
 </style>

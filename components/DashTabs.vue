@@ -3,7 +3,7 @@
        <br>
          <div class="hero-head">
             <div class="container">
-                <br>
+                
                  <nav class="level">
                   <div id="guild" class="level-item">
                         <figure class="image is-48x48">

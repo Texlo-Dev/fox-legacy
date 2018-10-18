@@ -74,7 +74,7 @@ export default {
         },
         {
           set: '@fortawesome/free-solid-svg-icons',
-          icons: ['faAngleDown', 'faPlus', 'faEdit', 'faWrench', 'faCogs', 'faTrashAlt', 'faRedo', 'faBan', 'faPause', 'faPlay', 'faStop']
+          icons: ['faAngleDown', 'faPlus', 'faEdit', 'faWrench', 'faCogs', 'faTrashAlt', 'faRedo', 'faBan', 'faPause', 'faPlay', 'faStop', 'faServer', 'faSignOutAlt']
         }
       ]
       
