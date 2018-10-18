@@ -12,7 +12,7 @@
                     <div class="box">
                         <h3 class="subtitle has-text-centered has-text-white">
                             Roles/Members
-                            <button class="button is-small is-grey-darker is-rounded" @click="selectMenu = true" ><font-awesome-icon size="0.8x" pull="left" icon="plus"/></button>
+                            <button class="button is-small is-grey-darker is-rounded" @click="selectMenu = true" ><font-awesome-icon size="0.8x" icon="plus"/></button>
                         </h3>
                         <b-select class="has-text-centered" @input="createOverwrite(selectedRole)" v-model="selectedRole" v-if="selectMenu" placeholder="None">
                         <option
