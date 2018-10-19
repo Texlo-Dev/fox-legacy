@@ -25,7 +25,28 @@
 										</b-switch>
 										<section>
 											<br>
-											<b-dropdown>
+                                            <div v-if="!prompts.includes('modlog')">
+                                                <a v-if="config.modlogChannel" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${config.modlogChannel.id}`">#{{ config.modlogChannel.name }}
+                                                </a>
+                                                <p v-else class="subtitle has-text-white">No Channel</p>
+                                                &nbsp;<button @click="prompts.push('modlog')" class="button is-small is-primary">Change</button>
+                                            </div>
+                                            <div v-else>
+                                                <b-field custom-class="has-text-white">
+                                                    <b-select v-model="config.modlogChannel" placeholder="Select a channel">
+                                                    <option
+                                                    v-for="channel of channels"
+                                                    :value="channel"
+                                                    :key="channel.id">
+                                                    #{{ channel.name }}
+                                                    </option>
+                                                    </b-select>
+                                                     <p class="control">
+                                                        <button @click="dropdownSave('modlogChannel', 'Mod-log', config.modlogChannel)" class="button is-primary">Save</button>
+                                                    </p>
+                                                </b-field>
+                                            </div>
+											<!--<b-dropdown>
 												<button class="button is-grey" slot="trigger">
 													<template v-if="config.modlogChannel">
 														<span>{{ config.modlogChannel.name }}</span>
@@ -36,7 +57,7 @@
 													<font-awesome-icon size="1x" pull="right" icon="angle-down" />
 												</button>
 												<b-dropdown-item  v-for="channel of channels" :value="channel.name" @click="dropdownSave('modlogChannel', 'Mod-log', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
-											</b-dropdown>
+											</b-dropdown>-->
 										</section>
 									</span>
 
@@ -54,23 +75,29 @@
                     <div class="box">
                         <div class="content">
                             <h3 class="has-text-white has-text-left">
-									Muted Role
-									<br><br>
-									<section>
-										<b-dropdown>
-											<button class="button is-grey" slot="trigger">
-												<template v-if="config.muteRole">
-													<span>{{ config.muteRole.name }}</span>
-												</template>
-												<template v-else>
-													<span>None</span>
-												</template>
-												<font-awesome-icon size="1x" pull="right" icon="angle-down" />
-											</button>
-											<b-dropdown-item  v-for="role of roles" :value="role.name" @click="dropdownSave('muteRole', 'Muted Role', role)" :key="role.name">{{ role.name }}</b-dropdown-item>
-										</b-dropdown>
-									</section>
-
+								Muted Role
+								<br><br>
+                                <div v-if="!prompts.includes('mute')">
+                                    <a v-if="config.muteRole" id="channel">@{{ config.muteRole.name }}
+                                    </a>
+                                    <p v-else class="subtitle has-text-white">No Role</p>
+                                    &nbsp;<button @click="prompts.push('mute')" class="button is-small is-primary">Change</button>
+                                 </div>
+                                <div v-else>
+                                    <b-field custom-class="has-text-white">
+                                        <b-select v-model="config.muteRole" placeholder="Select a channel">
+                                            <option
+                                            v-for="role of roles"
+                                            :value="role"
+                                            :key="role.id">
+                                            @{{ role.name }}
+                                            </option>
+                                        </b-select>
+                                        <p class="control">
+                                            <button @click="dropdownSave('muteRole', 'Muted Role', config.muteRole)" class="button is-primary">Save</button>
+                                        </p>
+                                    </b-field>
+                                </div>
 								</h3>
                             <p>Note: Mr.Fox will attempt to update the chat permissions for the specified role.</p>
                         </div>
@@ -87,7 +114,6 @@
 										</b-switch>
 										<button @click="modalActive = true" class="button is-small is-grey is-rounded">
 											Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
-
 										</button>	
 									</span>
 									<span v-else>
@@ -166,29 +192,15 @@
                 <section class="modal-card-body">
                     <form id="serverlog" @submit.prevent="logValidate">
                         <b-field :type="{ 'is-danger': errors.has('channel') }" :message="errors.first('channel')" label="Select Channel" custom-class="has-text-white">
-                    <b-select name="channel" v-validate="'required'" v-model="config.serverlogChannel" :placeholder="config.serverlogChanel ? config.serverlogChannel.name : 'None'">
-                        <option
-                        v-for="channel of channels"
-                        :value="channel"
-                        :key="channel.id">
-                        #{{ channel.name }}
-                        </option>
-                    </b-select>
-               </b-field>
-                    <!--<b-field custom-class='has-text-white' label="Channel">
-                        <b-dropdown>
-                            <button class="button is-grey-darker" slot="trigger">
-                                <template v-if="config.serverlogChannel">
-                                    #{{ config.serverlogChannel.name }}
-                                </template>
-                                <template v-else>
-                                    <span>None</span>
-                                </template>
-                                <font-awesome-icon size="1x" pull="right" icon="angle-down" />
-                            </button>
-                            <b-dropdown-item v-for="channel of channels" :value="channel.name" @click="dropdownSave('serverlogChannel', 'Server-Log', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
-                        </b-dropdown>
-                    </b-field>-->
+                            <b-select id="modalselect" name="channel" v-validate="'required'" v-model="config.serverlogChannel">
+                            <option
+                            v-for="channel of channels"
+                            :value="channel"
+                            :key="channel.id">
+                            #{{ channel.name }}
+                            </option>
+                            </b-select>
+                        </b-field>
                     <b-field label="Event List" custom-class="has-text-white">
                         <section id="checkbox" class="has-text-centered has-background-black">
 
@@ -278,6 +290,7 @@ export default {
             commands: null,
             config: null,
             channels: null,
+            prompts: [],
             roles: null,
             filteredChannels: this.channels,
 			filteredRoles: this.roles,
@@ -298,9 +311,7 @@ export default {
         dropdownSave(key, meta, item) {
             return this.settingUpdate(key, item, { meta })
                 .then(() => {
-                    if (key === "modlogChannel") this.config.modlogChannel = this.channels.find(c => c.name === item.name);
-                    if (key === "muteRole") this.config.muteRole = this.roles.find(c => c.name === item.name);
-                    if (key === "serverlogChannel") this.config.serverlogChannel = this.channels.find(c => c.name === item.name);
+                    this.prompts = [];
                 });
         },
         getChannelNames(channel) {
@@ -309,7 +320,7 @@ export default {
         getRoleNames(channel) {
             this.filteredRoles = this.roles.filter(option => `${option.name.toLowerCase()}`.indexOf(channel.toLowerCase()) >= 0);
         },
-        async settingUpdate(key, value, options) {
+        async settingUpdate(key, value, options = {}) {
             try {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
                 if (!options.hideToast) this.$toast.open({
@@ -397,3 +408,26 @@ export default {
     
 }
 </style>
+
+<style>
+.select select {
+background-color: #34383c;
+color: #eff;
+}
+
+#modalselect {
+background-color: #2b2f33;
+
+}
+
+.select.is-empty select {
+color: #eff;
+        
+}
+
+select {
+font-family: 'Poppins';
+}
+.select select option { color: #747f8d }
+</style>
+

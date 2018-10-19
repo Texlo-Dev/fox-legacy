@@ -103,7 +103,7 @@
                         </option>
                     </b-select>
                     </b-field>
-                    <b-field :type="{ 'is-danger': errors.has('channel') }" :message="errors.first('channel')" label="Select Type" custom-class="has-text-white">
+                    <b-field :type="{ 'is-danger': errors.has('type') }" :message="errors.first('type')" label="Select Type" custom-class="has-text-white">
                     <b-select name="type" v-validate="'required'" v-model="plData.type" placeholder="None">
                         <option value="simple">Simple</option>
                         <option value="open">Open-Ended</option>
@@ -122,61 +122,6 @@
 					</b-taginput>
                </b-field>
                 </form>
-               <!--<b-field label="Poll Name" custom-class="has-text-white">
-                  <b-input maxlength="20" v-model="plData.name"></b-input>
-               </b-field>
-               <b-field label="Question" custom-class="has-text-white">
-                  <b-input maxlength="75" v-model="plData.question"></b-input>
-               </b-field>
-               <b-field label="Select Channel" custom-class="has-text-white">
-                  <b-dropdown v-model="plData.channel">
-                       <button class="button is-grey-darker" slot="trigger">
-                           <template v-if="plData.channel">
-                               <span>#{{ plData.channel.name }}</span>
-                           </template>
-                           <template v-else>
-                               <span>None</span>
-                           </template>
-                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
-                       </button>
-                       <b-dropdown-item :key="channel.id" v-for="channel of channels" :value="channel">
-                           {{ channel.name }}
-                       </b-dropdown-item>
-                   </b-dropdown>
-               </b-field>
-               <b-field label="Choose Type" custom-class="has-text-white">
-                   <b-dropdown v-model="plData.type">
-                       <button class="button is-grey-darker" slot="trigger">
-                           <template v-if="plData.type === 'open'">
-                               <span>Open-Ended</span>
-                           </template>
-                           <template v-else-if="plData.type === 'simple'">
-                               <span>Simple</span>
-                           </template>
-                           <template v-else>
-                               <span>None</span>
-                           </template>
-                           <font-awesome-icon size="1x" pull="right" icon="angle-down" />
-                       </button>
-                       <b-dropdown-item value="simple">Simple</b-dropdown-item>
-                       <b-dropdown-item value="open">Open</b-dropdown-item>
-                   </b-dropdown>
-               </b-field>
-               <b-field v-if="plData.type === 'open'">
-                   <button class="button is-small is-rounded is-black" @click="respAdd = true">
-                        Add Response <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
-                    </button>
-                    <b-taginput v-if="respAdd"
-						v-model="plData.responses"
-						ellipsis
-						rounded
-                        size="is-small"
-                        maxtags="4"
-                        maxlength="35"
-						placeholder="Add Response"
-						custom-class="has-text-white">
-					</b-taginput>
-               </b-field>-->
             </section>
             <footer class="modal-card-foot">
                <button class="button is-danger is-outlined" type="button" @click="toggleAdd = false">Close</button>

@@ -100,37 +100,32 @@
                     <p class="modal-card-title">Goodbye Messaging</p>
                 </header>
                 <section class="modal-card-body">
-					<b-field label="Message" custom-class="has-text-white">
-                        <b-input type="textarea" v-model="config.goodbyeMsg" maxlength="1980" expanded></b-input>
-                    </b-field>
-					<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User name.</p>
-					<br>
-                    <b-field label="Message Location" custom-class="has-text-white">
-                        <b-dropdown>
-                            <button class="button is-grey-darker" slot="trigger">
-                                <template v-if="config.goodbyeChannel">
-                                    <span>#{{ config.goodbyeChannel.name }}</span>
-                                </template>
-                                <template v-else>
-                                    <span>None</span>
-                                </template>
-                                <font-awesome-icon pull="right" icon="angle-down" />
-                            </button>
-							
-                            <b-dropdown-item v-for="channel of channels" :value="channel.name" @click="dropdownSave('goodbyeChannel', 'Goodbye Channel', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
-                        </b-dropdown>
-
-                    </b-field>
-					<br>
-                    <div class="field">
-                        <b-switch @click.native="settingUpdate('goodbyeEmbed', !config.goodbyeEmbed, { hideToast: true })" type="is-primary" v-model="config.goodbyeEmbed">
-                            <p class="has-text-white has-text-weight-bold">Embed Message</p>
-                        </b-switch>
-                    </div>
+                    <form id="goodbye" @submit.prevent="validateGoodbye">
+                        <b-field :type="{ 'is-danger': errors.has('Message') }" :message="errors.first('Message')" label="Message" custom-class="has-text-white">
+                            <b-input name="Message" v-validate="'required|max:1980'" type="textarea" v-model="config.goodbyeMsg" expanded></b-input>
+                        </b-field>
+                        <p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class="inlinecode has-text-grey">{server}</code>= Server name. <code id="vars" class="inlinecode has-text-grey">{position}</code>= Join position.</p>
+                        <br>
+                        <b-field :type="{ 'is-danger': errors.has('Location') }" :message="errors.first('Location')" label="Goodbye Channel" custom-class="has-text-white">
+                            <b-select name="Location" v-validate="'required'" v-model="config.goodbyeChannel" placeholder="None">
+                            <option
+                            v-for="channel of channels"
+                            :value="channel"
+                            :key="channel.id">
+                            #{{ channel.name }}
+                            </option>
+                        </b-select>
+                        </b-field>
+                        <b-field>
+                            <b-switch type="is-primary" v-model="config.goodbyeEmbed">
+                                <p class="has-text-white has-text-weight-bold">Embed Message</p>
+                            </b-switch>
+                        </b-field>
+                    </form>	
                 </section>
 				<footer class="modal-card-foot">
-					<button class="button is-danger is-outlined" type="button" @click="toggleGoodbye = false">Close</button>
-                    <button class="button is-primary" @click="settingUpdate('goodbyeMsg', config.goodbyeMsg)" type="button">Save</button>
+					<button class="button is-danger is-outlined" @click="toggleGoodbye = false">Close</button>
+                    <button class="button is-primary" form="goodbye" type="submit">Save</button>
 				</footer>
             </div>
 
@@ -141,38 +136,33 @@
                     <p class="modal-card-title">Welcome Messaging&nbsp;&nbsp;</p>
                 </header>
                 <section class="modal-card-body">
-					<b-field label="Message" custom-class="has-text-white">
-                        <b-input type="textarea" v-model="config.welcomeMsg" maxlength="1980" expanded></b-input>
-                    </b-field>
-					<p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class="inlinecode has-text-grey">{server}</code>= Server name. <code id="vars" class="inlinecode has-text-grey">{position}</code>= Join position.</p>
-					<br>
-                    <b-field label="Message Location" custom-class="has-text-white">
-                        <b-dropdown>
-                            <button class="button is-grey-darker" slot="trigger">
-                                <template v-if="config.welcomeLocation">
-                                    <span>{{ config.welcomeLocation.name ? `#${config.welcomeLocation.name}`: config.welcomeLocation }}</span>
-                                </template>
-                                <template v-else>
-                                    <span>None</span>
-                                </template>
-                                <font-awesome-icon pull="right" icon="angle-down" />
-                            </button>
-							<b-dropdown-item @click="dropdownSave('welcomeLocation', 'Welcome Channel', 'DM')">DM</b-dropdown-item>
-                            <b-dropdown-item v-for="channel of channels" :value="channel.name" @click="dropdownSave('welcomeLocation', 'Welcome Channel', channel)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
-                        </b-dropdown>
-
-                    </b-field>
-					<br>
-                    <div class="field">
-                        <b-switch @click.native="settingUpdate('welcomerEmbed', !config.welcomerEmbed, { hideToast: true })" type="is-primary" v-model="config.welcomerEmbed">
-                            <p class="has-text-white has-text-weight-bold">Embed Message</p>
-                        </b-switch>
-                    </div>
-					
+                    <form id="welcome" @submit.prevent="validateWelcome">
+                        <b-field :type="{ 'is-danger': errors.has('Message') }" :message="errors.first('Message')" label="Message" custom-class="has-text-white">
+                            <b-input name="Message" v-validate="'required|max:1980'" type="textarea" v-model="config.welcomeMsg" expanded></b-input>
+                        </b-field>
+                        <p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class="inlinecode has-text-grey">{server}</code>= Server name. <code id="vars" class="inlinecode has-text-grey">{position}</code>= Join position.</p>
+                        <br>
+                        <b-field :type="{ 'is-danger': errors.has('Location') }" :message="errors.first('Location')" label="Welcome Location" custom-class="has-text-white">
+                            <b-select name="Location" v-validate="'required'" v-model="config.welcomeLocation" placeholder="None">
+                            <option value="DM">DM Member</option>
+                            <option
+                            v-for="channel of channels"
+                            :value="channel"
+                            :key="channel.id">
+                            #{{ channel.name }}
+                            </option>
+                        </b-select>
+                        </b-field>
+                        <b-field>
+                            <b-switch type="is-primary" v-model="config.welcomerEmbed">
+                                <p class="has-text-white has-text-weight-bold">Embed Message</p>
+                            </b-switch>
+                        </b-field>
+                    </form>	
                 </section>
 				<footer class="modal-card-foot">
 					<button class="button is-danger is-outlined" @click="toggleAdd = false">Close</button>
-                    <button @click="settingUpdate('welcomeMsg', config.welcomeMsg)" class="button is-primary" type="button">Save</button>
+                    <button class="button is-primary" form="welcome" type="submit">Save</button>
 				</footer>
             </div>
 
@@ -233,6 +223,22 @@ export default {
         };
     },
     methods: {
+        async validateWelcome() {
+            const result = await this.$validator.validateAll();
+            if (result) {
+                await this.settingUpdate('welcomeMsg', this.config.welcomeMsg);
+                await this.settingUpdate('welcomeLocation', this.config.welcomeLocation);
+                await this.settingUpdate('welcomerEmbed', !this.config.welcomerEmbed);
+            }
+        },
+        async validateGoodbye() {
+            const result = await this.$validator.validateAll();
+            if (result) {
+                await this.settingUpdate('goodbyeMsg', this.config.goodbyeMsg);
+                await this.settingUpdate('goodbyeChannel', this.config.goodbyeChannel);
+                await this.settingUpdate('goodbyeEmbed', !this.config.goodbyeEmbed);
+            }
+        },
         dropdownSave(key, meta, item) {
             return this.settingUpdate(key, item, { meta });
         },
@@ -331,4 +337,21 @@ export default {
 #vars {
 	background-color: #34383c;
 }
+.select select {
+background-color: #2b2f33;
+color: #eff;
+}
+
+.select.is-empty select {
+color: #eff;
+        
+}
+
+select {
+font-family: 'Poppins';
+}
+.select select option { color: #747f8d };
 </style>
+
+
+
