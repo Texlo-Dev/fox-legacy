@@ -117,7 +117,7 @@
                         </b-select>
                         </b-field>
                         <b-field>
-                            <b-switch @click.native="settingUpdate('goodbyeEmbed', !config.goodbyeEmbed)" type="is-primary" v-model="config.goodbyeEmbed">
+                            <b-switch @click.native="settingUpdate('goodbyeEmbed', !config.goodbyeEmbed, { hideToast: true, keepModal: true })" type="is-primary" v-model="config.goodbyeEmbed">
                                 <p class="has-text-white has-text-weight-bold">Embed Message</p>
                             </b-switch>
                         </b-field>
@@ -154,7 +154,7 @@
                         </b-select>
                         </b-field>
                         <b-field>
-                            <b-switch type="is-primary" @click.native="settingUpdate('welcomerEmbed', !config.welcomerEmbed)" v-model="config.welcomerEmbed">
+                            <b-switch type="is-primary" @click.native="settingUpdate('welcomerEmbed', !config.welcomerEmbed, { hideToast: true, keepModal: true })" v-model="config.welcomerEmbed">
                                 <p class="has-text-white has-text-weight-bold">Embed Message</p>
                             </b-switch>
                         </b-field>
@@ -251,8 +251,8 @@ export default {
                     type: "is-primary",
                     duration: 3800
                 });
-                this.toggleAdd = false;
-                this.toggleGoodbye = false;
+                if (options && !options.keepModal) this.toggleAdd = false;
+                if (options && !options.keepModal) this.toggleGoodbye = false;
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this setting: ${error}`,
