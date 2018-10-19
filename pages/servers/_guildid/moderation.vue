@@ -192,7 +192,7 @@
                 <section class="modal-card-body">
                     <form id="serverlog" @submit.prevent="logValidate">
                         <b-field :type="{ 'is-danger': errors.has('channel') }" :message="errors.first('channel')" label="Select Channel" custom-class="has-text-white">
-                            <b-select id="modalselect" name="channel" v-validate="'required'" v-model="config.serverlogChannel">
+                            <b-select id="modalselect" name="channel" v-model="config.serverlogChannel">
                             <option
                             v-for="channel of channels"
                             :value="channel"
@@ -206,6 +206,36 @@
 
                             <div class="box">
                                 <div class="content">
+                                    <b-checkbox v-model="config.enabledEvents" native-value="channelCreate">
+                                        <p>Channel Created</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="channelDelete">
+                                        <p>Channel Deleted</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="channelUpdate">
+                                        <p>Channel Updated</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="emojiCreate">
+                                        <p>Emoji Created</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="emojiDelete">
+                                        <p>Emoji Deleted</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="roleCreate">
+                                        <p>Role Created</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="roleDelete">
+                                        <p>Role Deleted</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="roleUpdate">
+                                        <p>Role Updated</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="guildMemberAdd">
+                                        <p>Member Join</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="guildMemberAdd">
+                                        <p>Member Join</p>
+                                    </b-checkbox>
                                     <b-checkbox v-model="config.enabledEvents" native-value="guildMemberAdd">
                                         <p>Member Join</p>
                                     </b-checkbox>
@@ -303,8 +333,8 @@ export default {
         async logValidate() {
             const result = await this.$validator.validateAll();
             if (result) {
+                await this.settingArrayUpdate({ enabledEvents: this.config.enabledEvents, logExcluded: this.config.logExcluded });
                 await this.settingUpdate('serverlogChannel', this.config.serverlogChannel, { bool: false, hideToast: true });
-                return this.settingArrayUpdate({ enabledEvents: this.config.enabledEvents, logExcluded: this.config.logExcluded });
             }
             this.$toast.open('Incorrect parameters.');   
         },
