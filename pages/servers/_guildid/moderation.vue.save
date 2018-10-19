@@ -233,6 +233,12 @@
                                     <b-checkbox v-model="config.enabledEvents" native-value="guildMemberAdd">
                                         <p>Member Join</p>
                                     </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="guildMemberAdd">
+                                        <p>Member Join</p>
+                                    </b-checkbox>
+                                    <b-checkbox v-model="config.enabledEvents" native-value="guildMemberAdd">
+                                        <p>Member Join</p>
+                                    </b-checkbox>
                                     <b-checkbox v-model="config.enabledEvents" native-value="guildMemberRemove">
                                         <p>Member Leave</p>
                                     </b-checkbox>
@@ -327,8 +333,8 @@ export default {
         async logValidate() {
             const result = await this.$validator.validateAll();
             if (result) {
-                await this.settingUpdate('serverlogChannel', this.config.serverlogChannel, { hideToast: true, dropHide: true });
                 await this.settingArrayUpdate({ enabledEvents: this.config.enabledEvents, logExcluded: this.config.logExcluded });
+                await this.settingUpdate('serverlogChannel', this.config.serverlogChannel, { bool: false, hideToast: true });
             }
             this.$toast.open('Incorrect parameters.');   
         },
