@@ -324,5 +324,5 @@ color: #eff;
 select {
 font-family: 'Poppins';
 }
-
+.select select option { color: #747f8d };
 </style>

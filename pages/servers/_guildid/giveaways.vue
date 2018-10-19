@@ -1,4 +1,4 @@
-<template>
+.select select option { color: #747f8d };<template>
    <section class="section">
       <div class="container">
          <nav class="level is-mobile">
@@ -346,7 +346,17 @@ export default {
 </script>
 
 <style>
-    .selectExample .input-select {
-        color: #242424;
-    }
+    .select select {
+background-color: #2b2f33;
+}
+
+.select.is-empty select {
+color: #eff;
+        
+}
+
+select {
+font-family: 'Poppins';
+}
+.select select option { color: #747f8d };
 </style>
