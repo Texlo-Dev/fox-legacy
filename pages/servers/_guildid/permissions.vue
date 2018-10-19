@@ -50,7 +50,7 @@
                                     <div class="level-left">
                                         <div class="level-item">
                                             <p class="subtitle has-text-white">
-                                                {{ perm.name }}
+                                                {{ capitalize(perm.name.split('.')[1]) }}
                                             </p>
                                         </div>
                                         <div class="level-item">
@@ -148,6 +148,9 @@ export default {
         this.pointTarget(this.overwrites[0]);
     },
     methods: {
+        capitalize(string) {
+            return string.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        },
         pointTarget(ow) {
             this.activeTarget = ow.identifier;
             this.activeOW = ow.overwrites;
