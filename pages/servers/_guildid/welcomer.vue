@@ -117,7 +117,7 @@
                         </b-select>
                         </b-field>
                         <b-field>
-                            <b-switch type="is-primary" v-model="config.goodbyeEmbed">
+                            <b-switch @click.native="settingUpdate('goodbyeEmbed', !config.goodbyeEmbed)" type="is-primary" v-model="config.goodbyeEmbed">
                                 <p class="has-text-white has-text-weight-bold">Embed Message</p>
                             </b-switch>
                         </b-field>
@@ -154,7 +154,7 @@
                         </b-select>
                         </b-field>
                         <b-field>
-                            <b-switch type="is-primary" v-model="config.welcomerEmbed">
+                            <b-switch type="is-primary" @click.native="settingUpdate('welcomerEmbed', !config.welcomerEmbed)" v-model="config.welcomerEmbed">
                                 <p class="has-text-white has-text-weight-bold">Embed Message</p>
                             </b-switch>
                         </b-field>
@@ -228,7 +228,6 @@ export default {
             if (result) {
                 await this.settingUpdate('welcomeMsg', this.config.welcomeMsg);
                 await this.settingUpdate('welcomeLocation', this.config.welcomeLocation);
-                await this.settingUpdate('welcomerEmbed', !this.config.welcomerEmbed);
             }
         },
         async validateGoodbye() {
@@ -236,7 +235,6 @@ export default {
             if (result) {
                 await this.settingUpdate('goodbyeMsg', this.config.goodbyeMsg);
                 await this.settingUpdate('goodbyeChannel', this.config.goodbyeChannel);
-                await this.settingUpdate('goodbyeEmbed', !this.config.goodbyeEmbed);
             }
         },
         dropdownSave(key, meta, item) {
