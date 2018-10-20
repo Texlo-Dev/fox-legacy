@@ -47,9 +47,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~/plugins/slide', ssr: false },
     { src: '~/plugins/vuecharts', ssr: false },
-    { src: '~/plugins/vuesax' },
     { src: '~/plugins/moment'}
   ],
 
@@ -60,8 +58,8 @@ export default {
     // Doc: https://github.com/nuxt-community/axios-module#usage
     '@nuxtjs/axios',
     '@nuxtjs/sitemap',
-    '@nuxtjs/dotenv',
     '@nuxtjs/auth',
+    '@nuxtjs/dotenv',
     'nuxt-buefy',
     ['nuxt-validate', {
       lang: 'en'
