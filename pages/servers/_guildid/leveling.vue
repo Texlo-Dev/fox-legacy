@@ -73,7 +73,7 @@
 									</button>
 									<br><br>
 									<b-taglist>
-										<b-tag v-if="leveling.promoRoles" v-for="role of leveling.promoRoles" :key="role"
+										<b-tag v-if="leveling.promoRoles.length" v-for="role of leveling.promoRoles" :key="role"
 											type="is-grey"
 											closable
 											@close="confirmDelete(role)"
@@ -81,7 +81,7 @@
 											@{{ role.name }} - Rank {{ role.rank }}
 										</b-tag>
 									</b-taglist>
-									<section v-if="leveling.promoRoles">
+									<section v-if="leveling.promoRoles.length">
 										<p class="has-text-white subtitle">When a user unlocks a role:</p>
 										<b-checkbox size="is-medium" required @click.native="levelingUpdate('stackRoles', true)" v-model="leveling.stackRoles">
 											Stack Roles
@@ -92,7 +92,7 @@
 										</b-checkbox>
 									</section>
 								</h3>
-								<p v-if="!leveling.promoRoles">No Roles added. Click the "Add Role" button to add a role.</p>
+								<p v-if="!leveling.promoRoles.length">No Roles added. Click the "Add Role" button to add a role.</p>
 
 							</div>
 						</div>
