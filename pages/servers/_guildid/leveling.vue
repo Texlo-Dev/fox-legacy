@@ -272,7 +272,7 @@ export default {
                 type: "is-primary",
                 onConfirm: async () => {
                     try {
-						this.promoRoles.splice(this.promoRoles.indexOf(role, 1));
+						this.leveling.promoRoles.splice(this.leveling.promoRoles.indexOf(role, 1));
                         this.leveling = await API.levelingUpdate("promoRoles", this.leveling.promoRoles, { bool: false });
                     } catch (error) {
                         this.$toast.open({

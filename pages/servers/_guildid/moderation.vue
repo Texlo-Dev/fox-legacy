@@ -327,8 +327,8 @@ export default {
         async logValidate() {
             const result = await this.$validator.validateAll();
             if (result) {
-                await this.settingUpdate('serverlogChannel', this.config.serverlogChannel, { hideToast: true, dropHide: true });
-                await this.settingArrayUpdate({ enabledEvents: this.config.enabledEvents, logExcluded: this.config.logExcluded });
+                // await this.settingUpdate('serverlogChannel', this.config.serverlogChannel, { hideToast: true, dropHide: true });
+                await this.settingArrayUpdate({ enabledEvents: this.config.enabledEvents, logExcluded: this.config.logExcluded, serverlogChannel: this.config.serverlogChannel });
             }
             this.$toast.open('Incorrect parameters.');   
         },

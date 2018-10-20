@@ -225,17 +225,19 @@ export default {
     methods: {
         async validateWelcome() {
             const result = await this.$validator.validateAll();
-            if (result) {
+            if (result) return await this.settingArrayUpdate({welcomeMsg: this.config.welcomeMsg, welcomeLocation: this.config.welcomeLocation });
+            /* if (result) {
                 await this.settingUpdate('welcomeMsg', this.config.welcomeMsg);
                 await this.settingUpdate('welcomeLocation', this.config.welcomeLocation);
-            }
+            }*/
         },
         async validateGoodbye() {
             const result = await this.$validator.validateAll();
-            if (result) {
+            if (result) return await this.settingArrayUpdate({goodbyeMsg: this.config.goodbyeMsg, goodbyeChannel: this.config.goodbyeChannel });
+            /* if (result) {
                 await this.settingUpdate('goodbyeMsg', this.config.goodbyeMsg);
                 await this.settingUpdate('goodbyeChannel', this.config.goodbyeChannel);
-            }
+            } */
         },
         dropdownSave(key, meta, item) {
             return this.settingUpdate(key, item, { meta });
