@@ -113,7 +113,7 @@ export default {
     lang: 'en'
   },
   meta: {
-    name: 'Mr.Fox Bot',
+    name: 'Mr.Fox',
     description: 'A fully-modular, multipurpose bot for Discord. Which happens to be very cunning.'
   },
   /*
