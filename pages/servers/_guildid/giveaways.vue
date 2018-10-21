@@ -55,10 +55,8 @@
                                     </button>
                                  </p>
                               </span>
-                              <br>
+
                               <span v-if="!gw.paused && gw.running">
-                              - Ends: {{ [gw.timeRemaining, 'milliseconds'] | duration('humanize', true) }}
-                              <br>
                               - Max Winners: {{ gw.maxWinners }}
                               <br>
                               - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
@@ -66,9 +64,6 @@
                               <span v-else-if="gw.paused"> 
                                 - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
                               </span>
-                              <span v-else>
-                              - Ended: {{ new Date(gw.endDate) | moment('MM/DD/YY [at] h:mm A') }}
-                              <br>
                                - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
                               <br>
                               - Winners: {{ gw.winners.map(w => `${w.username}#${w.discriminator}`).join(', ') || 'None' }}
@@ -152,7 +147,7 @@ import API from '~/API';
 export default {
     head() {
 		return {
-			title: 'Mr.Fox Bot - Giveaways',	
+            title: 'Mr.Fox Bot - Giveaways'
 		}
 	},
     async fetch({ store, app, params: { guildid } }) {

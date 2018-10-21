@@ -47,8 +47,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~/plugins/vuecharts', ssr: false },
-    { src: '~/plugins/moment'}
+    { src: '~/plugins/vuecharts', ssr: false }
   ],
 
   /*
@@ -123,6 +122,9 @@ export default {
   ** Build configuration
   */ 
  build: {
-    extractCSS: true
+    extractCSS: true,
+    extend(config) {
+      config.resolve.alias['chart.js'] = 'chart.js/dist/Chart.js'
+    }
   }
 }

@@ -69,7 +69,7 @@
                         <b-input name="Message ID" v-validate="'required|max:21'" v-model="roleData.messageID"></b-input>
                     </b-field>
                     <b-field :type="{ 'is-danger': errors.has('role') }" :message="errors.first('role')" label="Select Role" custom-class="has-text-white">
-                    <b-select name="role" v-validate="'required'" v-model="roleData.role" placeholder="None">
+                    <b-select id="modalselect" name="role" v-validate="'required'" v-model="roleData.role" placeholder="None">
                         <option
                         v-for="role of roles"
                         :value="role"
@@ -79,7 +79,7 @@
                     </b-select>
                     </b-field>
                     <b-field :type="{ 'is-danger': errors.has('emoji') }" :message="errors.first('emoji')" label="Select Emoji" custom-class="has-text-white">
-                    <b-select name="emoji" v-validate="'required'" v-model="roleData.emoji" placeholder="None">
+                    <b-select id="modalselect" name="emoji" v-validate="'required'" v-model="roleData.emoji" placeholder="None">
                         <option
                         v-for="emoji of emojis"
                         :value="emoji"
@@ -271,18 +271,3 @@ export default {
 }
 </script>
 
-<style>
-.select select {
-background-color: #2b2f33;
-}
-
-.select.is-empty select {
-color: #eff;
-        
-}
-
-select {
-font-family: 'Poppins';
-}
-
-</style>

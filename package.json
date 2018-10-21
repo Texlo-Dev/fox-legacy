@@ -20,6 +20,7 @@
     "@nuxtjs/auth": "^4.5.2",
     "@nuxtjs/axios": "^5.0.0",
     "@nuxtjs/dotenv": "^1.1.1",
+    "@nuxtjs/moment": "^1.0.0",
     "@nuxtjs/sitemap": "^0.1.1",
     "bulma": "^0.7.2",
     "bulma-extensions": "^3.0.0",
@@ -36,8 +37,7 @@
     "sass-loader": "^7.1.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "vue-chartjs": "^3.4.0",
-    "vue-moment": "^4.0.0"
+    "vue-chartjs": "^3.4.0"
   },
   "devDependencies": {
     "@types/dotenv": "^4.0.3",
