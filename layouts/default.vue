@@ -109,7 +109,7 @@ $colors: (
 
 // Update some of Bulma's component variables
 $dropdown-content-background-color: $grey-darker;
-$dropdown-item-hover-background-color: $black;
+$dropdown-item-hover-color: $grey;
 $tabs-link-color: #eff0eb;
 $tabs-link-active-color: #eff0eb;
 $tabs-border-bottom-color: #363636;
