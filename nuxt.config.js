@@ -112,6 +112,10 @@ export default {
     name: 'Mr.Fox Bot',
     lang: 'en'
   },
+  meta: {
+    name: 'Mr.Fox Bot',
+    description: 'A fully-modular, multipurpose bot for Discord. Which happens to be very cunning.'
+  },
   /*
   ** Axios module configuration
   */
