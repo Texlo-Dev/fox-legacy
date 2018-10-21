@@ -60,6 +60,7 @@ export default {
     '@nuxtjs/auth',
     '@nuxtjs/dotenv',
     'nuxt-buefy',
+    '@nuxtjs/pwa',
     ['nuxt-validate', {
       lang: 'en'
     }],
@@ -106,6 +107,10 @@ export default {
       plugins: [
         '~/plugins/auth' 
       ]
+  },
+  manifest: {
+    name: 'Mr.Fox Bot',
+    lang: 'en'
   },
   /*
   ** Axios module configuration
