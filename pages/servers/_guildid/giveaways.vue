@@ -57,17 +57,24 @@
                               </span>
 
                               <span v-if="!gw.paused && gw.running">
+                                - Time Remaining: {{ gw.timeRemaining }}
+                                <br>
                               - Max Winners: {{ gw.maxWinners }}
                               <br>
                               - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
                               </span>
                               <span v-else-if="gw.paused"> 
+                                <br>
                                 - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
                               </span>
-                               - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
-                              <br>
-                              - Winners: {{ gw.winners.map(w => `${w.username}#${w.discriminator}`).join(', ') || 'None' }}
+                              <span v-else>
+                                - Channel: <a target="_blank" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`">#{{ gw.channel.name }}</a>
+                                <br>
+                                - Ended: {{ gw.endDate }}
+                                <br>
+                                - Winners: {{ gw.winners.map(w => `${w.username}#${w.discriminator}`).join(', ') || 'None' }}
                               </span>
+            
                            </div>
                         </div>
                      </div>
