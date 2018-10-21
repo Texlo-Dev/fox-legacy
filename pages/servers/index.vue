@@ -79,9 +79,12 @@ export default {
         background-color: #2f3136;
         width: 128px;
         height: 128px;
+        display: flex;
+        justify-content: center;
         align-items: center;
         color: white;
         font-family: 'Raleway';
-        font-size: xx-large
+        font-size: xx-large;
     }
+
 </style>
