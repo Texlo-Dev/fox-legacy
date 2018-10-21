@@ -76,13 +76,7 @@ export default {
         }
       ]
       
-    }],
-    [
-      'nuxt-bulma-slim',
-      {
-        additionalPaths: ['assets/scss/styles.scss']
-      }
-    ]
+    }]
   ],
   /*
   ** Discord Oauth
@@ -129,18 +123,6 @@ export default {
   ** Build configuration
   */ 
  build: {
-    extractCSS: true,
-    /* optimization: {
-      splitChunks: {
-        cacheGroups: {
-          styles: {
-            name: 'styles',
-            test: /\.(css|vue)$/,
-            chunks: 'all',
-            enforce: true
-          }
-        }
-      }
-    }*/
+    extractCSS: true
   }
 }

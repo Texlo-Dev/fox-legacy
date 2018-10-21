@@ -12,7 +12,7 @@
 					An intelligent, wise, and rather cunning multipurpose bot for <strong>Discord</strong>.
 				</p>
 				<div style="margin-top: 10px;">
-					<nuxt-link class="button is-medium is-black is-inverted is-outlined" to="/servers">
+					<nuxt-link class="button is-medium is-primary" to="/servers">
 						<span><font-awesome-icon size="s" :icon="['fab', 'discord']"/></span>
 						<span>&nbsp;Manage Servers</span>
 					</nuxt-link>

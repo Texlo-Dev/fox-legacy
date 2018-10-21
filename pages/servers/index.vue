@@ -9,11 +9,11 @@
          <figure v-if="guild.canManage && guild.icon" class="image is-128x128">
             <img @click="enterDash(guild)" class="is-rounded" :src="guild.iconURL">
          </figure>
-         <a v-else-if="guild.canManage && !guild.icon" @click="enterDash(guild)" class="icon">{{ getInitials(guild.name) }}</a>
+         <a v-else-if="guild.canManage && !guild.icon" @click="enterDash(guild)" class="sicon">{{ getInitials(guild.name) }}</a>
          <figure v-else-if="guild.icon" class="image is-128x128">
             <a @click="popup(guild)"><img class="is-rounded" :src="guild.iconURL"></a>
          </figure>
-         <a v-else @click="popup(guild)" class="icon">{{ getInitials(guild.name) }}</a>
+         <a v-else @click="popup(guild)" class="sicon">{{ getInitials(guild.name) }}</a>
       </b-tooltip>
       <br>
       <br>
@@ -74,12 +74,11 @@ export default {
 </script>
 
 <style>
-.icon {
+.sicon {
         border-radius: 128px;
         background-color: #2f3136;
         width: 128px;
         height: 128px;
-       
         align-items: center;
         color: white;
         font-family: 'Raleway';
