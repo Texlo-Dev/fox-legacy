@@ -110,17 +110,18 @@ export default {
     },
     async asyncData({ app, params: { guildid }, route }) {
         const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-        let { data: permissions } = await app.$axios.get(`/api/permissions`);
-		const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-        const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles?all=true`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-        const { data: overwrites } = await app.$axios.get(`/api/permissions/${guildid}`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+        const [permissions, channels, roles, overwrites] = await Promise.all([
+			(await app.$axios.get(`/api/permissions`)).data,
+		    (await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+            (await app.$axios.get(`/api/guilds/${guildid}/roles?all=true`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+            (await app.$axios.get(`/api/permissions/${guildid}`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data
+		]);
         return {
             permissions, 
             roles, 
             channels,
             overwrites
         }
-
     },
     data() {
         return {

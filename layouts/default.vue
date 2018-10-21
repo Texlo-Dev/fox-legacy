@@ -70,7 +70,7 @@ td span {
 </style>
 
 
-<style lang="scss">
+<!--<style lang="scss">
 @import "~bulma/sass/utilities/_all";
 
 $purple: #8A4D76;
@@ -154,7 +154,7 @@ $menu-item-hover-background-color: $grey;
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
 @import "~bulma-extensions/bulma-divider/src/sass/index.sass";
-</style>
+</style>-->
 
 <style>
 html

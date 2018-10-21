@@ -116,16 +116,17 @@ export default {
 		store.commit('toggleDash', true);
     },
     async asyncData({ app, route, params: { guildid } }) {
-		const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-		const { data: commands } = await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: config } =  await app.$axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-        const { data: tags } =  await app.$axios.get(`/api/guilds/${guildid}/tags`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
+        const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        const [commands, config, tags] = await Promise.all([
+			(await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+            (await app.$axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+            (await app.$axios.get(`/api/guilds/${guildid}/tags`, { headers: { Authorization: secret.encrypt(app.$auth.user.id)} })).data,
+		]);
         return {
             commands,
             config,
             tags
         }
-
     },
     data() {
         return {

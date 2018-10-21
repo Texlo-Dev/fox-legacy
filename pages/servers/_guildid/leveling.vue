@@ -25,32 +25,46 @@
 										</b-switch>
 										<section>
 											<br>
-											<p class="subtitle title has-text-white has-text-left">Location</p>
-											<b-dropdown>
-												<button class="button is-grey" slot="trigger">
-													<template v-if="leveling.messageLocation">
-														<span>{{ leveling.messageLocation.name ? '#' + leveling.messageLocation.name : leveling.messageLocation }}</span>
-													</template>
-													<template v-else>
-														<span>None</span>
-													</template>
-													<font-awesome-icon size="1x" pull="right" icon="angle-down" />
-												</button>
-												<b-dropdown-item @click="dropdownSave('messageLocation', 'Level Message location', 'DM')">DM</b-dropdown-item>
-												<b-dropdown-item @click="dropdownSave('messageLocation', 'Level Message location', 'Current Channel')">Current Channel</b-dropdown-item>
-												<b-dropdown-item  v-if="channels" v-for="channel of channels" :value="channel.name" @click="dropdownSave('messageLocation', 'Level Message Location', channel, false)" :key="channel.name">{{ channel.name }}</b-dropdown-item>
-											</b-dropdown>
+											<p class="subtitle title has-text-white has-text-left">Location:</p>
+											<div v-if="!prompts.includes('leveloc')">
+                                                <a v-if="leveling.messageLocation.name" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${leveling.messageLocation.id}`">#{{ leveling.messageLocation.name }}
+                                                </a>
+                                                <p v-else class="subtitle has-text-white">Direct Message</p>
+                                                &nbsp;<button @click="prompts.push('leveloc')" class="button is-small is-primary">Change</button>
+                                            </div>
+                                            <div v-else>
+                                                <b-field custom-class="has-text-white">
+                                                    <b-select v-model="leveling.messageLocation" placeholder="Select a location">
+													<option value="DM">Direct Message</option>
+                                                    <option
+                                                    v-for="channel of channels"
+                                                    :value="channel"
+                                                    :key="channel.id">
+                                                    #{{ channel.name }}
+                                                    </option>
+                                                    </b-select>
+                                                     <p class="control">
+                                                        <button @click="dropdownSave('messageLocation', 'Level Message location', leveling.messageLocation)" class="button is-primary">Save</button>
+                                                    </p>
+                                                </b-field>
+                                            </div>
 										</section>
 										<section>
 											<br>
-											<p class="subtitle title has-text-white has-text-left">Message</p>
-											<b-field>
-												<b-input type="textarea" v-model="config.levelMsg" maxlength="1980" expanded></b-input>
-												<p class="control">
-													<button @click="settingUpdate('levelMsg', config.levelMsg, { bool: false })" class="button is-primary">Save</button>
-												</p>
-											</b-field>
-											<p style="font-size: 15px" class="subtitle has-text-white"><code id="vars" class="inlinecode has-text-white ">{user}</code>= User name. <code id="vars" class="has-text-white inlinecode">{level}</code>= User's new level.</p>
+											<p class="subtitle title has-text-white has-text-left">Message:</p>
+											<div v-if="!prompts.includes('levelmsg')">
+                                                <p class="subtitle has-text-white" style="font-size: 15px">{{ config.levelMsg }}</p>
+                                                &nbsp;<button @click="prompts.push('levelmsg')" class="button is-small is-primary">Change</button>
+                                            </div>
+                                            <div v-else>
+                                                <b-field>
+													<b-input type="textarea" v-model="config.levelMsg" maxlength="1980" expanded></b-input>
+													<p class="control">
+														<button @click="settingUpdate('levelMsg', config.levelMsg, { bool: false, hideToast: true })" class="button is-primary">Save</button>
+													</p>
+												</b-field>
+												<p style="font-size: 15px" class="subtitle has-text-white"><code id="vars" class="inlinecode has-text-white ">{user}</code>= User name. <code id="vars" class="has-text-white inlinecode">{level}</code>= User's new level.</p>
+                                            </div>
 										</section>
 									</span>
 									<span v-else>
@@ -174,28 +188,25 @@
 					<p class="modal-card-title">Add Promotion Role</p>
 				</header>
 				<section class="modal-card-body">
-					<b-field custom-class="has-text-white" label="Select Role">
-						<b-dropdown>
-							<button class="button is-grey-darker" slot="trigger">
-								<template v-if="selectedRole">
-									<span>{{ selectedRole.name }}</span>
-								</template>
-								<template v-else>
-									<span>None</span>
-								</template>
-								<font-awesome-icon size="1x" pull="right" icon="angle-down" />
-							</button>
-							<b-dropdown-item @click="selectedRole = role" v-for="role of roles" :value="role.name" :key="role.name">{{ role.name }}</b-dropdown-item>
-						</b-dropdown>
-
-					</b-field>
-					<b-field custom-class="has-text-white" label="Promotion Level">
-						<b-input type="number" min=1 v-model="selectedRank"></b-input>
-					</b-field>
+					<form id="promo" @submit.prevent="validatePromo">
+						<b-field :type="{ 'is-danger': errors.has('role') }" :message="errors.first('role')" label="Select Role" custom-class="has-text-white">
+                    	<b-select name="role" v-validate="'required'" v-model="roleData.role" placeholder="None">
+                        	<option
+                        	v-for="role of roles"
+                        	:value="role"
+                        	:key="role.id">
+                        	{{ role.name }}
+                        	</option>
+                    	</b-select>
+                    	</b-field>
+						<b-field :type="{ 'is-danger': errors.has('Rank') }" custom-class="has-text-white" label="Promotion Level">
+							<b-input name="Rank" v-validate="'required'" v-model.number="roleData.rank"></b-input>
+						</b-field>
+					</form>
 				</section>
 				<footer class="modal-card-foot">
 					<button class="button is-danger is-outlined" type="button" @click="promoModal = false">Close</button>
-					<button v-if="selectedRole" class="button is-primary" type="button" @click="addPromoRole(selectedRole, selectedRank)">Save</button>
+					<button class="button is-primary" type="submit" form="promo">Save</button>
 				</footer>
 			</div>
 
@@ -230,38 +241,46 @@ export default {
     },
     async asyncData({ app, route, params: { guildid } }) {
 		const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-		const { data: commands } = await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: config } =  await app.$axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: roles } =  await app.$axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: leveling } =  await app.$axios.get(`/api/guilds/${guildid}/leveling`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		roles.forEach(r => r.color = `#${r.color.toString(16).padStart(6, "0")}`);
+        const [commands, config, channels, roles, leveling] = await Promise.all([
+			(await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+            (await app.$axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+            (await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id)} })).data,
+			(await app.$axios.get(`/api/guilds/${guildid}/roles`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+			(await app.$axios.get(`/api/guilds/${guildid}/leveling`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+		]);
         return {
             commands,
             config,
-            channels, 
+            channels,
 			roles,
 			leveling
         }
-
     },
     data() {
         return {
             commands: null,
             config: null,
             channels: null,
-            leveling: null,
+			leveling: null,
+			prompts: [],
 			roles: null,
+			roleData: {
+				role: null,
+				rank: null
+			},
 			filteredChannels: this.channels,
             filteredRoles: this.roles,
-            promoModal: false,
-            selectedRole: null,
+            promoModal: false
 
         };
     },
     methods: {
+		async validatePromo() {
+			const result = await this.$validator.validateAll();
+			result ? this.addPromoRole(this.roleData.role, this.roleData.rank) : alert('Incorrect Parameters.');
+		},
 		dropdownSave(key, meta, item, bool) {
-			return this.levelingUpdate(key, item, { meta, bool })
+			return this.levelingUpdate(key, item, { meta, bool }).then(this.prompts = []);
 		},
         async confirmDelete(role) {
             this.$dialog.confirm({
@@ -286,15 +305,8 @@ export default {
             });
         },
         async addPromoRole(role, rank) {
-            if (!rank) {
-                return this.$toast.open({
-                    message: `Missing parameter "rank".`,
-                    type: "is-danger",
-                    duration: 3000
-                });
-            }
-            role.rank = parseInt(rank);
-            this.leveling.promoRoles.push(role);
+			this.leveling.promoRoles.push(role);
+			role.rank = rank;
 			await this.levelingUpdate('promoRoles', this.leveling.promoRoles);
             this.promoModal = false;
         },
@@ -319,11 +331,12 @@ export default {
         async settingUpdate(key, value, options) {
             try {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
-                this.$toast.open({
+                if (!options.hideToast) this.$toast.open({
                     message: `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
                     type: "is-primary",
                     duration: 3800
-                });
+				});
+				this.prompts = [];
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this setting: ${error}`,
@@ -403,3 +416,18 @@ export default {
 	background-color: #2b2f33;
 }
 </style>
+<style>
+.select select {
+background-color: #2b2f33;
+}
+
+.select.is-empty select {
+color: #eff;
+        
+}
+
+select {
+font-family: 'Poppins';
+}
+</style>
+

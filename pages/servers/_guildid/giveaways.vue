@@ -163,20 +163,21 @@ export default {
 		store.commit('toggleDash', true);
     },
     async asyncData({ app, route, params: { guildid } }) {
-		const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-		const { data: commands } = await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-		const { data: config } =  await app.$axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })
-        const { data: channels } =  await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-        const { data: giveaways } = await app.$axios.get(`/api/guilds/${guildid}/giveaways`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } });
-        const { data: emojis } =  await app.$axios.get(`/api/guilds/${guildid}/emojis`);
+        const page = route.path.split(guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+        const [commands, config, channels, giveaways, emojis] = await Promise.all([
+			(await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+            (await app.$axios.get(`/api/guilds/${guildid}/config`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+            (await app.$axios.get(`/api/guilds/${guildid}/channels`, { headers: { Authorization: secret.encrypt(app.$auth.user.id)} })).data,
+            (await app.$axios.get(`/api/guilds/${guildid}/giveaways`, { headers: { Authorization: secret.encrypt(app.$auth.user.id) } })).data,
+            (await app.$axios.get(`/api/guilds/${guildid}/emojis`)).data
+		]);
         return {
             commands,
             config,
-            channels, 
-            giveaways, 
+            channels,
+            giveaways,
             emojis
         }
-
     },
     data() {
         return {

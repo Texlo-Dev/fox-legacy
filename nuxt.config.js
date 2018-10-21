@@ -76,7 +76,13 @@ export default {
         }
       ]
       
-    }]
+    }],
+    [
+      'nuxt-bulma-slim',
+      {
+        additionalPaths: ['assets/scss/styles.scss']
+      }
+    ]
   ],
   /*
   ** Discord Oauth
@@ -124,7 +130,7 @@ export default {
   */ 
  build: {
     extractCSS: true,
-    optimization: {
+    /* optimization: {
       splitChunks: {
         cacheGroups: {
           styles: {
@@ -135,6 +141,6 @@ export default {
           }
         }
       }
-    }
+    }*/
   }
 }

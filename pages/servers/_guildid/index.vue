@@ -60,7 +60,6 @@ export default {
 	async asyncData({ app, params: { guildid }, store }) {
 		const { data: packages } = await app.$axios.get(`/api/guilds/${guildid}/packages`, { headers: { Authorization: secrets.encrypt(app.$auth.user.id) } });
 		store.commit('toggleDash', true);
-		
 		return {
 			packages
 		}
