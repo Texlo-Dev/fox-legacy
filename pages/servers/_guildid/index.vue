@@ -41,7 +41,6 @@
 import API from '~/API.js';
 import secrets from '~/secrets.js';
 export default {
-	transition: 'fade',
 	head() {
 		return {
 			title: 'Mr.Fox Bot - Dashboard',	

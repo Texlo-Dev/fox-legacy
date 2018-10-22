@@ -156,6 +156,7 @@
 
 <script>
 export default {
-	auth: false
+	auth: false,
+	transition: 'fade'
 }
 </script>

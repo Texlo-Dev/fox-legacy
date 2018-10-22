@@ -82,7 +82,8 @@
 
 <script>
 export default {
-	auth: false,
+    auth: false,
+    transition: 'fade',
 	head() {
 		return {
 			title: 'Mr.Fox Bot - Getting Started',
