@@ -133,7 +133,7 @@ export default {
   */ 
  build: {
     extractCSS: true,
-    /*optimization: {
+    optimization: {
       splitChunks: {
         cacheGroups: {
           styles: {
@@ -144,7 +144,7 @@ export default {
           }
         }
       }
-    },*/
+    },
     extend(config) {
       config.resolve.alias['chart.js'] = 'chart.js/dist/Chart.js'
     }
