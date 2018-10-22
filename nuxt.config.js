@@ -131,7 +131,19 @@ export default {
   ** Build configuration
   */ 
  build: {
-    extractCSS: false,
+    extractCSS: true,
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.(css|vue)$/,
+            chunks: 'all',
+            enforce: true
+          }
+        }
+      }
+    },
     extend(config) {
       config.resolve.alias['chart.js'] = 'chart.js/dist/Chart.js'
     }
