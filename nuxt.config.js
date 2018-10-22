@@ -27,7 +27,7 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Raleway|Niramit:300|Work+Sans|Mukta|Poppins' }
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Raleway|Poppins' }
     ]
   },
 
@@ -110,6 +110,7 @@ export default {
   },
   manifest: {
     name: 'Mr.Fox Bot',
+    background_color: '#f37934',
     lang: 'en'
   },
   meta: {
@@ -132,7 +133,7 @@ export default {
   */ 
  build: {
     extractCSS: true,
-    optimization: {
+    /*optimization: {
       splitChunks: {
         cacheGroups: {
           styles: {
@@ -143,7 +144,7 @@ export default {
           }
         }
       }
-    },
+    },*/
     extend(config) {
       config.resolve.alias['chart.js'] = 'chart.js/dist/Chart.js'
     }
