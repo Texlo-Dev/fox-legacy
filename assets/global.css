@@ -1,7 +1,7 @@
-.fade-enter-active, .fade-leave-active {
+.pagegenter-active, .page-leave-active {
     transition: opacity .5s;
   }
-  .fade-enter, .fade-leave-active {
+  .page-enter, .page-leave-active {
     opacity: 0;
   }
 .label {

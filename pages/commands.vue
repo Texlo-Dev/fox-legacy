@@ -86,7 +86,6 @@
 import API from "../API.js";
 export default {
 	auth: false,
-	transition: 'fade',
     head() {
 		return {
 			title: 'Mr.Fox Bot - Commands',

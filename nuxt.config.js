@@ -131,7 +131,7 @@ export default {
   ** Build configuration
   */ 
  build: {
-    extractCSS: true,
+    extractCSS: false,
     extend(config) {
       config.resolve.alias['chart.js'] = 'chart.js/dist/Chart.js'
     }
