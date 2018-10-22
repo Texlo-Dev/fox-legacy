@@ -113,6 +113,7 @@
 <script>
 export default {
 	auth: false,
+	transition: 'fade',
 	head() {
 		return {
 			title: 'Mr.Fox Bot - About',
