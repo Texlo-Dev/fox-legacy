@@ -100,7 +100,6 @@ $tabs-link-active-border-bottom-color: $primary;
 $tabs-link-hover-border-bottom-color: $primary;
 $tabs-link-hover-color: #eff0eb;
 $tabs-border-bottom-width: 0.5px;
-$input-background-color: $black;
 $input-focus-border-color: #363636;
 $input-color: #eff;
 $input-focus-color: #363636;
