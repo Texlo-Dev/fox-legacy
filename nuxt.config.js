@@ -63,12 +63,12 @@ export default {
       materialDesignIcons: false
     }],
     '@nuxtjs/pwa',
-    [
+    /*[
       'nuxt-bulma-slim',
       {
         variablesPath: 'assets/scss/styles.scss'
       }
-    ],
+    ],*/
     ['nuxt-validate', {
       lang: 'en'
     }],
