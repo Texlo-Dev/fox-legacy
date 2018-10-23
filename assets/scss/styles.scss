@@ -1,5 +1,4 @@
 @import "../../node_modules/bulma/sass/utilities/_all";
-
 $purple: #8A4D76;
 $pink: #FA7C91;
 $brown: #757763;
@@ -20,17 +19,13 @@ $pink-invert: findColorInvert($pink);
 
   // Update Bulma's global variables
 $colors: (
-  "white": ($white, $black),
-  "link": ($link, $link-invert),
-  "warning": ($warning, $warning-invert),
   "black": ($black, $black-invert),
+  "link": ($link, $link-invert),
   "danger": ($red, $red-invert),
   "pink": ($pink, $pink-invert),
   "grey": ($grey, $grey-invert),
   "grey-darker": ($grey-darker, $grey-darker-invert),
-  "primary": ($primary, $primary-invert),
-  "success": ($success, $success-invert),
-  "light": ($light, $light-invert)
+  "primary": ($primary, $primary-invert)
 );
 
 

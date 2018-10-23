@@ -22,55 +22,25 @@ export default {
 };
 </script>
 
-
 <style>
-
-td span {
-    font-family: 'Poppins'
-}
-.th-wrap {
-    font-family: 'Poppins'
+.input {
+	background-color: #2b2f33;
 }
 
- #channel {
-     background-color: rgba(114,137,218,.1);
-     color: #7289da;
+.textarea {
+	background-color: #2b2f33;
+	border-radius: 10px;
 }
- #channel:hover {
-     background-color: rgba(114, 137, 218, 0.701961);
-     color: rgb(255, 255, 255);
+#modalselect {
+  background-color: #2b2f33;
 }
- h2 {
-     font-family: 'Poppins', 'sans-serif';
-}
- h3 {
-     font-family: 'Poppins', 'sans-serif';
-}
- h1 {
-     font-family: 'Poppins', 'sans serif';
-     text-align: center;
-     font-size: 100px;
-}
- p {
-     font-family: 'Poppins', sans-serif;
-     word-wrap: break-word;
-     color: #eff;
-}
- .fox-logo {
-     border-radius: 75%;
-}
- .feature {
-     text-decoration: underline;
-}
- .center {
-     display: block;
-     margin-left: auto;
-     margin-right: auto;
+.modal-card-foot .button {
+  font-family: 'Poppins'
 }
 </style>
 
 
-<style lang="scss">
+<!--<style lang="scss">
 @import "~bulma/sass/utilities/_all";
 
 $purple: #8A4D76;
@@ -154,69 +124,6 @@ $menu-item-hover-background-color: $grey;
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
 @import "~bulma-extensions/bulma-divider/src/sass/index.sass";
-</style>
+</style>-->
 
-<style>
-html
-{
-  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
-*, *:before, *:after
-{
-  box-sizing: border-box;
-  margin: 0;
-}
-.button--green
-{
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
-}
-.button--green:hover
-{
-  color: #fff;
-  background-color: #3b8070;
-}
-.button--grey
-{
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-.button--grey:hover
-{
-  color: #fff;
-  background-color: #35495e;
-}
 
-.input {
-  background-color: #2b2f33;
-  border-radius: 5px
-}
-
-.textarea {
-  background-color: #2b2f33;
-  border-radius: 10px;
-}
-
-.modal-card {
-  overflow: visible;
-}
- .modal-card-body {
-    overflow: visible;
-  }
-</style>

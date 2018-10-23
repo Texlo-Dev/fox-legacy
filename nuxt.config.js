@@ -59,8 +59,16 @@ export default {
     '@nuxtjs/sitemap',
     '@nuxtjs/auth',
     '@nuxtjs/dotenv',
-    'nuxt-buefy',
+    ['nuxt-buefy', {
+      materialDesignIcons: false
+    }],
     '@nuxtjs/pwa',
+    [
+      'nuxt-bulma-slim',
+      {
+        variablesPath: 'assets/scss/styles.scss'
+      }
+    ],
     ['nuxt-validate', {
       lang: 'en'
     }],
@@ -78,6 +86,12 @@ export default {
       
     }]
   ],
+  sitemap: {
+    exclude: [
+      '/callback',
+      '/serveradd'
+    ]
+  },
   /*
   ** Discord Oauth
   */

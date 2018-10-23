@@ -1,9 +1,74 @@
-.pagegenter-active, .page-leave-active {
-    transition: opacity .5s;
-  }
-  .page-enter, .page-leave-active {
-    opacity: 0;
-  }
+.page-enter-active,
+.page-leave-active {
+	transition: opacity .5s;
+}
+
+.page-enter,
+.page-leave-active {
+	opacity: 0;
+}
+
 .label {
-    font-family: 'Raleway';
+	font-family: 'Poppins';
+}
+
+
+.modal-card {
+	overflow: visible;
+}
+
+.modal-card-body {
+	overflow: visible;
+}
+
+td span {
+	font-family: 'Poppins'
+}
+
+.th-wrap {
+	font-family: 'Poppins'
+}
+
+#channel {
+	background-color: rgba(114, 137, 218, .1);
+	color: #7289da;
+}
+
+#channel:hover {
+	background-color: rgba(114, 137, 218, 0.701961);
+	color: rgb(255, 255, 255);
+}
+
+h2 {
+	font-family: 'Poppins', 'sans-serif';
+}
+
+h3 {
+	font-family: 'Poppins', 'sans-serif';
+}
+
+h1 {
+	font-family: 'Poppins', 'sans serif';
+	text-align: center;
+	font-size: 100px;
+}
+
+p {
+	font-family: 'Poppins', sans-serif;
+	word-wrap: break-word;
+	color: #eff;
+}
+
+.fox-logo {
+	border-radius: 75%;
+}
+
+.feature {
+	text-decoration: underline;
+}
+
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }

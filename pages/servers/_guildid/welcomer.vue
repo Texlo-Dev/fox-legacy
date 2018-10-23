@@ -107,7 +107,7 @@
                         <p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class="inlinecode has-text-grey">{server}</code>= Server name. <code id="vars" class="inlinecode has-text-grey">{position}</code>= Join position.</p>
                         <br>
                         <b-field :type="{ 'is-danger': errors.has('Location') }" :message="errors.first('Location')" label="Goodbye Channel" custom-class="has-text-white">
-                            <b-select name="Location" v-validate="'required'" v-model="config.goodbyeChannel" placeholder="None">
+                            <b-select id="modalselect" name="Location" v-validate="'required'" v-model="config.goodbyeChannel" placeholder="None">
                             <option
                             v-for="channel of channels"
                             :value="channel"
@@ -143,7 +143,7 @@
                         <p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class="inlinecode has-text-grey">{server}</code>= Server name. <code id="vars" class="inlinecode has-text-grey">{position}</code>= Join position.</p>
                         <br>
                         <b-field :type="{ 'is-danger': errors.has('Location') }" :message="errors.first('Location')" label="Welcome Location" custom-class="has-text-white">
-                            <b-select name="Location" v-validate="'required'" v-model="config.welcomeLocation" placeholder="None">
+                            <b-select id="modalselect" name="Location" v-validate="'required'" v-model="config.welcomeLocation" placeholder="None">
                             <option value="DM">DM Member</option>
                             <option
                             v-for="channel of channels"
@@ -245,16 +245,16 @@ export default {
         getRoleNames(channel) {
             this.filteredRoles = this.roles.filter(option => `${option.name.toLowerCase()}`.indexOf(channel.toLowerCase()) >= 0);
         },
-        async settingUpdate(key, value, options) {
+        async settingUpdate(key, value, options = {}) {
             try {
-                this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, { bool: false });
-                if (options && !options.hideToast) this.$toast.open({
-                    message: value instanceof Object ? `Saved ${options.meta}.` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
+                this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
+                this.$snackbar.open({
+                    message: value instanceof Object ? `Saved ${options.meta} as ${value.name}` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
                     type: "is-primary",
-                    duration: 3800
+                    position: 'is-bottom-left',
+                    actionText: null,
+                    duration: 3500
                 });
-                if (options && !options.keepModal) this.toggleAdd = false;
-                if (options && !options.keepModal) this.toggleGoodbye = false;
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this setting: ${error}`,
@@ -266,39 +266,44 @@ export default {
         async settingArrayUpdate(obj) {
             try {
                 for (const key of Object.keys(obj)) {
-                    this.config = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
+                    const settingUpd = await API.setingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
                 }
-                this.$toast.open({
+                this.$snackbar.open({
                     message: `Successfully saved settings.`,
-                    type: "is-primary"
+                    type: "is-primary",
+                    position: 'is-bottom-left',
+                    actionText: null,
+                    duration: 3500
                 });
-                this.toggleAdd = false;
-                this.toggleGoodbye = false;
+                this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
+                this.modalActive = false;
             } catch (error) {
-                this.$toast.open({
-                    message: `Unable to edit these settings: ${error}`,
-                    type: "is-danger",
-                    duration: 4000
+                this.$snackbar.open({
+                    message: `Unable to edit these settings: ${error.message}`,
+                    type: "is-danger"
                 });
             }
         },
         async toggleCommand(data, bool) {
-            this.isLoading = true;
             if (!data) return;
 
             try {
                 await API.toggleCommand(data, this.$route.params.guildid, bool, this.$auth.user.id);
-                this.commands = await API.pkgCommands("Welcomer", this.$route.params.guildid, this.$auth.user.id);
+                this.commands = await API.pkgCommands(this.$route.path.split(this.$route.params.guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()), this.$route.params.guildid, this.$auth.user.id);
+                this.$snackbar.open({
+                    message: `Togged ${data} to ${bool ? 'On' : 'Off'}`,
+                    type: "is-primary",
+                    position: 'is-bottom-left',
+                    actionText: null,
+                    duration: 3500
+                });
             } catch (error) {
-                this.$toast.open({
-                    message: `Unable to edit this command: API_ERROR`,
-                    type: "is-danger"
+                this.$snackbar.open({
+                    message: `Unable to edit this command: ${error.message}`,
+                    type: "is-danger",
                 });
                 this.$refs[`${data}-switch`][0].newValue = !bool;
-                this.isLoading = false;
-            } finally {
-                this.isLoading = false;
-            }
+            } 
 		},
 		confirmPkg(pkg) {
             this.$dialog.confirm({
@@ -336,10 +341,6 @@ export default {
 <style>
 #vars {
 	background-color: #34383c;
-}
-.select select {
-background-color: #2b2f33;
-color: #eff;
 }
 
 .select.is-empty select {

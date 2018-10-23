@@ -318,9 +318,10 @@ export default {
         },
         async levelingUpdate(key, value, options) {
             try {
-                this.leveling = await API.levelingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
+				this.leveling = await API.levelingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
+				this
             } catch (error) {
-                this.$dialog.alert({
+                this.$snackbar.alert({
 					title: 'Error',
                     message: `Unable to edit this setting. ${error}`,
                     type: "is-danger"
@@ -328,15 +329,16 @@ export default {
                 this.$refs[`${key}-switch`][0].newValue = !value;
             } 
         },
-        async settingUpdate(key, value, options) {
+        async settingUpdate(key, value, options = {}) {
             try {
                 this.config = await API.settingUpdate(key, value, this.$route.params.guildid, this.$auth.user.id, options);
-                if (!options.hideToast) this.$toast.open({
-                    message: `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
+                this.$snackbar.open({
+                    message: value instanceof Object ? `Saved ${options.meta} as ${value.name}` : `Toggled ${key} to ${typeof value === "boolean" ? value ? "On" : "Off" : value}`,
                     type: "is-primary",
-                    duration: 3800
-				});
-				this.prompts = [];
+                    position: 'is-bottom-left',
+                    actionText: null,
+                    duration: 3500
+                });
             } catch (error) {
                 this.$toast.open({
                     message: `Unable to edit this setting: ${error}`,
@@ -348,35 +350,44 @@ export default {
         async settingArrayUpdate(obj) {
             try {
                 for (const key of Object.keys(obj)) {
-                    this.config = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
+                    const settingUpd = await API.setingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
                 }
-                this.bwModalActive = false;
-                this.massModalActive = false;
+                this.$snackbar.open({
+                    message: `Successfully saved settings.`,
+                    type: "is-primary",
+                    position: 'is-bottom-left',
+                    actionText: null,
+                    duration: 3500
+                });
+                this.config = await API.guildConfig(this.$route.params.guildid, this.$auth.user.id);
+                this.modalActive = false;
             } catch (error) {
-                this.$toast.open({
-                    message: `Unable to edit these settings: ${error}`,
-                    type: "is-danger",
-                    duration: 4000
+                this.$snackbar.open({
+                    message: `Unable to edit these settings: ${error.message}`,
+                    type: "is-danger"
                 });
             }
         },
         async toggleCommand(data, bool) {
-            this.isLoading = true;
             if (!data) return;
 
             try {
                 await API.toggleCommand(data, this.$route.params.guildid, bool, this.$auth.user.id);
-                this.commands = await API.pkgCommands("Leveling", this.$route.params.guildid, this.$auth.user.id);
+                this.commands = await API.pkgCommands(this.$route.path.split(this.$route.params.guildid + '/')[1].replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()), this.$route.params.guildid, this.$auth.user.id);
+                this.$snackbar.open({
+                    message: `Togged ${data} to ${bool ? 'On' : 'Off'}`,
+                    type: "is-primary",
+                    position: 'is-bottom-left',
+                    actionText: null,
+                    duration: 3500
+                });
             } catch (error) {
-                this.$toast.open({
-                    message: `Unable to edit this command: ${error}`,
-                    type: "is-danger"
+                this.$snackbar.open({
+                    message: `Unable to edit this command: ${error.message}`,
+                    type: "is-danger",
                 });
                 this.$refs[`${data}-switch`][0].newValue = !bool;
-                this.isLoading = false;
-            } finally {
-                this.isLoading = false;
-            }
+            } 
 		},
 		confirmPkg(pkg) {
             this.$dialog.confirm({
