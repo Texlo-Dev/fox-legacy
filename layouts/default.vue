@@ -23,14 +23,6 @@ export default {
 </script>
 
 <style>
-.input {
-	background-color: #2b2f33;
-}
-
-.textarea {
-	background-color: #2b2f33;
-	border-radius: 10px;
-}
 #modalselect {
   background-color: #2b2f33;
 }
