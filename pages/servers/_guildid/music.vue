@@ -95,7 +95,7 @@ export default {
         async settingArrayUpdate(obj) {
             try {
                 for (const key of Object.keys(obj)) {
-                    const settingUpd = await API.setingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
+                    const settingUpd = await API.settingArrayUpdate(key, obj[key], this.$route.params.guildid, this.$auth.user.id, { array: true });
                 }
                 this.$snackbar.open({
                     message: `Successfully saved settings.`,
