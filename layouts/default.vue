@@ -93,6 +93,7 @@ $table-background-color: $grey-darker;
 $footer-background-color: $grey;
 $control-border-width: 2px;
 $input-border-color: #363636;
+$input-background-color: #2b2f33;
 $input-shadow: none;
 $table-row-active-color: #242424;
 $table-cell-border-color: #242424;
