@@ -29,8 +29,8 @@
                                     <nuxt-link :to="`/servers/${this.$route.params.guildid}/permissions`" :class="{ 'is-outlined': selected === 0 }" class="button is-hidden-desktop is-hidden-tablet-only is-small is-primary"><p class="has-text-weight-bold">Permissions</p></nuxt-link>
                                 </p>
                                 <p class="control">
-                                    <nuxt-link :to="`/servers/${this.$route.params.guildid}`" class="button is-hidden-mobile is-success is-outlined"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
-                                     <nuxt-link :to="`/servers/${this.$route.params.guildid}`" class="button is-success is-hidden-desktop is-hidden-tablet-only is-small is-outlined"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
+                                    <nuxt-link to="/servers" class="button is-hidden-mobile is-success is-outlined"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
+                                    <nuxt-link to="/servers" class="button is-success is-hidden-desktop is-hidden-tablet-only is-small is-outlined"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
                                 </p>
                             </div>
                         </div>
