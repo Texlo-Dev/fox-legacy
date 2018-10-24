@@ -14,13 +14,20 @@
                <div class="sk-cube sk-cube9"></div>
             </div>
          </div>
-         <h1 class="title has-text-white">Loading Servers...</h1>
       </section>
    </div>
 </template>
 
 <script>
 export default {
+  mounted() {
+    setTimeout(() => {
+      if (this.$route.query.id === 'pwa') {
+        this.$store.commit('isPWA', 'active');
+        this.$router.push('/servers');
+      }
+    }, 1200)
+  }
   
 }
 </script>

@@ -14,7 +14,6 @@
                <div class="sk-cube sk-cube9"></div>
             </div>
          </div>
-         <h1 class="title has-text-white">Preparing your server...</h1>
       </section>
    </div>
 </template>

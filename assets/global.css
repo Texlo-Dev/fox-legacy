@@ -77,3 +77,10 @@ p {
 .textarea {
 	border-radius: 10px;
 }
+
+#buttondocs {
+    width: 250px
+}
+.button {
+    font-family: 'Poppins';
+}

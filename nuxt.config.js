@@ -80,7 +80,7 @@ export default {
         },
         {
           set: '@fortawesome/free-solid-svg-icons',
-          icons: ['faAngleDown', 'faPlus', 'faEdit', 'faWrench', 'faCogs', 'faTrashAlt', 'faRedo', 'faBan', 'faPause', 'faPlay', 'faStop', 'faServer', 'faSignOutAlt']
+          icons: ['faAngleDown', 'faPlus', 'faEdit', 'faBook', 'faWrench', 'faCogs', 'faTrashAlt', 'faRedo', 'faBan', 'faPause', 'faPlay', 'faStop', 'faServer', 'faSignOutAlt']
         }
       ]
       
@@ -89,7 +89,8 @@ export default {
   sitemap: {
     exclude: [
       '/callback',
-      '/serveradd'
+      '/serveradd',
+      '/s'
     ]
   },
   /*
@@ -99,7 +100,7 @@ export default {
     rewriteRedirects: true,
     redirect: {
       login: '/login',
-      logout: '/',
+      logout: '/s',
       home: '/servers',
       callback: '/callback'
     },
@@ -125,10 +126,12 @@ export default {
   manifest: {
     name: 'Mr.Fox Bot',
     background_color: '#f37934',
-    lang: 'en'
+    lang: 'en',
+    start_url: '/s'
   },
   meta: {
     name: 'Mr.Fox',
+    title: 'Mr.Fox Bot',
     description: 'A fully-modular, multipurpose bot for Discord. Which happens to be very cunning.'
   },
   /*

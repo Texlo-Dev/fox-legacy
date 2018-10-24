@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar />
+    <navbar v-if="$store.state.pwaStart !== 'Yes'"/>
 	  <dashtabs v-if="isDash && $route.params.guildid" />
     <nuxt/>
   </div>

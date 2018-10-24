@@ -6,6 +6,7 @@ const createStore = () => {
         state: {
             token: null,
             isDash: false,
+            pwaStart: false,
             cachedGuild: null,
             loading: false,
             encryptedID: null,
@@ -14,6 +15,9 @@ const createStore = () => {
         mutations: {
             dashLoading(state, bool) {
                 state.dashLoaded = bool;
+            },
+            isPWA(state, bool) {
+                state.pwaStart = bool;
             },
             toggleDash(state, bool) {
                 state.isDash = bool;
