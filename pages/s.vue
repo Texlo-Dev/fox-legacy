@@ -88,4 +88,10 @@ export default {
     padding-left: 480px
 }
 
+
+#foote {
+    padding-bottom: 150px
+    
+}
+
 </style>
