@@ -26,7 +26,7 @@
                   <span>&nbsp;Manage Servers</span>
                </nuxt-link>
             </div>
-            <nav class="level is-hidden-desktop">
+            <nav class="level is-hidden-desktop is-hidden-tablet">
                <div class="level-item has-text-centered">
                   <nuxt-link class="button has-text-centered is-medium is-link is-outlined" to="/commands">
                      <span>

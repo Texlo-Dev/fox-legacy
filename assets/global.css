@@ -81,6 +81,9 @@ p {
 #buttondocs {
     width: 250px
 }
+#placeholder {
+    padding-left: 480px
+}
 .button {
     font-family: 'Poppins';
 }
