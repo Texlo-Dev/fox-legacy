@@ -39,7 +39,7 @@
                         </button>
                      </div>
                      <div class="level-item">
-                        <button class="button is-medium is-outlined is-link" @click="navTo('commands', false)">
+                        <button class="button is-medium is-outlined is-link" @click="navTo('commands')">
                              <font-awesome-icon size="s" icon="book"/>
                             &nbsp;Documentation
                         </button>
@@ -90,7 +90,7 @@ export default {
 
 
 #foote {
-    padding-bottom: 150px
+    padding-bottom: 35vh;
     
 }
 
