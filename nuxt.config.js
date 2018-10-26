@@ -165,7 +165,7 @@ export default {
 
   build: {
     extractCSS: true,
-    optimization: {
+    /*optimization: {
       splitChunks: {
         cacheGroups: {
           styles: {
@@ -176,7 +176,7 @@ export default {
           }
         }
       }
-    },
+    },*/
     extend(config, { isDev, isClient }) {
       config.resolve.alias["chart.js"] = "chart.js/dist/Chart.js";
       if (isDev && isClient) {
