@@ -65,7 +65,7 @@
         <section class="modal-card-body">
           <form id="custcmd" @submit.prevent="validateForm">
             <b-field :type="{ 'is-danger': errors.has('command name') }" :message="errors.first('command name')" custom-class="has-text-white" label="Command Name">
-              <b-input v-validate="'required|max:8'" v-model="custCommand.name" name="command name"/>
+              <b-input v-validate="'required|max:12'" v-model="custCommand.name" name="command name"/>
             </b-field>
             <b-field :type="{ 'is-danger': errors.has('description') }" :message="errors.first('description')" custom-class="has-text-white" label="Command Description">
               <b-input v-validate="'required|max:40'" v-model="custCommand.description" name="description"/>
@@ -76,8 +76,8 @@
             <b-field custom-class="has-text-white" label="Command Cooldown (Seconds)">
               <b-input v-model.number="custCommand.cooldown" type="number"/>
             </b-field>
-            <b-field custom-class="has-text-white" label="Command Required Permissions (Optional)">
-              <b-select v-model="custCommand.requiredPerms" multiple>
+            <b-field custom-class="has-text-white" label="Command Required Permission (Optional)">
+              <b-select v-model="custCommand.requiredPerms">
                 <optgroup v-for="(key, category) in permissions" :key="category" :label="category">
                   <option v-for="perm of permissions[category]" :key="perm.name" :value="perm.name">{{ perm.name }}</option>
                 </optgroup>
@@ -151,7 +151,7 @@ export default {
       deleteCommand: false,
       dmCommand: false,
       cooldown: 0,
-      requiredPerms: [],
+      requiredPerms: null,
       template: ""
     }
   }),
@@ -216,26 +216,15 @@ export default {
     },
     async saveCommand(command) {
       try {
-        if (!command.guild)
-          ({ data: this.commands } = await this.$axios.post(
-            `/api/guilds/${this.$route.params.guildid}/customcommands`,
-            command,
-            {
-              headers: {
-                Authorization: secret.encrypt(this.$auth.user.id)
-              }
+        ({ data: this.commands } = await this.$axios.post(
+          `/api/guilds/${this.$route.params.guildid}/customcommands`,
+          command,
+          {
+            headers: {
+              Authorization: secret.encrypt(this.$auth.user.id)
             }
-          ));
-        else
-          ({ data: this.commands } = await this.$axios.patch(
-            `/api/guilds/${this.$route.params.guildid}/customcommands`,
-            command,
-            {
-              headers: {
-                Authorization: secret.encrypt(this.$auth.user.id)
-              }
-            }
-          ));
+          }
+        ));
         for (const val in this.custCommand) {
           if (val === "requiredPerms") this.custCommand[val] = [];
           else if (val === "cooldown") this.custCommand[val] = 0;

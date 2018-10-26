@@ -6,7 +6,7 @@
       </header>
       <section class="modal-card-body">
         <b-field :type="{ 'is-danger': errors.has('command name') }" :message="errors.first('command name')" custom-class="has-text-white" label="Command Name">
-          <b-input v-validate="'required|max:8'" v-model="cmd.name" name="command name"/>
+          <b-input v-validate="'required|max:12'" v-model="cmd.name" name="command name"/>
         </b-field>
         <b-field :type="{ 'is-danger': errors.has('description') }" :message="errors.first('description')" custom-class="has-text-white" label="Command Description">
           <b-input v-validate="'required|max:40'" v-model="cmd.description" name="description"/>
@@ -17,8 +17,8 @@
         <b-field custom-class="has-text-white" label="Command Cooldown (Seconds)">
           <b-input v-model.number="cmd.cooldown" type="number"/>
         </b-field>
-        <b-field custom-class="has-text-white" label="Command Required Permissions (Optional)">
-          <b-select v-model="cmd.requiredPerms" multiple>
+        <b-field custom-class="has-text-white" label="Command Required Permission (Optional)">
+          <b-select v-model="cmd.requiredPerms">
             <optgroup v-for="(key, category) in permissions" :key="category" :label="category">
               <option v-for="perm of permissions[category]" :key="perm.name" :value="perm.name">{{ perm.name }}</option>
             </optgroup>
