@@ -31,13 +31,25 @@
       </div>
       <div v-for="command of commands" v-else :key="command.name" class="box">
         <div class="content">
-          <h1 class="has-text-white has-text-left">
-            {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
-                      @input="toggleCommand(command.name, !command.enabled)"/>
-            <button class="button is-primary is-outlined" @cmdedit="cmdEdited" @click="editCommand(command)">Edit<font-awesome-icon icon="cogs" size="s" pull="right"/></button>
-            <button class="button is-danger is-outlined" @click="confirmDelete(command.name)">Delete<font-awesome-icon icon="trash-alt" size="s" pull="right"/></button>
-          </h1>
+          <nav class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <h1 class="has-text-white has-text-left">
+                  {{ command.name }}
+                  <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-small" type="is-primary"
+                            @input="toggleCommand(command.name, !command.enabled)"/>
+            
+                </h1>
+              </div>
+              <div class="level-item">
+                <button class="button is-primary is-outlined" @cmdedit="cmdEdited" @click="editCommand(command)">Edit<font-awesome-icon icon="cogs" size="s" pull="right"/></button>
+              </div>
+              <div class="level-item">
+                <button class="button is-danger is-outlined" @click="confirmDelete(command.name)">Delete<font-awesome-icon icon="trash-alt" size="s" pull="right"/></button>
+              </div>
+            </div>
+
+          </nav>
           <p>{{ command.description }}</p>
         </div>
       </div>
