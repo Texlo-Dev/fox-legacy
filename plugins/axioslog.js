@@ -1,3 +1,3 @@
 export default ({ $axios }) => {
-    $axios.onRequest(console.log);
+  $axios.onRequest(console.log);
 };

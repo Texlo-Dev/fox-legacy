@@ -87,3 +87,10 @@ p {
 .button {
     font-family: 'Poppins';
 }
+select {
+	font-family: 'Poppins';
+	}
+
+	.select select option {
+		color: #747f8d;
+	  }

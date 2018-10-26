@@ -1,6 +1,6 @@
 {
   "name": "Mr.Fox",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Mr.Fox site, rewritten in Nuxt.js (SSR)",
   "author": "rTexel",
   "private": true,
@@ -10,6 +10,7 @@
     "start": "cross-env NODE_ENV=production node -r esm server/index.js",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore . --debug",
     "precommit": "npm run lint"
   },
   "dependencies": {
@@ -41,11 +42,23 @@
   },
   "devDependencies": {
     "@types/dotenv": "^4.0.3",
-    "babel-eslint": "^8.2.1",
+    "babel-eslint": "^8.2.6",
     "cross-env": "^5.0.1",
-    "eslint": "^5.0.1",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-vue": "^4.0.0",
-    "nodemon": "^1.11.0"
-  }
+    "eslint": "^5.7.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-vue": "^4.7.1",
+    "nodemon": "^1.11.0",
+    "prettier": "^1.14.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/rTexel/mrfox-site.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/rTexel/mrfox-site/issues"
+  },
+  "homepage": "https://gitlab.com/rTexel/mrfox-site#readme"
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <navbar v-if="$store.state.pwaStart !== 'Yes'"/>
-	  <dashtabs v-if="isDash && $route.params.guildid" />
+    <dashtabs v-if="isDash && $route.params.guildid" />
     <nuxt/>
   </div>
 </template>
@@ -12,13 +12,10 @@ import dashtabs from "~/components/DashTabs.vue";
 import { mapGetters } from "vuex";
 
 export default {
-    components: { Navbar, dashtabs },
-    computed: {
-        ...mapGetters([
-            "loading",
-            "isDash"
-        ])
-    }
+  components: { Navbar, dashtabs },
+  computed: {
+    ...mapGetters(["loading", "isDash"])
+  }
 };
 </script>
 
@@ -27,7 +24,7 @@ export default {
   background-color: #2b2f33;
 }
 .modal-card-foot .button {
-  font-family: 'Poppins'
+  font-family: "Poppins";
 }
 </style>
 
@@ -35,16 +32,16 @@ export default {
 <style lang="scss">
 @import "~bulma/sass/utilities/_all";
 
-$purple: #8A4D76;
-$pink: #FA7C91;
+$purple: #8a4d76;
+$pink: #fa7c91;
 $brown: #757763;
-$beige-light: #D0D1CD;
-$beige-lighter: #EFF0EB;
+$beige-light: #d0d1cd;
+$beige-lighter: #eff0eb;
 $red: #ff4136;
 $red-invert: findColorInvert($red);
-$black: #23272A;
+$black: #23272a;
 $black-invert: findColorInvert($black);
-$grey:#34383c;
+$grey: #34383c;
 $grey-darker: #2b2f33;
 $grey-darker-invert: findColorInvert($grey-darker);
 $grey-invert: findColorInvert($grey);
@@ -52,22 +49,53 @@ $primary: #f37934;
 $primary-invert: findColorInvert($primary);
 $pink-invert: findColorInvert($pink);
 
-
-  // Update Bulma's global variables
+// Update Bulma's global variables
 $colors: (
-  "white": ($white, $black),
-  "link": ($link, $link-invert),
-  "warning": ($warning, $warning-invert),
-  "black": ($black, $black-invert),
-  "danger": ($red, $red-invert),
-  "pink": ($pink, $pink-invert),
-  "grey": ($grey, $grey-invert),
-  "grey-darker": ($grey-darker, $grey-darker-invert),
-  "primary": ($primary, $primary-invert),
-  "success": ($success, $success-invert),
-  "light": ($light, $light-invert)
+  "white": (
+    $white,
+    $black
+  ),
+  "link": (
+    $link,
+    $link-invert
+  ),
+  "warning": (
+    $warning,
+    $warning-invert
+  ),
+  "black": (
+    $black,
+    $black-invert
+  ),
+  "danger": (
+    $red,
+    $red-invert
+  ),
+  "pink": (
+    $pink,
+    $pink-invert
+  ),
+  "grey": (
+    $grey,
+    $grey-invert
+  ),
+  "grey-darker": (
+    $grey-darker,
+    $grey-darker-invert
+  ),
+  "primary": (
+    $primary,
+    $primary-invert
+  ),
+  "success": (
+    $success,
+    $success-invert
+  ),
+  "light": (
+    $light,
+    $light-invert
+  )
 );
-
 
 // Update some of Bulma's component variables
 $dropdown-content-background-color: $grey-darker;
@@ -104,7 +132,7 @@ $input-focus-border-color: #363636;
 $input-color: #eff;
 $input-focus-color: #363636;
 $input-hover-border-color: #363636;
-$modal-card-head-background-color:  #2b2f33;
+$modal-card-head-background-color: #2b2f33;
 $modal-card-head-border-bottom: 0px;
 $modal-card-foot-border-top: 0px;
 $modal-card-body-background-color: #34383c;
@@ -117,5 +145,3 @@ $menu-item-hover-background-color: $grey;
 @import "~buefy/src/scss/buefy";
 @import "~bulma-extensions/bulma-divider/src/sass/index.sass";
 </style>
-
-

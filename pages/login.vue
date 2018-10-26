@@ -1,14 +1,12 @@
 <template>
-<div>
-</div>
+  <div/>
     
 </template>
 
 <script>
 export default {
-    created() {
-        this.$auth.loginWith('discord');
-    }
-}
+  created() {
+    this.$auth.loginWith("discord");
+  }
+};
 </script>
-
