@@ -76,7 +76,7 @@
                       &nbsp;<button class="button is-small is-success" @click="editItem(item)">
                         Edit <font-awesome-icon size="0.8x" pull="right" icon="cogs"/>
                       </button>
-                      <button class="button is-small is-danger" @click="shopAction('delete', item)">
+                      <button class="button is-small is-danger" @click="shopAction('remove', item)">
                         Delete <font-awesome-icon size="0.8x" pull="right" icon="trash-alt"/>
                       </button>
                     </p>
@@ -301,7 +301,7 @@ export default {
               ({ data: this.banking } = await this.$axios.patch(
                 `/api/guilds/${this.$route.params.guildid}/banking`,
                 {
-                  key,
+                  key: 'shopItems',
                   value: this.banking.shopItems
                 },
                 {
