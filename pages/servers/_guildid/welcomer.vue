@@ -48,14 +48,14 @@
               <h3 class="has-text-white has-text-left">
                 Welcome Messaging
                 <span v-if="config.welcomeEnabled">
-                  <b-switch ref="welcomeEnabled-switch" :disabled="isLoading" size="is-small" value="true" type="is-primary"
+                  <b-switch ref="welcomeEnabled-switch" size="is-small" value="true" type="is-primary"
                             @click.native="settingUpdate('welcomeEnabled', false)"/>
                   <button class="button is-rounded is-small is-grey" @click="toggleAdd = true">
                     Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
                   </button>
                 </span>
                 <span v-else>
-                  <b-switch ref="welcomeEnabled-switch" :disabled="isLoading" size="is-small" value="false" type="is-primary"
+                  <b-switch ref="welcomeEnabled-switch" size="is-small" value="false" type="is-primary"
                             @click.native="settingUpdate('welcomeEnabled', true)"/>
                 </span>
               </h3>
@@ -71,14 +71,14 @@
               <h3 class="has-text-white has-text-left">
                 Goodbye Messaging
                 <span v-if="config.goodbyeEnabled">
-                  <b-switch ref="goodbyeEnabled-switch" :disabled="isLoading" size="is-small" value="true" type="is-primary"
+                  <b-switch ref="goodbyeEnabled-switch" size="is-small" value="true" type="is-primary"
                             @click.native="settingUpdate('goodbyeEnabled', false)"/>
                   <button class="button is-rounded is-small is-grey" @click="toggleGoodbye = true">
                     Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
                   </button>
                 </span>
                 <span v-else>
-                  <b-switch ref="goodbyeEnabled-switch" :disabled="isLoading" size="is-small" value="false" type="is-primary"
+                  <b-switch ref="goodbyeEnabled-switch" size="is-small" value="false" type="is-primary"
                             @click.native="settingUpdate('goodbyeEnabled', true)"/>
                 </span>
               </h3>

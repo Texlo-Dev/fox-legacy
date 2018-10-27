@@ -91,7 +91,10 @@ export default {
         this.cmd = null;
         this.$emit("cmdedit", commands);
       } catch (error) {
-        console.error(error);
+        this.$dialog.alert({
+          message: `Failed to edit this command. }${error.message}"`,
+          type: "is-danger"
+        });
       }
     }
   }

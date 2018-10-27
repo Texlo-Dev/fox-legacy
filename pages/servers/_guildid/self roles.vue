@@ -38,13 +38,13 @@
       <div class="is-divider"/>
 
     </div>
-    <div v-if="!loading" class="container" style="position: relative">
+    <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
       <div v-for="command of commands" :key="command.name" class="box">
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :disabled="isLoading" :value="command.enabled" size="is-medium" type="is-primary"
+            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
                       @input="toggleCommand(command.name, !command.enabled)"/>
           </h1>
 

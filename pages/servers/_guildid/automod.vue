@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <div v-if="!loading" class="container">
+    <div class="container">
       <nav class="level is-mobile">
         <div class="level-left">
           <h1 class="title has-text-white has-text-left">&nbsp;Automod</h1>
@@ -20,7 +20,7 @@
               <h3 class="has-text-white has-text-left">
                 Spam Protection
                 <button class="button is-pink is-small is-rounded">Deprecated</button>
-                <b-switch ref="spamProtected-switch" :disabled="isLoading" :value="config.spamProtected" size="is-small" type="is-primary"
+                <b-switch ref="spamProtected-switch" :value="config.spamProtected" size="is-small" type="is-primary"
                           @input="settingUpdate('spamProtected', !config.spamProtected)"/>
               </h3>
               <p>Helps protects against server members sending text at a very fast rate.</p>
@@ -33,7 +33,7 @@
             <div class="content">
               <h3 class="has-text-white has-text-left">
                 Invite Protection
-                <b-switch ref="invProtected-switch" :disabled="isLoading" :value="config.invProtected" size="is-small" type="is-primary"
+                <b-switch ref="invProtected-switch" :value="config.invProtected" size="is-small" type="is-primary"
                           @input="settingUpdate('invProtected', !config.invProtected)"/>
               </h3>
               <p>Prevents unauthorized users from sending Discord invites from other servers.</p>
@@ -47,14 +47,14 @@
               <h3 class="has-text-white has-text-left">
                 Bad Words
                 <span v-if="config.bwProtected">
-                  <b-switch ref="bwProtected-switch" :disabled="isLoading" size="is-small" value="true" type="is-primary"
+                  <b-switch ref="bwProtected-switch" size="is-small" value="true" type="is-primary"
                             @click.native="settingUpdate('bwProtected', false)"/>
                   <button class="button is-rounded is-small is-grey" @click="bwModalActive = true">
                     Manage<font-awesome-icon size="1x" pull="right" icon="wrench"/>
                   </button>
                 </span>
                 <span v-else>
-                  <b-switch ref="bwProtected-switch" :disabled="isLoading" size="is-small" value="false" type="is-primary"
+                  <b-switch ref="bwProtected-switch" size="is-small" value="false" type="is-primary"
                             @click.native="settingUpdate('bwProtected', true)"/>
                 </span>
               </h3>
@@ -69,14 +69,14 @@
               <h3 class="has-text-white has-text-left">
                 Mass Mentioning
                 <span v-if="config.massProtected">
-                  <b-switch ref="massProtected-switch" :disabled="isLoading" size="is-small" value="true" type="is-primary"
+                  <b-switch ref="massProtected-switch" size="is-small" value="true" type="is-primary"
                             @click.native="settingUpdate('massProtected', false)"/>
                   <button class="button is-rounded is-small is-grey" @click="massModalActive = true">
                     Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
                   </button>
                 </span>
                 <span v-else>
-                  <b-switch ref="massProtected-switch" :disabled="isLoading" size="is-small" value="false" type="is-primary"
+                  <b-switch ref="massProtected-switch" size="is-small" value="false" type="is-primary"
                             @click.native="settingUpdate('massProtected', true)"/>
                 </span>
               </h3>
@@ -89,13 +89,13 @@
       </div>
       <div class="is-divider"/>
     </div>
-    <div v-if="!loading" class="container" style="position: relative">
+    <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
       <div v-for="command of commands" :key="command.name" class="box">
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :disabled="isLoading" :value="command.enabled" size="is-medium" type="is-primary"
+            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
                       @input="toggleCommand(command.name, !command.enabled)"/>
           </h1>
 

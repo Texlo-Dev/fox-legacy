@@ -1,6 +1,6 @@
 <template>
   <section class="section">
-    <div v-if="!loading" class="container">
+    <div class="container">
       <nav class="level is-mobile">
         <div class="level-left">
           <h1 class="title has-text-white has-text-left">&nbsp;Leveling</h1>
@@ -20,7 +20,7 @@
               <h3 class="has-text-white has-text-left">
                 Level-Up Messaging
                 <span v-if="config.levelMessaging">
-                  <b-switch ref="levelMessaging-switch" :disabled="isLoading" size="is-small" value="true" type="is-primary"
+                  <b-switch ref="levelMessaging-switch" size="is-small" value="true" type="is-primary"
                             @click.native="settingUpdate('levelMessaging', false)"/>
                   <section>
                     <br>
@@ -67,7 +67,7 @@
                   </section>
                 </span>
                 <span v-else>
-                  <b-switch ref="levelMessaging-switch" :disabled="isLoading" size="is-small" value="false" type="is-primary"
+                  <b-switch ref="levelMessaging-switch" size="is-small" value="false" type="is-primary"
                             @click.native="settingUpdate('levelMessaging', true)"/>
                 </span>
               </h3>
@@ -161,13 +161,13 @@
       <div class="is-divider"/>
 
     </div>
-    <div v-if="!loading" class="container" style="position: relative">
+    <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
       <div v-for="command of commands" :key="command.name" class="box">
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :disabled="isLoading" :value="command.enabled" size="is-medium" type="is-primary"
+            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
                       @input="toggleCommand(command.name, !command.enabled)"/>
           </h1>
 

@@ -72,7 +72,7 @@
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :disabled="isLoading" :value="command.enabled" size="is-medium" type="is-primary" @input="toggleCommand(command.name, !command.enabled)"/>
+            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary" @input="toggleCommand(command.name, !command.enabled)"/>
           </h1>
 
           <p>{{ command.description }}</p>
