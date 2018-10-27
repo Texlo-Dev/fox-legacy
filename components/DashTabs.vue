@@ -2,6 +2,7 @@
   <div class="hero" style="background-color: #2b2f33">
     <br class="is-hidden-touch">
     <br>
+
     
     <div class="hero-head">
       <div class="container">
@@ -19,21 +20,12 @@
           </div>
           <br>
           <div class="level-item has-text-centered">
-            <div class="field has-addons">
-              <p class="control">
-                <nuxt-link :to="`/servers/${this.$route.params.guildid}`" :class="{ 'is-outlined': selected === 1 }" class="button is-hidden-mobile is-primary"><p class="has-text-weight-bold">Packages</p></nuxt-link>
-                <nuxt-link :to="`/servers/${this.$route.params.guildid}`" :class="{ 'is-outlined': selected === 1 }" class="button is-hidden-desktop is-hidden-tablet-only  is-small is-primary"><p class="has-text-weight-bold">Packages</p></nuxt-link>
-              </p>
-              <p class="control">
-                <nuxt-link :to="`/servers/${this.$route.params.guildid}/permissions`" :class="{ 'is-outlined': selected === 0 }" class="button is-hidden-mobile is-primary"><p class="has-text-weight-bold">Permissions</p></nuxt-link>
-                <nuxt-link :to="`/servers/${this.$route.params.guildid}/permissions`" :class="{ 'is-outlined': selected === 0 }" class="button is-hidden-desktop is-hidden-tablet-only is-small is-primary"><p class="has-text-weight-bold">Permissions</p></nuxt-link>
-              </p>
-              <br>
-              <p class="control">
-                <nuxt-link to="/servers" class="button is-hidden-mobile is-success"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
-                <nuxt-link to="/servers" class="button is-success is-hidden-desktop is-hidden-tablet-only is-small"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
-              </p>
-            </div>
+            <nuxt-link :to="`/servers/${this.$route.params.guildid}`" :class="{ 'is-outlined': selected === 1 }" class="button is-hidden-mobile is-primary"><p class="has-text-weight-bold">Packages</p></nuxt-link>
+            <nuxt-link :to="`/servers/${this.$route.params.guildid}`" :class="{ 'is-outlined': selected === 1 }" class="button is-hidden-desktop is-hidden-tablet-only  is-small is-primary"><p class="has-text-weight-bold">Packages</p></nuxt-link>
+            <nuxt-link :to="`/servers/${this.$route.params.guildid}/permissions`" :class="{ 'is-outlined': selected === 0 }" class="button is-hidden-mobile is-primary"><p class="has-text-weight-bold">Permissions</p></nuxt-link>
+            <nuxt-link :to="`/servers/${this.$route.params.guildid}/permissions`" :class="{ 'is-outlined': selected === 0 }" class="button is-hidden-desktop is-hidden-tablet-only is-small is-primary"><p class="has-text-weight-bold">Permissions</p></nuxt-link>
+            <nuxt-link to="/servers" class="button is-hidden-mobile is-success"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
+            <nuxt-link to="/servers" class="button is-success is-hidden-desktop is-hidden-tablet-only is-small"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
           </div>
         </nav>
       </div>

@@ -301,7 +301,7 @@ export default {
               ({ data: this.banking } = await this.$axios.patch(
                 `/api/guilds/${this.$route.params.guildid}/banking`,
                 {
-                  key: 'shopItems',
+                  key: "shopItems",
                   value: this.banking.shopItems
                 },
                 {
