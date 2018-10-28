@@ -12,9 +12,58 @@
       <div class="is-divider"/>
     </div>
     <div class="container">
-      <div class="box">
+      <h1 class="title has-text-white has-text-left">Settings</h1>
+      <div class="columns">
+        <div class="column is-one-quarter">
+          <div class="box">
+            <div class="content">
+              <h3 class="has-text-white has-text-left">Shop Name:</h3>
+              <div v-if="!prompts.includes('shopName')">
+                <p class="subtitle has-text-white">{{ banking.shopName }}</p>
+                <button class="button is-small is-primary" @click="prompts.push('shopName')">Change</button>
+              </div>
+              <div v-else>
+                <form id="sname" @submit.prevent="vername">
+                  <b-field :type="{ 'is-danger': errors.has('Shop Name') }" :message="errors.first('Shop Name')">
+                    <b-input v-validate="'required|max:30'" id="grey" v-model="banking.shopName" name="Shop Name"/>
+                    <p class="control">
+                      <button class="button is-primary" type="submit" form="sname">Save</button>
+                    </p>
+                  </b-field>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="column is-one-quarter">
+          <div class="box">
+            <div class="content">
+              <h3 class="has-text-white has-text-left">
+                Shop Currency: 
+              </h3>
+              <div v-if="!prompts.includes('currency')">
+                <p class="subtitle has-text-white">{{ banking.currency }}</p>
+                <button class="button is-small is-primary" @click="prompts.push('currency')">Change</button>
+              </div>
+              <div v-else>
+                <form id="crcy" @submit.prevent="vercurrency">
+                  <b-field :type="{ 'is-danger': errors.has('Currency') }" :message="errors.first('Currency')">
+                    <b-input v-validate="'required|max:4'" id="grey" v-model="banking.currency" name="Currency"/>
+                    <p class="control">
+                      <button class="button is-primary" type="submit" form="crcy">Save</button>
+                    </p>
+                  </b-field>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!--<div class="box">
         <div class="content">
-          <h1 class="title has-text-white has-text-left">Settings</h1>
           <div v-if="!prompts.includes('shopName')">
             <h3 class="has-text-white has-text-left">Shop Name</h3>
             <p class="has-text-white">{{ banking.shopName }}</p>
@@ -48,7 +97,7 @@
             </form>
           </div>
         </div>
-      </div>
+      </div>-->
       <div class="is-divider" />
     </div>
     <div class="container">

@@ -18,13 +18,29 @@
                 Prefix
                 <br><br>
                 <b-field>
-                  <b-input v-model="config.prefix" maxlength="10"/>
+                  <b-input id="grey" v-model="config.prefix" maxlength="10"/>
                   <p class="control">
                     <button class="button is-primary" @click="setPrefix(config.prefix)">Save</button>
                   </p>
                 </b-field>
               </h3>
               <p>What all commands are prefixed (begin) with.</p>
+            </div>
+          </div>
+        </div>
+        <div class="column is-narrow">
+          <div class="box">
+            <div class="content">
+              <h3 class="has-text-white has-text-left">Bot Language</h3>
+              <b-field>
+                <b-select id="grey" v-model="config.language">
+                  <option v-for="lang of languages" :key="lang" :value="lang">{{ lang }}</option>
+                </b-select>
+                <p class="control">
+                  <button class="button is-primary" @click="settingUpdate('language', config.language)">Save</button>
+                </p>
+              </b-field>
+              <p>The primary language for all of Mr.Fox's commands.</p>
             </div>
           </div>
         </div>
@@ -75,7 +91,7 @@ export default {
         /\w\S*/g,
         txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
       );
-    const [commands, config, roles] = await Promise.all([
+    const [commands, config, roles, languages] = await Promise.all([
       (await app.$axios.get(`/api/commands/${page}?guildID=${guildid} `, {
         headers: { Authorization: secret.encrypt(app.$auth.user.id) }
       })).data,
@@ -84,12 +100,14 @@ export default {
       })).data,
       (await app.$axios.get(`/api/guilds/${guildid}/roles`, {
         headers: { Authorization: secret.encrypt(app.$auth.user.id) }
-      })).data
+      })).data,
+      (await app.$axios.get(`/api/languages`)).data
     ]);
     return {
       commands,
       config,
-      roles
+      roles,
+      languages
     };
   },
   data() {
@@ -206,3 +224,18 @@ export default {
   }
 };
 </script>
+
+<style>
+select {
+  font-family: "Poppins";
+}
+.select select option {
+  color: #747f8d;
+}
+#grey {
+  background-color: #34383c;
+}
+.select.is-empty select {
+  color: #eff;
+}
+</style>
