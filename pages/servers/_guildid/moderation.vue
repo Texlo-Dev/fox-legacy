@@ -148,13 +148,13 @@
               </h3>
               <p class="subtitle has-text-white">Automatic kick threshold</p>
               <b-field>
-                <b-input v-model="config.kickPoints" type="number" min="10" max="100000"/>
+                <b-input id="grey" v-model="config.kickPoints" type="number" min="10" max="100000"/>
                 <button class="button is-primary" @click="settingUpdate('kickPoints', config.kickPoints)">Update</button>
               </b-field>
               <br>
               <p class="subtitle has-text-white">Automatic ban threshold</p>
               <b-field>
-                <b-input v-model="config.banPoints" type="number" min="10" max="100000"/>
+                <b-input id="grey" v-model="config.banPoints" type="number" min="10" max="100000"/>
                 <button class="button is-primary" @click="settingUpdate('banPoints', config.banPoints)">Update</button>
               </b-field>
             </div>
@@ -510,5 +510,8 @@ select {
 }
 .select select option {
   color: #747f8d;
+}
+#grey {
+  background-color: #34383c;
 }
 </style>

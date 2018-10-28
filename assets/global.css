@@ -98,4 +98,9 @@ select {
 
 	.select select option {
 		color: #747f8d;
-	  }
+		}
+		
+
+input {
+	font-family: 'Poppins';
+}
