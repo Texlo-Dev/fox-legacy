@@ -3,23 +3,17 @@
   "version": "1.0.0",
   "description": "mr.fox, with my own handler!",
   "main": "mrFox.js",
-  "scripts": {
-    "start": "npm run css-watch",
-    "test": "eslint .",
-    "lint": "eslint --fix .",
-    "startosx": "find . -name \".DS_Store\" -delete && node .",
-    "css-build": "node-sass --omit-source-map-url site/src/sass/mystyles.scss site/src/css/mystyles.css",
-    "css-watch": "npm run css-build -- --watch"
-  },
   "author": "rich",
   "license": "MIT",
+  "scripts": {
+    "lint": "tslint -p tsconfig.json --fix 'src/*/**/*.ts'",
+    "build": "npm run lint && tsc --project ./"
+  },
   "dependencies": {
     "@polka/send-type": "^0.5.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "btoa": "^1.2.1",
-    "bulma": "^0.7.1",
-    "bulma-start": "0.0.2",
     "canvas": "github:Automattic/node-canvas#92b192447e9b9ae98da0f801e4e34afdd1dc1ef8",
     "canvas-constructor": "github:kyranet/canvasConstructor",
     "cheerio": "^1.0.0-rc.2",
@@ -62,6 +56,15 @@
   "devDependencies": {
     "eslint": "^4.15.0",
     "eslint-plugin-import": "^2.14.0",
-    "node-sass": "^4.9.2"
-  }
+    "node-sass": "^4.9.2",
+    "ts-node": "^7.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/rTexel/fox.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/rTexel/fox/issues"
+  },
+  "homepage": "https://gitlab.com/rTexel/fox#readme"
 }
