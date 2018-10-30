@@ -1,31 +1,31 @@
-import { MessageEmbed } from 'discord.js';
-import { Command } from '../../util';
+import { MessageEmbed } from "discord.js";
+import { Command } from "../../util";
 
 export default class FoxCommand extends Command {
 
-    constructor(client) {
+    public constructor(client) {
         super(client, {
-            name: 'ban',
-            description: 'Bans a user from the guild.',
-            usage: '<member> [reason]',
+            name: "ban",
+            description: "Bans a user from the guild.",
+            usage: "<member> [reason]",
             extendedUsage: {
                 member: client.args.member,
                 reason: client.args.reason
             },
             guildOnly: true,
-            requiredPerms: ['`mod.banhammer`']
+            requiredPerms: ["`mod.banhammer`"]
         });
     }
 
-    hasPermission(message) {
-        return message.guild.perms.check('mod.banhammer', message);
+    public hasPermission(message) {
+        return message.guild.perms.check("mod.banhammer", message);
     }
 
-    async run(message, [user, ...reason], prefix) {
-        reason = reason.join(' ');
+    public async run(message, [user, ...reason], prefix) {
+        reason = reason.join(" ");
         const member = await this.member(message.mentions.users.first() || user, message);
-        if (!message.guild.me.hasPermission('BAN_MEMBERS')) return message.reply('I do not have adequate permissions to perform this operation.');
-        if (!member) return message.error('Value \'member\' was not supplied, please try again.');
+        if (!message.guild.me.hasPermission("BAN_MEMBERS")) return message.reply("I do not have adequate permissions to perform this operation.");
+        if (!member) return message.error("Value 'member' was not supplied, please try again.");
         if (member.roles.highest.position >= message.member.roles.highest.position) return message.error(`Sorry, but you cannot perform moderation actions on ${member.displayName}.`);
         let modlog = message.guild.config.modlogChannel;
         const enabled = message.guild.config.modLogging;
@@ -40,11 +40,11 @@ export default class FoxCommand extends Command {
             days: 4,
             reason: reason
         }).catch(() => null);
-        if (!banUser) return message.reply('<:nicexmark:495362785010647041> Sorry, but I couldn\'t ban this user.');
+        if (!banUser) return message.reply("<:nicexmark:495362785010647041> Sorry, but I couldn't ban this user.");
 
         const embed = new MessageEmbed()
             .setTimestamp()
-            .setColor('RANDOM')
+            .setColor("RANDOM")
             .setAuthor(message.author.tag, message.author.displayAvatarURL())
             .setDescription(`**Action:** Ban\n**Member:** ${(await this.client.users.fetch(member.id)).tag} (${member.id})\n**Reason:** ${reason}`)
             .setFooter(`Case#${caseInt}`);
@@ -59,7 +59,7 @@ export default class FoxCommand extends Command {
             reasonFor: reason,
             createdAt: message.createdAt,
             embedID: m ? m.id : null,
-            action: 'Banned'
+            action: "Banned"
         });
         await entry.save();
     }

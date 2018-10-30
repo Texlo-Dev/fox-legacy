@@ -1,22 +1,22 @@
-import { MessageEmbed } from 'discord.js';
-import { Command } from '../../util';
+import { MessageEmbed } from "discord.js";
+import { Command } from "../../util";
 
 export default class FoxCommand extends Command {
 
-    constructor(client) {
+    public constructor(client) {
         super(client, {
-            name: 'warnpoints',
-            description: 'Shows your current warnpoints.',
+            name: "warnpoints",
+            description: "Shows your current warnpoints.",
             guildOnly: true,
-            usage: '[member(warning permission only)]',
-            requiredPerms: ['`mod.warning`']
+            usage: "[member(warning permission only)]",
+            requiredPerms: ["`mod.warning`"]
 
         });
     }
 
-    async run(message, args) {
-        let member = await this.user(args.join(' '), message);
-        if (!message.guild.perms.check('mod.warning', message)) member = null;
+    public async run(message, args) {
+        let member = await this.user(args.join(" "), message);
+        if (!message.guild.perms.check("mod.warning", message)) member = null;
         if (!member) {
             const query = await this.client.mongo.modactions.findOne({ guildID: message.guild.id, userID: message.author.id, action: undefined, id: undefined });
             if (!query) {
@@ -24,15 +24,15 @@ export default class FoxCommand extends Command {
                     embed: {
                         author: {
                             icon_url: this.client.user.displayAvatarURL(),
-                            name: 'Warning Points'
+                            name: "Warning Points"
                         },
-                        description: 'You have 0 warning points. Keep up the good behavior!',
+                        description: "You have 0 warning points. Keep up the good behavior!",
                         color: this.client.brandColor,
                         timestamp: Date.now()
                     }
                 });
             } else {
-                const warnpoints = query.get('warnpoints');
+                const warnpoints = query.get("warnpoints");
                 const embed = new MessageEmbed()
                     .setColor(this.client.brandColor)
                     .setAuthor(this.client.user.username, this.client.user.displayAvatarURL())
@@ -47,7 +47,7 @@ export default class FoxCommand extends Command {
                     embed: {
                         author: {
                             icon_url: this.client.user.displayAvatarURL(),
-                            name: 'Warning Points'
+                            name: "Warning Points"
                         },
                         description: `${member.username} has 0 warning points. Keep up the good behavior!`,
                         color: this.client.brandColor,
@@ -55,7 +55,7 @@ export default class FoxCommand extends Command {
                     }
                 });
             } else {
-                const warnpoints = query.get('warnpoints');
+                const warnpoints = query.get("warnpoints");
                 const embed = new MessageEmbed()
                     .setColor(this.client.brandColor)
                     .setAuthor(this.client.user.username, this.client.user.displayAvatarURL())

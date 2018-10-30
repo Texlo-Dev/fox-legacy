@@ -1,19 +1,19 @@
-import { MessageEmbed } from 'discord.js';
-import { Command } from '../../util';
+import { MessageEmbed } from "discord.js";
+import { Command } from "../../util";
 
 export default class FoxCommand extends Command {
 
     public constructor(client) {
         super(client, {
-            name: 'prefix',
-            description: 'Shows/sets the command prefix.',
-            usage: '[prefix]'
+            name: "prefix",
+            description: "Shows/sets the command prefix.",
+            usage: "[prefix]"
         });
     }
 
     public hasPermission(message) {
         if (message.client.isOwner(message.author.id)) return true;
-        else if (message.guild.perms.check('core.manageserver')) return true;
+        else if (message.guild.perms.check("core.manageserver")) return true;
         else if (message.guild.ownerID === message.author.id) return true;
         return false;
     }
@@ -21,7 +21,7 @@ export default class FoxCommand extends Command {
     public async run(message, args, prefix) {
         if (!args[0] && !message.guild) {
             const embed = new MessageEmbed()
-                .setAuthor('Prefix', this.client.user.displayAvatarURL())
+                .setAuthor("Prefix", this.client.user.displayAvatarURL())
                 .setColor(this.client.brandColor)
                 .setTimestamp()
                 .setFooter(this.client.user.username)
@@ -29,17 +29,17 @@ export default class FoxCommand extends Command {
             message.send({ embed });
         } else if (!args[0]) {
             const embed = new MessageEmbed()
-                .setAuthor('Prefix', this.client.user.displayAvatarURL())
+                .setAuthor("Prefix", this.client.user.displayAvatarURL())
                 .setColor(this.client.brandColor)
                 .setTimestamp()
                 .setFooter(this.client.user.username)
                 .setDescription(`My current prefix for this server is \`${prefix}\`. To use commands, just run \`${prefix}command\`.`);
             message.send({ embed });
         } else {
-            if (!message.guild) return message.reply('You may only change the guild prefix in a guild channel.');
-            const setPrefix = await message.guild.config.set('prefix', args[0]);
+            if (!message.guild) return message.reply("You may only change the guild prefix in a guild channel.");
+            const setPrefix = await message.guild.config.set("prefix", args[0]);
             const embed = new MessageEmbed()
-                .setAuthor('Change Prefix', this.client.user.displayAvatarURL())
+                .setAuthor("Change Prefix", this.client.user.displayAvatarURL())
                 .setColor(this.client.brandColor)
                 .setTimestamp()
                 .setFooter(this.client.user.username)
@@ -49,4 +49,3 @@ export default class FoxCommand extends Command {
     }
 
 }
-

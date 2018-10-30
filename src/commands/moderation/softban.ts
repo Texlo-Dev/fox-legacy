@@ -1,33 +1,33 @@
-import { MessageEmbed } from 'discord.js';
-import { Command } from '../../util';
+import { MessageEmbed } from "discord.js";
+import { Command } from "../../util";
 let id;
 
 export default class FoxCommand extends Command {
 
-    constructor(client) {
+    public constructor(client) {
         super(client, {
-            name: 'softban',
-            description: 'Kicks a user, and purges their messages.',
-            usage: '<member> [reason]',
+            name: "softban",
+            description: "Kicks a user, and purges their messages.",
+            usage: "<member> [reason]",
             extendedUsage: {
                 member: client.args.member,
                 reason: client.args.reason
             },
             guildOnly: true,
-            requiredPerms: ['`mod.kickboot`']
+            requiredPerms: ["`mod.kickboot`"]
         });
     }
 
-    hasPermission(message) {
-        return message.guild.perms.check('mod.kickboot', message);
+    public hasPermission(message) {
+        return message.guild.perms.check("mod.kickboot", message);
     }
 
-    async run(message, args, prefix) {
-        if (!message.guild.me.hasPermission('BAN_MEMBERS')) return message.error(' I do not have the permission Ban Members to perform this operation.');
+    public async run(message, args, prefix) {
+        if (!message.guild.me.hasPermission("BAN_MEMBERS")) return message.error(" I do not have the permission Ban Members to perform this operation.");
         const member = await this.member(message.mentions.users.first() || args[0], message);
-        if (!member) return message.error(' Please mention a member to softban.');
+        if (!member) return message.error(" Please mention a member to softban.");
         if (member.roles.highest.position >= message.member.roles.highest.position) return message.error(` Sorry, but you cannot perform moderation actions on ${member.displayName}.`);
-        let reason = args.slice(1).join(' ');
+        let reason = args.slice(1).join(" ");
         let modlog = message.guild.config.modlogChannel;
         const enabled = message.guild.config.modLogging;
         if (!enabled) modlog = null;
@@ -42,7 +42,7 @@ export default class FoxCommand extends Command {
         await message.guild.members.unban(id);
         const embed = new MessageEmbed()
             .setTimestamp()
-            .setColor('RANDOM')
+            .setColor("RANDOM")
             .setAuthor(message.author.tag, message.author.displayAvatarURL())
             .setDescription(`**Action:** Softban\n**Member:** ${mem.user.tag} (${mem.id})\n**Reason:** ${reason}`)
             .setFooter(`Case#${caseInt}`);
@@ -56,7 +56,7 @@ export default class FoxCommand extends Command {
             reasonFor: reason,
             embedID: m ? m.id : null,
             createdAt: message.createdAt,
-            action: 'Softban'
+            action: "Softban"
         });
 
         await entry.save();

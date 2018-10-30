@@ -1,21 +1,21 @@
-import { get } from 'snekfetch';
-import { Command } from '../../util';
-const userValidator = new RegExp('^\\w{3,12}[\\#]\\d{4,5}$'); //eslint-disable-line
-const platforms = ['PC', 'PSN', 'XBL'];
+import { get } from "snekfetch";
+import { Command } from "../../util";
+const userValidator = new RegExp("^\\w{3,12}[\\#]\\d{4,5}$"); // eslint-disable-line
+const platforms = ["PC", "PSN", "XBL"];
 export default class FoxCommand extends Command {
 
-    constructor(client) {
+    public constructor(client) {
         super(client, {
-            name: 'overwatch',
-            description: 'Get another user\'s Overwatch stats',
-            usage: '<user> [PC|PSN|XBL]'
+            name: "overwatch",
+            description: "Get another user's Overwatch stats",
+            usage: "<user> [PC|PSN|XBL]"
         });
     }
 
-    async run(message, [battlenettag, platform = 'PC']) {
+    public async run(message, [battlenettag, platform = "PC"]) {
         // ~~hand~~ user input sanitization
-        if (!battlenettag) return message.error('Please specify a user.');
-        if (!platforms.includes(platform.toUpperCase())) return message.error('Invalid platform. Valid: PC, PSN, XBL');
+        if (!battlenettag) return message.error("Please specify a user.");
+        if (!platforms.includes(platform.toUpperCase())) return message.error("Invalid platform. Valid: PC, PSN, XBL");
         if (!userValidator.test(battlenettag)) return message.error(`Invalid User: "${battlenettag}"`);
         const commandMsg = await message.send(`:check: Getting Overwatch stats for ${battlenettag}. This may take a minute.`);
         // If the user input is correct, send our API request
@@ -39,9 +39,9 @@ export default class FoxCommand extends Command {
         return commandMsg.edit({ embed: this.makeEmbed(owStats, { platform: platform, owUser: battlenettag }) });
     }
     // Jacz spent a lot of time writing this beautiful function. Shame I'm about to tear it apart, as I do.
-    getData(tag, platform) {
+    public getData(tag, platform) {
         return new Promise(async (res, rej) => {
-            const { body: { us, kr, eu } } = await get(`https://owapi.net/api/v3/u/${tag.replace('#', '-')}/stats?platform=${platform.toLowerCase()}`).catch(err => rej(err));
+            const { body: { us, kr, eu } } = await get(`https://owapi.net/api/v3/u/${tag.replace("#", "-")}/stats?platform=${platform.toLowerCase()}`).catch(err => rej(err));
             const Stats = us.stats || kr.stats || eu.stats;
             const comp = Stats.competitive;
             const quick = Stats.quickplay;
@@ -54,7 +54,7 @@ export default class FoxCommand extends Command {
         });
     }
     // NOT USING THE CONSTRUCTOR FOR A MULTITUDE OF REASONS, NOT *JUST* BECAUSE I'M STUBBORN AND LAZY. THAT'S PART OF IT THOUGH.
-    makeEmbed(owStats, cmdMeta) {
+    public makeEmbed(owStats, cmdMeta) {
         const { platform, owUser } = cmdMeta;
         const { quick: owQuick, comp: owComp, level: owLevel } = owStats;
         // API Doesn't include comp data if player has never played comp
@@ -132,7 +132,7 @@ export default class FoxCommand extends Command {
             cmdEmbed.fields.splice(
                 1, 0, {
                     name: `SR`,
-                    value: `${owComp.overall_stats.comprank || 'Hasn\'t completed\nplacement matches.'}`,
+                    value: `${owComp.overall_stats.comprank || "Hasn't completed\nplacement matches."}`,
                     inline: true
                 }
             );

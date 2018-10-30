@@ -1,36 +1,36 @@
-import { MessageEmbed } from 'discord.js';
-import { Command } from '../../util';
+import { MessageEmbed } from "discord.js";
+import { Command } from "../../util";
 
 export default class FoxCommand extends Command {
 
-    constructor(client) {
+    public constructor(client) {
         super(client, {
-            name: 'kick',
-            description: 'Kicks a user from the guild.',
-            usage: '<member> [reason]',
+            name: "kick",
+            description: "Kicks a user from the guild.",
+            usage: "<member> [reason]",
             extendedUsage: {
                 member: client.args.member,
                 reason: client.args.reason
             },
             guildOnly: true,
-            requiredPerms: ['`mod.kickboot`']
+            requiredPerms: ["`mod.kickboot`"]
         });
     }
 
-    hasPermission(message) {
-        return message.guild.perms.check('mod.kickboot', message);
+    public hasPermission(message) {
+        return message.guild.perms.check("mod.kickboot", message);
     }
 
-    async run(message, args, prefix) {
-        if (!message.guild.me.hasPermission('KICK_MEMBERS')) return message.reply('Sorry, I don\'t have the proper permissions to perform this operation.');
+    public async run(message, args, prefix) {
+        if (!message.guild.me.hasPermission("KICK_MEMBERS")) return message.reply("Sorry, I don't have the proper permissions to perform this operation.");
         let modlog = message.guild.config.modlogChannel;
         const enabled = message.guild.config.modLogging;
         if (!enabled) modlog = null;
         const caseEntry = await this.client.mongo.modactions.count({ guildID: message.guild.id, id: undefined, warnpoints: undefined });
         const caseInt = caseEntry + 1;
-        let reason = args.slice(1).join(' ');
+        let reason = args.slice(1).join(" ");
         const member = await this.member(message.mentions.users.first() || args[0], message);
-        if (!member) return message.error('Value \'member\' was not supplied. Please try again.');
+        if (!member) return message.error("Value 'member' was not supplied. Please try again.");
         if (member.roles.highest.position >= message.member.roles.highest.position) return message.error(`Sorry, but you cannot perform moderation actions on ${member.displayName}.`);
         if (!reason) reason = `\nModerator: Please type \`${prefix}reason ${caseInt} <reason>\``;
 
@@ -38,7 +38,7 @@ export default class FoxCommand extends Command {
         member.kick().catch(err => message.reply(`I couldn't kick this user, most likely because they have a higher role than me, or they are the guild owner. ${err}`));
         const embed = new MessageEmbed()
             .setTimestamp()
-            .setColor('RANDOM')
+            .setColor("RANDOM")
             .setAuthor(message.author.tag, message.author.displayAvatarURL())
             .setDescription(`**Action:** Kick\n**Member:** ${member.user.tag} (${member.user.id})\n**Reason:** ${reason}`)
             .setFooter(`Case#${caseInt}`);
@@ -52,7 +52,7 @@ export default class FoxCommand extends Command {
             reasonFor: reason,
             createdAt: message.createdAt,
             embedID: m ? m.id : null,
-            action: 'Kicked'
+            action: "Kicked"
         });
         await entry.save();
     }

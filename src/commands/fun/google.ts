@@ -1,41 +1,41 @@
-import { MessageEmbed } from 'discord.js';
-import { stripIndents } from 'common-tags';
-import { load } from 'cheerio';
-import { request } from 'axios';
-import { parse } from 'querystring';
-import { Command } from '../../util';
+import { MessageEmbed } from "discord.js";
+import { stripIndents } from "common-tags";
+import { load } from "cheerio";
+import { request } from "axios";
+import { parse } from "querystring";
+import { Command } from "../../util";
 
 export default class FoxCommand extends Command {
 
-    constructor(client) {
+    public constructor(client) {
         super(client, {
-            name: 'google',
-            description: 'Searches Google, with a provided search query.',
-            usage: '<query>',
-            alaises: ['g', 'googlesearch']
+            name: "google",
+            description: "Searches Google, with a provided search query.",
+            usage: "<query>",
+            alaises: ["g", "googlesearch"]
         });
     }
 
-    async run(message, args) {
-        const query = args.join(' ');
-        const initmsg = await message.send('<a:typing:393848431413559296> Searching...');
-        if (!query) return message.error(' Please specify something to search on Google.');
+    public async run(message, args) {
+        const query = args.join(" ");
+        const initmsg = await message.send("<a:typing:393848431413559296> Searching...");
+        if (!query) return message.error(" Please specify something to search on Google.");
         try {
             const { data } = await request({
-                method: 'GET',
+                method: "GET",
                 url: `https://www.google.com/search?q=${encodeURIComponent(query)}`
             });
             const $ = load(data);
 
-            let googleURL = $('.r').first().find('a').first().attr('href');
-            googleURL = parse(googleURL.replace('/url?', ''));
-            const searchText = $('.st').first().text();
-            const metadata = $('.r').first().text();
+            let googleURL = $(".r").first().find("a").first().attr("href");
+            googleURL = parse(googleURL.replace("/url?", ""));
+            const searchText = $(".st").first().text();
+            const metadata = $(".r").first().text();
             initmsg.edit(
                 new MessageEmbed()
                     .setColor(this.client.brandColor)
                     .setTimestamp()
-                    .setAuthor('Google Search Results', this.client.user.displayAvatarURL())
+                    .setAuthor("Google Search Results", this.client.user.displayAvatarURL())
                     .setFooter(this.client.user.username)
                     .setDescription(stripIndents`
                         [${metadata}](${googleURL.q})\n${searchText}
@@ -43,7 +43,7 @@ export default class FoxCommand extends Command {
             );
         } catch (error) {
             console.error(error);
-            return initmsg.error('No results found.');
+            return initmsg.error("No results found.");
         }
         /* google.resultsPerPage = 5;
         google(query, (err, res) => {

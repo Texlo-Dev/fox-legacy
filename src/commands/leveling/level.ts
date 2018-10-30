@@ -1,41 +1,41 @@
-import { MessageEmbed } from 'discord.js';
-import { stripIndents } from 'common-tags';
-import { Command } from '../../util';
+import { MessageEmbed } from "discord.js";
+import { stripIndents } from "common-tags";
+import { Command } from "../../util";
 
 export default class FoxCommand extends Command {
 
-    constructor(client) {
+    public constructor(client) {
         super(client, {
-            name: 'level',
-            description: 'Shows the leveling stats of you or another user.',
-            usage: '[user]',
+            name: "level",
+            description: "Shows the leveling stats of you or another user.",
+            usage: "[user]",
             guildOnly: true,
-            aliases: ['level', 'rank'],
-            requiredPerms: ['`leveling.use`']
+            aliases: ["level", "rank"],
+            requiredPerms: ["`leveling.use`"]
         });
     }
 
-    hasPermission(message) {
-        return message.guild.perms.check('leveling.use', message);
+    public hasPermission(message) {
+        return message.guild.perms.check("leveling.use", message);
     }
 
-    async run(message, args) {
+    public async run(message, args) {
         const member = await this.member(args[0], message);
         if (member) {
             const entry = await this.client.mongo.leveling.findOne({
                 guildID: message.guild.id,
                 userID: member.id
             });
-            if (!entry && member.user.bot) return message.send('Sorry, bots aren\'t eligible for banking.');
-            if (!entry && !member.user.bot) return message.send('That person hasn\'t started saving money yet. Try again later!');
+            if (!entry && member.user.bot) return message.send("Sorry, bots aren't eligible for banking.");
+            if (!entry && !member.user.bot) return message.send("That person hasn't started saving money yet. Try again later!");
             const embed = new MessageEmbed()
                 .setAuthor(`${member.user.username}'s leveling stats`, `${member.user.displayAvatarURL()}`)
                 .setColor(this.client.brandColor)
                 .setTimestamp()
                 .setFooter(`Requested by ${message.author.tag}`)
                 .setDescription(stripIndents`
-                **Level:** ${entry.get('level')}
-                **Current XP/To Next Level:** ${entry.get('xp')}/${entry.get('tonextlevel')} (${entry.get('totalXP')} total)
+                **Level:** ${entry.get("level")}
+                **Current XP/To Next Level:** ${entry.get("xp")}/${entry.get("tonextlevel")} (${entry.get("totalXP")} total)
                 **Rank:** #${await message.guild.leveling.rankOf(member)} out of ${message.guild.memberCount} total members
                 `);
             message.send({ embed });
@@ -51,8 +51,8 @@ export default class FoxCommand extends Command {
                 .setTimestamp()
                 .setFooter(`Requested by ${message.author.tag}`)
                 .setDescription(stripIndents`
-                **Level:** ${entry.get('level')}
-                **XP/To Next Level:** ${entry.get('xp')}/${entry.get('tonextlevel')} (${entry.get('totalXP').toLocaleString()} total)
+                **Level:** ${entry.get("level")}
+                **XP/To Next Level:** ${entry.get("xp")}/${entry.get("tonextlevel")} (${entry.get("totalXP").toLocaleString()} total)
                 **Rank:** #${await message.guild.leveling.rankOf(message.member)} out of ${message.guild.memberCount} total members
                 `);
             message.send({ embed });
