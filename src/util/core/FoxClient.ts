@@ -8,50 +8,54 @@ import {
 } from "..";
 import translate from "translate";
 import { prefix, isTestFox, ownerID, devs, dbotsKey, yt_api_key as googleKey } from "../../config.json";
-import { post, get } from "snekfetch";
 import { Database, Model } from "mongorito";
-import { request } from "axios";
+import axios from "axios";
 translate.key = googleKey;
 const connection = new Database("localhost/encipio");
-connection.connect().then(() => console.log("MongoDB connection established.")).catch(err => {
-    console.error(`Error connecting to MongoDB. ${err}`);
-    process.exit();
-});
+connection.connect()
+    .then(() => console.log("MongoDB connection established."))
+    .catch(err => {
+        console.error(`Error connecting to MongoDB. ${err}`);
+        process.exit();
+    });
 class FoxLeveling extends Model {}
-class customcommands extends Model {}
-class modActions extends Model {}
-class guildSettings extends Model {}
-class tags extends Model {}
+class CustomCommands extends Model {}
+class ModActions extends Model {}
+class GuildSettings extends Model {}
+class Tags extends Model {}
 class FoxBank extends Model {}
-class polls extends Model {}
-class patrons extends Model {}
-class selfroles extends Model {}
-class permissions extends Model {}
-class giveaways extends Model {}
-connection.register(guildSettings);
+class Polls extends Model {}
+class Patrons extends Model {}
+class SelfRoles extends Model {}
+class Permissions extends Model {}
+class Giveaways extends Model {}
+connection.register(GuildSettings);
 connection.register(FoxLeveling);
-connection.register(modActions);
-connection.register(customcommands);
-connection.register(tags);
+connection.register(ModActions);
+connection.register(CustomCommands);
+connection.register(Tags);
 connection.register(FoxBank);
-connection.register(selfroles);
-connection.register(polls);
-connection.register(patrons);
-connection.register(permissions);
-connection.register(giveaways);
-
-Array.prototype.shuffle = function ArrayShuffle() {
-    for (let i = this.length - 1; i >= 0; i--) {
-        let randomIndex = Math.floor(Math.random() * (i + 1));
-        let itemAtIndex = this[randomIndex];
-
-        this[randomIndex] = this[i];
-        this[i] = itemAtIndex;
-    }
-    return this;
-};
+connection.register(SelfRoles);
+connection.register(Polls);
+connection.register(Patrons);
+connection.register(Permissions);
+connection.register(Giveaways);
 
 class FoxClient extends Client {
+    public tools: object;
+    public packages: string[];
+    public music: FoxMusic;
+    public commandPrefix: string;
+    public commands: CommandStore;
+    public events: EventStore;
+    public commandsRun: number;
+    public isTestFox: boolean;
+    public ready: boolean;
+    public translate: Function;
+    public locales: object;
+    public permissions: any;
+    public mongo: object;
+    public brandColor: number;
 
     public constructor() {
         super({ disableEveryone: true });
@@ -60,7 +64,6 @@ class FoxClient extends Client {
         this.music = new FoxMusic(this);
         this.commandPrefix = prefix;
         this.commands = new CommandStore(this);
-        this.events = new EventStore();
         this.commandsRun = 0;
         this.isTestFox = isTestFox;
         this.permissions = new Collection();
@@ -83,25 +86,25 @@ class FoxClient extends Client {
             Japanese: "ja",
             Italian: "it"
         };
-        this.mongo = { customcommands, leveling: FoxLeveling, modactions: modActions, banking: FoxBank, tags, selfroles, permissions, giveaways, guildconfig: guildSettings, polls, patrons };
+        this.mongo = { customcommands: CustomCommands, leveling: FoxLeveling, modactions: ModActions, banking: FoxBank, tags: Tags, selfroles: SelfRoles, permissions: Permissions, giveaways: Giveaways, guildconfig: GuildSettings, polls: Polls, patrons: Patrons };
         this.once("ready", async () => this._ready());
     }
 
-    public isOwner(id) {
+    public isOwner(id: string) {
         return id === ownerID;
     }
-    public isDev(id) {
+    public isDev(id: string) {
         return this.isOwner(id) || devs.includes(id);
     }
 
-    public clean(text) {
+    public clean(text: string) {
         return text
             .replace(/`/g, `\`${String.fromCharCode(8203)}`)
             .replace(/@/g, `@${String.fromCharCode(8203)}`)
             .replace(new RegExp(`${this.token}`, "g"), "NO YOU");
     }
 
-    public paginate(items, page = 1, pageLength = 10) {
+    public paginate(items: any[], page = 1, pageLength = 10) {
         const maxPage = Math.ceil(items.length / pageLength);
         if (page < 1) page = 1;
         if (page > maxPage) page = maxPage;
@@ -114,26 +117,25 @@ class FoxClient extends Client {
         };
     }
 
-    public async haste(input, extension) {
-        return new Promise(async (res, rej) => {
-            if (!input) return rej("Input argument is required.");
-            const { body: { key } } = await post("https://hastebin.com/documents").send(input).catch(e => rej(e));
-            res(`https://hastebin.com/${key}${extension ? `.${extension}` : ""}`);
-        });
+    public async haste(input: string, extension: string) {
+        return axios({
+            url: "https://hastebin.com/documents",
+            data: input
+        }).then(res => `https://hastebin.com/${key}${extension ? `.${extension}` : ""}`)
+        .catch(err => err);
     }
 
-    public async axios(method, meta) {
+    public async http(method: string, meta: any) {
         if (!method || !meta) throw new Error("Missing Paramaters.");
-        return request({
+        return axios({
             method,
             url: meta.url,
             data: meta.body || {},
-            headers: meta.headers || {},
-            query: meta.query || {}
+            headers: meta.headers || {}
         }).then(res => res.data);
     }
 
-    public capitalizeStr(string) {
+    public capitalizeStr(string: string) {
         return string.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
 
@@ -151,7 +153,7 @@ class FoxClient extends Client {
         let messages = 0;
         let commandMessages = 0;
 
-        for (const channel of this.channels.values()) {
+        for (const channel  of this.channels.values()) {
             if (!channel.messages) continue;
             channels++;
 
@@ -170,20 +172,21 @@ class FoxClient extends Client {
         return messages;
     }
 
-    public isUpvoter(id) {
+    public async isUpvoter(id: string) {
         if (this.user.id !== "333985343445663749") return Promise.resolve(true);
-        return new Promise(async (res, rej) => {
-            get(`https://discordbots.org/api/bots/333985343445663749/votes`)
-                .set("Authorization", dbotsKey)
-                .then(r => res(r.body.map(c => c.id).includes(id)))
-                .catch(err => rej(err));
+        const res = await axios({
+            url: `https://discordbots.org/api/bots/333985343445663749/votes`,
+            headers: {
+                Authorization: dbotsKey
+            }
         });
+        return res.data.map((c: any) => c.id).includes(id);
     }
 
-    public spanMs(span) {
+    public spanMs(span: string) {
         if (typeof span !== "string") return null;
         let total = 0;
-        const amounts = span.split(/[a-z]/); amounts.splice(-1);
+        const amounts: any = span.split(/[a-z]/); amounts.splice(-1);
         const units = span.split(/\d+/); units.shift();
         for (let i = 0; i < units.length; i++) {
             amounts[i] = parseFloat(amounts[i]);
@@ -208,7 +211,7 @@ class FoxClient extends Client {
     }
 
     public get args() {
-        const obj = {
+        const obj: object = {
             member: `mention, ID, or name (Ex: @Jacz#9536, Jacz)`,
             duration: `second, minute, hour, day, week (Ex: 2s, 4m, 8d, 9w)`,
             reason: `string`,

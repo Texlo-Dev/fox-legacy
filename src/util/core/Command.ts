@@ -1,7 +1,7 @@
-const userRegex = new RegExp(/^(?:<@!?)?([0-9]+)>?$/);
-const memberRegex = new RegExp(/^(?:<@!?)?([0-9]+)>?$/);
-const channelRegex = new RegExp(/^(?:<#)?([0-9]+)>?$/);
-const roleRegex = new RegExp(/^(?:<@&)?([0-9]+)>?$/);
+const userRegex: RegExp = new RegExp(/^(?:<@!?)?([0-9]+)>?$/);
+const memberRegex: RegExp = new RegExp(/^(?:<@!?)?([0-9]+)>?$/);
+const channelRegex: RegExp = new RegExp(/^(?:<#)?([0-9]+)>?$/);
+const roleRegex: RegExp = new RegExp(/^(?:<@&)?([0-9]+)>?$/);
 const regexs = {
     userOrMember: new RegExp("^(?:<@!?)?(\\d{17,19})>?$"),
     channel: new RegExp("^(?:<#)?(\\d{17,19})>?$"),
@@ -9,28 +9,57 @@ const regexs = {
     snowflake: new RegExp("^(\\d{17,19})$")
 };
 import { User, GuildMember, Message, Channel, Role } from "discord.js";
-class Command {
+import { FoxClient } from "..";
 
-    public constructor(client, info = {}) {
+interface CommandInfo {
+    name: string;
+    description: string;
+    aliases: string[];
+    usage: string;
+    cooldown: number;
+    extendedUsage: string[];
+    requiredPerms: string[];
+    guildOnly: boolean;
+    patreonTier: number;
+    enabled: boolean;
+}
+
+class Command {
+    public client: FoxClient;
+    public name: string;
+    public description: string;
+    public aliases: string[];
+    public usage: string;
+    public cooldown: number;
+    public extendedUsage: object;
+    public requiredPerms: string[];
+    public reqPermString: string[];
+    public patreonTier: number;
+    public guildOnly: boolean;
+    public enabled: boolean;
+    public category: any;
+
+    public constructor(client: FoxClient, info: CommandInfo) {
         Object.defineProperty(this, "client", { value: client });
         this.name = info.name;
         this.description = info.description;
         this.aliases = info.aliases || [];
         this.usage = info.usage;
-        this.cooldown = info.cooldown || null;
+        this.cooldown = info.cooldown || 0;
         this.extendedUsage = info.extendedUsage || null;
         this.requiredPerms = info.requiredPerms || [];
-        this.reqPermString = info.requiredPerms ? info.requiredPerms.length ? info.requiredPerms.join(", ").replace(/`/g, "").trim().split(",") : "None" : [];
+        this.reqPermString = info.requiredPerms ? info.requiredPerms.length ? info.requiredPerms.join(", ").replace(/`/g, "").trim().split(",") : [] : [];
         this.guildOnly = info.guildOnly || false;
-        this.patreonOnly = info.patreonOnly || false;
+        this.patreonTier = info.patreonTier || 0;
         this.enabled = info.enabled || true;
+        this.category = null;
     }
 
-    public hasPermission(message) { // eslint-disable-line
+    public hasPermission(message: FoxMessage) { // eslint-disable-line
         return true;
     }
 
-    public async run(message, args, prefix) { // eslint-disable-line
+    public async run(message: Message, args: string[], prefix: string) { // eslint-disable-line
         // defined in other classes
     }
 
@@ -71,7 +100,7 @@ class Command {
         return false;
     }
 
-    public _registerExecutor(message) {
+    private _registerExecutor(message) {
         this.executor = message.author;
     }
 
@@ -130,7 +159,7 @@ class Command {
         return false;
     }
 
-    public boolean(bool) {
+    public boolean(bool: any) {
         if (!bool) return null;
         if (bool instanceof Boolean) return bool;
         if (["true", "+", "t", "yes", "y", "off"].includes(String(bool).toLowerCase())) return true;
@@ -168,14 +197,14 @@ function channelFilterExact(search) {
     return channel => channel.name.toLowerCase() === search;
 }
 
-function channelFilterInexact(search) {
+function channelFilterInexact(search: Channel) {
     return channel => channel.name.toLowerCase().includes(search);
 }
 
-function roleFilterExact(search) {
+function roleFilterExact(search: Role) {
     return role => role.name.toLowerCase() === search;
 }
 
-function roleFilterInexact(search) {
-    return role => role.name.toLowerCase().includes(search);
+function roleFilterInexact(search: Role) {
+    return  => role.name.toLowerCase().includes(search);
 }

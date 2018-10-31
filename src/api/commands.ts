@@ -1,11 +1,12 @@
 import polka from "polka";
 import authMiddleware from "../util/authMiddleware";
+import { Command } from "../util";
 const router = polka();
 
 router.get("/", (req, res) => {
-    const help = {};
-    const excludedCommands = ["eval", "exec", "addperm", "addpatreon", "rmpatreon", "restart", "reload", "addmoney", "removemoney"];
-    req.client.commands.filter(c => excludedCommands.indexOf(c.name) < 0).forEach(cmd => {
+    const help: Object = {};
+    const excludedCommands: string[] = ["eval", "exec", "addperm", "addpatreon", "rmpatreon", "restart", "reload", "addmoney", "removemoney"];
+    req.client.commands.filter(c => excludedCommands.indexOf(c.name) < 0).forEach((cmd: Command) => {
         const cat = cmd.category;
         cmd.executor = null;
         if (!help.hasOwnProperty(cat)) help[cat] = [];

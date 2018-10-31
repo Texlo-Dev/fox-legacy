@@ -16,8 +16,8 @@ import * as Tools from "./core/Tools";
 
 import Guild from "./extensions/FoxGuild";
 import Member from "./extensions/FoxMember";
-import Message from "./extensions/FoxMessage";
-import User from "./extensions/FoxUser";
+import FoxMessage from "./extensions/FoxMessage";
+import FoxUser from "./extensions/FoxUser";
 
 import Giveaway from "./giveaways/Giveaway";
 import GiveawayStore from "./giveaways/GiveawayStore";
@@ -54,8 +54,8 @@ export {
     Tools,
     Guild,
     Member,
-    Message,
-    User,
+    FoxMessage,
+    FoxUser,
     Giveaway,
     GiveawayStore,
     Leveling,

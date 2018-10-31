@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@polka/send-type": "^0.5.0",
+    "@types/axios": "^0.14.0",
+    "@types/mongorito": "^3.0.0",
+    "@types/node": "^10.12.1",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "btoa": "^1.2.1",
@@ -21,7 +24,7 @@
     "common-tags": "^1.8.0",
     "cors": "^2.8.4",
     "dateformat": "^3.0.2",
-    "discord.js": "github:discordjs/discord.js#master",
+    "discord.js": "github:discordjs/discord.js#b759fc415e89c1f3eb3523deb23c5b514968c845",
     "ejs": "^2.5.7",
     "esm": "^3.0.84",
     "express": "^4.16.2",
@@ -49,6 +52,7 @@
     "snekfetch": "^4.0.4",
     "socket.io": "^2.1.1",
     "translate": "^1.0.3",
+    "tsc-watch": "^1.0.30",
     "urban": "^0.3.1",
     "uws": "^9.14.0",
     "ytdl-core": "github:fent/node-ytdl-core#master"
