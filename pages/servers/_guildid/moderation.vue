@@ -136,7 +136,6 @@
                   <p>Message target after kick/ban/warn</p>
                 </b-checkbox>
               </div>
-
             </div>
           </div>
         </div>
@@ -161,7 +160,6 @@
           </div>
         </div>
       </div>
-
       <div class="is-divider"/>
     </div>
     <div class="container" style="position: relative">
