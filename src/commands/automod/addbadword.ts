@@ -1,23 +1,24 @@
-import { Command } from "../../util";
+import { Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/types";
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "addbadword",
             description: "Adds a word that will delete any messages that contain it.",
-            usage: ["<word>"],
+            usage: "<word>",
             requiredPerms: ["`automod.badwords`"],
             guildOnly: true
         });
     }
 
-    public hasPermission(message) {
+    public hasPermission(message: FoxMessage) {
         return message.guild.perms.check("automod.badwords", message);
     }
 
-    public async run(message, args) {
+    public async run(message: FoxMessage, args: string[]) {
         await message.delete().catch(() => 0);
-        const word = args.join(" ");
+        const word: string = args.join(" ");
         if (!word) return message.error("Please specify a bad word to add.");
         const res = await message.guild.config.setArray("badWords", word);
         if (!res) return message.error("This word is already added.");

@@ -1,5 +1,4 @@
 const inviteRegex = new RegExp(/\b(?:https?:\/\/)?(?:www\.)?(?:discordapp\.com\/invite\/|discord\.gg\/)([\w-]{2,32})/gi);
-
 export const badWords = message => {
     if (!message.guild) return;
     if (!message.guild.config.bwProtected) return;

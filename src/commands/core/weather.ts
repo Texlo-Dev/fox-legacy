@@ -1,7 +1,7 @@
 import * as cv from "canvas-constructor";
 import { readFile } from "fs-nextra";
 import { request } from "axios";
-import { yt_api_key, darkSkyAPI } from "../../config";
+import { googleAPI, darkSkyAPI } from "../../config";
 import { Command } from "../../util";
 const { Canvas } = cv;
 Canvas.registerFont(`${process.cwd()}/canvas/fonts/Roboto-Regular.ttf`, "Roboto");
@@ -26,7 +26,7 @@ export default class FoxCommand extends Command {
             text = text.replace(/ /g, "");
             const { data } = await request({
                 url: `https://maps.googleapis.com/maps/api/geocode/json`,
-                params: { address: encodeURIComponent(text.replace(/ /g, "+")), key: yt_api_key },
+                params: { address: encodeURIComponent(text.replace(/ /g, "+")), key: googleAPI },
                 method: "GET"
             });
 

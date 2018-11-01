@@ -10,20 +10,7 @@ const regexs = {
 };
 import { User, GuildMember, Message, Channel, Role } from "discord.js";
 import { FoxClient } from "..";
-
-interface CommandInfo {
-    name: string;
-    description: string;
-    aliases: string[];
-    usage: string;
-    cooldown: number;
-    extendedUsage: string[];
-    requiredPerms: string[];
-    guildOnly: boolean;
-    patreonTier: number;
-    enabled: boolean;
-}
-
+import { CommandInfo, FoxMessage, FoxUser } from "../types";
 class Command {
     public client: FoxClient;
     public name: string;
@@ -38,6 +25,7 @@ class Command {
     public guildOnly: boolean;
     public enabled: boolean;
     public category: any;
+    public executor: User;
 
     public constructor(client: FoxClient, info: CommandInfo) {
         Object.defineProperty(this, "client", { value: client });
@@ -55,15 +43,11 @@ class Command {
         this.category = null;
     }
 
-    public hasPermission(message: FoxMessage) { // eslint-disable-line
+    public hasPermission(message: FoxMessage): boolean { // eslint-disable-line
         return true;
     }
 
-    public async run(message: Message, args: string[], prefix: string) { // eslint-disable-line
-        // defined in other classes
-    }
-
-    public reload() {
+    public reload(): Promise<Command> {
         return new Promise((resolve, reject) => {
             try {
                 delete require.cache[require.resolve(`../../commands/${this.category.toLowerCase()}/${this.name}.js`)];
@@ -79,7 +63,7 @@ class Command {
         });
     }
 
-    public async user(user, msg) {
+    public async user(user: any, msg: FoxMessage): Promise<false | User>{
         if (!user) return false;
         if (user instanceof User) return user;
         if (user instanceof GuildMember) return user.user;
@@ -100,11 +84,11 @@ class Command {
         return false;
     }
 
-    private _registerExecutor(message) {
+    private _registerExecutor(message: Message) {
         this.executor = message.author;
     }
 
-    public async member(member, msg) {
+    public async member(member: any, msg: FoxMessage): Promise<false | GuildMember> {
         if (!member) return false;
         if (member instanceof GuildMember) return msg.guild.members.fetch(member);
         if (member instanceof User) return msg.guild.members.fetch(member);
@@ -125,7 +109,7 @@ class Command {
         return false;
     }
 
-    public async channel(channel, msg) {
+    public async channel(channel: any, msg: FoxMessage): Promise<Channel | false> {
         if (!channel) return false;
         if (channel instanceof Channel) return channel;
         const matches = channelRegex.exec(channel);
@@ -142,7 +126,7 @@ class Command {
         return false;
     }
 
-    public async role(role, msg) {
+    public async role(role: any, msg: FoxMessage): Promise<Role | false> {
         if (!role) return false;
         const matches = roleRegex.exec(role);
         if (role instanceof Role) return role;
@@ -171,40 +155,40 @@ class Command {
 
 export default Command;
 
-function userFilterExact(search) {
-    return user => user.username.toLowerCase() === search ||
+function userFilterExact(search: string) {
+    return (user: FoxUser) => user.username.toLowerCase() === search ||
   `${user.username.toLowerCase()}#${user.discriminator}` === search;
 }
 
-function userFilterInexact(search) {
-    return user => user.username.toLowerCase().includes(search) ||
+function userFilterInexact(search: string) {
+    return (user: FoxUser) => user.username.toLowerCase().includes(search) ||
   `${user.username.toLowerCase()}#${user.discriminator}`.includes(search);
 }
 
-function memberFilterExact(search) {
-    return mem => mem.user.username.toLowerCase() === search ||
+function memberFilterExact(search: string) {
+    return (mem: GuildMember) => mem.user.username.toLowerCase() === search ||
   (mem.nickname && mem.nickname.toLowerCase() === search) ||
   `${mem.user.username.toLowerCase()}#${mem.user.discriminator}` === search;
 }
 
-function memberFilterInexact(search) {
-    return mem => mem.user.username.toLowerCase().includes(search) ||
+function memberFilterInexact(search: string) {
+    return (mem: GuildMember) => mem.user.username.toLowerCase().includes(search) ||
   (mem.nickname && mem.nickname.toLowerCase().includes(search)) ||
   `${mem.user.username.toLowerCase()}#${mem.user.discriminator}`.includes(search);
 }
 
-function channelFilterExact(search) {
-    return channel => channel.name.toLowerCase() === search;
+function channelFilterExact(search: any) {
+    return (channel: any) => channel.name.toLowerCase() === search;
 }
 
 function channelFilterInexact(search: Channel) {
-    return channel => channel.name.toLowerCase().includes(search);
+    return (channel: any) => channel.name.toLowerCase().includes(search);
 }
 
-function roleFilterExact(search: Role) {
-    return role => role.name.toLowerCase() === search;
+function roleFilterExact(search: string) {
+    return (role: Role) => role.name.toLowerCase() === search;
 }
 
-function roleFilterInexact(search: Role) {
-    return  => role.name.toLowerCase().includes(search);
+function roleFilterInexact(search: string) {
+    return (role: Role) => role.name.toLowerCase().includes(search);
 }

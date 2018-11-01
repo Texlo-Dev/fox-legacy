@@ -1,8 +1,11 @@
 import { Collection } from "discord.js";
+import { FoxClient, Command } from "..";
 
 class CommandStore extends Collection {
+    public aliases: Collection;
+    public cooldowns: Collection;
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super();
 
         Object.defineProperty(this, "client", { value: client });
@@ -14,22 +17,22 @@ class CommandStore extends Collection {
         return Collection;
     }
 
-    public get(name) {
+    public get(name: string): Command {
         return super.get(name) || this.aliases.get(name);
     }
 
-    public has(name) {
+    public has(name: string): boolean {
         return super.has(name) || this.aliases.has(name);
     }
 
-    public set(command) {
+    public set(command: Command): Command {
         super.set(command.name, command);
         if (command.aliases && command.aliases.length) for (const alias of command.aliases) this.aliases.set(alias, command);
         return command;
     }
 
-    public delete(name) {
-        const command = this.get(name);
+    public delete(name: string): boolean {
+        const command: Command = this.get(name);
         if (!command) return false;
         super.delete(command.name);
         if (command.aliases && command.aliases.length) for (const alias of command.aliases) this.aliases.delete(alias);

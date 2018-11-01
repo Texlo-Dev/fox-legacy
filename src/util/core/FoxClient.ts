@@ -7,10 +7,11 @@ import {
     Loader
 } from "..";
 import translate from "translate";
-import { prefix, isTestFox, ownerID, devs, dbotsKey, yt_api_key as googleKey } from "../../config.json";
+import { prefix, isTestFox, ownerID, devs, dbotsKey, googleAPI } from "../../config.json";
 import { Database, Model } from "mongorito";
 import axios from "axios";
-translate.key = googleKey;
+translate.key = googleAPI;
+
 const connection = new Database("localhost/encipio");
 connection.connect()
     .then(() => console.log("MongoDB connection established."))
@@ -52,9 +53,9 @@ class FoxClient extends Client {
     public isTestFox: boolean;
     public ready: boolean;
     public translate: Function;
-    public locales: object;
+    public locales: any;
     public permissions: any;
-    public mongo: object;
+    public mongo: any;
     public brandColor: number;
 
     public constructor() {

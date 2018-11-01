@@ -1,7 +1,7 @@
 import { MessageEmbed } from "discord.js";
 import ytdl from "ytdl-core";
 import YoutubeAPI from "simple-youtube-api";
-import { yt_api_key as apikey } from "../../config.json";
+import { googleAPI as apikey } from "../../config.json";
 const youtube = new YoutubeAPI(apikey);
 import Song from "./Song";
 import Queue from "./Queue";

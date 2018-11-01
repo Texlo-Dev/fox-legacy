@@ -1,6 +1,20 @@
-export default class CustomCommand {
+import { FoxGuild, CustOptions } from "../types";
 
-    public constructor(guild, data) {
+export default class CustomCommand {
+    public name: string;
+    public guildID: string;
+    public enabled: boolean;
+    public category: string;
+    public cooldown: number;
+    public description: string;
+    public dmCommand: boolean;
+    public deleteCommand: boolean;
+    public requiredPerms: string;
+    public usage: string;
+    public template: string;
+    public args: any;
+
+    public constructor(guild: FoxGuild, data: CustOptions) {
         Object.defineProperty(this, "guild", { value: guild, writable: false });
         this.name = data.name;
         this.guildID = data.guildID;

@@ -5,6 +5,7 @@
   "main": "mrFox.js",
   "author": "rich",
   "license": "MIT",
+  "types": "./src/util/types/index.d.ts",
   "scripts": {
     "lint": "tslint -p tsconfig.json --fix 'src/*/**/*.ts'",
     "build": "npm run lint && tsc --project ./"

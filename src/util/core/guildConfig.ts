@@ -1,6 +1,50 @@
-export default class guildConfig {
+import { FoxGuild } from "../types";
+export default class GuildConfig {
+    public readonly guild: FoxGuild;
+    public readonly prefix: string;
+    public readonly modlogChannel: any;
+    public readonly serverlogChannel: any;
+    public readonly welcomeChannel: any;
+    public readonly welcomeEnabled: boolean;
+    public readonly welcomeMsg: string;
+    public readonly welcomerEmbed: boolean;
+    public readonly welcomeLocation: any;
+    public readonly goodbyeEnabled: boolean;
+    public readonly goodbyeChannel: any;
+    public readonly goodbyeEmbed: boolean;
+    public readonly goodbyeMsg: string;
+    public readonly levelMsg: string;
+    public readonly packages: string[];
+    public readonly kickPoints: number;
+    public readonly banPoints: number;
+    public readonly muteRole: any;
+    public readonly delModCmds: boolean;
+    public readonly msgAfterMod: boolean;
+    public readonly tacMode: boolean;
+    public readonly mentionLimit: number;
+    public readonly messageLogging: boolean;
+    public readonly modLogging: boolean;
+    public readonly massProtected: boolean;
+    public readonly serverLogging: boolean;
+    public readonly levelMessaging: boolean;
+    public readonly invProtected: boolean;
+    public language: string;
+    public readonly bwProtected: boolean;
+    public badWords: string[];
+    public autoRoles: any[];
+    public selfRoles: any[];
+    public reactionRoles: any[];
+    public enabledEvents: string[];
+    public disabledCommands: string[];
+    public readonly spamProtected: boolean;
+    public readonly allowedInviteChannels: any[];
+    public readonly allowedBwChannels: any[];
+    public readonly allowedSpamChannels: any[];
+    public readonly allowedCapsChannels: any[];
+    public readonly allowedMentionChannels: [];
+    public readonly logExcluded: boolean;
 
-    public constructor(guild) {
+    public constructor(guild: FoxGuild) {
         this.guild = guild;
         this.prefix = guild.client.commandPrefix;
         this.modlogChannel = null;
@@ -46,7 +90,7 @@ export default class guildConfig {
         this.logExcluded = null;
     }
 
-    public async _loadSettings() {
+    public async _loadSettings(): Promise<void> {
         const settings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
             type: "settings"
@@ -78,7 +122,7 @@ export default class guildConfig {
                 badWords: this.badWords,
                 spamProtected: this.spamProtected,
                 allowedInviteChannels: this.allowedInviteChannels,
-                allowedBwChannels: this.allowedBwchannels,
+                allowedBwChannels: this.allowedBwChannels,
                 allowedSpamChannels: this.allowedSpamChannels,
                 allowedCapsChannels: this.allowedCapsChannels,
                 allowedMentionChannels: this.allowedMentionChannels,
@@ -94,7 +138,7 @@ export default class guildConfig {
         }
     }
 
-    public async set(key, value) {
+    public async set(key: string, value: any): Promise<Boolean|Object> {
         const settings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
             type: "settings"
@@ -107,7 +151,7 @@ export default class guildConfig {
         return new Promise(r => setTimeout(() => r(this), 25));
     }
 
-    public async setArray(key, value, isWeb) {
+    public async setArray(key: string, value: string[] | string, isWeb?: boolean) {
         const settings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
             type: "settings"
