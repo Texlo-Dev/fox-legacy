@@ -1,9 +1,9 @@
-import { Collection } from "discord.js";
+import { Collection, Snowflake } from "discord.js";
 import { FoxClient, Command } from "..";
 
-class CommandStore extends Collection {
-    public aliases: Collection;
-    public cooldowns: Collection;
+class CommandStore extends Collection<string, Command>{
+    public aliases: Collection<string, Command>;
+    public cooldowns: Collection<string, Collection<Snowflake, number>>;
 
     public constructor(client: FoxClient) {
         super();
@@ -39,7 +39,7 @@ class CommandStore extends Collection {
         return true;
     }
 
-    public clear() {
+    public clear(): void {
         super.clear();
         this.aliases.clear();
     }

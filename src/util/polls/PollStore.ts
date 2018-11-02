@@ -1,5 +1,7 @@
-import { Collection } from "discord.js";
+import { Collection, TextChannel } from "discord.js";
 import Poll from "./Poll";
+import { FoxGuild } from "../extensions";
+import { Polls } from "../Mongo";
 const numbers = {
     1: "1⃣",
     2: "2⃣",
@@ -8,15 +10,16 @@ const numbers = {
     5: "5⃣"
 };
 
-export default class PollStore extends Collection {
+export default class PollStore extends Collection<any, any> {
+    public readonly guild: FoxGuild;
 
-    public constructor(guild) {
+    public constructor(guild: FoxGuild) {
         super();
         this.guild = guild;
     }
 
-    public async _cache() {
-        const polls = await this.guild.client.mongo.polls.find({ guildID: this.guild.id });
+    public async _cache(): Promise<boolean> {
+        const polls: Polls[] = await this.guild.client.mongo.polls.find({ guildID: this.guild.id });
         if (!polls) return;
         const mapped = polls.map(g => g.get());
         if (!mapped.length) return;
@@ -27,7 +30,7 @@ export default class PollStore extends Collection {
         return true;
     }
 
-    public async set(name, obj) {
+    public async set(name: string, obj: any): Promise<Object> {
         if (super.has(name)) throw new Error("Poll already exists.");
         if (obj.channel instanceof String) obj.channel = this.guild.channels.get(obj.channel);
         const data = {
@@ -59,7 +62,7 @@ export default class PollStore extends Collection {
                 if (obj.type === "open") embed.addField(`${answer.name}`, "\u200B");
                 else embed.addField(`${num++}. ${answer.name}`, "\u200B");
             }
-            const m = await this.guild.channels.get(data.channel.id).send(embed);
+            const m: Message = (await this.guild.channels.get(data.channel.id) as TextChannel).send(embed);
             if (pl.type === "simple") {
                 await m.react("✅");
                 await m.react("❌");

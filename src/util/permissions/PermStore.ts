@@ -1,16 +1,19 @@
 import { Collection, Message } from "discord.js";
-export default class PermStore extends Collection {
+import { FoxGuild } from "../extensions";
+import { Permissions } from "../Mongo";
+export default class PermStore extends Collection<any, any> {
+    public guild: FoxGuild;
 
-    public constructor(guild) {
+    public constructor(guild: FoxGuild) {
         super();
         this.guild = guild;
     }
 
-    public async _cache() {
+    public async _cache(): Promise<boolean> {
         try {
-            const permission = await this.guild.client.mongo.permissions.find({ guildID: this.guild.id });
+            const permission: any[] = await this.guild.client.mongo.permissions.find({ guildID: this.guild.id });
             if (!permission) return;
-            const mapped = permission.map(p => p.get());
+            const mapped: any[] = permission.map(p => p.get());
             if (mapped.length) {
                 super.clear();
                 for (const ow of mapped[0].overwrites) {
@@ -18,7 +21,7 @@ export default class PermStore extends Collection {
                     else super.get(ow.target.id).overwrites.push(ow);
                 }
             } else {
-                const server = new this.guild.client.mongo.permissions({
+                const server: Permissions = new this.guild.client.mongo.permissions({
                     guildID: this.guild.id,
                     overwrites: [
                         {
@@ -38,9 +41,9 @@ export default class PermStore extends Collection {
         }
     }
 
-    public async set(perm, target, status, channel = null) {
+    public async set(perm: string, target: any, status: string, channel: any): Promise<Object> {
         if (!["neutral", "allowed", "denied"].includes(status)) throw new Error("Invalid status.");
-        const entry = await this.guild.client.mongo.permissions.findOne({ guildID: this.guild.id });
+        const entry: Permissions = await this.guild.client.mongo.permissions.findOne({ guildID: this.guild.id });
         if (!entry) {
             const ow = new this.guild.client.mongo.permissions({
                 guildID: this.guild.id,
@@ -55,10 +58,10 @@ export default class PermStore extends Collection {
             });
             await ow.save();
         } else {
-            const ow = entry.get("overwrites");
-            const pm = ow.find(o => o.permission === perm && o.target.id === target.id);
+            const ow: any[] = entry.get("overwrites");
+            const pm: any = ow.find(o => o.permission === perm && o.target.id === target.id);
             if (!pm) {
-                const obj = { permission: perm || "automod.freespeech", target: JSON.parse(JSON.stringify(target)), status: status || "neutral", channel: JSON.parse(JSON.stringify(channel)) };
+                const obj: object = { permission: perm || "automod.freespeech", target: JSON.parse(JSON.stringify(target)), status: status || "neutral", channel: JSON.parse(JSON.stringify(channel)) };
                 ow.push(obj);
                 entry.set({ overwrites: ow });
                 await entry.save();
@@ -72,46 +75,46 @@ export default class PermStore extends Collection {
         return new Promise(res => setTimeout(() => res(super.array()), 70));
     }
 
-    public async delete(target) {
-        const entry = await this.guild.client.mongo.permissions.findOne({ guildID: this.guild.id });
+    public async delete(target: string): Promise<Object> {
+        const entry: Permissions = await this.guild.client.mongo.permissions.findOne({ guildID: this.guild.id });
         if (!entry) throw new Error("Server overwrites do not exist.");
-        const ow = entry.get("overwrites");
-        const pm = ow.filter(o => o.target.id === target);
+        const ow: any[] = entry.get("overwrites");
+        const pm: any[] = ow.filter(o => o.target.id === target);
         if (!pm) throw new Error("Permission overwrite does not exist.");
-        pm.forEach(p => ow.splice(ow.indexOf(p), 1));
+        for (const p of pm) ow.splice(ow.indexOf(p), 1);
         entry.set({ overwrites: ow });
         await entry.save();
         await this._cache();
         return new Promise(res => setTimeout(() => res(super.array()), 50));
     }
 
-    public check(perm, member, channel = null) {
+    public check(perm: string, member: any, channel: any): boolean {
         if (member instanceof Message) {
             channel = member.channel;
             member = member.member;
             if (this.guild.ownerID === member.id) return true;
             for (const role of member.roles.values()) {
-                const ows = super.get(role.id);
+                const ows: any = super.get(role.id);
                 if (!ows) continue;
-                const ow = ows.overwrites.find(o => o.target.id === role.id && o.permission === perm);
+                const ow = ows.overwrites.find((o: any) => o.target.id === role.id && o.permission === perm);
                 if (!ow) continue;
                 if (ow.status === "denied") return false;
                 else if (ow.status === "allowed") return true;
                 else continue;
             }
-            const userows = super.get(member.id);
+            const userows: any = super.get(member.id);
             if (!userows) return;
-            const userow = userows.overwrites.find(o => o.target.id === member.id && o.permission === perm);
+            const userow: any = userows.overwrites.find((o: any) => o.target.id === member.id && o.permission === perm);
             if (!userow) return;
             if (userow.status === "denied") return false;
             else if (userow.status === "allowed") return true;
-            else return PermStore._verifyEveryone(perm);
+            else return this._verifyEveryone(perm);
         }
     }
 
-    public static _verifyEveryone(perm) {
+    private _verifyEveryone(perm: string): boolean {
         const guildows = super.get(this.guild.id);
-        const ow = guildows.overwrites.find(o => o.permission === perm);
+        const ow = guildows.overwrites.find((o: any) => o.permission === perm);
         if (!ow) return null;
         if (ow.status === "denied") return false;
         else if (ow.status === "allowed") return true;

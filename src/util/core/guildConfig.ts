@@ -1,4 +1,4 @@
-import { FoxGuild } from "../types";
+import { FoxGuild } from "../extensions";
 export default class GuildConfig {
     public readonly guild: FoxGuild;
     public readonly prefix: string;
@@ -151,7 +151,7 @@ export default class GuildConfig {
         return new Promise(r => setTimeout(() => r(this), 25));
     }
 
-    public async setArray(key: string, value: string[] | string, isWeb?: boolean) {
+    public async setArray(key: string, value: string[] | string, isWeb?: boolean): Promise<Object> {
         const settings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
             type: "settings"

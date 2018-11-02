@@ -1,52 +1,55 @@
 import CustomCommand from "./CustomCommand";
-import { Collection } from "discord.js";
-export default class CustomCommands extends Collection {
+import { Collection, User, Channel } from "discord.js";
+import { FoxGuild, FoxMessage } from "../extensions";
+export default class CustomCommands extends Collection<any, any> {
+    public readonly guild: FoxGuild;
+    public readonly actions: object;
+    public readonly variables: object;
 
-    public constructor(guild) {
+    public constructor(guild: FoxGuild) {
         super();
         this.guild = guild;
         this.actions = {
-            async addRole(message, role) {
+            async addRole(message: FoxMessage, role: any): Promise<void> {
                 if (role.match(/^(\\d{17,19})$/)) await message.member.roles.add(role);
                 else if (message.guild.roles.some(r => r.name === role)) await message.member.roles.add(message.guild.roles.find(r => r.name === role));
             },
-            async removeRole(message, role) {
+            async removeRole(message: FoxMessage, role: any): Promise<void> {
                 if (role.match(/^(\\d{17,19})$/)) message.member.roles.remove(role);
                 else if (message.guild.roles.some(r => r.name === role)) await message.member.roles.remove(message.guild.roles.find(r => r.name === role));
             },
-            async setNickname (message, nickname) {
+            async setNickname (message: FoxMessage, nickname: string): Promise<void> {
                 const member = await message.guild.members.fetch(message.author);
                 if (member) await member.setNickname(nickname);
             },
-            async createChannel(message, channel) {
-                await message.guild.channels.create({
-                    name: channel,
+            async createChannel(message: FoxMessage, channel: string): Promise<void> {
+                await message.guild.channels.create(channel, {
                     type: "text"
                 });
             }
         };
 
         this.variables = {
-            member: message => message.author,
-            "member.name": message => message.member.displayName,
-            "member.tag": message => message.author.tag,
-            "member.avatar": message => message.author.displayAvatarURL({ format: "png" }),
-            "member.id": message => message.member.id,
-            server: message => message.guild.name,
-            "server.id": message => message.guild.id,
-            "server.icon": message => message.guild.iconURL || "Blank.",
-            channel: message => message.channel,
-            "channel.id": message => message.channel.id,
-            message: message => message.content
+            member: (message: FoxMessage): User => message.author,
+            "member.name": (message: FoxMessage): string => message.member.displayName,
+            "member.tag": (message: FoxMessage): string => message.author.tag,
+            "member.avatar": (message: FoxMessage): string => message.author.displayAvatarURL({ format: "png" }),
+            "member.id": (message: FoxMessage): string => message.member.id,
+            server: (message: FoxMessage): string => message.guild.name,
+            "server.id": (message: FoxMessage): string => message.guild.id,
+            "server.icon": (message: FoxMessage): string => message.guild.iconURL() || "Blank.",
+            channel: (message: FoxMessage): Channel => message.channel,
+            "channel.id": (message: FoxMessage): string => message.channel.id,
+            message: (message: FoxMessage): string => message.content
         };
     }
 
-    public async reloadAll() {
-        const commands = await this.guild.client.mongo.customcommands.find({ guildID: this.guild.id });
+    public async reloadAll(): Promise<boolean> {
+        const commands: any[] = await this.guild.client.mongo.customcommands.find({ guildID: this.guild.id });
         if (!commands) return;
         const mapped = commands.map(c => c.get());
         if (!mapped.length) return;
-        await super.sweep(c => c);
+        await super.sweep((c: CustomCommand) => c);
         for await (const cmd of mapped) {
             const command = new CustomCommand(this.guild, cmd);
             super.set(command.name, command);
@@ -54,7 +57,7 @@ export default class CustomCommands extends Collection {
         return true;
     }
 
-    public async add(data) {
+    public async add(data: any): Promise<Object> {
         const obj = {
             guildID: this.guild.id,
             name: data.name,
@@ -70,7 +73,7 @@ export default class CustomCommands extends Collection {
             template: data.template
         };
 
-        const entry = new this.guild.client.mongo.customcommands(obj);
+        const entry: any = new this.guild.client.mongo.customcommands(obj);
         try {
             await entry.save();
             const command = new CustomCommand(this.guild, obj);
@@ -85,7 +88,7 @@ export default class CustomCommands extends Collection {
         }
     }
 
-    public async remove(command) {
+    public async remove(command: string): Promise<Object> {
         if (!super.has(command)) throw new Error("Command does not exist in server.");
         const entry = await this.guild.client.mongo.customcommands.findOne({ guildID: this.guild.id, name: command });
         if (!entry) throw new Error("Could not resolve command in database.");

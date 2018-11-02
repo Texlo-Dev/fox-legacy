@@ -10,7 +10,8 @@ const regexs = {
 };
 import { User, GuildMember, Message, Channel, Role } from "discord.js";
 import { FoxClient } from "..";
-import { CommandInfo, FoxMessage, FoxUser } from "../types";
+import { FoxUser } from "../extensions";
+import { CommandInfo, FoxMessage } from "../../types";
 class Command {
     public client: FoxClient;
     public name: string;
@@ -63,7 +64,7 @@ class Command {
         });
     }
 
-    public async user(user: any, msg: FoxMessage): Promise<false | User>{
+    public async user(user: any, msg: FoxMessage): Promise<boolean | User>{
         if (!user) return false;
         if (user instanceof User) return user;
         if (user instanceof GuildMember) return user.user;
@@ -88,7 +89,7 @@ class Command {
         this.executor = message.author;
     }
 
-    public async member(member: any, msg: FoxMessage): Promise<false | GuildMember> {
+    public async member(member: any, msg: FoxMessage): Promise<boolean | GuildMember> {
         if (!member) return false;
         if (member instanceof GuildMember) return msg.guild.members.fetch(member);
         if (member instanceof User) return msg.guild.members.fetch(member);
@@ -109,7 +110,7 @@ class Command {
         return false;
     }
 
-    public async channel(channel: any, msg: FoxMessage): Promise<Channel | false> {
+    public async channel(channel: any, msg: FoxMessage): Promise<Channel | boolean> {
         if (!channel) return false;
         if (channel instanceof Channel) return channel;
         const matches = channelRegex.exec(channel);
@@ -126,7 +127,7 @@ class Command {
         return false;
     }
 
-    public async role(role: any, msg: FoxMessage): Promise<Role | false> {
+    public async role(role: any, msg: FoxMessage): Promise<Role | boolean> {
         if (!role) return false;
         const matches = roleRegex.exec(role);
         if (role instanceof Role) return role;
@@ -143,9 +144,9 @@ class Command {
         return false;
     }
 
-    public boolean(bool: any) {
+    public boolean(bool: any): boolean {
         if (!bool) return null;
-        if (bool instanceof Boolean) return bool;
+        if (bool instanceof Boolean) return bool as boolean;
         if (["true", "+", "t", "yes", "y", "off"].includes(String(bool).toLowerCase())) return true;
         if (["0", "false", "-", "f", "no", "n", "on"].includes(String(bool).toLowerCase())) return false;
         return null;

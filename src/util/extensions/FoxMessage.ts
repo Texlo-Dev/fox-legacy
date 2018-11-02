@@ -1,6 +1,6 @@
 import { Message, MessageEmbed, util as splitMessage, CollectorFilter, MessageOptions } from "discord.js";
 import { Command, FoxClient } from "..";
-import { FoxGuild } from "../types";
+import { FoxGuild } from ".";
 export default class FoxMessage extends Message {
     public command: Command;
     public client: FoxClient;
@@ -20,18 +20,18 @@ export default class FoxMessage extends Message {
         else return collected.first().content;
     }
 
-    public async error(content: string, options?: MessageOptions) {
+    public async error(content: string, options?: MessageOptions): Promise<Message| Message[]> {
         content = this.guild.config.language !== "English" ? await this.client.translate(content, this.client.locales[this.guild.config.language]) : content;
         return this.channel.send(`<:nicexmark:495362785010647041> ${content}`, options);
     }
 
-    public async success(content: string, options?: MessageOptions) {
+    public async success(content: string, options?: MessageOptions): Promise<Message| Message[]>{
         content = this.guild.config.language !== "English" ? await this.client.translate(content, this.client.locales[this.guild.config.language]) : content;
         return this.channel.send(`<:checkmark:495362807731060757> ${content}`, options);
     }
 
-    public async sendMessage(content: string, options?: MessageOptions) {
-        options = this.constructor.combineContentOptions(content, options);
+    public async sendMessage(content: string, options?: MessageOptions): Promise<Message| Message[]> {
+        options = FoxMessage.combineContentOptions(content, options);
         content = options.content; // eslint-disable-line prefer-destructuring
         delete options.content;
 
@@ -43,7 +43,7 @@ export default class FoxMessage extends Message {
                 if (options.embed.description) options.embed.description = await this.client.translate(options.embed.description.replace(/\n/g, "xyz"), this.client.locales[this.guild.config.language]);
                 if (options.embed.description) options.embed.description = options.embed.description.replace(/xyz/gi, "\n");
                 if (options.embed.author) options.embed.author.name = await this.client.translate(options.embed.author.name, this.client.locales[this.guild.config.language]);
-                if (options.embed.footer) options.embed.footer.tex = await this.client.translate(options.embed.footer.name, this.client.locales[this.guild.config.language]);
+                if (options.embed.footer) options.embed.footer.text = await this.client.translate(options.embed.footer.text, this.client.locales[this.guild.config.language]);
                 for (const field of options.embed.fields) {
                     field.name = await this.client.translate(field.name, this.client.locales[this.guild.config.language]);
                 }
@@ -88,7 +88,7 @@ export default class FoxMessage extends Message {
             });
     }
 
-    public async send(content: string, options: MessageOptions) {
+    public async send(content: string, options?: MessageOptions): Promise<Message| Message[]> {
         content = this.guild.config.language !== "English"
         ? options && options.translate !== false
         ? await this.client.translate(content, this.client.locales[this.guild.config.language])
@@ -97,28 +97,27 @@ export default class FoxMessage extends Message {
         return this.sendMessage(content, options);
     }
 
-    public async FoxEmbed(options: any{}, text: string) {
+    public async FoxEmbed(options: any, text: string): Promise<Message| Message[]> {
         const foxembed = new MessageEmbed()
             .setColor(this.client.brandColor)
             .setDescription(text || "")
             .setTimestamp()
             .setFooter(options.footer || this.client.user.username)
             .setAuthor(options.header || "", this.client.user.displayAvatarURL());
-        return this.send(foxembed);
+        return this.send(null, foxembed);
     }
 
-    public _registerCommand(command) {
+    public _registerCommand(command: Command): void {
         this.command = command;
     }
 
-    public static combineContentOptions(content, options) {
+    public static combineContentOptions(content: any, options: any): any {
         if (!options) return isObject(content) ? content : { content };
         return Object.assign(options, { content });
     }
 
 }
 
-
-function isObject(input) {
+function isObject(input: any): boolean {
     return Object.prototype.toString.call(input) === "[object Object]";
 }

@@ -15,6 +15,7 @@ import {
 } from "..";
 
 import { readdir } from "fs-nextra";
+import { Permissions } from "../Mongo";
 export default class FoxGuild extends Guild {
     public perms: PermStore;
     public config: Config;
@@ -50,33 +51,33 @@ export default class FoxGuild extends Guild {
         this._getPackages();
     }
 
-    public async _getPackages() {
-        const folders = await readdir(`${process.cwd()}/commands/`);
+    public async _getPackages(): Promise<void> {
+        const folders: string[] = await readdir(`${process.cwd()}/commands/`);
         for (const folder of folders) {
-            const files = await readdir(`${process.cwd()}/commands/${folder}/`);
+            const files: string[] = await readdir(`${process.cwd()}/commands/${folder}/`);
             for (const file of files) {
                 if (!file.endsWith(".json")) continue;
-                const config = await import(`${process.cwd()}/commands/${folder}/${file}`);
-                const pkg = new Package(config.default, this);
+                const config: any = await import(`${process.cwd()}/commands/${folder}/${file}`);
+                const pkg: Package = new Package(config.default, this);
                 this.packages.set(pkg.name, pkg);
             }
         }
     }
 
-    public async fetchPackages() {
+    public async fetchPackages(): Promise<object> {
         const promises = this.packages.map(async p => await p._setEnabled());
         return new Promise(r => {
-            Promise.all(promises).then(setTimeout(() => r(this), 100));
+            Promise.all(promises).then(() => setTimeout(() => r(this), 100));
         });
     }
 
     public async refreshPerms() {
-        const permfind = await this.client.mongo.permissions.find();
-        let perms = permfind.map(perm => perm.get());
+        const permfind: any[] = await this.client.mongo.permissions.find();
+        let perms = permfind.map((perm: Permissions) => perm.get());
         perms = perms.sort((p, c) => p.category > c.category ? 1 : p.name > c.name && p.category === c.category ? 1 : -1);
         await this.permissions.clear();
         for (const perm of perms) {
-            const foxperm = new FoxPermission(this.client, perm);
+            const foxperm: FoxPermission = new FoxPermission(this.client, perm);
             this.permissions.set(foxperm.name, foxperm);
         }
     }

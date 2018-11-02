@@ -9,38 +9,11 @@ import {
 import translate from "translate";
 import { prefix, isTestFox, ownerID, devs, dbotsKey, googleAPI } from "../../config.json";
 import { Database, Model } from "mongorito";
+import * as Mongo from "../Mongo";
 import axios from "axios";
 translate.key = googleAPI;
 
-const connection = new Database("localhost/encipio");
-connection.connect()
-    .then(() => console.log("MongoDB connection established."))
-    .catch(err => {
-        console.error(`Error connecting to MongoDB. ${err}`);
-        process.exit();
-    });
-class FoxLeveling extends Model {}
-class CustomCommands extends Model {}
-class ModActions extends Model {}
-class GuildSettings extends Model {}
-class Tags extends Model {}
-class FoxBank extends Model {}
-class Polls extends Model {}
-class Patrons extends Model {}
-class SelfRoles extends Model {}
-class Permissions extends Model {}
-class Giveaways extends Model {}
-connection.register(GuildSettings);
-connection.register(FoxLeveling);
-connection.register(ModActions);
-connection.register(CustomCommands);
-connection.register(Tags);
-connection.register(FoxBank);
-connection.register(SelfRoles);
-connection.register(Polls);
-connection.register(Patrons);
-connection.register(Permissions);
-connection.register(Giveaways);
+
 
 class FoxClient extends Client {
     public tools: object;
@@ -87,7 +60,19 @@ class FoxClient extends Client {
             Japanese: "ja",
             Italian: "it"
         };
-        this.mongo = { customcommands: CustomCommands, leveling: FoxLeveling, modactions: ModActions, banking: FoxBank, tags: Tags, selfroles: SelfRoles, permissions: Permissions, giveaways: Giveaways, guildconfig: GuildSettings, polls: Polls, patrons: Patrons };
+        this.mongo = {
+            customcommands: Mongo.CustomCommands,
+            leveling: Mongo.FoxLeveling,
+            modactions: Mongo.ModActions,
+            banking: Mongo.FoxBank,
+            tags: Mongo.Tags,
+            selfroles: Mongo.SelfRoles,
+            permissions: Mongo.Permissions,
+            giveaways: Mongo.Giveaways,
+            guildconfig: Mongo.GuildSettings,
+            polls: Mongo.Polls,
+            patrons: Mongo.Patrons
+        };
         this.once("ready", async () => this._ready());
     }
 

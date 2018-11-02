@@ -1,25 +1,32 @@
-export const checkUnmute = async (client) => {
-    const check = await client.mongo.modactions.findOne({ isMute: true, hasLeft: false, shard: client.shard.id });
+import { FoxClient } from "..";
+import { ModActions } from "../Mongo";
+import { FoxGuild } from "../extensions";
+import { GuildMember } from "discord.js";
+
+export const checkUnmute = async (client: FoxClient): Promise<boolean> => {
+    const check: ModActions = await client.mongo.modactions.findOne({ isMute: true, hasLeft: false, shard: client.shard.id });
     if (!check) return false;
-    const guild = client.guilds.get(check.get("guildID"));
+    const guild = client.guilds.get(check.get("guildID")) as FoxGuild;
     if (check.get("time") <= Date.now() && guild) {
-        const member = guild.member(check.get("userID"));
+        const member: GuildMember = await guild.members.fetch(check.get("userID")).catch(() => null);
         if (!member) {
             check.set({ hasLeft: true });
-            return await check.save();
+            await check.save();
+            return true;
         }
-        const muteRole = guild.config.muteRole;
-        if (muteRole) guild.member(check.get("userID")).roles.remove(muteRole.id);
+        const muteRole: any = guild.config.muteRole;
+        if (muteRole) member.roles.remove(muteRole.id);
         check.set({ isMute: false });
         await check.save();
     } else { return false; }
 };
 
-export const checkIfMute = async (member) => {
-    if (!member.guild.config) return;
-    const check = await member.client.mongo.modactions.findOne({ isMute: true, hasLeft: true, userID: member.id, guildID: member.guild.id });
+export const checkIfMute = async (member: GuildMember): Promise<boolean> => {
+    const guild = member.guild as FoxGuild;
+    if (!guild.config) return;
+    const check: ModActions = await guild.client.mongo.modactions.findOne({ isMute: true, hasLeft: true, userID: member.id, guildID: member.guild.id });
     if (check) {
-        const muteRole = member.guild.roles.get(member.guild.config.muteRole.id);
+        const muteRole = member.guild.roles.get(guild.config.muteRole.id);
         if (muteRole) member.roles.add(muteRole).catch(() => 0);
     } else { return false; }
 };

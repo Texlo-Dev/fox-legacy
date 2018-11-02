@@ -1,6 +1,15 @@
-export default class FoxPermission {
+import { FoxClient } from "..";
+import { Options } from "../../types";
+interface PermOptions extends Options {
+    category: string;
+}
 
-    public constructor(client, data = {}) {
+export default class FoxPermission {
+    public name: string;
+    public description: string;
+    public category: string;
+
+    public constructor(client: FoxClient, data: PermOptions) {
         this.name = data.name;
         this.description = data.description;
         this.category = data.category;

@@ -6,7 +6,7 @@ import FoxUser from "./FoxUser";
 Structures.extend('Guild', FoxGuild);
 Structures.extend('Message', FoxMessage);
 Structures.extend('FoxUser', FoxUser);
-export default {
+export {
     FoxGuild,
     FoxUser,
     FoxMessage

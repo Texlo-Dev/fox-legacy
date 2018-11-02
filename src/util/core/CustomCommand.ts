@@ -1,8 +1,12 @@
-import { FoxGuild, CustOptions } from "../types";
+import { CustOptions } from "../../types";
+import { FoxGuild, FoxMessage } from "../extensions";
+import { CustomCommands } from "../Mongo";
+import { Message } from "discord.js";
 
 export default class CustomCommand {
     public name: string;
     public guildID: string;
+    public guild: FoxGuild;
     public enabled: boolean;
     public category: string;
     public cooldown: number;
@@ -31,8 +35,8 @@ export default class CustomCommand {
 
     }
 
-    public async edit(data) {
-        const command = await this.guild.client.mongo.customcommands.findOne({ guildID: this.guild.id, name: this.name });
+    public async edit(data: any): Promise<Array<CustomCommand>> {
+        const command: CustomCommands = await this.guild.client.mongo.customcommands.findOne({ guildID: this.guild.id, name: this.name });
         if (!command) throw new Error("Command not found in database.");
         for (const key in data) {
             if (!this.hasOwnProperty(key)) throw new Error(`Invalid Key: ${key}.`);
@@ -43,16 +47,16 @@ export default class CustomCommand {
         return this.guild.commands.array();
     }
 
-    public hasPermission(message) {
+    public hasPermission(message: FoxMessage): boolean {
         return message.guild.perms.check(this.requiredPerms, message);
     }
 
-    public async execute(message) {
-        let template = this.template;
+    public async execute(message: FoxMessage): Promise<Message| Message[]> {
+        let template: string = this.template;
         for await (const variable of Object.keys(this.guild.commands.variables)) {
-            const regex = new RegExp(`{${variable}}`, "gi");
-            if (!regex.test(template)) continue;
-            template = template.replace(regex, this.guild.commands.variables[variable](message));
+            const rgx: RegExp = new RegExp(`{${variable}}`, "gi");
+            if (!rgx.test(template)) continue;
+            template = template.replace(rgx, this.guild.commands.variables[variable](message));
         }
         const regex = new RegExp(`{(.*?)}`, "gm");
         template = await this.parseActions(message, template, regex, 1);
@@ -60,11 +64,11 @@ export default class CustomCommand {
         return this.dmCommand ? await message.author.send(template) : message.channel.send(template);
     }
 
-    public async parseActions(message, str, regex, index) {
-        index || (index = 1);
+    public async parseActions(message: FoxMessage, str: string, regex: RegExp, index: number): Promise<any> {
+        index || (index = 1); /* tslint:disable-line */
         const matches = [];
         let match;
-        while (match = regex.exec(str)) {
+        while (match = regex.exec(str)) { /* tslint:disable-line */
             matches.push(match[index]);
         }
         try {

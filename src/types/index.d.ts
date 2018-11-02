@@ -1,5 +1,10 @@
 import { User, Message, Guild, GuildMember, StringResolvable } from 'discord.js';
 
+export interface Options {
+    name: string;
+    description: string;
+}
+
 export interface CustOptions {
     name: string;
     guildID: string;
