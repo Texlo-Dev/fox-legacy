@@ -3,16 +3,8 @@ canvas/*
 config.json
 permissions.json
 data*/
+build/
 info.json
 **/.DS_Store
 yarn.lock
-package-lock.json
-Mr\.Fox\.code-workspace
 
-MrFox\.code-workspace
-
-mrFox-linux
-
-mrFox-macos
-
-mrFox-win\.exe
