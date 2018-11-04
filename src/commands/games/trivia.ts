@@ -19,8 +19,13 @@ export default class FoxCommand extends Command {
     }
 
     public async run(message: FoxMessage) {
-        const obj = await this.fetchTriviaQ().catch(() => null);
-        if (!obj) return message.error(" It seems like the trivia API is currently down. Please try again later.");
+        const obj = await this.fetchTriviaQ().catch(error => {
+            console.error(error);
+            return null;
+        });
+        console.log(obj);
+
+        if (!obj) return message.error("It seems like the trivia API is currently down. Please try again later.");
         let trivia = game[`${message.guild.id}${message.author.id}`];
         if (!trivia) {
             trivia = game[`${message.guild.id}${message.author.id}`] = { correct: [] };
@@ -46,8 +51,9 @@ export default class FoxCommand extends Command {
         let question = 1;
         const obj = await this.fetchTriviaQ();
         let res;
-        if (num === 1) res = await message.sendPrompt(`Welcome to trivia! Let's get started!\nCategory: *${obj.category}*.\n${obj.type === "boolean" ? `True or False: ${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}` : `${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}`}\n\nPlease enter a number between 1 and 4.`, 15000);
-        else res = await message.sendPrompt(`Category: *${obj.category}*.\n${obj.type === "boolean" ? `True or False: ${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}` : `${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}`}\n\nPlease enter a number between 1 and 4.`, 15000);
+        num === 1
+            ? res = await message.sendPrompt(`Welcome to trivia! Let's get started!\nCategory: *${obj.category}*.\n${obj.type === "boolean" ? `True or False: ${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}` : `${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}`}\n\nPlease enter a number between 1 and 4.`, 15000)
+            : res = await message.sendPrompt(`Category: *${obj.category}*.\n${obj.type === "boolean" ? `True or False: ${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}` : `${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}`}\n\nPlease enter a number between 1 and 4.`, 15000);
         if (res === undefined) message.channel.send(`Time is up!`);
         if (res === 0) return 0;
         if (!this.isCorrect(res, obj)) { message.send(`<:nicexmark:495362785010647041>  Sorry, wrong answer! Correct answer is "${obj.correct_answer}".`); } else {
@@ -66,24 +72,27 @@ export default class FoxCommand extends Command {
     public async fetchTriviaQ() {
         const { results: arr }: any = await this.client.http("GET", {
             url: "https://opentdb.com/api.php?amount=1&encode=base64"
-        }).catch(() => null);
+        }).catch(error => {
+            console.error(error);
+            return null;
+        });
         if (!arr) return null;
         const obj = arr[0];
         obj.type = this.atob(obj.type);
         obj.category = this.atob(obj.category);
         obj.question = this.atob(obj.question);
         obj.correct_answer = this.atob(obj.correct_answer);
-        const answers = obj.incorrect_answers.map(o => this.atob(o));
-        answers.splice(Math.floor(Math.random() * answers.length), 0, obj.correct_answer).shuffle();
-        obj.available_answers = answers;
+        let answers = obj.incorrect_answers.map(o => this.atob(o));
+        answers.splice(Math.floor(Math.random() * answers.length), 0, obj.correct_answer);
+        obj.available_answers = this.client.shuffleArray(answers);
         return obj;
     }
 
-    public atob(base64) {
+    public atob(base64: string): string {
         return Buffer.from(base64, "base64").toString("ascii");
     }
 
-    public regExpEsc(str) {
+    public regExpEsc(str: string): string {
         return str.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
     }
 
