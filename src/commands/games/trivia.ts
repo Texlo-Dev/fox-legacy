@@ -1,5 +1,5 @@
-import { get } from "snekfetch";
 import { Command } from "../../util";
+import { FoxMessage } from "../../util/extensions";
 const game = {};
 
 export default class FoxCommand extends Command {
@@ -14,15 +14,12 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public hasPermission(message) {
+    public hasPermission(message: FoxMessage) {
         return message.guild.perms.check("games.play", message);
     }
 
-    public async run(message) {
-        const obj = await this.fetchTriviaQ().catch(err => {
-            message.error(" It seems like the trivia API is currently down. Please try again later.");
-            throw err.stack ? err.stack : err;
-        });
+    public async run(message: FoxMessage) {
+        const obj = await this.fetchTriviaQ().catch(() => null);
         if (!obj) return message.error(" It seems like the trivia API is currently down. Please try again later.");
         let trivia = game[`${message.guild.id}${message.author.id}`];
         if (!trivia) {
@@ -40,12 +37,12 @@ export default class FoxCommand extends Command {
         if (res5 === 0) return message.send("Successfuly cancelled the game.");
     }
 
-    public isCorrect(str, obj) {
+    public isCorrect(str: string, obj: any): boolean {
         const num = parseInt(str) - 1;
         return this.boolean(str) ? str.match(new RegExp(obj.correct_answer, "i")) : obj.available_answers[num] ? obj.available_answers[num].match(new RegExp(obj.correct_answer)) : false;
     }
 
-    public async sendQuestion(num, message, trivia) {
+    public async sendQuestion(num: number, message: FoxMessage, trivia: any) {
         let question = 1;
         const obj = await this.fetchTriviaQ();
         let res;
@@ -67,8 +64,10 @@ export default class FoxCommand extends Command {
     }
 
     public async fetchTriviaQ() {
-        const { body: { results: arr } } = await get("https://opentdb.com/api.php?amount=1&encode=base64")
-            .catch(err => err);
+        const { results: arr }: any = await this.client.http("GET", {
+            url: "https://opentdb.com/api.php?amount=1&encode=base64"
+        }).catch(() => null);
+        if (!arr) return null;
         const obj = arr[0];
         obj.type = this.atob(obj.type);
         obj.category = this.atob(obj.category);

@@ -1,4 +1,5 @@
-import { Client, Collection, MessageStore } from "discord.js";
+import { Client, Collection, MessageStore, TextChannel } from "discord.js";
+import "../types/extensions.d.ts";
 import {
     CommandStore,
     FoxMusic,
@@ -8,9 +9,9 @@ import {
 } from "..";
 import translate from "translate";
 import { prefix, isTestFox, ownerID, devs, dbotsKey, googleAPI } from "../../config.json";
-import { Database, Model } from "mongorito";
 import * as Mongo from "../Mongo";
 import axios, { AxiosResponse } from "axios";
+import { FoxMessage } from "../extensions";
 translate.key = googleAPI;
 
 class FoxClient extends Client {
@@ -138,16 +139,19 @@ class FoxClient extends Client {
         let messages = 0;
         let commandMessages = 0;
 
-        for (const channel of this.channels.values()) {
-            if (!channel.messages) continue;
+        for (let channel of this.channels.values()) {
+            let chl = channel as TextChannel;
+
+            if (!chl.messages) continue;
             channels++;
 
-            for (const message of channel.messages.values()) {
-                if (message.command && now - (message.editedTimestamp || message.createdTimestamp) > commandLifetimeMs) {
-                    channel.messages.delete(message.id);
+            for (const message of chl.messages.values()) {
+                let mess = message as FoxMessage;
+                if (mess.command && now - (mess.editedTimestamp || mess.createdTimestamp) > commandLifetimeMs) {
+                    chl.messages.delete(message.id);
                     commandMessages++;
-                } else if (!message.command && now - (message.editedTimestamp || message.createdTimestamp) > lifetimeMs) {
-                    channel.messages.delete(message.id);
+                } else if (!mess.command && now - (mess.editedTimestamp || mess.createdTimestamp) > lifetimeMs) {
+                    chl.messages.delete(message.id);
                     messages++;
                 }
             }
@@ -212,18 +216,18 @@ class FoxClient extends Client {
         this.ready = true;
         this.emit("foxReady");
     }
-Array.prototype.shuffle = function() {
-  var i = this.length, j, temp;
-  if ( i == 0 ) return this;
-  while ( --i ) {
-     j = Math.floor( Math.random() * ( i + 1 ) );
-     temp = this[i];
-     this[i] = this[j];
-     this[j] = temp;
-  }
-  return this;
-}
 
+    public shuffleArray(arr: any[]): any[] {
+        let i = arr.length, j, temp;
+        if ( i === 0 ) return arr;
+        while ( --i ) {
+            j = Math.floor( Math.random() * ( i + 1 ) );
+            temp = arr[i];
+            arr[i] = arr[j];
+        arr[j] = temp;
+        }
+        return arr;
+    }
 }
 
 export default FoxClient;

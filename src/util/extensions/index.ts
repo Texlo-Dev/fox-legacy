@@ -43,6 +43,7 @@ export interface FoxMessage extends Message {
     success: Function;
     _registerCommand: Function;
     send: Function;
+    sendPrompt: Function;
 }
 
 export interface FoxUser extends User {
