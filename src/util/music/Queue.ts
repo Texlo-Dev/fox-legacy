@@ -1,6 +1,26 @@
-class Queue {
+import { FoxClient, Song } from "..";
+import { TextChannel, VoiceChannel, VoiceConnection, GuildMember, Message } from "discord.js";
+import { FoxGuild } from "../extensions";
 
-    public constructor(client, info) {
+interface QueueInfo {
+    textChannel: TextChannel;
+    voiceChannel: VoiceChannel;
+    connection: VoiceConnection;
+    songs: Song[];
+    skippers: string[];
+    playing: boolean;
+}
+
+export default class Queue implements QueueInfo {
+    public client: FoxClient;
+    public textChannel: TextChannel;
+    public voiceChannel: VoiceChannel;
+    public connection: VoiceConnection;
+    public songs: Song[];
+    public skippers: string[];
+    public playing: boolean;
+
+    public constructor(client: FoxClient, info: QueueInfo) {
         this.client = client;
         this.textChannel = info.textChannel;
         this.voiceChannel = info.voiceChannel;
@@ -10,8 +30,8 @@ class Queue {
         this.playing = info.playing;
     }
 
-    public async skip(member) {
-        const serverQueue = member.guild.queue;
+    public async skip(member: GuildMember): Promise<Message | Message[]> {
+        const serverQueue = (member.guild as FoxGuild).queue;
         if (!serverQueue) return this.textChannel.send("<:nicexmark:495362785010647041>  Sorry, but there was nothing playing for me to skip.");
         if (serverQueue.skippers.includes(member.id)) return this.textChannel.send("<:nicexmark:495362785010647041>  Sorry, but you have already voted to skip!");
         await serverQueue.skippers.push(member.id);
@@ -19,12 +39,12 @@ class Queue {
             serverQueue.connection.dispatcher.end();
             return this.textChannel.send("<:check:314349398811475968> Successfully skipped the current song.");
         } else {
-            this.textChannel.send(`<:check:314349398811475968> Your skip has been added! To complete the skip, you need ${Math.ceil((member.voice.channel.members.size - 1) / 2) - serverQueue.skippers.length} more votes.`);
+            return this.textChannel.send(`<:check:314349398811475968> Your skip has been added! To complete the skip, you need ${Math.ceil((member.voice.channel.members.size - 1) / 2) - serverQueue.skippers.length} more votes.`);
         }
     }
 
-    public endAllSongs() {
-        const serverQueue = this.textChannel.guild.queue;
+    public endAllSongs(): boolean| Promise<Message | Message[]> {
+        const serverQueue = (this.textChannel.guild as FoxGuild).queue;
         // Check if there are songs in queue to stop.
         // Doesn't use brackets because Jacz has weird formatting.
         if (!serverQueue.songs.length) return this.textChannel.send("<:nicexmark:495362785010647041>  There is nothing playing for me to stop.");
@@ -37,7 +57,7 @@ class Queue {
     public pause() {
         try {
             this.textChannel.guild.voiceConnection.dispatcher.pause();
-            return this.textChannel.send(" <:away:313956277220802560> Successfully paused the current song.");
+            return this.textChannel.send("<:away:313956277220802560> Successfully paused the current song.");
         } catch (err) {
             return this.textChannel.send(`Oops, there was an error! ${err}`);
         }
@@ -46,12 +66,10 @@ class Queue {
     public resume() {
         try {
             this.textChannel.guild.voiceConnection.dispatcher.resume();
-            return this.textChannel.send(" <:away:313956277220802560> Successfully resumed the current song.");
+            return this.textChannel.send("<:away:313956277220802560> Successfully resumed the current song.");
         } catch (err) {
             return this.textChannel.send(`Oops, there was an error! ${err}`);
         }
     }
 
 }
-
-export default Queue;

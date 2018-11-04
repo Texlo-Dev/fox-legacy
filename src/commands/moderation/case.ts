@@ -1,8 +1,7 @@
 import { MessageEmbed } from "discord.js";
 import dateFormat from "dateformat";
 import { Command } from "../../util";
-dateFormat(now, "ddd, mmm d, yyyy, at h MM TT");
-let now = new Date();
+dateFormat(new Date(), "ddd, mmm d, yyyy, at h MM TT");
 
 export default class FoxCommand extends Command {
 

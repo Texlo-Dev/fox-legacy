@@ -1,4 +1,5 @@
 import { FoxGuild } from "../extensions";
+import { GuildSettings } from "../Mongo";
 export default class GuildConfig {
     public readonly guild: FoxGuild;
     public readonly prefix: string;
@@ -41,8 +42,8 @@ export default class GuildConfig {
     public readonly allowedBwChannels: any[];
     public readonly allowedSpamChannels: any[];
     public readonly allowedCapsChannels: any[];
-    public readonly allowedMentionChannels: [];
-    public readonly logExcluded: boolean;
+    public readonly allowedMentionChannels: any[];
+    public readonly logExcluded: any[];
 
     public constructor(guild: FoxGuild) {
         this.guild = guild;
@@ -87,7 +88,7 @@ export default class GuildConfig {
         this.allowedSpamChannels = null;
         this.allowedCapsChannels = null;
         this.allowedMentionChannels = null;
-        this.logExcluded = null;
+        this.logExcluded = [];
     }
 
     public async _loadSettings(): Promise<void> {
@@ -109,8 +110,8 @@ export default class GuildConfig {
                 packages: this.packages,
                 kickPoints: this.kickPoints,
                 banPoints: this.banPoints,
-                muteRoles: this.muteRole,
-                autoRoles: this.autoRole,
+                muteRole: this.muteRole,
+                autoRoles: this.autoRoles,
                 messageLogging: this.messageLogging,
                 modLogging: this.modLogging,
                 serverLogging: this.serverLogging,
@@ -139,7 +140,7 @@ export default class GuildConfig {
     }
 
     public async set(key: string, value: any): Promise<Boolean|Object> {
-        const settings = await this.guild.client.mongo.guildconfig.findOne({
+        const settings: GuildSettings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
             type: "settings"
         });
@@ -152,7 +153,7 @@ export default class GuildConfig {
     }
 
     public async setArray(key: string, value: string[] | string, isWeb?: boolean): Promise<Object> {
-        const settings = await this.guild.client.mongo.guildconfig.findOne({
+        const settings: GuildSettings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
             type: "settings"
         });

@@ -1,8 +1,10 @@
-import { User, Message, Guild, GuildMember, StringResolvable } from 'discord.js';
+import { User, Message, Guild, GuildMember, StringResolvable } from "discord.js";
 
 export interface Options {
     name: string;
     description: string;
+    client?: FoxClient;
+    enabled?: boolean;
 }
 
 export interface CustOptions {
@@ -31,9 +33,9 @@ import {
     GiveawayStore,
     Config,
     ServerProtect,
-    PermStore
-} from "..";
-import FoxClient from '../core/FoxClient';
+    PermStore,
+    FoxClient
+} from "../util";
 
 export type FoxConfig = {
     token: string;
@@ -52,40 +54,17 @@ export type FoxConfig = {
     dboatsKey: string;
     dbotsKey: string;
     discordbotsKey: string;
-}
-export interface FoxMessage extends Message {
-    command: Command;
-    error: Function;
-    success: Function;
-    guild: FoxGuild;
-    sendMessage: Function;
-}
-
-export interface FoxGuild extends Guild {
-    perms: PermStore;
-    config: Config;
-    shard: number;
-    client: FoxClient;
-    polls: Polls;
-    giveaways: GiveawayStore;
-    commands: CustomCommands;
-}
-
-export interface FoxUser extends User {
-    upvoter: boolean;
-    patreonTier: number;
-
-}
+};
 
 export interface CommandInfo {
     name: string;
     description: string;
     aliases?: string[];
-    usage: string;
+    usage?: string;
     cooldown?: number;
     extendedUsage?: string[];
-    requiredPerms: string[];
-    guildOnly: boolean;
+    requiredPerms?: string[];
+    guildOnly?: boolean;
     patreonTier?: number;
     enabled?: boolean;
 }

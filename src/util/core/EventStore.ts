@@ -1,5 +1,5 @@
 import { Collection } from "discord.js";
-class EventStore extends Collection {
+class EventStore extends Collection<any, any> {
 
     /* async disable(event) {
 

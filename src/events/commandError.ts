@@ -1,16 +1,16 @@
 import { MessageEmbed, WebhookClient } from "discord.js";
-import { Event } from "../util";
+import { Event, FoxClient, FoxMessage } from "../util";
 
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "commandError",
             description: "Run this when commands error."
         });
     }
 
-    public run(message, err) {
+    public run(message: FoxMessage, err: Error) {
         const embed = new MessageEmbed()
             .setAuthor("Command Error", message.client.user.displayAvatarURL())
             .setDescription(`There was an error executing this command: \n\`\`\`${message.client.isOwner(message.author.id) ? err.stack.split(",")[0] : err.message}\`\`\`\nThis error has been recorded.`)

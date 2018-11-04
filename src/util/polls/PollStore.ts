@@ -1,4 +1,4 @@
-import { Collection, TextChannel } from "discord.js";
+import { Collection, TextChannel, Message } from "discord.js";
 import Poll from "./Poll";
 import { FoxGuild } from "../extensions";
 import { Polls } from "../Mongo";
@@ -62,7 +62,7 @@ export default class PollStore extends Collection<any, any> {
                 if (obj.type === "open") embed.addField(`${answer.name}`, "\u200B");
                 else embed.addField(`${num++}. ${answer.name}`, "\u200B");
             }
-            const m: Message = (await this.guild.channels.get(data.channel.id) as TextChannel).send(embed);
+            const m: any = (await this.guild.channels.get(data.channel.id) as TextChannel).send(embed);
             if (pl.type === "simple") {
                 await m.react("✅");
                 await m.react("❌");
@@ -88,9 +88,9 @@ export default class PollStore extends Collection<any, any> {
         }
     }
 
-    public async delete(name) {
+    public async delete(name: string) {
         if (!super.has(name)) throw new Error("Poll does not exists in collection.");
-        const poll = await this.guild.client.mongo.polls.findOne({ guildID: this.guild.id, name });
+        const poll: Polls = await this.guild.client.mongo.polls.findOne({ guildID: this.guild.id, name });
         if (!poll) throw new Error("Could not resolve giveaway.");
         await poll.remove();
         await super.delete(name);

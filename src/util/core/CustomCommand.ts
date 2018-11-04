@@ -73,7 +73,7 @@ export default class CustomCommand {
         }
         try {
             for await (const m of matches) {
-                const array = m.split(":");
+                const array: string[] = m.split(":");
                 const [action, value] = array;
                 await this.guild.commands.actions[action](message, value);
             }

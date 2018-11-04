@@ -1,17 +1,18 @@
-import { MessageEmbed } from "discord.js";
+import { MessageEmbed, TextChannel } from "discord.js";
 import { invProtect, spamProtect, massProtect, badWords } from "../util/core/Automod";
-import { Event } from "../util";
+import { Event, FoxClient } from "../util";
+import { FoxMessage } from "../util/extensions";
 const inviteRegex = new RegExp(/\b(?:https?:\/\/)?(?:www\.)?(?:discordapp\.com\/invite\/|discord\.gg\/)([\w-]{2,32})/gi);
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "messageUpdate",
             description: "Fired when a message is updated in a server."
         });
     }
 
-    public async run(oldMessage, newMessage) {
+    public async run(oldMessage: FoxMessage, newMessage: FoxMessage) {
         if (oldMessage.content === newMessage.content) return;
         if (!oldMessage.guild) return;
         await this.initAutomod(newMessage);
@@ -33,13 +34,13 @@ export default class extends Event {
             .setDescription(`\n**Channel:** ${oldMessage.channel}\n**Author:** ${oldMessage.author.tag}\n**Old Message:**\n${oldMessage.content}\n**New message:**\n${newMessage.content}\n\n**Message ID:** ${oldMessage.id}`)
             .setFooter(oldMessage.client.user.username);
         if (modlog) {
-            const serverlog = oldMessage.guild.channels.get(modlog.id);
+            const serverlog = oldMessage.guild.channels.get(modlog.id) as TextChannel;
             if (!serverlog) return;
             serverlog.send({ embed });
         }
     }
 
-    public async initAutomod(message) {
+    public async initAutomod(message: FoxMessage) {
         try {
             badWords(message);
             await invProtect(message);

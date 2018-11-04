@@ -88,7 +88,7 @@ export default class PermStore extends Collection<any, any> {
         return new Promise(res => setTimeout(() => res(super.array()), 50));
     }
 
-    public check(perm: string, member: any, channel: any): boolean {
+    public check(perm: string, member: any, channel?: any): boolean {
         if (member instanceof Message) {
             channel = member.channel;
             member = member.member;

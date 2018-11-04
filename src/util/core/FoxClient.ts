@@ -1,4 +1,4 @@
-import { Client, Collection } from "discord.js";
+import { Client, Collection, MessageStore } from "discord.js";
 import {
     CommandStore,
     FoxMusic,
@@ -10,13 +10,11 @@ import translate from "translate";
 import { prefix, isTestFox, ownerID, devs, dbotsKey, googleAPI } from "../../config.json";
 import { Database, Model } from "mongorito";
 import * as Mongo from "../Mongo";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 translate.key = googleAPI;
 
-
-
 class FoxClient extends Client {
-    public tools: object;
+    public tools: typeof Tools;
     public packages: string[];
     public music: FoxMusic;
     public commandPrefix: string;
@@ -38,6 +36,7 @@ class FoxClient extends Client {
         this.music = new FoxMusic(this);
         this.commandPrefix = prefix;
         this.commands = new CommandStore(this);
+        this.events = new EventStore();
         this.commandsRun = 0;
         this.isTestFox = isTestFox;
         this.permissions = new Collection();
@@ -76,21 +75,21 @@ class FoxClient extends Client {
         this.once("ready", async () => this._ready());
     }
 
-    public isOwner(id: string) {
+    public isOwner(id: string): boolean {
         return id === ownerID;
     }
-    public isDev(id: string) {
+    public isDev(id: string): boolean {
         return this.isOwner(id) || devs.includes(id);
     }
 
-    public clean(text: string) {
+    public clean(text: string): string {
         return text
             .replace(/`/g, `\`${String.fromCharCode(8203)}`)
             .replace(/@/g, `@${String.fromCharCode(8203)}`)
             .replace(new RegExp(`${this.token}`, "g"), "NO YOU");
     }
 
-    public paginate(items: any[], page = 1, pageLength = 10) {
+    public paginate(items: any[], page = 1, pageLength = 10): any {
         const maxPage = Math.ceil(items.length / pageLength);
         if (page < 1) page = 1;
         if (page > maxPage) page = maxPage;
@@ -103,7 +102,7 @@ class FoxClient extends Client {
         };
     }
 
-    public async haste(input: string, extension: string) {
+    public async haste(input: string, extension: string): Promise<String> {
         return axios({
             url: "https://hastebin.com/documents",
             data: input
@@ -111,7 +110,7 @@ class FoxClient extends Client {
         .catch(err => err);
     }
 
-    public async http(method: string, meta: any) {
+    public async http(method: string, meta: any): Promise<AxiosResponse> {
         if (!method || !meta) throw new Error("Missing Paramaters.");
         return axios({
             method,
@@ -121,11 +120,11 @@ class FoxClient extends Client {
         }).then(res => res.data);
     }
 
-    public capitalizeStr(string: string) {
+    public capitalizeStr(string: string): string {
         return string.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
 
-    public sweepMessages(lifetime = this.options.messageCacheLifetime, commandLifetime = 30000) {
+    public sweepMessages(lifetime = this.options.messageCacheLifetime, commandLifetime = 30000): number | MessageStore {
         if (typeof lifetime !== "number" || isNaN(lifetime)) throw new TypeError("The lifetime must be a number.");
         if (lifetime <= 0) {
             this.emit("debug", "Didn't sweep messages - lifetime is unlimited");
@@ -139,7 +138,7 @@ class FoxClient extends Client {
         let messages = 0;
         let commandMessages = 0;
 
-        for (const channel  of this.channels.values()) {
+        for (const channel of this.channels.values()) {
             if (!channel.messages) continue;
             channels++;
 
@@ -158,7 +157,7 @@ class FoxClient extends Client {
         return messages;
     }
 
-    public async isUpvoter(id: string) {
+    public async isUpvoter(id: string): Promise<boolean> {
         if (this.user.id !== "333985343445663749") return Promise.resolve(true);
         const res = await axios({
             url: `https://discordbots.org/api/bots/333985343445663749/votes`,
@@ -169,7 +168,7 @@ class FoxClient extends Client {
         return res.data.map((c: any) => c.id).includes(id);
     }
 
-    public spanMs(span: string) {
+    public spanMs(span: string): number {
         if (typeof span !== "string") return null;
         let total = 0;
         const amounts: any = span.split(/[a-z]/); amounts.splice(-1);
@@ -196,7 +195,7 @@ class FoxClient extends Client {
         return total;
     }
 
-    public get args() {
+    public get args(): object {
         const obj: object = {
             member: `mention, ID, or name (Ex: @Jacz#9536, Jacz)`,
             duration: `second, minute, hour, day, week (Ex: 2s, 4m, 8d, 9w)`,
@@ -206,7 +205,7 @@ class FoxClient extends Client {
         return obj;
     }
 
-    public async _ready() {
+    public async _ready(): Promise<void> {
         const { loadCommands, loadEvents } = Loader;
         await loadCommands(this);
         await loadEvents(this);

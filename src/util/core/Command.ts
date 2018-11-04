@@ -10,23 +10,24 @@ const regexs = {
 };
 import { User, GuildMember, Message, Channel, Role } from "discord.js";
 import { FoxClient } from "..";
-import { FoxUser } from "../extensions";
-import { CommandInfo, FoxMessage } from "../../types";
+import { FoxUser, FoxMessage } from "../extensions";
+import { CommandInfo } from "../../types";
 class Command {
     public client: FoxClient;
     public name: string;
     public description: string;
-    public aliases: string[];
-    public usage: string;
-    public cooldown: number;
-    public extendedUsage: object;
-    public requiredPerms: string[];
-    public reqPermString: string[];
-    public patreonTier: number;
-    public guildOnly: boolean;
-    public enabled: boolean;
-    public category: any;
-    public executor: User;
+    public aliases?: string[];
+    public usage?: string;
+    public cooldown?: number;
+    public extendedUsage?: any;
+    public requiredPerms?: string[];
+    public reqPermString?: string[];
+    public patreonTier?: number;
+    public guildOnly?: boolean;
+    public enabled?: boolean;
+    public category?: any;
+    public executor?: User;
+    public run: (message: FoxMessage, args: string[], prefix: string) => {};
 
     public constructor(client: FoxClient, info: CommandInfo) {
         Object.defineProperty(this, "client", { value: client });
@@ -85,7 +86,7 @@ class Command {
         return false;
     }
 
-    private _registerExecutor(message: Message) {
+    public _registerExecutor(message: FoxMessage) {
         this.executor = message.author;
     }
 

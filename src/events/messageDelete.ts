@@ -1,16 +1,17 @@
-import { MessageEmbed } from "discord.js";
-import { Event } from "../util";
+import { MessageEmbed, TextChannel } from "discord.js";
+import { Event, FoxClient } from "../util";
+import { FoxMessage } from "../util/extensions";
 
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "messageDelete",
             description: "Fired whenever a message is deleted in a channel."
         });
     }
 
-    public async run(message) {
+    public async run(message: FoxMessage) {
         if (message.author === message.client.user) return;
         const modlog = message.guild.config.serverlogChannel;
         if (!modlog) return;
@@ -28,7 +29,6 @@ export default class extends Event {
             .setDescription(`\n**Channel:** ${message.channel}\n**Author:** ${message.author.tag}\n**Content:**\n${message.content}\n\n**Message ID:** ${message.id}`)
             .setFooter(message.client.user.username);
         if (!modlog) return;
-        const serverlog = message.guild.channels.get(modlog.id);
         if (!serverlog) return;
         serverlog.send({ embed });
     }

@@ -3,8 +3,8 @@ import { Collection, User, Channel } from "discord.js";
 import { FoxGuild, FoxMessage } from "../extensions";
 export default class CustomCommands extends Collection<any, any> {
     public readonly guild: FoxGuild;
-    public readonly actions: object;
-    public readonly variables: object;
+    public readonly actions: any;
+    public readonly variables: any;
 
     public constructor(guild: FoxGuild) {
         super();

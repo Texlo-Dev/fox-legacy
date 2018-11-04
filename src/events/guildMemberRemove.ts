@@ -1,25 +1,26 @@
-import { MessageEmbed } from "discord.js";
+import { MessageEmbed, GuildMember, TextChannel } from "discord.js";
 import dateFormat from "dateformat";
-import { Event } from "../util";
+import { Event, FoxClient } from "../util";
+import { FoxGuild } from "../util/extensions";
 
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "guildMemberRemove",
             description: "Fires when a member leaves the server."
         });
     }
 
-    public async run(member) {
+    public async run(member: GuildMember) {
         await this.checkAutoMute(member);
         this.handleGoodbyeMsg(member);
-
-        const modlog = member.guild.config.serverlogChannel;
+        const guild = member.guild as FoxGuild;
+        const modlog = guild.config.serverlogChannel;
         if (!modlog) return;
-        const enabled = member.guild.config.serverLogging;
+        const enabled = guild.config.serverLogging;
         if (!enabled) return;
-        if (member.guild.config.enabledEvents.indexOf(this.name) < 0) return;
+        if (guild.config.enabledEvents.indexOf(this.name) < 0) return;
         const embed = new MessageEmbed()
             .setAuthor("Member Left", member.client.user.displayAvatarURL())
             .setThumbnail(member.user.displayAvatarURL())
@@ -27,18 +28,19 @@ export default class extends Event {
             .setTimestamp()
             .setColor(this.client.brandColor)
             .setFooter(member.client.user.username);
-        const serverlog = member.guild.channels.get(modlog.id);
+        const serverlog = member.guild.channels.get(modlog.id) as TextChannel;
         if (!serverlog) return;
         serverlog.send({ embed });
     }
 
-    public async checkAutoMute(member) {
-        if (member.guild.config.muteRole && member.roles.has(member.guild.config.muteRole.id)) {
-            const query = await this.client.mongo.modactions.findOne({ guildID: member.guild.id, userID: member.id, isMute: true, hasLeft: false, automatic: true });
+    public async checkAutoMute(member: GuildMember): Promise<void> {
+        const guild = member.guild as FoxGuild;
+        if (guild.config.muteRole && member.roles.has(guild.config.muteRole.id)) {
+            const query = await this.client.mongo.modactions.findOne({ guildID: guild.id, userID: member.id, isMute: true, hasLeft: false, automatic: true });
             query.set({ hasLeft: true });
             await query.save();
         } else {
-            const query = await this.client.mongo.modactions.findOne({ guildID: member.guild.id, userID: member.id, isMute: true, hasLeft: true, automatic: true });
+            const query = await this.client.mongo.modactions.findOne({ guildID: guild.id, userID: member.id, isMute: true, hasLeft: true, automatic: true });
             if (query) {
                 query.set({ hasLeft: false });
                 await query.save();
@@ -46,13 +48,14 @@ export default class extends Event {
         }
     }
 
-    public async handleGoodbyeMsg(member) {
-        const goodbyeEnabled = member.guild.config.goodbyeEnabled;
-        const canEmbed = member.guild.config.goodbyeEmbed;
-        const goodbyeMessage = member.guild.config.goodbyeMsg;
-        const location = member.guild.config.goodbyeChannel;
+    public async handleGoodbyeMsg(member: GuildMember): Promise<any> {
+        const guild = member.guild as FoxGuild;
+        const goodbyeEnabled = guild.config.goodbyeEnabled;
+        const canEmbed = guild.config.goodbyeEmbed;
+        const goodbyeMessage = guild.config.goodbyeMsg;
+        const location = guild.config.goodbyeChannel;
         if (goodbyeEnabled && goodbyeMessage && goodbyeMessage.length && location.id) {
-            const channel = member.guild.channels.get(location.id);
+            const channel = member.guild.channels.get(location.id) as TextChannel;
             if (channel && !canEmbed) {
                 return channel.send(goodbyeMessage.replace(/{user}/g, `${member.user.tag}`));
             } else if (channel) {

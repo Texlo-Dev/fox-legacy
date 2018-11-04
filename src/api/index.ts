@@ -1,6 +1,6 @@
 import polka from "polka";
 import { put } from "axios";
-import { token } from "../config";
+import { token } from "../config.json";
 import permissions from "./permissions";
 import commands from "./commands";
 import guilds from "./guilds";

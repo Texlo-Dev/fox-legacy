@@ -1,17 +1,18 @@
-import { Event } from "../util";
-import { MessageEmbed } from "discord.js";
+import { Event, FoxClient } from "../util";
+import { MessageEmbed, MessageStore, TextChannel } from "discord.js";
+import { FoxMessage } from "../util/extensions";
 
-export default class messageDeleteBulkEvent extends Event {
+export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "messageDeleteBulk",
             description: "Message bulk delete event"
         });
     }
 
-    public async run(msgs) {
-        const message = msgs.first();
+    public async run(msgs: MessageStore) {
+        const message = msgs.first() as FoxMessage;
         const modlog = message.guild.config.serverlogChannel;
         if (!modlog) return;
         const enabled = message.guild.config.serverLogging;
@@ -29,7 +30,7 @@ export default class messageDeleteBulkEvent extends Event {
             .setDescription(`\n**Purged by:** ${message.command.executor.tag}\n**Channel:** ${message.channel}\n**Purge Count**: ${msgs.size}\n**Archive Link**: ${await this.client.haste(msgs.map(m => `${m.member.displayName} - ${m.content}`).join("\n"), "bash")}`)
             .setFooter(message.client.user.username);
         if (!modlog) return;
-        const serverlog = message.guild.channels.get(modlog.id);
+        const serverlog = message.guild.channels.get(modlog.id) as TextChannel;
         if (!serverlog) return;
         serverlog.send({ embed });
     }

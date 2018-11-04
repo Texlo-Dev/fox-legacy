@@ -1,15 +1,16 @@
 import * as cv from "canvas-constructor";
 import { readFile } from "fs-nextra";
 import { request } from "axios";
-import { googleAPI, darkSkyAPI } from "../../config";
-import { Command } from "../../util";
+import { googleAPI, darkSkyAPI } from "../../config.json";
+import { Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions/index.js";
 const { Canvas } = cv;
-Canvas.registerFont(`${process.cwd()}/canvas/fonts/Roboto-Regular.ttf`, "Roboto");
-Canvas.registerFont(`${process.cwd()}/canvas/fonts/RobotoCondensed-Regular.ttf`, "Roboto Condensed");
-Canvas.registerFont(`${process.cwd()}/canvas/fonts/RobotoMono-Light.ttf`, "Roboto Mono");
+Canvas.registerFont(`${process.cwd()}/build/canvas/fonts/Roboto-Regular.ttf`, "Roboto");
+Canvas.registerFont(`${process.cwd()}/build/canvas/fonts/RobotoCondensed-Regular.ttf`, "Roboto Condensed");
+Canvas.registerFont(`${process.cwd()}/build/canvas/fonts/RobotoMono-Light.ttf`, "Roboto Mono");
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "weather",
             description: "Shows weather for a certain location.",
@@ -18,7 +19,7 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public async run(message, args) {
+    public async run(message: FoxMessage, args: string[]) {
         let text = args.join(" ");
         if (!text) return message.error(`Missing city.`);
         const mg = await message.send(`<a:typing:393848431413559296> Loading Weather.....`);

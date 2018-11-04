@@ -1,18 +1,19 @@
-import { Event } from "../util";
+import { Event, FoxClient } from "../util";
+import { FoxMessage } from "../util/extensions";
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "levelUp",
             description: "Fired when a server member levels up."
         });
     }
 
-    public async run(message, level) {
-        const promoRoles = message.guild.leveling.promoRoles;
-        const msgEnabled = message.guild.config.levelMessaging;
-        const levelMsg = message.guild.config.levelMsg;
-        const location = message.guild.leveling.messageLocation;
+    public async run(message: FoxMessage, level: number) {
+        const promoRoles: any[] = message.guild.leveling.promoRoles;
+        const msgEnabled: boolean = message.guild.config.levelMessaging;
+        const levelMsg: string = message.guild.config.levelMsg;
+        const location: any = message.guild.leveling.messageLocation;
         let channel;
         if (!location) return;
         if (location === "Current Channel") channel = message.channel;

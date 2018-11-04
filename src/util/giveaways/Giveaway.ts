@@ -1,6 +1,35 @@
-export default class Giveaway {
+import { FoxGuild } from "../extensions";
 
-    public constructor(guild, info) {
+interface GiveawayInfo {
+    name: string;
+    guildID: string;
+    channel: any;
+    endDate: number;
+    running: boolean;
+    messageID?: string;
+    winners: any[];
+    paused: boolean;
+    maxWinners: number;
+    reactionEmote: any;
+    timeRemaining: number;
+}
+
+export default class Giveaway implements GiveawayInfo {
+    public guild: FoxGuild;
+    public name: string;
+    public guildID: string;
+    public channel: any;
+    public endDate: number;
+    public running: boolean;
+    public messageID: string;
+    public winners: any[];
+    public paused: boolean;
+    public maxWinners: number;
+    public timeRemaining: number;
+    public reactionEmote: any;
+    public ended?: boolean;
+
+    public constructor(guild: FoxGuild, info: GiveawayInfo) {
         this.guild = guild;
         this.name = info.name;
         this.guildID = info.guildID;
@@ -15,39 +44,43 @@ export default class Giveaway {
         this.reactionEmote = info.reactionEmote;
     }
 
-    public async end() {
+    public async end(): Promise<Object> {
         if (!this.running) throw new Error("Giveaway must be running in order to end.");
         this.ended = true;
 
         try {
-            return await this.guild.client.guilds.get(this.guildID).giveaways.listenGiveaway(this);
+            const guild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
+            return await guild.giveaways.listenGiveaway(this);
         } catch (err) {
             throw err;
         }
     }
 
-    public async reroll() {
+    public async reroll(): Promise<Object> {
         if (this.running) throw new Error("Giveaway must not be running to reroll.");
         try {
-            return await this.guild.client.guilds.get(this.guildID).giveaways.reroll(this);
+            const guild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
+            return await guild.giveaways.reroll(this);
         } catch (err) {
             throw err;
         }
     }
 
-    public async pause() {
+    public async pause(): Promise<Object> {
         if (this.paused || !this.running) throw new Error("Giveaway must not either be already paused and currently running.");
         try {
-            return await this.guild.client.guilds.get(this.guildID).giveaways.pause(this);
+            const guild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
+            return await guild.giveaways.pause(this);
         } catch (err) {
             throw err;
         }
     }
 
-    public async resume() {
+    public async resume(): Promise<Object> {
         if (!this.paused || !this.running) throw new Error("Giveaway must be already paused and currently running.");
         try {
-            return await this.guild.client.guilds.get(this.guildID).giveaways.resume(this);
+            const guild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
+            return await guild.giveaways.resume(this);
         } catch (err) {
             throw err;
         }

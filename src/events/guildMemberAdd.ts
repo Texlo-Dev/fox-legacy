@@ -1,23 +1,23 @@
-import { MessageEmbed } from "discord.js";
+import { MessageEmbed, GuildMember, TextChannel } from "discord.js";
 import dateformat from "dateformat";
-import { Event } from "../util";
+import { Event, FoxClient } from "../util";
+import { FoxGuild } from "../util/extensions";
 
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "guildMemberAdd",
             description: "Fires whenever a member joins a server."
         });
     }
 
-    public async run(member) {
+    public async run(member: GuildMember) {
         const guild = member.guild;
-        const client = member.client;
-        client.tools.checkIfMute(member);
+        this.client.tools.checkIfMute(member);
         if (guild.id === "336211307541954560") {
             const ownerRole = guild.roles.find(role => role.name === "Server Owner");
-            const ownerCheck = await client.shard.broadcastEval(`this.guilds.some(g => g.ownerID === '${member.id}')`);
+            const ownerCheck = await this.client.shard.broadcastEval(`this.guilds.some(g => g.ownerID === '${member.id}')`);
             if (ownerCheck.some(bool => bool === true)) {
                 member.roles.add(ownerRole);
             }
@@ -29,14 +29,15 @@ export default class extends Event {
         this.handleLog(member);
     }
 
-    public async welcomemsgHandle(member) {
-        const welcomeEnabled = member.guild.config.welcomeEnabled;
-        const welcomeMessage = member.guild.config.welcomeMsg;
-        const canEmbed = member.guild.config.welcomerEmbed;
-        const location = member.guild.config.welcomeLocation;
+    public async welcomemsgHandle(member: GuildMember): Promise<any> {
+        const guild = member.guild as FoxGuild;
+        const welcomeEnabled: boolean = guild.config.welcomeEnabled;
+        const welcomeMessage: string = guild.config.welcomeMsg;
+        const canEmbed: boolean = guild.config.welcomerEmbed;
+        const location: any = guild.config.welcomeLocation;
         if (welcomeEnabled && welcomeMessage && welcomeMessage.length && location === "DM") {
-            if (!canEmbed) return member.send(welcomeMessage.replace(/{user}/g, `${member}`).replace(/{server}/g, `${member.guild}`).replace(/{position}/g, `${member.guild.memberCount}`)).catch(() => 0);
-            member.send(
+            if (!canEmbed) member.send(welcomeMessage.replace(/{user}/g, `${member}`).replace(/{server}/g, `${member.guild}`).replace(/{position}/g, `${member.guild.memberCount}`)).catch(() => 0);
+            else member.send(
                 new MessageEmbed()
                     .setColor("RANDOM")
                     .setTimestamp()
@@ -45,7 +46,7 @@ export default class extends Event {
                     .setFooter(this.client.user.username)
             ).catch(() => 0);
         } else if (welcomeEnabled && welcomeMessage && location.id) {
-            const channel = member.guild.channels.get(location.id);
+            const channel = member.guild.channels.get(location.id) as TextChannel;
             if (channel && !canEmbed) { channel.send(welcomeMessage.replace(/{user}/g, `${member}`).replace(/{server}/g, `${member.guild}`).replace(/{position}/g, `${member.guild.memberCount}`)); } else {
                 channel.send(
                     new MessageEmbed()
@@ -59,8 +60,9 @@ export default class extends Event {
         }
     }
 
-    public async handleAutoRole(member) {
-        const autoroles = member.guild.config.autoRoles;
+    public async handleAutoRole(member: GuildMember): Promise<void> {
+        const guild = member.guild as FoxGuild;
+        const autoroles = guild.config.autoRoles;
         if (!autoroles || !autoroles.length) return;
         for (const autorole of autoroles) {
             const role = member.guild.roles.get(autorole.id);
@@ -69,23 +71,25 @@ export default class extends Event {
         }
     }
 
-    public async handleLevelRoles(member) {
-        const promoRoles = member.guild.leveling.promoRoles;
-        const level = await member.guild.leveling.levelOf(member);
-        const enabled = member.guild.packages.get("Leveling").enabled;
+    public async handleLevelRoles(member: GuildMember): Promise<void> {
+        const guild = member.guild as FoxGuild;
+        const promoRoles = guild.leveling.promoRoles;
+        const level = await guild.leveling.levelOf(member);
+        const enabled = guild.packages.get("Leveling").enabled;
         if (!enabled || !promoRoles || !promoRoles.length || !level) return;
-        const filtered = member.guild.leveling.stackRoles ? promoRoles.filter(p => p.rank <= level) : promoRoles.filter(p => p.rank === level);
+        const filtered = guild.leveling.stackRoles ? promoRoles.filter(p => p.rank <= level) : promoRoles.filter(p => p.rank === level);
         for (const role of filtered) {
             member.roles.add(role.id);
         }
     }
 
-    public async handleLog(member) {
-        const modlog = member.guild.config.serverlogChannel;
+    public async handleLog(member: GuildMember): Promise<void> {
+        const guild = member.guild as FoxGuild;
+        const modlog = guild.config.serverlogChannel;
         if (!modlog) return;
-        const enabled = member.guild.config.serverLogging;
+        const enabled = guild.config.serverLogging;
         if (!enabled) return;
-        if (member.guild.config.enabledEvents.indexOf(this.name) < 0) return;
+        if (guild.config.enabledEvents.indexOf(this.name) < 0) return;
 
         const embed = new MessageEmbed()
             .setAuthor("Member Joined", member.client.user.displayAvatarURL())
@@ -94,7 +98,7 @@ export default class extends Event {
             .setTimestamp()
             .setColor(3534687)
             .setFooter(member.client.user.username);
-        const serverlog = member.guild.channels.get(modlog.id);
+        const serverlog = member.guild.channels.get(modlog.id) as TextChannel;
         if (!serverlog) return;
         serverlog.send({ embed });
     }

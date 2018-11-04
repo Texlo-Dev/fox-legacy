@@ -1,17 +1,18 @@
-import { MessageEmbed } from "discord.js";
-import { Event } from "../util";
+import { MessageEmbed, Role, TextChannel } from "discord.js";
+import { Event, FoxClient } from "../util";
+import { FoxGuild } from "../util/extensions";
 
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "roleUpdate",
             description: "Emitted when a role is updated."
         });
     }
 
-    public async run(oRole, nRole) {
-        const guild = oRole.guild;
+    public async run(oRole: Role, nRole: Role) {
+        const guild = oRole.guild as FoxGuild;
         const enabled = guild.config.serverLogging;
         const log = guild.config.serverlogChannel;
         if (!enabled || !log || !guild.channels.get(log.id)) return;
@@ -24,7 +25,8 @@ export default class extends Event {
             .setFooter(guild.client.user.username)
             .setColor(this.client.brandColor)
             .setDescription(`\n**Old Role:** ${oRole}\n**New Role:** ${nRole}\n**Updated By:** ${audit.entries.first().executor.tag}`);
-        guild.channels.get(log.id).send(embed);
+        const channel = guild.channels.get(log.id) as TextChannel;
+        if (channel) channel.send(embed);
     }
 
 }

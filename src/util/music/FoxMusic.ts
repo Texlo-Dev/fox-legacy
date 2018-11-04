@@ -1,4 +1,4 @@
-import { MessageEmbed } from "discord.js";
+import { MessageEmbed, GuildMember } from "discord.js";
 import ytdl from "ytdl-core";
 import YoutubeAPI from "simple-youtube-api";
 import { googleAPI as apikey } from "../../config.json";
@@ -6,23 +6,25 @@ const youtube = new YoutubeAPI(apikey);
 import Song from "./Song";
 import Queue from "./Queue";
 import { duration } from "moment";
+import { FoxClient } from "../";
+import { FoxMessage, FoxUser } from "../extensions/index.js";
 
 class FoxMusic {
+    public client: FoxClient;
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         this.client = client;
     }
 
-    public async getID(args, message, member) {
+    public async getID(args: string, message: FoxMessage, member: GuildMember) {
         if (args.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
             const times = [];
-            const playlist = await youtube.getPlaylist(args);
-            const videos = await playlist.getVideos();
-
-            if (videos.length > 5 && !message.author.patreonTier) return message.error(` Sorry, but YouTube playlists are limited to 5 songs as a free user. To remove this limit, consider becoming a Patreon today, to recieve exclusive features, including enhanced music playback.\nhttps://www.patreon.com/foxdevteam`);
+            const playlist: any = await youtube.getPlaylist(args);
+            const videos: any = await playlist.getVideos();
+            if (videos.length > 5 && !(message.author as FoxUser).patreonTier) return message.error(` Sorry, but YouTube playlists are limited to 5 songs as a free user. To remove this limit, consider becoming a Patreon today, to recieve exclusive features, including enhanced music playback.\nhttps://www.patreon.com/foxdevteam`);
 
             for (const video of Object.values(videos)) {
-                const video2 = await youtube.getVideoByID(video.id);
+                const video2 = await youtube.getVideoByID((video as any).id);
                 times.push(video2.durationSeconds);
                 await this.handleVideo(video2, message, member, member.voice.channel, true);
             }
@@ -49,8 +51,9 @@ class FoxMusic {
                         .setTimestamp()
                         .setFooter(this.client.user.username);
                     message.send({ embed });
+                    let res;
                     try {
-                        let res = await message.channel.awaitMessages(m => m.author.id === message.author.id, {
+                        res = await message.channel.awaitMessages(m => m.author.id === message.author.id, {
                             max: 1,
                             time: 15000,
                             errors: ["time"]

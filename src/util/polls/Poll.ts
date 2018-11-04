@@ -2,12 +2,12 @@ interface PollOptions {
     name: string;
     type: string;
     channel: any;
-    messageID: string;
+    messageID?: string;
     question: string;
     open: boolean;
     responses: any[];
 }
-export default class Poll {
+export default class Poll implements PollOptions {
     public name: string;
     public type: string;
     public channel: any;

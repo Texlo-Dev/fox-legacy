@@ -1,15 +1,16 @@
-import { Event } from "../util";
+import { Event, FoxClient } from "../util";
+import { FoxGuild } from "../util/extensions";
 
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "guildConfigUpdate",
             description: "Fired when a guild setting has been updated."
         });
     }
 
-    public async run(guild, option) {
+    public async run(guild: FoxGuild, option: any) {
         await guild.config._loadSettings();
         console.log(`Saved settings for ${guild.name}`);
         if (option) console.log(option);

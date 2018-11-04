@@ -1,13 +1,14 @@
-import { Event } from "../util";
+import { Event, FoxClient } from "../util";
 import FoxGuild from "../util/extensions/FoxGuild";
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "giveawayStart",
             description: "Starts the giveaway cache."
         });
     }
+
     public async run(gw) {
         gw = gw instanceof FoxGuild ? gw.giveaways : gw;
         if (!gw.timeout) {

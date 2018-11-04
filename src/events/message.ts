@@ -1,18 +1,20 @@
-import { Event } from "../util";
+import { Event, FoxClient } from "../util";
 import { invProtect, spamProtect, massProtect, badWords } from "../util/core/Automod";
+import { FoxMessage, FoxUser } from "../util/extensions";
+import { TextChannel } from "discord.js";
 
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "message",
             description: "Fires when a message is sent in a server."
         });
     }
 
-    public async run(message) {
+    public async run(message: FoxMessage) {
         if (message.author.bot) return;
-        if (message.guild && !message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
+        if (message.guild && !(message.channel as TextChannel).permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
         if (message.guild) await this.pkgInitialize(message);
         const commandPrefix = message.guild ? message.guild.config.prefix : this.client.commandPrefix;
         const prefix = new RegExp(`^<@!?${this.client.user.id}> |^${this.regExpEsc(commandPrefix || "f)")}`).exec(message.content);
@@ -21,11 +23,13 @@ export default class extends Event {
         const command = this.client.commands.get(args.shift().toLowerCase());
         if (!command) return this.client.emit("unknownCommand", message);
         message._registerCommand(command);
-        if (!message.author.upvoter) await message.author._setUpvoter();
-        if (typeof message.author.patreonTier !== "number") await message.author._setTier();
+
+        const user = message.author as FoxUser;
+        if (!user.upvoter) await user._setUpvoter();
+        if (typeof user.patreonTier !== "number") await user._setTier();
         if (command.guildOnly && !message.guild) return message.send("Sorry, this command can only be ran in a guild channel.");
         if (message.guild.config.disabledCommands ? message.guild.config.disabledCommands.indexOf(command.name) > -1 : null) return message.error(" This command has been disabled by the server administrator.");
-        if (!message.guild.packages.get(command.category).enabled) return message.error(` The **${this.client.capitalizeStr(command.category)}** package is currently disabled. Enable it with the enablepkg command.`);
+        // if (!message.guild.packages.get(command.category).enabled) return message.error(` The **${this.client.capitalizeStr(command.category)}** package is currently disabled. Enable it with the enablepkg command.`);
         if (typeof command.hasPermission === "function" && !command.hasPermission(message)) return message.error(" _**Sorry, but you do not have permission to use this command.**_");
         this.client.commandsRun++;
 
@@ -41,7 +45,7 @@ export default class extends Event {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
-                return message.error(`You must wait ${require("moment").duration(parseInt(timeLeft), "seconds").format("h [hours], m [minutes and] s [seconds]")} before using this command again.`);
+                return message.error(`You must wait ${require("moment").duration(timeLeft, "seconds").format("h [hours], m [minutes and] s [seconds]")} before using this command again.`);
             }
             timestamps.set(message.author.id, now);
             setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
@@ -56,7 +60,7 @@ export default class extends Event {
         }
     }
 
-    public async pkgInitialize(message) {
+    public async pkgInitialize(message: FoxMessage): Promise<void> {
         message.guild.leveling.listen(message);
         message.guild.banking.listen(message);
         try {
@@ -69,7 +73,7 @@ export default class extends Event {
         }
     }
 
-    public regExpEsc(str) {
+    public regExpEsc(str: string) {
         return str.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
     }
 

@@ -1,6 +1,8 @@
 import { MessageEmbed, WebhookClient } from "discord.js";
 import { dbotsKey, discordbotsKey, dboatsKey } from "../config.json";
 import { Event } from "../util";
+import { FoxGuild } from "../util/extensions/";
+import { Permissions } from "../util/Mongo.js";
 
 export default class extends Event {
 
@@ -11,12 +13,12 @@ export default class extends Event {
         });
     }
 
-    public async run(guild) {
+    public async run(guild: FoxGuild) {
         const client = guild.client;
         console.log(`Joined ${guild.name}`);
         client.user.setActivity(`on shard #${client.shard.id}/${client.shard.count}: ${client.guilds.size} servers`);
         await this.initializeServer(guild).catch(console.error);
-        let channel = guild.channels.filter(c => c.type === "text" && c.permissionsFor(guild.me).has(["SEND_MESSAGES", "EMBED_LINKS", "VIEW_CHANNEL"])).sort((a, b) => b.calculatedPosition - a.calculatedPosition).first(); // eslint-disable-line quotes
+        let channel: any = guild.channels.filter(c => c.type === "text" && c.permissionsFor(guild.me).has(["SEND_MESSAGES", "EMBED_LINKS", "VIEW_CHANNEL"])).sort((a, b) => b.calculatedPosition - a.calculatedPosition).first(); // eslint-disable-line quotes
         if (!channel) channel = await guild.members.fetch(guild.owner.user);
         const embed = new MessageEmbed()
             .setColor(this.client.brandColor)
@@ -26,24 +28,24 @@ export default class extends Event {
             .addField("Need Help?", `Feel free to join the official ${client.user.username} server, where you can receive support, chat with fellow server owners, and make feature requests at https://discord.gg/DfsqmaV.`);
         channel.send({ embed });
 
-        client.axios("POST", {
+        client.http("POST", {
             url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
             body: { shard_id: client.shard.id, shard_count: client.shard.count, server_count: client.guilds.size },
             headers: { Authorization: dbotsKey }
-        }).then(console.log("Updated dbots.org status.")).catch(console.error);
+        }).then(() => console.log("Updated dbots.org status.")).catch(console.error);
 
-        client.axios("POST", {
+        client.http("POST", {
             url: `https://bots.discord.pw/api/bots/${client.user.id}/stats`,
             body: { shard_id: client.shard.id, shard_count: client.shard.count, server_count: client.guilds.size },
             headers: { Authorization: discordbotsKey }
-        }).then(console.log("Updated bots.discord.pw status.")).catch(console.error);
+        }).then(() => console.log("Updated bots.discord.pw status.")).catch(console.error);
 
         const num = (await this.client.shard.fetchClientValues("guilds.size")).reduce((prev, val) => prev + val, 0);
-        client.axios("POST", {
+        client.http("POST", {
             url: `https://discord.boats/api/bot/${client.user.id}`,
             body: { server_count: num },
             headers: { Authorization: dboatsKey }
-        }).then(console.log("Updated dboats.org status.")).catch(console.error);
+        }).then(() => console.log("Updated dboats.org status.")).catch(console.error);
 
         const webhook = new WebhookClient("364566963621462017", "l4iJUal1lMrAlDYGr9YCvBN2SareiJD4K-5RAnMaiIpQBoIEAwiG9du7MWZzbTRtAmPX");
         const embe = new MessageEmbed()
@@ -56,8 +58,8 @@ export default class extends Event {
         webhook.send({ embeds: [embe] });
     }
 
-    public async initializeServer(guild) {
-        const perms = await guild.client.mongo.permissions.findOne({ guildID: guild.id });
+    public async initializeServer(guild: FoxGuild) {
+        const perms: Permissions = await guild.client.mongo.permissions.findOne({ guildID: guild.id });
         if (!perms) {
             const server = new guild.client.mongo.permissions({
                 guildID: guild.id,

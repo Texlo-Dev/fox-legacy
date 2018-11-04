@@ -1,16 +1,23 @@
-import { Collection } from "discord.js";
+import { Collection, TextChannel } from "discord.js";
 import Giveaway from "./Giveaway";
 import moment, { duration } from "moment";
-export default class GiveawayStore extends Collection {
+import { FoxGuild } from "../extensions";
+import { FoxClient } from "..";
+import { Giveaways } from "../Mongo";
 
-    public constructor(guild) {
+export default class GiveawayStore extends Collection<any, any> {
+    public guild: FoxGuild;
+    public client: FoxClient;
+    public timeout?: any;
+
+    public constructor(guild: FoxGuild) {
         super();
         this.guild = guild;
         Object.defineProperty(this, "client", { value: guild.client });
     }
 
-    public async _cache() {
-        const giveaways = await this.client.mongo.giveaways.find({ guildID: this.guild.id });
+    public async _cache(): Promise<boolean> {
+        const giveaways: Giveaways[] = await this.client.mongo.giveaways.find({ guildID: this.guild.id });
         if (!giveaways) return;
         const mapped = giveaways.map(g => g.get());
         if (!mapped.length) return;
@@ -21,7 +28,7 @@ export default class GiveawayStore extends Collection {
         return true;
     }
 
-    public begin() {
+    public begin(): void {
         this.forEach(giveaway => {
             if (giveaway.running) {
                 this.listenGiveaway(giveaway);
@@ -29,7 +36,7 @@ export default class GiveawayStore extends Collection {
         });
     }
 
-    public array() {
+    public array(): Giveaway[] {
         const arr = super.array();
         for (const gw of arr) {
             gw.endDate = moment(new Date(gw.endDate)).format("MM/DD/YY [at] h:mm A");
@@ -38,9 +45,9 @@ export default class GiveawayStore extends Collection {
         return arr;
     }
 
-    public async listenGiveaway(giveaway) {
+    public async listenGiveaway(giveaway: Giveaway): Promise<Object> {
         let time = giveaway.endDate;
-        const channel = this.guild.channels.get(giveaway.channel.id);
+        const channel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
         const gw = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, name: giveaway.name });
         const message = channel ? await channel.messages.fetch(giveaway.messageID).catch(() => null) : null;
         if (giveaway.ended) time = 0;
@@ -102,13 +109,13 @@ export default class GiveawayStore extends Collection {
         }
     }
 
-    public async reroll(giveaway) {
-        const channel = this.guild.channels.get(giveaway.channel.id);
+    public async reroll(giveaway: Giveaway): Promise<Object>{
+        const channel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
         const message = channel ? await channel.messages.fetch(giveaway.messageID) : null;
         const gw = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, name: giveaway.name });
         if (channel && message) {
             const embed = message.embeds[0];
-            let reaction = giveaway.reactionEmote ? message.reactions.get(giveaway.reactionEmote.id) : message.reactions.get("495031665803001876");
+            let reaction: any = giveaway.reactionEmote ? message.reactions.get(giveaway.reactionEmote.id) : message.reactions.get("495031665803001876");
             if (reaction) reaction = await reaction.users.fetch();
             if (!reaction || !reaction.filter(u => !u.bot).size) {
                 embed.title = `Giveaway Name: ${giveaway.name}`;
@@ -124,6 +131,7 @@ export default class GiveawayStore extends Collection {
                 const winner = reaction.filter(u => !u.bot).random(giveaway.maxWinners);
                 embed.title = `Giveaway Name: ${giveaway.name}`;
                 embed.description = `${winner.length > 1 ? `New Winners: ${winner.join(", ")}` : `New Winner: ${winner[0]}`}\nIf you didn't win this time around, there's always next time!`;
+                // @ts-ignore
                 embed.timestamp = new Date(giveaway.endDate);
                 embed.footer.text = `The Giveaway Ended At`;
                 embed.author.name = "Giveaway Re-rolled!";
@@ -141,8 +149,8 @@ export default class GiveawayStore extends Collection {
         }
     }
 
-    public async pause(giveaway) {
-        const channel = this.guild.channels.get(giveaway.channel.id);
+    public async pause(giveaway: Giveaway): Promise<Object> {
+        const channel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
         const message = channel ? await channel.messages.fetch(giveaway.messageID).catch(() => null) : null;
         const gw = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, name: giveaway.name });
         if (channel && message && !giveaway.paused) {
@@ -162,14 +170,15 @@ export default class GiveawayStore extends Collection {
         }
     }
 
-    public async resume(giveaway) {
-        const channel = this.guild.channels.get(giveaway.channel.id);
+    public async resume(giveaway: Giveaway): Promise<Object> {
+        const channel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
         const message = channel ? await channel.messages.fetch(giveaway.messageID) : null;
         const gw = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, name: giveaway.name });
         if (channel && message && giveaway.paused) {
             const newEnd = (gw.get("endDate") + giveaway.paused) - Date.now();
             const embed = message.embeds[0];
             embed.description = embed.description.replace(embed.description, `In order to enter this giveaway, make sure to react with ${giveaway.reactionEmote ? this.guild.emojis.get(giveaway.reactionEmote.id) : "<:phat:495031665803001876>"}.\nPossible winners: **${giveaway.maxWinners}**\nYou have **${newEnd}** remaining to enter.`.replace(newEnd, `${duration(newEnd, "milliseconds").format("d [days], h [hours], m [minutes and] s [seconds]")}`));
+            // @ts-ignore
             embed.timestamp = new Date(gw.get("endDate") + giveaway.paused);
             embed.footer.text = "The Giveaway Ends At";
             message.edit({ embed });
@@ -211,7 +220,7 @@ export default class GiveawayStore extends Collection {
                 .setDescription(`In order to enter this giveaway, make sure to react with ${giveaway.reactionEmote ? this.guild.emojis.get(giveaway.reactionEmote.id) : "<:phat:495031665803001876>"}.\nPossible winners: **${gw.maxWinners}**\nYou have **${gw.timeRemaining}** remaining to enter.`.replace(gw.timeRemaining, `${duration(gw.timeRemaining, "milliseconds").format("d [days], h [hours], m [minutes and] s [seconds]")}`))
                 .setTimestamp(new Date(gw.endDate))
                 .setFooter("The Giveaway Ends At");
-            const m = await this.guild.channels.get(giveaway.channel.id).send(embed);
+            const m: any = (await this.guild.channels.get(giveaway.channel.id) as TextChannel).send(embed);
             gw.messageID = m.id;
             super.set(gw.name, gw);
             const entry = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, endDate: gw.endDate, name: gw.name });

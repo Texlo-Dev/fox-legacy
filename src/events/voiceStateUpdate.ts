@@ -1,5 +1,6 @@
-import { MessageEmbed } from "discord.js";
+import { MessageEmbed, VoiceState, TextChannel } from "discord.js";
 import { Event } from "../util";
+import { FoxGuild } from "../util/extensions";
 
 export default class extends Event {
 
@@ -10,13 +11,14 @@ export default class extends Event {
         });
     }
 
-    public async run(oState, nState) {
+    public async run(oState: VoiceState, nState: VoiceState) {
         const hasJoined = !oState.channel;
         const channel = oState.channel ? oState.channel : nState.channel;
-        const enabled = channel.guild.config.serverLogging;
-        const log = channel.guild.config.serverlogChannel;
+        const guild = channel.guild as FoxGuild;
+        const enabled = guild.config.serverLogging;
+        const log = guild.config.serverlogChannel;
         if (!enabled || !log || !channel.guild.channels.get(log.id)) return;
-        if (channel.guild.config.enabledEvents.indexOf(this.name) < 0) return;
+        if (guild.config.enabledEvents.indexOf(this.name) < 0) return;
         const embed = new MessageEmbed()
             .setAuthor(hasJoined ? "Joined Voice Channel" : oState.channel && nState.channel ? "Changed Voice Channel" : "Left Voice Channel", channel.guild.client.user.displayAvatarURL({}))
             .setTimestamp()
@@ -24,7 +26,9 @@ export default class extends Event {
             .setFooter(channel.guild.client.user.username)
             .setColor(this.client.brandColor)
             .setDescription(`\n**Member:** ${oState.member.user.tag}\n${oState.channel && nState.channel ? `**Went From:** ${oState.channel.name}\n**To:** ${nState.channel.name}` : `**Channel:** ${channel.name}`}`);
-        channel.guild.channels.get(log.id).send(embed);
+        const cl = guild.channels.get(log.id) as TextChannel;
+        if (cl) cl.send(embed);
+
     }
 
 }

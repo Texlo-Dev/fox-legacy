@@ -1,16 +1,19 @@
-export default async message => {
-    const entry = await message.client.mongo.banking.findOne({
+import { FoxMessage } from "../extensions";
+import { FoxBank, FoxLeveling } from "../Mongo";
+
+export default async (message: FoxMessage): Promise<void> => {
+    const entry: FoxBank = await message.client.mongo.banking.findOne({
         guildID: message.guild.id,
         userID: message.author.id
     });
     if (!entry) return;
-    const oldlevel = entry.get("level"),
-        oldxp = entry.get("XP"),
-        oldNextLevel = entry.get("toNextLevel"),
-        oldtotal = entry.get("totalXP");
+    const oldlevel: number = entry.get("level"),
+        oldxp: number = entry.get("XP"),
+        oldNextLevel: number = entry.get("toNextLevel"),
+        oldtotal: number = entry.get("totalXP");
     if (!oldlevel || !oldxp || !oldNextLevel || !oldtotal) return;
 
-    const memberdata = await message.client.mongo.leveling.findOne({ guildID: message.guild.id, userID: message.author.id });
+    const memberdata: FoxLeveling = await message.client.mongo.leveling.findOne({ guildID: message.guild.id, userID: message.author.id });
     if (memberdata && !memberdata.get("v2")) {
         memberdata.set({
             guildID: message.guild.id,
@@ -23,7 +26,7 @@ export default async message => {
         });
         await memberdata.save();
     } else if (!memberdata) {
-        const newMember = new message.client.mongo.leveling({
+        const newMember: FoxLeveling = new message.client.mongo.leveling({
             guildID: message.guild.id,
             userID: message.author.id,
             level: oldlevel,

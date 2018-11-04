@@ -1,19 +1,21 @@
-import { Event } from "../util";
+import { Event, FoxClient } from "../util";
+import { TextChannel } from "discord.js";
+import { FoxGuild, FoxUser } from "../util/extensions";
 
 export default class extends Event {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "typingStart",
             description: "Fired when a user starts typing in a channel."
         });
     }
 
-    public async run(channel, user) {
-        const guild = channel.guild;
+    public async run(channel: TextChannel, user: FoxUser) {
+        const guild = channel.guild as FoxGuild;
         if (!guild) return;
-        const member = await guild.members.fetch(user);
-        const client = channel.client;
+        const member = await guild.members.fetch(user.id);
+        const client = channel.client as FoxClient;
         await guild.config._loadSettings();
         guild.packages.forEach(p => p._setEnabled());
         const ownerRole = guild.roles.find(role => role.name === "Server Owner");

@@ -1,5 +1,5 @@
 import { Command, FoxClient } from "../../util";
-import { FoxMessage } from "../../util/types";
+import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
     public constructor(client: FoxClient) {

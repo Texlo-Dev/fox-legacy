@@ -3,7 +3,7 @@
 		"no-inferrable-types": [false],
 		"no-unused-expression": true,
 		"no-duplicate-variable": true,
-		"no-shadowed-variable": true,
+		"no-shadowed-variable": false,
 		"comment-format": [
 			true, "check-space"
 		],
