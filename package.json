@@ -47,6 +47,7 @@
     "simple-youtube-api": "^5.0.1",
     "snekfetch": "^4.0.4",
     "translate": "^1.0.3",
+    "typescript": "^3.1.6",
     "urban": "^0.3.1",
     "uws": "^9.14.0",
     "ytdl-core": "github:fent/node-ytdl-core#master"
@@ -58,8 +59,7 @@
     "node-sass": "^4.9.2",
     "ts-node": "^7.0.1",
     "tsc-watch": "^1.0.30",
-    "tslint": "^5.11.0",
-    "typescript": "^3.1.6"
+    "tslint": "^5.11.0"
   },
   "repository": {
     "type": "git",
