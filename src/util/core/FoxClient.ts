@@ -106,7 +106,7 @@ class FoxClient extends Client {
         return axios({
             url: "https://hastebin.com/documents",
             data: input
-        }).then(res => `https://hastebin.com/${key}${extension ? `.${extension}` : ""}`)
+        }).then(res => `https://hastebin.com/${res.data.key}${extension ? `.${extension}` : ""}`)
         .catch(err => err);
     }
 
