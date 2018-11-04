@@ -1,5 +1,4 @@
 import { Client, Collection, MessageStore, TextChannel } from "discord.js";
-import "../types/extensions.d.ts";
 import {
     CommandStore,
     FoxMusic,
