@@ -23,8 +23,6 @@ export default class FoxCommand extends Command {
             console.error(error);
             return null;
         });
-        console.log(obj);
-
         if (!obj) return message.error("It seems like the trivia API is currently down. Please try again later.");
         let trivia = game[`${message.guild.id}${message.author.id}`];
         if (!trivia) {
@@ -56,7 +54,7 @@ export default class FoxCommand extends Command {
             : res = await message.sendPrompt(`Category: *${obj.category}*.\n${obj.type === "boolean" ? `True or False: ${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}` : `${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}`}\n\nPlease enter a number between 1 and 4.`, 15000);
         if (res === undefined) message.channel.send(`Time is up!`);
         if (res === 0) return 0;
-        if (!this.isCorrect(res, obj)) { message.send(`<:nicexmark:495362785010647041>  Sorry, wrong answer! Correct answer is "${obj.correct_answer}".`); } else {
+        if (!this.isCorrect(res, obj)) { message.channel.send(`<:nicexmark:495362785010647041>  Sorry, wrong answer! Correct answer is "${obj.correct_answer}".`); } else {
             await message.channel.send("Correct!");
             trivia.correct.push(true);
         }
