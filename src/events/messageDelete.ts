@@ -28,9 +28,11 @@ export default class extends Event {
             .setColor(this.client.brandColor)
             .setDescription(`\n**Channel:** ${message.channel}\n**Author:** ${message.author.tag}\n**Content:**\n${message.content}\n\n**Message ID:** ${message.id}`)
             .setFooter(message.client.user.username);
-        if (!modlog) return;
-        if (!serverlog) return;
-        serverlog.send({ embed });
+        if (modlog) {
+            const serverlog = message.guild.channels.get(modlog.id) as TextChannel;
+            if (!serverlog) return;
+            serverlog.send({ embed });
+        }
     }
 
 }

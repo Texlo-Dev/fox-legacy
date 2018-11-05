@@ -1,8 +1,21 @@
 import { User, GuildMember, Message } from "discord.js";
+import { FoxGuild, FoxMessage } from "../extensions";
+import { FoxClient } from "..";
+import { FoxBank } from "../Mongo";
+
+interface MoneyOptions {
+    guild: FoxGuild;
+    amount?: number;
+}
 
 export default class Banking {
+    public guild: FoxGuild;
+    public client: FoxClient;
+    public shopItems: any[];
+    public currency: string;
+    public shopName: string;
 
-    public constructor(guild) {
+    public constructor(guild: FoxGuild) {
         this.guild = guild;
         this.client = guild.client;
         this.shopItems = [];
@@ -10,8 +23,8 @@ export default class Banking {
         this.shopName = "The Fox Store";
     }
 
-    public async _loadSettings() {
-        const settings = await this.guild.client.mongo.banking.findOne({
+    public async _loadSettings(): Promise<void> {
+        const settings: FoxBank = await this.guild.client.mongo.banking.findOne({
             guildID: this.guild.id,
             type: "settings"
         });
@@ -30,15 +43,16 @@ export default class Banking {
         }
     }
 
-    public minify() {
+    public minify(): Banking {
+        // @ts-ignore
         const current = { ...this };
         delete current.guild;
         delete current.client;
         return current;
     }
 
-    public async set(key, value) {
-        const settings = await this.guild.client.mongo.banking.findOne({
+    public async set(key: string, value: any): Promise<Object> {
+        const settings: FoxBank = await this.guild.client.mongo.banking.findOne({
             guildID: this.guild.id,
             type: "settings"
         });
@@ -51,13 +65,13 @@ export default class Banking {
         return new Promise(r => setTimeout(() => r(this.minify()), 50));
     }
 
-    public async listen(message) {
+    public async listen(message: FoxMessage) {
         if (!message.guild) return;
         if (!Banking.validate(message)) return;
         if (message.command) return;
         if (!message.guild.packages.get("Economy").enabled) return;
 
-        const entry = await message.guild.client.mongo.banking.findOne({
+        const entry: FoxBank = await message.guild.client.mongo.banking.findOne({
             guildID: message.guild.id,
             userID: message.author.id
         });
@@ -76,13 +90,13 @@ export default class Banking {
         }
     }
 
-    public static randomNum(min, max) {
+    public static randomNum(min: number, max: number): number {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min;
     }
 
-    public static validate(message) {
+    public static validate(message: FoxMessage): boolean {
         const text = message.content.toLowerCase();
         const mentions = message.mentions;
 
@@ -99,7 +113,7 @@ export default class Banking {
         const necessarySubstance = 10;
         if (mentions.roles.some(r => [message.guild.id].includes(r.id))) return false;
         let substance = 0;
-        if (text.length > "lol xD".length) (substance += 400) * ((substance - 5) / 1995) + 7; // eslint-disable-line
+        if (text.length > "lol xD".length) (substance += 400) * ((substance - 5) / 1995) + 7; // tslint:disable-line
         substance += substantialWords.reduce((num, word) => text.includes(word) ? num + 2 : num, 0);
         substance -= insubstantialWords.reduce((num, word) => text.includes(word) ? num + 1 : num, 0);
         if (mentions.users.size > 0) substance -= mentions.users.size;
@@ -109,8 +123,8 @@ export default class Banking {
         return substance >= necessarySubstance;
     }
 
-    public async balanceOf(member) {
-        const mem = await member.guild.client.mongo.banking.findOne({
+    public async balanceOf(member: GuildMember): Promise<number> {
+        const mem: FoxBank = await (member.guild as FoxGuild).client.mongo.banking.findOne({
             guildID: member.guild.id,
             userID: member.id
         });
@@ -118,41 +132,41 @@ export default class Banking {
         return mem.get("money");
     }
 
-    public async addMoney(user, options = {}) {
+    public async addMoney(user: any, options: MoneyOptions): Promise<boolean>{
         if (user instanceof User || user instanceof GuildMember) user = user.id;
         if (user instanceof Message) user = user.author.id;
-        const giveMember = await options.guild.client.mongo.banking.findOne({
+        const giveMember: FoxBank = await options.guild.client.mongo.banking.findOne({
             guildID: options.guild.id,
             userID: user
         });
         if (!giveMember) return null;
-        const toUser = giveMember.get("money") + options.amount;
+        const toUser: number = giveMember.get("money") + options.amount;
         giveMember.set({ money: toUser });
         await giveMember.save();
         return true;
     }
 
-    public async removeMoney(user, options = {}) {
+    public async removeMoney(user, options: MoneyOptions): Promise<string|boolean> {
         if (user instanceof User || user instanceof GuildMember) user = user.id;
         if (user instanceof Message) user = user.author.id;
 
-        const giveMember = await options.guild.client.mongo.banking.findOne({
+        const giveMember: FoxBank = await options.guild.client.mongo.banking.findOne({
             guildID: options.guild.id,
             userID: user
         });
         if (!giveMember) return "Account";
-        const toUser = giveMember.get("money") - options.amount;
+        const toUser: number = giveMember.get("money") - options.amount;
         if (toUser < 0) return null;
         giveMember.set({ money: toUser });
         await giveMember.save();
         return true;
     }
 
-    public async giveDaily(user, options = {}) {
+    public async giveDaily(user, options: MoneyOptions): Promise<number|boolean> {
         if (user instanceof User || user instanceof GuildMember) user = user.id;
         if (user instanceof Message) user = user.author.id;
 
-        const entry = await options.guild.client.mongo.banking.findOne({
+        const entry: FoxBank = await options.guild.client.mongo.banking.findOne({
             guildID: options.guild.id,
             userID: user
         });

@@ -59,7 +59,7 @@ class FoxMusic {
                             errors: ["time"]
                         });
                     } catch (error) {
-                        return message.error(" Sorry, but that wasn't a valid selection.");
+                        return message.error("Sorry, but that wasn't a valid selection.");
                     }
                     const index = parseInt(res.first().content);
                     const video = await youtube.getVideoByID(videos[index - 1].id);
