@@ -12,7 +12,7 @@ import { User, GuildMember, Message, Channel, Role } from "discord.js";
 import { FoxClient } from "..";
 import { FoxUser, FoxMessage } from "../extensions";
 import { CommandInfo } from "../../types";
-class Command {
+class Command implements CommandInfo {
     public client: FoxClient;
     public name: string;
     public description: string;
@@ -27,7 +27,6 @@ class Command {
     public enabled?: boolean;
     public category?: any;
     public executor?: User;
-    public run: (message: FoxMessage, args: string[], prefix: string) => {};
 
     public constructor(client: FoxClient, info: CommandInfo) {
         Object.defineProperty(this, "client", { value: client });
@@ -47,6 +46,10 @@ class Command {
 
     public hasPermission(message: FoxMessage): boolean { // eslint-disable-line
         return true;
+    }
+
+    public run(message: FoxMessage, args: string[], prefix: string) {
+        // in other classes.
     }
 
     public reload(): Promise<Command> {

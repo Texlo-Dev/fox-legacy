@@ -6,6 +6,9 @@ export default class Event {
     public description: string;
     public enabled: boolean;
     public client: FoxClient;
+    public run(...args: any) {
+        // In other files
+    }
 
     public constructor(client: FoxClient, info: Options) {
         this.name = info.name;

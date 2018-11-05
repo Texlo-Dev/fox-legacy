@@ -103,10 +103,10 @@ class FoxClient extends Client {
     }
 
     public async haste(input: string, extension: string): Promise<String> {
-        return axios({
+        return this.http("POST", {
             url: "https://hastebin.com/documents",
-            data: input
-        }).then(res => `https://hastebin.com/${res.data.key}${extension ? `.${extension}` : ""}`)
+            body: input
+        }).then(res => `https://hastebin.com/${res.key}${extension ? `.${extension}` : ""}`)
         .catch(err => err);
     }
 
