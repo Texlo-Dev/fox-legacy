@@ -1,4 +1,4 @@
-import { MessageEmbed, GuildMember } from "discord.js";
+import { MessageEmbed, GuildMember, StreamDispatcher, TextChannel } from "discord.js";
 import ytdl from "ytdl-core";
 import YoutubeAPI from "simple-youtube-api";
 import { googleAPI as apikey } from "../../config.json";
@@ -6,8 +6,9 @@ const youtube = new YoutubeAPI(apikey);
 import Song from "./Song";
 import Queue from "./Queue";
 import { duration } from "moment";
+import "moment-duration-format";
 import { FoxClient } from "../";
-import { FoxMessage, FoxUser } from "../extensions/index.js";
+import { FoxMessage, FoxUser, FoxGuild } from "../extensions/index.js";
 
 class FoxMusic {
     public client: FoxClient;
@@ -72,8 +73,8 @@ class FoxMusic {
         }
     }
 
-    public async play(guild, song) {
-        const serverQueue = guild.queue;
+    public play(guild: FoxGuild, song: Song): void {
+        const serverQueue: Queue = guild.queue;
         if (!song) {
             setTimeout(() => {
                 serverQueue.voiceChannel.leave();
@@ -83,8 +84,7 @@ class FoxMusic {
             return;
         }
         serverQueue.skippers = [];
-        console.log(song.url);
-        const dispatcher = serverQueue.connection.play(ytdl(song.url, { filter: "audioonly" }), { bitrate: "auto" });
+        const dispatcher: StreamDispatcher = serverQueue.connection.play(ytdl(song.url, { filter: "audioonly" }), { bitrate: "auto" });
         const embed = new MessageEmbed()
             .setThumbnail(song.thumbnail)
             .setAuthor(`Music`, this.client.user.displayAvatarURL())
@@ -98,10 +98,9 @@ class FoxMusic {
         });
     }
 
-    public async handleVideo(video, message, member, voiceChannel, playlist = false) {
-        const upvoter = message.author.upvoter;
+    public async handleVideo(video, message: FoxMessage, member, voiceChannel, playlist = false) {
+        const upvoter = message.author;
         const song = new Song(this.client, {
-            id: video.id,
             title: video.title,
             author: video.channel.title,
             url: `https://www.youtube.com/watch?v=${video.id}`,

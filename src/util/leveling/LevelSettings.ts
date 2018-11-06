@@ -42,7 +42,8 @@ export default class Leveling {
     }
 
     public minify(): Leveling {
-        const current = { ...this };
+        // @ts-ignore
+        const current: Leveling = { ...this };
         delete current.guild;
         return current;
     }

@@ -17,7 +17,7 @@ export interface CustOptions {
     dmCommand: boolean;
     deleteCommand: boolean;
     requiredPerms: string;
-    args: any;
+    args?: any;
     usage: string;
     template: string;
 }

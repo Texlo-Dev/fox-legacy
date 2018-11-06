@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, util as splitMessage, CollectorFilter, MessageOptions, Structures } from "discord.js";
+import { Message, MessageEmbed, Util as splitMessage, CollectorFilter, MessageOptions, Structures } from "discord.js";
 import { Command, FoxClient } from "..";
 import { FoxGuild } from ".";
 export default Structures.extend("Message", mes => {

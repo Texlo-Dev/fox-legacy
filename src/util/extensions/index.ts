@@ -1,4 +1,4 @@
-import { Guild, Message, User, Collection } from "discord.js";
+import { Guild, Message, User, Collection, TextChannel } from "discord.js";
 import {
     Banking,
     CustomCommands,
@@ -44,6 +44,8 @@ export interface FoxMessage extends Message {
     _registerCommand: Function;
     send: Function;
     sendPrompt: Function;
+    author: FoxUser;
+    channel: TextChannel;
 }
 
 export interface FoxUser extends User {

@@ -41,7 +41,7 @@ export default class PermStore extends Collection<any, any> {
         }
     }
 
-    public async set(perm: string, target: any, status: string, channel: any): Promise<Object> {
+    public async add(perm: string, target: any, status: string, channel: any): Promise<Object> {
         if (!["neutral", "allowed", "denied"].includes(status)) throw new Error("Invalid status.");
         const entry: Permissions = await this.guild.client.mongo.permissions.findOne({ guildID: this.guild.id });
         if (!entry) {
@@ -75,7 +75,7 @@ export default class PermStore extends Collection<any, any> {
         return new Promise(res => setTimeout(() => res(super.array()), 70));
     }
 
-    public async delete(target: string): Promise<Object> {
+    public async remove(target: string): Promise<Object> {
         const entry: Permissions = await this.guild.client.mongo.permissions.findOne({ guildID: this.guild.id });
         if (!entry) throw new Error("Server overwrites do not exist.");
         const ow: any[] = entry.get("overwrites");

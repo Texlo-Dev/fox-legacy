@@ -30,7 +30,7 @@ export default class PollStore extends Collection<any, any> {
         return true;
     }
 
-    public async set(name: string, obj: any): Promise<Object> {
+    public async add(name: string, obj: any): Promise<Object> {
         if (super.has(name)) throw new Error("Poll already exists.");
         if (obj.channel instanceof String) obj.channel = this.guild.channels.get(obj.channel);
         const data = {
@@ -88,7 +88,7 @@ export default class PollStore extends Collection<any, any> {
         }
     }
 
-    public async delete(name: string) {
+    public async remove(name: string) {
         if (!super.has(name)) throw new Error("Poll does not exists in collection.");
         const poll: Polls = await this.guild.client.mongo.polls.findOne({ guildID: this.guild.id, name });
         if (!poll) throw new Error("Could not resolve giveaway.");
@@ -101,9 +101,9 @@ export default class PollStore extends Collection<any, any> {
         });
     }
 
-    public async gatherData(poll) {
+    public async gatherData(poll: Poll): Promise<object> {
         if (!poll) throw new Error("No poll was provided.");
-        const channel = this.guild.channels.get(poll.channel.id);
+        const channel = this.guild.channels.get(poll.channel.id) as TextChannel;
         const message = await channel.messages.fetch(poll.messageID);
         if (!channel || !message) throw new Error("Invalid channel/message.");
 

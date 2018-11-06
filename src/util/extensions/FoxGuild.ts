@@ -42,7 +42,6 @@ export default Structures.extend("Guild", guild => {
                 maxban: 9
             });
             this.queue = null;
-            this.shard = this.client.shard.id;
             this.leveling = new Leveling(this);
             this.banking = new Banking(this);
             this.polls = new Polls(this);
