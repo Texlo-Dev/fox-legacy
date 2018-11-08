@@ -11,31 +11,6 @@ interface MoneyOptions {
 
 export default class Banking {
 
-    public static async addMoney(user: any, options: MoneyOptions): Promise<boolean> {
-        if (user instanceof User || user instanceof GuildMember) { user = user.id; }
-        if (user instanceof Message) { user = user.author.id; }
-        const giveMember: FoxBank = await options.guild.client.mongo.banking.findOne({
-            guildID: options.guild.id,
-            userID: user,
-        });
-        if (!giveMember) { return undefined; }
-        const toUser: number = giveMember.get("money") + options.amount;
-        giveMember.set({ money: toUser });
-        await giveMember.save();
-
-        return true;
-    }
-
-    public static async balanceOf(member: GuildMember): Promise<number> {
-        const mem: FoxBank = await (member.guild as FoxGuild).client.mongo.banking.findOne({
-            guildID: member.guild.id,
-            userID: member.id,
-        });
-        if (!mem) { return NaN; }
-
-        return mem.get("money");
-    }
-
     public static checkEligibility(member: GuildMember, channel: TextChannel): boolean {
         const excludedRoles: Role[] = (member.guild as FoxGuild).banking.excludedRoles;
         const excludedChannels: TextChannel[] = (member.guild as FoxGuild).banking.excludedChannels;
@@ -48,49 +23,11 @@ export default class Banking {
         return true;
     }
 
-    public static async giveDaily(user: any, options: MoneyOptions): Promise<number | boolean> {
-        if (user instanceof User || user instanceof GuildMember) { user = user.id; }
-        if (user instanceof Message) { user = user.author.id; }
-
-        const entry: FoxBank = await options.guild.client.mongo.banking.findOne({
-            guildID: options.guild.id,
-            userID: user,
-        });
-        if (!entry) { return false; }
-        const time: number = entry.get("timeUntilDaily") - Date.now();
-        if (entry.get("timeUntilDaily") >= Date.now()) { return time; }
-        const toUser: number = entry.get("money") + 500;
-        entry.set({
-            money: toUser,
-            timeUntilDaily: Date.now() + 86400000,
-        });
-        await entry.save();
-
-        return true;
-    }
-
     public static randomNum(min: number, max: number): number {
         min = Math.ceil(min);
         max = Math.floor(max);
 
         return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    public static async removeMoney(user, options: MoneyOptions): Promise<string | boolean> {
-        if (user instanceof User || user instanceof GuildMember) { user = user.id; }
-        if (user instanceof Message) { user = user.author.id; }
-
-        const giveMember: FoxBank = await options.guild.client.mongo.banking.findOne({
-            guildID: options.guild.id,
-            userID: user,
-        });
-        if (!giveMember) { return "Account"; }
-        const toUser: number = giveMember.get("money") - options.amount;
-        if (toUser < 0) { return null; }
-        giveMember.set({ money: toUser });
-        await giveMember.save();
-
-        return true;
     }
 
     public static validate(message: FoxMessage): boolean {
@@ -166,6 +103,52 @@ export default class Banking {
         }
     }
 
+    public async addMoney(user: any, options: MoneyOptions): Promise<boolean> {
+        if (user instanceof User || user instanceof GuildMember) { user = user.id; }
+        if (user instanceof Message) { user = user.author.id; }
+        const giveMember: FoxBank = await options.guild.client.mongo.banking.findOne({
+            guildID: options.guild.id,
+            userID: user,
+        });
+        if (!giveMember) { return undefined; }
+        const toUser: number = giveMember.get("money") + options.amount;
+        giveMember.set({ money: toUser });
+        await giveMember.save();
+
+        return true;
+    }
+
+    public async balanceOf(member: GuildMember): Promise<number> {
+        const mem: FoxBank = await (member.guild as FoxGuild).client.mongo.banking.findOne({
+            guildID: member.guild.id,
+            userID: member.id,
+        });
+        if (!mem) { return NaN; }
+
+        return mem.get("money");
+    }
+
+    public async giveDaily(user: any, options: MoneyOptions): Promise<number | boolean> {
+        if (user instanceof User || user instanceof GuildMember) { user = user.id; }
+        if (user instanceof Message) { user = user.author.id; }
+
+        const entry: FoxBank = await options.guild.client.mongo.banking.findOne({
+            guildID: options.guild.id,
+            userID: user,
+        });
+        if (!entry) { return false; }
+        const time: number = entry.get("timeUntilDaily") - Date.now();
+        if (entry.get("timeUntilDaily") >= Date.now()) { return time; }
+        const toUser: number = entry.get("money") + 500;
+        entry.set({
+            money: toUser,
+            timeUntilDaily: Date.now() + 86400000,
+        });
+        await entry.save();
+
+        return true;
+    }
+
     public async listen(message: FoxMessage): Promise<Banking> {
         if (!message.guild) { return; }
         if (!Banking.validate(message)) { return; }
@@ -202,6 +185,23 @@ export default class Banking {
         delete current.client;
 
         return current;
+    }
+
+    public async removeMoney(user, options: MoneyOptions): Promise<string | boolean> {
+        if (user instanceof User || user instanceof GuildMember) { user = user.id; }
+        if (user instanceof Message) { user = user.author.id; }
+
+        const giveMember: FoxBank = await options.guild.client.mongo.banking.findOne({
+            guildID: options.guild.id,
+            userID: user,
+        });
+        if (!giveMember) { return "Account"; }
+        const toUser: number = giveMember.get("money") - options.amount;
+        if (toUser < 0) { return null; }
+        giveMember.set({ money: toUser });
+        await giveMember.save();
+
+        return true;
     }
 
     public async set(key: string, value: any): Promise<Object> {
