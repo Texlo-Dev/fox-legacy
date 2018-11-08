@@ -1,11 +1,13 @@
-const router = require("polka")();
+// tslint:disable:no-magic-numbers
+import polka from "polka";
 import { get } from "axios";
-import authMiddleware from "../util/authMiddleware";
 import { Permissions } from "discord.js";
+import authMiddleware from "../util/authMiddleware";
+const router = polka();
 
 router.get("/", authMiddleware, async (req, res) => {
     let { data: guilds } = await get("https://discordapp.com/api/users/@me/guilds", { headers: { Authorization: `Bearer ${req.auth}` } }).catch(() => 0);
-    if (!guilds) return res.json(401, { error: "Invalid Credentials." });
+    if (!guilds) { return res.json(401, { error: "Invalid Credentials." }); }
     guilds = guilds.filter(guild => guild.owner || new Permissions(guild.permissions).has("MANAGE_GUILD"));
     for (const guild of guilds) {
         const arr = await req.client.shard.broadcastEval(`this.guilds.has('${guild.id}')`);
@@ -23,7 +25,7 @@ router.get("/:guildID", authMiddleware, async (req, res) => {
                 this.guilds.get('${guildID}');
             }
         `).catch(err => { throw err; });
-        if (!guild.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!guild.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, guild.filter(r => r)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -42,7 +44,7 @@ router.get("/:guildID/packages", authMiddleware, async (req, res) => {
                 guild.packages
             }
         `).catch(err => { throw err; });
-        if (!guild.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!guild.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, guild.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -58,7 +60,7 @@ router.get("/:guildID/emojis", async (req, res) => {
             guild.emojis.array();
         }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -75,7 +77,7 @@ router.get("/:guildID/leveling", authMiddleware, async (req, res) => {
             guild.leveling.minify();
         }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -101,7 +103,7 @@ router.get("/:guildID/banking", authMiddleware, async (req, res) => {
             guild.banking.minify();
         }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -118,7 +120,7 @@ router.get("/:guildID/config", authMiddleware, async (req, res) => {
             guild.config;
         }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -133,7 +135,7 @@ router.get("/:guildID/channels", authMiddleware, async (req, res) => {
                 guild.channels.filter(c => c.permissionsFor(this.user.id).has(["SEND_MESSAGES", "MANAGE_MESSAGES", "VIEW_CHANNEL"]) && c.type === 'text').array().sort();
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -152,7 +154,7 @@ router.get("/:guildID/roles", authMiddleware, async (req, res) => {
                 guild.roles.sort((c, d) => c.position - d.position).filter(r => ${all} ? r.name !== "@everyone" && !r.managed : r.position < guild.me.roles.highest.position && r.name !== "@everyone" && !r.managed).array();
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -169,7 +171,7 @@ router.get("/:guildID/giveaways", authMiddleware, async (req, res) => {
                 guild.giveaways.array();
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -186,7 +188,7 @@ router.get("/:guildID/polls", authMiddleware, async (req, res) => {
                 guild.polls.array();
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -202,7 +204,7 @@ router.get("/:guildID/customcommands", authMiddleware, async (req, res) => {
                 guild.commands.array();
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -213,13 +215,10 @@ router.post("/:guildID/customcommands", authMiddleware, async (req, res) => {
     const { guildID } = req.params;
     const commandData = {
         name: req.body.name,
-        description: req.body.description
-        // usage: req.body.usage,
-        // requiredPerms: req.body.requiredPerms
-        // cooldown: req.body.cooldown
+        description: req.body.description,
     };
     for (const key in commandData) {
-        if (!req.body[key]) return res.json(400, { error: `Missing Parameter: ${key}` });
+        if (!req.body[key]) { return res.json(400, { error: `Missing Parameter: ${key}` }); }
     }
 
     try {
@@ -229,7 +228,7 @@ router.post("/:guildID/customcommands", authMiddleware, async (req, res) => {
                 guild.commands.add(${JSON.stringify(req.body)}).then(r => r)
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -247,7 +246,7 @@ router.patch("/:guildID/customcommands/:command", authMiddleware, async (req, re
                 command.edit(${JSON.stringify(req.body)}).then(r => r);
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -262,7 +261,7 @@ router.delete("/:guildID/customcommands/:command", authMiddleware, async (req, r
                 guild.commands.remove('${decodeURIComponent(command)}').then(r => r)
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -272,15 +271,15 @@ router.delete("/:guildID/customcommands/:command", authMiddleware, async (req, r
 router.post("/:guildID/polls", authMiddleware, async (req, res) => {
     const { guildID } = req.params;
     const { name, type, possibleAnswers, channel, open = true, question } = req.body;
-    if (!name || !type || !channel || !question || !(possibleAnswers instanceof Object)) return res.json(500, { error: "Improper paramaters given." });
+    if (!name || !type || !channel || !question || !(possibleAnswers instanceof Object)) { return res.json(500, { error: "Improper paramaters given." }); }
     try {
         const resp = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
                 const guild = this.guilds.get('${guildID}');
-                guild.polls.set('${decodeURIComponent(name)}', ${JSON.stringify(req.body)}).then(r => r)
+                guild.polls.add('${decodeURIComponent(name)}', ${JSON.stringify(req.body)}).then(r => r)
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -291,7 +290,7 @@ router.patch("/:guildID/polls/:name", authMiddleware, async (req, res) => {
     const { guildID } = req.params;
     const { action } = req.body;
     const name = decodeURIComponent(req.params.name);
-    if (!guildID || !name || !action) return res.json(500, { message: "Missing parameters." });
+    if (!guildID || !name || !action) { return res.json(500, { message: "Missing parameters." }); }
     try {
         const resp = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
@@ -303,7 +302,7 @@ router.patch("/:guildID/polls/:name", authMiddleware, async (req, res) => {
                 }
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -312,15 +311,15 @@ router.patch("/:guildID/polls/:name", authMiddleware, async (req, res) => {
 
 router.delete("/:guildID/polls/:name", authMiddleware, async (req, res) => {
     const { guildID, name } = req.params;
-    if (!name) return res.json(500, { error: "Improper paramaters given." });
+    if (!name) { return res.json(500, { error: "Improper paramaters given." }); }
     try {
         const resp = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
                 const guild = this.guilds.get('${guildID}');
-                guild.polls.delete('${decodeURIComponent(name)}').then(r => r)
+                guild.polls.remove('${decodeURIComponent(name)}').then(r => r)
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -334,25 +333,27 @@ router.post("/:guildID/giveaways", authMiddleware, async (req, res) => {
         channel,
         maxWinners,
         time,
-        reactionEmote
+        reactionEmote,
     } = req.body;
 
-    if (!guildID || !name || !channel || !maxWinners || !time) return res.json(500, { message: "Missing one or more parameters." });
+    if (!guildID || !name || !channel || !maxWinners || !time) {
+        return res.json(500, { message: "Missing one or more parameters." });
+    }
     const struct = {
         name,
         channel,
         endDate: Date.now() + req.client.spanMs(time),
         maxWinners,
-        reactionEmote
+        reactionEmote,
     };
     try {
         const resp = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
                 const guild = this.guilds.get('${guildID}');
-                guild.giveaways.set('${decodeURIComponent(name)}', ${JSON.stringify(struct)}).then(r => r)
+                guild.giveaways.add('${decodeURIComponent(name)}', ${JSON.stringify(struct)}).then(r => r)
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -361,15 +362,15 @@ router.post("/:guildID/giveaways", authMiddleware, async (req, res) => {
 
 router.delete("/:guildID/giveaways/:name", authMiddleware, async (req, res) => {
     const { guildID, name } = req.params;
-    if (!guildID || !name) return res.json(500, { message: "Missing parameters." });
+    if (!guildID || !name) { return res.json(500, { message: "Missing parameters." }); }
     try {
         const resp = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
                 const guild = this.guilds.get('${guildID}');
-                guild.giveaways.delete('${decodeURIComponent(name)}').then(r => r);
+                guild.giveaways.remove('${decodeURIComponent(name)}').then(r => r);
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -380,7 +381,7 @@ router.patch("/:guildID/giveaways/:name", authMiddleware, async (req, res) => {
     const { guildID } = req.params;
     const { action } = req.body;
     const name = decodeURIComponent(req.params.name);
-    if (!guildID || !name || !action) return res.json(400, { message: "Missing parameters." });
+    if (!guildID || !name || !action) { return res.json(400, { message: "Missing parameters." }); }
     try {
         const resp = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
@@ -398,7 +399,7 @@ router.patch("/:guildID/giveaways/:name", authMiddleware, async (req, res) => {
                 }
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -416,7 +417,7 @@ router.patch("/:guildID/config", authMiddleware, async (req, res) => {
                     guild.config.setArray('${setting.key}', ${JSON.stringify(setting.value)}, true).then(r => r);
                 }
             `).catch(err => { throw err; });
-            if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+            if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
             res.json(200, resp.filter(g => g)[0]);
         } else {
             const resp = await req.client.shard.broadcastEval(`
@@ -425,7 +426,7 @@ router.patch("/:guildID/config", authMiddleware, async (req, res) => {
                     guild.config.set('${setting.key}', ${setting.bool ? setting.value : stringifiedValue}).then(r => r);
                 }
             `).catch(err => { throw err; });
-            if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+            if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
             res.json(200, resp.filter(g => g)[0]);
         }
     } catch (error) {
@@ -444,7 +445,7 @@ router.patch("/:guildID/leveling", authMiddleware, async (req, res) => {
                 guild.leveling.set('${key}', ${bool ? value : stringifiedValue}).then(r => r)
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -462,7 +463,7 @@ router.patch("/:guildID/banking", authMiddleware, async (req, res) => {
                 guild.banking.set('${key}', ${bool ? value : stringifiedValue}).then(r => r)
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
@@ -475,14 +476,14 @@ router.post("/:guildID/tags", authMiddleware, async (req, res) => {
     const tagContent = req.body.tagContent;
     try {
         const tag = await req.client.mongo.tags.findOne({ guildID, tagName });
-        if (tag) return res.json(500, { error: "Tag Already exists." });
+        if (tag) { return res.json(500, { error: "Tag Already exists." }); }
         const entry = new req.client.mongo.tags({
             guildID,
             tagName,
             tagContent,
             author: req.auth,
             createdAt: new Date(),
-            usage_count: 0
+            usage_count: 0,
         });
         await entry.save();
         const tags = await req.client.mongo.tags.find({ guildID });
@@ -497,30 +498,10 @@ router.delete("/:guildID/tags/:tagName", authMiddleware, async (req, res) => {
     const tagName = req.params.tagName.toLowerCase();
     try {
         const tag = await req.client.mongo.tags.findOne({ guildID, tagName });
-        if (!tag) return res.json(500, { error: "Tag was not found." });
+        if (!tag) { return res.json(500, { error: "Tag was not found." }); }
         await tag.remove();
         const tags = await req.client.mongo.tags.find({ guildID });
         res.json(200, tags.map(t => t.get("tagName")).sort());
-    } catch (error) {
-        res.json(500, { error: error.message });
-    }
-});
-
-router.patch("/:guildID/permissions", authMiddleware, async (req, res) => {
-    const { value, name, target, guildID } = req.body;
-    try {
-        const resp = await req.client.shard.broadcastEval(`
-            if (this.guilds.has('${guildID}')) {
-                const guild = this.guilds.get('${guildID}');
-                if (${value}) {
-                    guild.allowPermission('${name}', '${target}');
-                } else {
-                    guild.denyPermission('${name}', '${target}');
-                }
-            }
-        `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
-        res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
         res.json(500, { error: error.message });
     }
@@ -531,7 +512,7 @@ router.patch("/:guildID/packages", authMiddleware, async (req, res) => {
     const pkg = req.body.pkg;
     const guildID = req.params.guildID;
     const enabled = req.body.enabled;
-    if (!userID || !pkg || !guildID || enabled == null) return res.json(400, { message: "Missing Parameters" });
+    if (!userID || !pkg || !guildID || enabled == undefined) { return res.json(400, { message: "Missing Parameters" }); }
     try {
         const resp = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
@@ -551,7 +532,7 @@ router.patch("/:guildID/packages", authMiddleware, async (req, res) => {
                 }
             }
         `).catch(err => { throw err; });
-        if (!resp.filter(g => g)) throw new Error("Could Not resolve guild.");
+        if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, { packageModified: pkg });
     } catch (error) {
         res.json(500, { error: error.message });
