@@ -14,7 +14,7 @@
     <div class="container">
       <h1 class="title has-text-white has-text-left">Settings</h1>
       <div class="columns">
-        <div class="column is-one-quarter">
+        <div class="column is-one-third">
           <div class="box">
             <div class="content">
               <h3 class="has-text-white has-text-left">Shop Name:</h3>
@@ -36,7 +36,7 @@
             </div>
           </div>
         </div>
-        <div class="column is-one-quarter">
+        <div class="column is-one-third">
           <div class="box">
             <div class="content">
               <h3 class="has-text-white has-text-left">
@@ -60,44 +60,56 @@
             </div>
           </div>
         </div>
-
-      </div>
-      <!--<div class="box">
-        <div class="content">
-          <div v-if="!prompts.includes('shopName')">
-            <h3 class="has-text-white has-text-left">Shop Name</h3>
-            <p class="has-text-white">{{ banking.shopName }}</p>
-            <button class="button is-small is-primary" @click="prompts.push('shopName')">Change</button>
-          </div>
-          <div v-else>
-            <form id="sname" @submit.prevent="vername">
-              <b-field :type="{ 'is-danger': errors.has('Shop Name') }" :message="errors.first('Shop Name')">
-                <b-input v-validate="'required|max:30'" id="grey" v-model="banking.shopName" name="Shop Name"/>
-                <p class="control">
-                  <button class="button is-primary" type="submit" form="sname">Save</button>
-                </p>
-              </b-field>
-            </form>
-          </div>
-          <br>
-          <div v-if="!prompts.includes('currency')">
-            <h3 class="has-text-white has-text-left">
-              Shop Currency: {{ banking.currency }}
-              <button class="button is-small is-primary" @click="prompts.push('currency')">Change</button>
-            </h3>
-          </div>
-          <div v-else>
-            <form id="crcy" @submit.prevent="vercurrency">
-              <b-field :type="{ 'is-danger': errors.has('Currency') }" :message="errors.first('Currency')">
-                <b-input v-validate="'required|max:4'" id="grey" v-model="banking.currency" name="Currency"/>
-                <p class="control">
-                  <button class="button is-primary" type="submit" form="crcy">Save</button>
-                </p>
-              </b-field>
-            </form>
+        <div class="column is-one-third">
+          <div class="box">
+            <div class="content">
+              <h3 class="has-text-white">
+                Exempted Channels
+                <br><br>
+                <b-field custom-class="has-text-white">
+                  <b-taginput
+                    v-model="banking.excludedChannels"
+                    :allow-new="false"
+                    :data="filteredChannels"
+                    ellipsis
+                    rounded
+                    autocomplete
+                    type="is-grey"
+                    field="name"
+                    placeholder="Add a Channel"
+                    custom-class="has-text-white"
+                    @typing="getChannelNames"/>
+                  <p class="control">
+                    <button class="button is-primary" @click="bankingUpdate('excludedChannels', banking.excludedChannels, { bool: false })">Save</button>
+                  </p>
+                </b-field>
+              </h3>
+              <h3 class="has-text-white">
+                Exempted Roles
+                <br><br>
+                <b-field custom-class="has-text-white">
+                  <b-taginput
+                    v-model="banking.excludedRoles"
+                    :allow-new="false"
+                    :data="filteredRoles"
+                    ellipsis
+                    rounded
+                    autocomplete
+                    type="is-grey"
+                    field="name"
+                    placeholder="Add a Role"
+                    custom-class="has-text-white"
+                    @typing="getRoleNames"/>
+                  <p class="control">
+                    <button class="button is-primary" @click="bankingUpdate('excludedRoles', banking.excludedRoles, { bool: false })">Save</button>
+                  </p>
+                </b-field>
+              </h3>
+            </div>
           </div>
         </div>
-      </div>-->
+
+      </div>
       <div class="is-divider" />
     </div>
     <div class="container">
@@ -267,6 +279,7 @@ export default {
       roles: null,
       toggleAdd: false,
       filteredRoles: this.roles,
+      filteredChannels: this.channels,
       currItem: {
         name: "",
         price: "",
@@ -296,6 +309,12 @@ export default {
           itemedit: this.itemEdited
         }
       });
+    },
+    getChannelNames(channel) {
+      this.filteredChannels = this.channels.filter(
+        option =>
+          `${option.name.toLowerCase()}`.indexOf(channel.toLowerCase()) >= 0
+      );
     },
     async vername() {
       const result = await this.$validator.validate("Shop Name");
