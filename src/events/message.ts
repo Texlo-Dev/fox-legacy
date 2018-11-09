@@ -58,7 +58,7 @@ export default class MessageEvent extends Event {
         if (!message.guild.packages.get(command.category).enabled) return message.error(`The **${this.client.capitalizeStr(command.category)}** package is currently disabled.`); // tslint:disable-line
         if (typeof command.hasPermission === "function" && !command.hasPermission(message)) {
             return message.error(" _**Sorry, but you do not have permission to use this command.**_");
-        } else if (typeof command.constructor.run === "function" && !command.constructor.hasPermission(message)) {
+        } else if (typeof command.constructor.hasPermission === "function" && !command.constructor.hasPermission(message)) {
             return message.error(" _**Sorry, but you do not have permission to use this command.**_")
         }
 
