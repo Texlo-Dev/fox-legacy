@@ -1,4 +1,4 @@
-import { Collection, Message, TextChannel, MessageEmbed } from "discord.js";
+import { Collection, Message, MessageEmbed, TextChannel } from "discord.js";
 import { FoxGuild, FoxMessage } from "../extensions";
 import { Polls } from "../Mongo";
 import Poll from "./Poll";

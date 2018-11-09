@@ -15,7 +15,6 @@ import ServerProtect from "./core/ServerProtect-rewrite";
 import * as Tools from "./core/Tools";
 
 import Guild from "./extensions/FoxGuild";
-import Member from "./extensions/FoxMember";
 import FoxMessage from "./extensions/FoxMessage";
 import FoxUser from "./extensions/FoxUser";
 
@@ -53,7 +52,6 @@ export {
     ServerProtect,
     Tools,
     Guild,
-    Member,
     FoxMessage,
     FoxUser,
     Giveaway,
@@ -68,5 +66,5 @@ export {
     Poll,
     PollStore,
     Auth,
-    Utils
+    Utils,
 };

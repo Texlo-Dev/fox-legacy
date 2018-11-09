@@ -1,33 +1,33 @@
 import { FoxGuild } from "../extensions";
-
+// tslint:disable-next-line:interface-name
 interface GiveawayInfo {
-    name: string;
-    guildID: string;
     channel: any;
     endDate: number;
-    running: boolean;
-    messageID?: string;
-    winners: any[];
-    paused: boolean;
+    guildID: string;
     maxWinners: number;
+    messageID?: string;
+    name: string;
+    paused: boolean;
     reactionEmote: any;
+    running: boolean;
     timeRemaining: number;
+    winners: any[];
 }
 
 export default class Giveaway implements GiveawayInfo {
-    public guild: FoxGuild;
-    public name: string;
-    public guildID: string;
     public channel: any;
     public endDate: number;
-    public running: boolean;
-    public messageID: string;
-    public winners: any[];
-    public paused: boolean;
-    public maxWinners: number;
-    public timeRemaining: number;
-    public reactionEmote: any;
     public ended?: boolean;
+    public guild: FoxGuild;
+    public guildID: string;
+    public maxWinners: number;
+    public messageID: string;
+    public name: string;
+    public paused: boolean;
+    public reactionEmote: any;
+    public running: boolean;
+    public timeRemaining: number;
+    public winners: any[];
 
     public constructor(guild: FoxGuild, info: GiveawayInfo) {
         this.guild = guild;
@@ -45,42 +45,50 @@ export default class Giveaway implements GiveawayInfo {
     }
 
     public async end(): Promise<Object> {
-        if (!this.running) throw new Error("Giveaway must be running in order to end.");
+        if (!this.running) { throw new Error("Giveaway must be running in order to end."); }
         this.ended = true;
 
         try {
-            const guild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
-            return await guild.giveaways.listenGiveaway(this);
-        } catch (err) {
-            throw err;
-        }
-    }
+            const guild: FoxGuild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
 
-    public async reroll(): Promise<Object> {
-        if (this.running) throw new Error("Giveaway must not be running to reroll.");
-        try {
-            const guild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
-            return await guild.giveaways.reroll(this);
+            return guild.giveaways.listenGiveaway(this);
         } catch (err) {
             throw err;
         }
     }
 
     public async pause(): Promise<Object> {
-        if (this.paused || !this.running) throw new Error("Giveaway must not either be already paused and currently running.");
+        if (this.paused || !this.running) {
+            throw new Error("Giveaway must not either be already paused and currently running.");
+        }
         try {
-            const guild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
-            return await guild.giveaways.pause(this);
+            const guild: FoxGuild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
+
+            return guild.giveaways.pause(this);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    public async reroll(): Promise<Object> {
+        if (this.running) { throw new Error("Giveaway must not be running to reroll."); }
+        try {
+            const guild: FoxGuild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
+
+            return guild.giveaways.reroll(this);
         } catch (err) {
             throw err;
         }
     }
 
     public async resume(): Promise<Object> {
-        if (!this.paused || !this.running) throw new Error("Giveaway must be already paused and currently running.");
+        if (!this.paused || !this.running) {
+            throw new Error("Giveaway must be already paused and currently running.");
+        }
         try {
-            const guild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
-            return await guild.giveaways.resume(this);
+            const guild: FoxGuild = this.guild.client.guilds.get(this.guildID) as FoxGuild;
+
+            return guild.giveaways.resume(this);
         } catch (err) {
             throw err;
         }

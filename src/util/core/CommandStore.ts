@@ -1,7 +1,11 @@
 import { Collection, Snowflake } from "discord.js";
-import { FoxClient, Command } from "..";
+import { Command, FoxClient } from "..";
 
-class CommandStore extends Collection<string, Command>{
+class CommandStore extends Collection<string, Command> {
+
+    public static get [Symbol.species]() {
+        return Collection;
+    }
     public aliases: Collection<string, Command>;
     public cooldowns: Collection<string, Collection<Snowflake, number>>;
 
@@ -13,8 +17,17 @@ class CommandStore extends Collection<string, Command>{
         this.cooldowns = new Collection();
     }
 
-    public static get [Symbol.species]() {
-        return Collection;
+    public clear(): void {
+        super.clear();
+        this.aliases.clear();
+    }
+
+    public delete(name: string): boolean {
+        const command: Command = this.get(name);
+        if (!command) { return false; }
+        super.delete(command.name);
+        if (command.aliases && command.aliases.length) { for (const alias of command.aliases) { this.aliases.delete(alias); } }
+        return true;
     }
 
     public get(name: string): Command {
@@ -27,21 +40,8 @@ class CommandStore extends Collection<string, Command>{
 
     public set(command: Command): Command {
         super.set(command.name, command);
-        if (command.aliases && command.aliases.length) for (const alias of command.aliases) this.aliases.set(alias, command);
+        if (command.aliases && command.aliases.length) { for (const alias of command.aliases) { this.aliases.set(alias, command); } }
         return command;
-    }
-
-    public delete(name: string): boolean {
-        const command: Command = this.get(name);
-        if (!command) return false;
-        super.delete(command.name);
-        if (command.aliases && command.aliases.length) for (const alias of command.aliases) this.aliases.delete(alias);
-        return true;
-    }
-
-    public clear(): void {
-        super.clear();
-        this.aliases.clear();
     }
 
 }

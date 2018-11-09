@@ -1,8 +1,9 @@
+import { MessageReaction, TextChannel } from "discord.js";
 import { Event, FoxClient } from "../util";
-import { TextChannel } from "discord.js";
-const events = {
+import { FoxMessage, FoxUser } from "../util/extensions";
+const events: any = {
     MESSAGE_REACTION_ADD: "messageReactionAdd",
-    MESSAGE_REACTION_REMOVE: "messageReactionRemove"
+    MESSAGE_REACTION_REMOVE: "messageReactionRemove",
 };
 
 export default class extends Event {
@@ -10,25 +11,25 @@ export default class extends Event {
     public constructor(client: FoxClient) {
         super(client, {
             name: "raw",
-            description: "Raw Discord event."
+            description: "Raw Discord event.",
         });
     }
 
-    public async run(event: any) {
-        if (!events.hasOwnProperty(event.t)) return;
+    public async run(event: any): Promise<void> {
+        if (!events.hasOwnProperty(event.t)) { return; }
 
         const { d: data } = event;
-        const user = this.client.users.get(data.user_id);
-        const channel = this.client.channels.get(data.channel_id) as TextChannel;
+        const user: FoxUser = this.client.users.get(data.user_id) as FoxUser;
+        const channel: TextChannel = this.client.channels.get(data.channel_id) as TextChannel;
 
-        if (channel.messages.has(data.message_id)) return;
+        if (channel.messages.has(data.message_id)) { return; }
 
-        const message = await channel.messages.fetch(data.message_id);
-        const emojiKey = data.emoji.id || data.emoji.name;
-        const reaction = message.reactions.get(emojiKey) || message.reactions.add(data);
+        const message: FoxMessage = await channel.messages.fetch(data.message_id) as FoxMessage;
+        const emojiKey: string = data.emoji.id || data.emoji.name;
+        const reaction: MessageReaction = message.reactions.get(emojiKey) || message.reactions.add(data);
 
         this.client.emit(events[event.t], reaction, user);
-        if (message.reactions.size === 1) message.reactions.delete(emojiKey);
+        if (message.reactions.size === 1) { message.reactions.delete(emojiKey); }
     }
 
 }

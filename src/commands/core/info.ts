@@ -1,19 +1,20 @@
+import { MessageEmbed, version as discordVersion } from "discord.js";
 import { version } from "../../config.json";
-import { version as discordVersion, MessageEmbed } from "discord.js";
-import { Command } from "../../util";
+import { Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions/index.js";
 
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "info",
             description: "Shows some useful info about the bot.",
-            aliases: ["about", "invite"]
+            aliases: ["about", "invite"],
         });
     }
 
-    public async run(message) {
-        const embed = new MessageEmbed()
+    public async run(message: FoxMessage): Promise<void> {
+        const embed: MessageEmbed = new MessageEmbed()
             .setAuthor(`${this.client.user.username} Information`, this.client.user.displayAvatarURL())
             .setColor(this.client.brandColor)
             .setTimestamp()
@@ -24,9 +25,16 @@ export default class FoxCommand extends Command {
             .addField("Servers", `${this.client.guilds.size.toLocaleString()}`, true)
             .addField("Users", `${this.client.users.size.toLocaleString()}`, true)
             .addField("Discord.js version", `v${discordVersion}`, true)
-            .addField(`Website`, "https://mrfoxbot.xyz/servers", true)
+            .addField("Website", "https://mrfoxbot.xyz/servers", true)
             .addField(`Official server for ${this.client.user.username}:`, "https://discord.gg/DfsqmaV", true)
-            .addField(`Core Developers:`, `${(await this.client.users.fetch("358465137516216341")).tag}\n${(await this.client.users.fetch("272689325521502208")).tag}\n${(await this.client.users.fetch("209031139791339520")).tag}\n${(await this.client.users.fetch("131857875973701633")).tag}`);
+            .addField(
+                "Core Developers:",
+                `${(await this.client.users.fetch("358465137516216341")).tag}
+                ${(await this.client.users.fetch("272689325521502208")).tag}
+                ${(await this.client.users.fetch("209031139791339520")).tag}
+                ${(await this.client.users.fetch("131857875973701633")).tag}
+                `,
+            );
         message.send({ embed });
     }
 

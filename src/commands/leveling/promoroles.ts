@@ -8,7 +8,7 @@ export default class FoxCommand extends Command {
             name: "promoroles",
             description: "Shows all of the available promotion roles.",
             guildOnly: true,
-            requiredPerms: ["`leveling.use`"]
+            requiredPerms: ["`leveling.use`"],
         });
     }
 
@@ -18,7 +18,7 @@ export default class FoxCommand extends Command {
 
     public async run(message) {
         const array = message.guild.leveling.promoRoles;
-        if (!array || !array.length) return message.send("No leveling roles were found.");
+        if (!array || !array.length) { return message.send("No leveling roles were found."); }
         const embed = new MessageEmbed()
             .setAuthor(`All Promotion roles for ${message.guild.name}`, message.guild.iconURL())
             .setColor(this.client.brandColor)

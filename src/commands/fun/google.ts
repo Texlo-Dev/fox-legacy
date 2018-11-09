@@ -1,7 +1,7 @@
-import { MessageEmbed } from "discord.js";
-import { stripIndents } from "common-tags";
-import { load } from "cheerio";
 import { request } from "axios";
+import { load } from "cheerio";
+import { stripIndents } from "common-tags";
+import { MessageEmbed } from "discord.js";
 import { parse } from "querystring";
 import { Command } from "../../util";
 
@@ -12,18 +12,18 @@ export default class FoxCommand extends Command {
             name: "google",
             description: "Searches Google, with a provided search query.",
             usage: "<query>",
-            alaises: ["g", "googlesearch"]
+            alaises: ["g", "googlesearch"],
         });
     }
 
     public async run(message, args) {
         const query = args.join(" ");
         const initmsg = await message.send("<a:typing:393848431413559296> Searching...");
-        if (!query) return message.error(" Please specify something to search on Google.");
+        if (!query) { return message.error(" Please specify something to search on Google."); }
         try {
             const { data } = await request({
                 method: "GET",
-                url: `https://www.google.com/search?q=${encodeURIComponent(query)}`
+                url: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
             });
             const $ = load(data);
 
@@ -39,7 +39,7 @@ export default class FoxCommand extends Command {
                     .setFooter(this.client.user.username)
                     .setDescription(stripIndents`
                         [${metadata}](${googleURL.q})\n${searchText}
-                    `)
+                    `),
             );
         } catch (error) {
             console.error(error);

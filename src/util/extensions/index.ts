@@ -1,56 +1,58 @@
-import { Guild, Message, User, Collection, TextChannel } from "discord.js";
+// tslint:disable:interface-name
+import { Collection, CollectorFilter, Guild, Message, MessageOptions, TextChannel, User } from "discord.js";
 import {
     Banking,
-    CustomCommands,
-    Leveling,
-    PollStore as Polls,
-    FoxPermission,
-    Package,
-    GiveawayStore,
+    Command,
     Config,
-    ServerProtect,
-    PermStore,
+    CustomCommands,
     FoxClient,
-    Command
+    FoxPermission,
+    GiveawayStore,
+    Leveling,
+    Package,
+    PermStore,
+    PollStore as Polls,
+    ServerProtect,
 } from "..";
 
+// @ts-ignore
 export interface FoxGuild extends Guild {
-    perms: PermStore;
-    config: Config;
-    shard: number;
-    polls: Polls;
-    giveaways: GiveawayStore;
-    serverprotect: ServerProtect;
-    queue: any;
-    leveling: Leveling;
-    permissions: Collection<any, FoxPermission>;
     banking: Banking;
-    packages: Collection<any, Package>;
-    commands: CustomCommands;
-    fetchPackages: Function;
-    // @ts-ignore
     client: FoxClient;
+    commands: CustomCommands;
+    config: Config;
+    fetchPackages: Function;
+    giveaways: GiveawayStore;
+    leveling: Leveling;
+    packages: Collection<any, Package>;
+    permissions: Collection<any, FoxPermission>;
+    perms: PermStore;
+    polls: Polls;
+    queue: any;
+    serverprotect: ServerProtect;
+    shard: number;
 }
 
 // @ts-ignore
 export interface FoxMessage extends Message {
-    command: Command;
-    client: FoxClient;
-    guild: FoxGuild;
-    responses: any;
-    FoxEmbed: Function;
-    error: Function;
-    success: Function;
     _registerCommand: Function;
-    send: Function;
-    sendPrompt: Function;
     author: FoxUser;
     channel: TextChannel;
+    client: FoxClient;
+    command: Command;
+    guild: FoxGuild;
+    responses: any;
+    error(content: string, options?: MessageOptions): Promise<FoxMessage | FoxMessage[]>;
+    FoxEmbed(options: any, text: string): Promise<FoxMessage | FoxMessage[]>;
+    send(content: any, options?: MessageOptions): Promise<FoxMessage | FoxMessage[]>;
+    sendPrompt(prompt: string, time: number, filter: CollectorFilter): Promise<number | string>;
+    success(content: string, options?: MessageOptions): Promise<Message | Message[]>;
 }
 
 export interface FoxUser extends User {
-    upvoter: boolean;
     patreonTier: number;
-    _setTier: Function;
-    _setUpvoter: Function;
+    upvoter: boolean;
+    _setTier(): Promise<number> ;
+    _setUpvoter(): Promise<boolean>;
+    addPatreon(tier: number): Promise<boolean>;
 }

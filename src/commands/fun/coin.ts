@@ -7,7 +7,7 @@ export default class FoxCommand extends Command {
         super(client, {
             name: "coin",
             description: "Flips a coin!",
-            alaises: ["flipcoin", "coinflip", "flip"]
+            alaises: ["flipcoin", "coinflip", "flip"],
         });
     }
 

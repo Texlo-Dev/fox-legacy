@@ -6,7 +6,7 @@ export default class FoxCommand extends Command {
             name: "catfact",
             description: "Displays a random catfact.",
             aliases: ["catfacts"],
-            enabled: true
+            enabled: true,
         });
     }
 

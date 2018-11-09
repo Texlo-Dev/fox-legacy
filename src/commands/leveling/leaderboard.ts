@@ -9,7 +9,7 @@ export default class FoxCommand extends Command {
             description: "Shows the server rankings for leveling.",
             aliases: ["leader-board", "ranking", "lb"],
             requiredPerms: ["`leveling.use`"],
-            guildOnly: true
+            guildOnly: true,
         });
     }
 
@@ -19,12 +19,12 @@ export default class FoxCommand extends Command {
 
     public async run(message, args, prefix) {
         const data = await this.client.mongo.leveling.sort({ level: "desc", totalXP: "desc" }).find({ guildID: message.guild.id });
-        let mapped = data.filter(l => l.get("level")).map(c => `${c.get("userID")} ${c.get("level")} ${c.get("xp")}`).join(" ");
-        let numArr = [];
+        const mapped = data.filter(l => l.get("level")).map(c => `${c.get("userID")} ${c.get("level")} ${c.get("xp")}`).join(" ");
+        const numArr = [];
         const mappedArr = mapped.split(" ");
-        let arr = [];
-        let xp = [];
-        let levels = [];
+        const arr = [];
+        const xp = [];
+        const levels = [];
         for (let u = 0; u < mappedArr.length; u += 3) {
             arr.push(mappedArr[u]);
         }
@@ -38,7 +38,7 @@ export default class FoxCommand extends Command {
             xp.push(mappedArr[m]);
         }
         let page = parseInt(args[0]);
-        if (!page) page = 1;
+        if (!page) { page = 1; }
         const paginated = this.client.paginate(numArr, page, 10);
         let rank = 10 * (paginated.page - 1);
         const num = await paginated.items.map(async a => `**${++rank}.** Level ${levels[a]} (${parseInt(xp[a]).toLocaleString()}) - ${(await this.client.users.fetch(arr[a])).tag}\n`);

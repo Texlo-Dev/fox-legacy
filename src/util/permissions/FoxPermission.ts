@@ -5,9 +5,9 @@ interface PermOptions extends Options {
 }
 
 export default class FoxPermission {
-    public name: string;
-    public description: string;
     public category: string;
+    public description: string;
+    public name: string;
 
     public constructor(client: FoxClient, data: PermOptions) {
         this.name = data.name;

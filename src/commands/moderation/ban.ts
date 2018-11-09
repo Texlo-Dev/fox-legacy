@@ -10,10 +10,10 @@ export default class FoxCommand extends Command {
             usage: "<member> [reason]",
             extendedUsage: {
                 member: client.args.member,
-                reason: client.args.reason
+                reason: client.args.reason,
             },
             guildOnly: true,
-            requiredPerms: ["`mod.banhammer`"]
+            requiredPerms: ["`mod.banhammer`"],
         });
     }
 
@@ -21,26 +21,27 @@ export default class FoxCommand extends Command {
         return message.guild.perms.check("mod.banhammer", message);
     }
 
-    public async run(message, [user, ...reason], prefix) {
-        reason = reason.join(" ");
+    public async run(message, args, prefix) {
+        const user = args[0];
+        let reason = args.slice(1).join(" ");
         const member = await this.member(message.mentions.users.first() || user, message);
-        if (!message.guild.me.hasPermission("BAN_MEMBERS")) return message.reply("I do not have adequate permissions to perform this operation.");
-        if (!member) return message.error("Value 'member' was not supplied, please try again.");
-        if (member.roles.highest.position >= message.member.roles.highest.position) return message.error(`Sorry, but you cannot perform moderation actions on ${member.displayName}.`);
+        if (!message.guild.me.hasPermission("BAN_MEMBERS")) { return message.reply("I do not have adequate permissions to perform this operation."); }
+        if (!member) { return message.error("Value 'member' was not supplied, please try again."); }
+        if (member.roles.highest.position >= message.member.roles.highest.position) { return message.error(`Sorry, but you cannot perform moderation actions on ${member.displayName}.`); }
         let modlog = message.guild.config.modlogChannel;
         const enabled = message.guild.config.modLogging;
-        if (!enabled) modlog = null;
+        if (!enabled) { modlog = null; }
 
         const caseEntry = await this.client.mongo.modactions.count({ guildID: message.guild.id, id: undefined, warnpoints: undefined });
         const caseInt = caseEntry + 1;
-        if (!reason) reason = `Moderator: Please type \`${prefix}reason ${caseInt} <reason>\``;
+        if (!reason) { reason = `Moderator: Please type \`${prefix}reason ${caseInt} <reason>\``; }
 
-        if (message.guild.config.msgAfterMod) await member.send(`You have been banned from **${message.guild.name}** with the reason of _${reason}_.`);
+        if (message.guild.config.msgAfterMod) { await member.send(`You have been banned from **${message.guild.name}** with the reason of _${reason}_.`); }
         const banUser = await message.guild.members.ban(member, {
             days: 4,
-            reason: reason
+            reason,
         }).catch(() => null);
-        if (!banUser) return message.reply("<:nicexmark:495362785010647041> Sorry, but I couldn't ban this user.");
+        if (!banUser) { return message.reply("<:nicexmark:495362785010647041> Sorry, but I couldn't ban this user."); }
 
         const embed = new MessageEmbed()
             .setTimestamp()
@@ -59,7 +60,7 @@ export default class FoxCommand extends Command {
             reasonFor: reason,
             createdAt: message.createdAt,
             embedID: m ? m.id : null,
-            action: "Banned"
+            action: "Banned",
         });
         await entry.save();
     }

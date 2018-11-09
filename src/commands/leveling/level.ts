@@ -1,5 +1,5 @@
-import { MessageEmbed } from "discord.js";
 import { stripIndents } from "common-tags";
+import { MessageEmbed } from "discord.js";
 import { Command } from "../../util";
 
 export default class FoxCommand extends Command {
@@ -11,7 +11,7 @@ export default class FoxCommand extends Command {
             usage: "[user]",
             guildOnly: true,
             aliases: ["level", "rank"],
-            requiredPerms: ["`leveling.use`"]
+            requiredPerms: ["`leveling.use`"],
         });
     }
 
@@ -24,10 +24,10 @@ export default class FoxCommand extends Command {
         if (member) {
             const entry = await this.client.mongo.leveling.findOne({
                 guildID: message.guild.id,
-                userID: member.id
+                userID: member.id,
             });
-            if (!entry && member.user.bot) return message.send("Sorry, bots aren't eligible for banking.");
-            if (!entry && !member.user.bot) return message.send("That person hasn't started saving money yet. Try again later!");
+            if (!entry && member.user.bot) { return message.send("Sorry, bots aren't eligible for banking."); }
+            if (!entry && !member.user.bot) { return message.send("That person hasn't started saving money yet. Try again later!"); }
             const embed = new MessageEmbed()
                 .setAuthor(`${member.user.username}'s leveling stats`, `${member.user.displayAvatarURL()}`)
                 .setColor(this.client.brandColor)
@@ -42,11 +42,11 @@ export default class FoxCommand extends Command {
         } else {
             const entry = await this.client.mongo.leveling.findOne({
                 guildID: message.guild.id,
-                userID: message.author.id
+                userID: message.author.id,
             });
-            if (!entry) return message.reply(`No bank account detected, so creating one now!`).then(m => m.delete({ timeout: 2000 }));
+            if (!entry) { return message.reply("No bank account detected, so creating one now!").then(m => m.delete({ timeout: 2000 })); }
             const embed = new MessageEmbed()
-                .setAuthor(`Your Profile`, `${message.author.displayAvatarURL()}`)
+                .setAuthor("Your Profile", `${message.author.displayAvatarURL()}`)
                 .setColor(this.client.brandColor)
                 .setTimestamp()
                 .setFooter(`Requested by ${message.author.tag}`)

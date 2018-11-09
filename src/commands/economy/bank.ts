@@ -8,7 +8,7 @@ export default class FoxCommand extends Command {
             name: "bank",
             description: "Shows the current bank values.",
             aliases: ["currentvalue"],
-            requiredPerms: ["`economy.banking`"]
+            requiredPerms: ["`economy.banking`"],
         });
     }
 
@@ -18,7 +18,7 @@ export default class FoxCommand extends Command {
 
     public async run(message) {
         const value = await this.client.mongo.banking.findOne({ guildID: message.guild.id, userID: message.author.id });
-        if (!value) return message.error(`You do not have a bank account set up. Start chatting in an enabled channel to set up an account.`);
+        if (!value) { return message.error("You do not have a bank account set up. Start chatting in an enabled channel to set up an account."); }
         const embed = new MessageEmbed()
             .setTitle("Your Bank Account")
             .setColor(this.client.brandColor)

@@ -1,7 +1,7 @@
-import LevelMigrate from "./migrator";
+import { GuildMember, TextChannel } from "discord.js";
 import { FoxGuild, FoxMessage } from "../extensions";
 import { FoxLeveling } from "../Mongo";
-import { GuildMember, TextChannel } from "discord.js";
+import LevelMigrate from "./migrator";
 
 export default class Leveling {
     public guild: FoxGuild;
@@ -23,19 +23,19 @@ export default class Leveling {
     public async _loadSettings(): Promise<void> {
         const settings = await this.guild.client.mongo.leveling.findOne({
             guildID: this.guild.id,
-            type: "settings"
+            type: "settings",
         });
         if (!settings) {
             const levelsettings = new this.guild.client.mongo.leveling({
                 guildID: this.guild.id,
-                type: "settings"
+                type: "settings",
             });
             await levelsettings.save();
         } else {
             for (const key of Object.keys(this)) {
-                if (key === "guild") continue;
+                if (key === "guild") { continue; }
                 const value = settings.get(key);
-                if (value === undefined) continue;
+                if (value === undefined) { continue; }
                 this[key] = value;
             }
         }
@@ -45,29 +45,31 @@ export default class Leveling {
         // @ts-ignore
         const current: Leveling = { ...this };
         delete current.guild;
+
         return current;
     }
     public async set(key: string, value: any): Promise<boolean | Object> {
         const settings: FoxLeveling = await this.guild.client.mongo.leveling.findOne({
             guildID: this.guild.id,
-            type: "settings"
+            type: "settings",
         });
-        if (!settings) return false;
-        if (!this.hasOwnProperty(key)) return;
+        if (!settings) { return false; }
+        if (!this.hasOwnProperty(key)) { return; }
         await settings.unset(key);
         await settings.set({ [key]: value });
         await settings.save();
         await this._loadSettings();
-        return new Promise(r => setTimeout(() => r(this.minify()), 50));
+
+        return new Promise((r) => setTimeout(() => r(this.minify()), 50));
     }
 
     public async listen(message: FoxMessage): Promise<void> {
-        if (!message.guild) return;
-        if (message.content.startsWith(message.guild.config.prefix)) return;
-        if (!message.guild.packages.get("Leveling").enabled) return;
-        if (!Leveling.validate(message)) return;
+        if (!message.guild) { return; }
+        if (message.content.startsWith(message.guild.config.prefix)) { return; }
+        if (!message.guild.packages.get("Leveling").enabled) { return; }
+        if (!Leveling.validate(message)) { return; }
         const isEligible: boolean = Leveling.checkEligibility(message.member, message.channel);
-        if (!isEligible) return;
+        if (!isEligible) { return; }
         await LevelMigrate(message);
         await this._loadSettings();
 
@@ -81,7 +83,7 @@ export default class Leveling {
                 memberdata.set({
                     xp: 0,
                     level: memberdata.get("level") + 1,
-                    tonextlevel: Math.round(memberdata.get("tonextlevel") * 1.19)
+                    tonextlevel: Math.round(memberdata.get("tonextlevel") * 1.19),
                 });
                 await memberdata.save();
                 message.client.emit("levelUp", message, memberdata.get("level"));
@@ -93,7 +95,7 @@ export default class Leveling {
                 level: 1,
                 xp: 0,
                 totalXP: 0,
-                tonextlevel: 100
+                tonextlevel: 100,
             });
             await entry.save();
         }
@@ -101,24 +103,22 @@ export default class Leveling {
 
     public async rankOf(member: any): Promise<number> {
         const data: FoxLeveling[] = await member.client.mongo.leveling.sort("totalXP", "desc").find({ guildID: member.guild.id });
-        let mapped = data.map(c => `${c.get("userID")}`);
+        const mapped = data.map((c) => `${c.get("userID")}`);
         return mapped.indexOf(member.id) + 1;
     }
 
     public async levelOf(member: any): Promise<number> {
         const entry: FoxLeveling = await member.client.mongo.leveling.findOne({
             guildID: member.guild.id,
-            userID: member.id
+            userID: member.id,
         });
-        if (!entry) return null;
+        if (!entry) { return null; }
         return entry.get("level");
     }
 
     public static generateXp(level: number): number {
-        if (level >= 60) return level * 20;
-        if (level >= 35) return level * 10;
-        else if (level >= 27) return Leveling.randomNum(110, 115);
-        else return Leveling.randomNum(10, 15);
+        if (level >= 60) { return level * 20; }
+        if (level >= 35) { return level * 10; } else if (level >= 27) { return Leveling.randomNum(110, 115); } else { return Leveling.randomNum(10, 15); }
     }
 
     public static randomNum(min: number, max: number): number {
@@ -130,8 +130,7 @@ export default class Leveling {
     public static checkEligibility(member: GuildMember, channel: TextChannel): boolean {
         const excludedRoles = (member.guild as FoxGuild).leveling.excludedRoles;
         const excludedChannels = (member.guild as FoxGuild).leveling.excludedChannels;
-        if (excludedRoles.length && excludedRoles.some(role => member.roles.has(role.id))) return null;
-        else if (excludedChannels.length && excludedChannels.some(c => c.id === channel.id)) return null;
+        if (excludedRoles.length && excludedRoles.some((role) => member.roles.has(role.id))) { return null; } else if (excludedChannels.length && excludedChannels.some((c) => c.id === channel.id)) { return null; }
         return true;
     }
 
@@ -143,22 +142,20 @@ export default class Leveling {
             "js", "javascript", "node", "nodejs", "code", "pars", "script", "clojure", "sql",
             "discord", "moment", "snekfetch", "dithcord", "guide", "video", "bot", "dev", "git",
             "github", "discord.js", "snekie", "mod.banhammer", "mrfox", "rtexel", "jacz", "the", "this",
-            "that", "hello"
+            "that", "hello",
+            // @ts-ignore
         ].concat(Object.keys(process.binding("natives")));
 
         // Words that might indicate that this message is lower quality
         const insubstantialWords = ["lol", "lul", "lel", "kek", "xd", "¯\\_(ツ)_/¯", "dicksword", "gus", "kys", "dumbass",
-            "!", "-", ".", message.guild.config.prefix];
+                                    "!", "-", ".", message.guild.config.prefix];
         const necessarySubstance = 10;
-        if (mentions.roles.some(r => [message.guild.id].includes(r.id))) return false;
+        if (mentions.roles.some((r) => [message.guild.id].includes(r.id))) { return false; }
         let substance = 0;
         if (text.length > "lol xD".length) (substance += 400) * ((substance - 5) / 1995) + 7; // tslint:disable-line
         substance += substantialWords.reduce((num, word) => text.includes(word) ? num + 2 : num, 0);
         substance -= insubstantialWords.reduce((num, word) => text.includes(word) ? num + 1 : num, 0);
-        if (mentions.users.size > 0) substance -= mentions.users.size;
-        else if (mentions.roles.size > 3) substance -= mentions.roles.size;
-        else if (mentions.channels.size > 5) substance -= mentions.channels.size;
-        else substance += 2;
+        if (mentions.users.size > 0) { substance -= mentions.users.size; } else if (mentions.roles.size > 3) { substance -= mentions.roles.size; } else if (mentions.channels.size > 5) { substance -= mentions.channels.size; } else { substance += 2; }
         return substance >= necessarySubstance;
     }
 

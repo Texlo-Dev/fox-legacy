@@ -10,7 +10,7 @@ export default class FoxCommand extends Command {
             description: "Shows all of the available songs in the queue.",
             guildOnly: true,
             usage: "[page]",
-            requiredPerms: ["`music.listen`"]
+            requiredPerms: ["`music.listen`"],
         });
     }
 
@@ -20,9 +20,9 @@ export default class FoxCommand extends Command {
 
     public run(message, args, prefix) {
         let page = parseInt(args[0]);
-        if (!page) page = 1;
+        if (!page) { page = 1; }
         const serverQueue = message.guild.queue;
-        if (!serverQueue) return message.error(" It looks like there are no songs in the queue.");
+        if (!serverQueue) { return message.error(" It looks like there are no songs in the queue."); }
         const timeArr = serverQueue.songs.map(song => parseInt(song.length));
         const totalQueue = duration(timeArr.reduce((p, val) => p + val, 0) - (serverQueue.connection.dispatcher.streamTime / 1000), "seconds").format("m:ss", { trim: false });
         const remaining = duration(serverQueue.songs[0].length - (serverQueue.connection.dispatcher.streamTime / 1000), "seconds").format("m:ss", { trim: false });

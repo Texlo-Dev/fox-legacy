@@ -8,9 +8,9 @@ export default class FoxCommand extends Command {
             usage: "<time | disable>",
             guildOnly: true,
             extendedUsage: {
-                time: client.args.duration
+                time: client.args.duration,
             },
-            requiredPerms: ["`mod.silencer`"]
+            requiredPerms: ["`mod.silencer`"],
         });
     }
 
@@ -21,8 +21,8 @@ export default class FoxCommand extends Command {
     public async run(message, [time]) {
         if (time === "disable" || time === "false") { time = 0; } else {
             time = this.client.spanMs(time) / 1000;
-            if (!time) return message.error("You must tell me the time (from 1 second to 2 minutes)");
-            if (time < 1 || time > 120) return message.error("Invalid time! Time goes from 1 second to 2 minutes!");
+            if (!time) { return message.error("You must tell me the time (from 1 second to 2 minutes)"); }
+            if (time < 1 || time > 120) { return message.error("Invalid time! Time goes from 1 second to 2 minutes!"); }
         }
 
         this.client.api.channels(message.channel.id).patch({ data: { rate_limit_per_user: time } });

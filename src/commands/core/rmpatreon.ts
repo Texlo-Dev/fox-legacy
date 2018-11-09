@@ -1,25 +1,25 @@
-import { Command } from "../../util";
+import { Command, FoxClient } from "../../util";
+import { FoxMessage, FoxUser } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public static hasPermission(message: FoxMessage): boolean {
+        return message.client.isDev(message.author.id);
+    }
+
+    public constructor(client: FoxClient) {
         super(client, {
             name: "rmpatreon",
             description: "Removes a patreon to the database.",
             usage: "<tier> <user>",
-            requiredPerms: ["Server Staff"]
+            requiredPerms: ["Server Staff"],
         });
     }
 
-    public hasPermission(message) {
-        return message.client.isDev(message.author.id);
-    }
-
-    public async run(message, args) {
-        const user = await this.user(args.join(" "), message);
-        if (!user) return message.send("Invalid user.");
+    public async run(message: FoxMessage, args: string[]): Promise<void> {
+        const user: FoxUser = await this.user(args.join(" "), message) as FoxUser;
+        if (!user) { return message.send("Invalid user."); }
         user.removePatreon()
-            .then(message.send(`Successfully removed ${user.tag}'s patreon tier.`))
+            .then(() => message.send(`Successfully removed ${user.tag}'s patreon tier.`))
             .catch(err => message.send(`There was an error removing this tier. ${err.message}`));
     }
-
 }

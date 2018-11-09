@@ -6,7 +6,7 @@ export default class extends Event {
     public constructor(client: FoxClient) {
         super(client, {
             name: "commandError",
-            description: "Run this when commands error."
+            description: "Run this when commands error.",
         });
     }
 
@@ -31,8 +31,8 @@ export default class extends Event {
                     \`\`\`${err.stack ? err.stack : err}\`\`\``)
                     .setTimestamp()
                     .setColor(this.client.brandColor)
-                    .setFooter(message.client.user.username)
-            ]
+                    .setFooter(message.client.user.username),
+            ],
         });
     }
 

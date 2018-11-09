@@ -8,7 +8,7 @@ export default class FoxCommand extends Command {
             usage: "<user> <amount>",
             aliases: ["givemoney", "gm"],
             guildOnly: true,
-            requiredPerms: ["Bot Owner"]
+            requiredPerms: ["Bot Owner"],
         });
     }
 
@@ -19,14 +19,13 @@ export default class FoxCommand extends Command {
     public async run(message, args) {
         const user = await this.user(args[0], message);
         const amount = parseInt(args[1]);
-        if (!user) return message.error("Please specify a valid user.");
-        if (!amount) return message.error(`Please specify a ${message.guild.banking.currency} amount to give to this user.`);
+        if (!user) { return message.error("Please specify a valid user."); }
+        if (!amount) { return message.error(`Please specify a ${message.guild.banking.currency} amount to give to this user.`); }
         const result = await message.guild.banking.addMoney(user, {
             amount,
-            guild: message.guild
+            guild: message.guild,
         }).catch(() => null);
-        if (result === true) message.reply(`Successfully added ${message.guild.banking.currency + amount.toLocaleString()} to **${user.tag}**.`);
-        else message.error("There was an error doing that transaction.");
+        if (result === true) { message.reply(`Successfully added ${message.guild.banking.currency + amount.toLocaleString()} to **${user.tag}**.`); } else { message.error("There was an error doing that transaction."); }
     }
 
 }

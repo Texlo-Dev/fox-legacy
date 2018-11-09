@@ -1,49 +1,49 @@
 import { FoxGuild } from "../extensions";
 import { GuildSettings } from "../Mongo";
 export default class GuildConfig {
-    public readonly guild: FoxGuild;
-    public readonly prefix: string;
-    public readonly modlogChannel: any;
-    public readonly serverlogChannel: any;
-    public readonly welcomeChannel: any;
-    public readonly welcomeEnabled: boolean;
-    public readonly welcomeMsg: string;
-    public readonly welcomerEmbed: boolean;
-    public readonly welcomeLocation: any;
-    public readonly goodbyeEnabled: boolean;
+    public readonly allowedBwChannels: any[];
+    public readonly allowedCapsChannels: any[];
+    public readonly allowedInviteChannels: any[];
+    public readonly allowedMentionChannels: any[];
+    public readonly allowedSpamChannels: any[];
+    public autoRoles: any[];
+    public badWords: string[];
+    public readonly banPoints: number;
+    public readonly bwProtected: boolean;
+    public readonly delModCmds: boolean;
+    public disabledCommands: string[];
+    public enabledEvents: string[];
     public readonly goodbyeChannel: any;
     public readonly goodbyeEmbed: boolean;
+    public readonly goodbyeEnabled: boolean;
     public readonly goodbyeMsg: string;
-    public readonly levelMsg: string;
-    public readonly packages: string[];
+    public readonly guild: FoxGuild;
+    public readonly invProtected: boolean;
     public readonly kickPoints: number;
-    public readonly banPoints: number;
-    public readonly muteRole: any;
-    public readonly delModCmds: boolean;
-    public readonly msgAfterMod: boolean;
-    public readonly tacMode: boolean;
+    public language: string;
+    public readonly levelMessaging: boolean;
+    public readonly levelMsg: string;
+    public readonly logExcluded: any[];
+    public readonly massProtected: boolean;
     public readonly mentionLimit: number;
     public readonly messageLogging: boolean;
+    public readonly modlogChannel: any;
     public readonly modLogging: boolean;
-    public readonly massProtected: boolean;
-    public readonly serverLogging: boolean;
-    public readonly levelMessaging: boolean;
-    public readonly invProtected: boolean;
-    public language: string;
-    public readonly bwProtected: boolean;
-    public badWords: string[];
-    public autoRoles: any[];
-    public selfRoles: any[];
+    public readonly msgAfterMod: boolean;
+    public readonly muteRole: any;
+    public readonly packages: string[];
+    public readonly prefix: string;
     public reactionRoles: any[];
-    public enabledEvents: string[];
-    public disabledCommands: string[];
+    public selfRoles: any[];
+    public readonly serverlogChannel: any;
+    public readonly serverLogging: boolean;
     public readonly spamProtected: boolean;
-    public readonly allowedInviteChannels: any[];
-    public readonly allowedBwChannels: any[];
-    public readonly allowedSpamChannels: any[];
-    public readonly allowedCapsChannels: any[];
-    public readonly allowedMentionChannels: any[];
-    public readonly logExcluded: any[];
+    public readonly tacMode: boolean;
+    public readonly welcomeChannel: any;
+    public readonly welcomeEnabled: boolean;
+    public readonly welcomeLocation: any;
+    public readonly welcomeMsg: string;
+    public readonly welcomerEmbed: boolean;
 
     public constructor(guild: FoxGuild) {
         this.guild = guild;
@@ -94,7 +94,7 @@ export default class GuildConfig {
     public async _loadSettings(): Promise<void> {
         const settings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
-            type: "settings"
+            type: "settings",
         });
         if (!settings) {
             const entry = new this.guild.client.mongo.guildconfig({
@@ -127,44 +127,44 @@ export default class GuildConfig {
                 allowedSpamChannels: this.allowedSpamChannels,
                 allowedCapsChannels: this.allowedCapsChannels,
                 allowedMentionChannels: this.allowedMentionChannels,
-                logExcluded: this.logExcluded
+                logExcluded: this.logExcluded,
             });
             await entry.save();
         } else {
             for (const key of Object.keys(this)) {
-                if (key === "guild") continue;
+                if (key === "guild") { continue; }
                 const value = settings.get(key);
-                if (value !== undefined) this[key] = value;
+                if (value !== undefined) { this[key] = value; }
             }
         }
     }
 
-    public async set(key: string, value: any): Promise<Boolean|Object> {
+    public async set(key: string, value: any): Promise<Boolean | Object> {
         const settings: GuildSettings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
-            type: "settings"
+            type: "settings",
         });
-        if (!settings) return false;
-        if (!this.hasOwnProperty(key)) return;
+        if (!settings) { return false; }
+        if (!this.hasOwnProperty(key)) { return; }
         settings.set(key, value);
         await settings.save();
         await this.guild.client.emit("guildConfigUpdate", this.guild);
-        return new Promise(r => setTimeout(() => r(this), 25));
+        return new Promise((r) => setTimeout(() => r(this), 25));
     }
 
     public async setArray(key: string, value: string[] | string, isWeb?: boolean): Promise<Object> {
         const settings: GuildSettings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
-            type: "settings"
+            type: "settings",
         });
-        if (settings.get(key) === undefined && !this.hasOwnProperty(key)) return null;
+        if (settings.get(key) === undefined && !this.hasOwnProperty(key)) { return null; }
         if (isWeb) {
             const array = value;
             await settings.unset(key);
             await settings.set({ [key]: array });
             await settings.save();
             await this.guild.client.emit("guildConfigUpdate", this.guild, settings.get(key));
-            return new Promise(r => setTimeout(() => r(this), 25));
+            return new Promise((r) => setTimeout(() => r(this), 25));
         } else {
             const array = settings.get(key) || [];
             if (array.indexOf(value) > -1) {
@@ -175,7 +175,7 @@ export default class GuildConfig {
             settings.set(key, array);
             await settings.save();
             this.guild.client.emit("guildConfigUpdate", this.guild);
-            return new Promise(r => setTimeout(() => r(this), 25));
+            return new Promise((r) => setTimeout(() => r(this), 25));
         }
     }
 

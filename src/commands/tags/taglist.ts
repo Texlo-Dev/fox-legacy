@@ -1,5 +1,5 @@
-import { version } from "../../config.json";
 import { MessageEmbed } from "discord.js";
+import { version } from "../../config.json";
 import { Command } from "../../util";
 
 export default class FoxCommand extends Command {
@@ -10,7 +10,7 @@ export default class FoxCommand extends Command {
             description: "Shows all available tags for the server.",
             guildOnly: true,
             aliases: ["tags", "all-tags", "show-tags", "tag-list"],
-            requiredPerms: ["`tag.tagger`"]
+            requiredPerms: ["`tag.tagger`"],
         });
     }
 

@@ -1,5 +1,5 @@
 import { readdir as Folders } from "fs-nextra";
-import { FoxClient, Command, Event } from "..";
+import { Command, Event, FoxClient } from "..";
 
 export const loadCommands = async (client: FoxClient): Promise<void> => {
     try {
@@ -8,13 +8,13 @@ export const loadCommands = async (client: FoxClient): Promise<void> => {
             console.log(`[Mr.Fox] Initialized ${client.capitalizeStr(folder)} Package.`);
             const files: string[] = await Folders(`${process.cwd()}/build/commands/${folder}/`);
             for (const file of files) {
-                if (!file.endsWith(".js") || file.startsWith("pkg")) continue;
+                if (!file.endsWith(".js") || file.startsWith("pkg")) { continue; }
                 const cmd: any = await import(`${process.cwd()}/build/commands/${folder}/${file}`);
                 // const cmd = require(`${process.cwd()}/commands/${folder}/${file}`);
                 const command: Command = new cmd.default(client);
                 command.category = client.capitalizeStr(folder);
                 await client.commands.set(command);
-                if (client.packages.indexOf(command.category) > -1) continue;
+                if (client.packages.indexOf(command.category) > -1) { continue; }
                 client.packages.push(command.category);
             }
         }
@@ -29,7 +29,7 @@ export const loadEvents = async (client: FoxClient): Promise<void> => {
         const evt: any = await import(`${process.cwd()}/build/events/${eventFile.split(".")[0]}`);
         const event: Event = new evt.default(client);
         client.events.set(event.name, event);
-        if (!event.enabled) return;
+        if (!event.enabled) { return; }
         client.on(event.name, (...args) => event.run(...args));
     }
 };

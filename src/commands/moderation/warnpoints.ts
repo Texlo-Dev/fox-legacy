@@ -9,14 +9,14 @@ export default class FoxCommand extends Command {
             description: "Shows your current warnpoints.",
             guildOnly: true,
             usage: "[member(warning permission only)]",
-            requiredPerms: ["`mod.warning`"]
+            requiredPerms: ["`mod.warning`"],
 
         });
     }
 
     public async run(message, args) {
         let member = await this.user(args.join(" "), message);
-        if (!message.guild.perms.check("mod.warning", message)) member = null;
+        if (!message.guild.perms.check("mod.warning", message)) { member = null; }
         if (!member) {
             const query = await this.client.mongo.modactions.findOne({ guildID: message.guild.id, userID: message.author.id, action: undefined, id: undefined });
             if (!query) {
@@ -24,12 +24,12 @@ export default class FoxCommand extends Command {
                     embed: {
                         author: {
                             icon_url: this.client.user.displayAvatarURL(),
-                            name: "Warning Points"
+                            name: "Warning Points",
                         },
                         description: "You have 0 warning points. Keep up the good behavior!",
                         color: this.client.brandColor,
-                        timestamp: Date.now()
-                    }
+                        timestamp: Date.now(),
+                    },
                 });
             } else {
                 const warnpoints = query.get("warnpoints");
@@ -47,12 +47,12 @@ export default class FoxCommand extends Command {
                     embed: {
                         author: {
                             icon_url: this.client.user.displayAvatarURL(),
-                            name: "Warning Points"
+                            name: "Warning Points",
                         },
                         description: `${member.username} has 0 warning points. Keep up the good behavior!`,
                         color: this.client.brandColor,
-                        timestamp: Date.now()
-                    }
+                        timestamp: Date.now(),
+                    },
                 });
             } else {
                 const warnpoints = query.get("warnpoints");

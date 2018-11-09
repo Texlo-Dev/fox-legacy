@@ -1,5 +1,5 @@
-import { MessageEmbed } from "discord.js";
 import dateFormat from "dateformat";
+import { MessageEmbed } from "discord.js";
 import { Command } from "../../util";
 dateFormat(new Date(), "ddd, mmm d, yyyy, at h MM TT");
 
@@ -12,7 +12,7 @@ export default class FoxCommand extends Command {
             usage: "<number>",
             extendedUsage: { number: client.args.number },
             guildOnly: true,
-            requiredPerms: ["`mod.modcases`"]
+            requiredPerms: ["`mod.modcases`"],
         });
     }
 
@@ -22,13 +22,13 @@ export default class FoxCommand extends Command {
 
     public async run(message, args) {
         const number = parseInt(args[0]);
-        if (!number) return message.error("Please specify a valid integer.");
+        if (!number) { return message.error("Please specify a valid integer."); }
         const entry = await this.client.mongo.modactions.findOne({
             guildID: message.guild.id,
-            caseNum: number
+            caseNum: number,
         });
 
-        if (!entry) return message.error("Oops! That case didn't exist.");
+        if (!entry) { return message.error("Oops! That case didn't exist."); }
         const id = entry.get("userID");
         const user = await this.client.users.fetch(id);
         const embed = new MessageEmbed()

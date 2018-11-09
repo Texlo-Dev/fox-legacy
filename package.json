@@ -28,7 +28,7 @@
     "common-tags": "^1.8.0",
     "cors": "^2.8.4",
     "dateformat": "^3.0.2",
-    "discord.js": "github:discordjs/discord.js",
+    "discord.js": "github:discordjs/discord.js#3418b5a1a2e2e424369da42f0a04dc3523f3d933",
     "erlpack": "github:discordapp/erlpack",
     "esm": "^3.0.84",
     "fs-nextra": "^0.3.7",

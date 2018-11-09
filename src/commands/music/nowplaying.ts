@@ -11,7 +11,7 @@ export default class FoxCommand extends Command {
             description: "Displays info about the currently playing song.",
             guildOnly: true,
             aliases: ["np"],
-            requiredPerms: ["`music.listen`"]
+            requiredPerms: ["`music.listen`"],
         });
     }
 
@@ -21,7 +21,7 @@ export default class FoxCommand extends Command {
 
     public run(message) {
         const serverQueue = message.guild.queue;
-        if (!serverQueue) return message.error(" Nothing is currently playing.");
+        if (!serverQueue) { return message.error(" Nothing is currently playing."); }
         const np = serverQueue.songs[0];
         const songTime = duration(serverQueue.connection.dispatcher.streamTime, "milliseconds").format("m:ss", { trim: false });
         const songDuration = duration(parseInt(np.length), "seconds").format("m:ss", { trim: false });
@@ -29,7 +29,7 @@ export default class FoxCommand extends Command {
         const remaining = duration(np.length - dispatcherSeconds, "seconds").format("m:ss", { trim: false });
         const embed = new MessageEmbed()
             .setThumbnail(np.thumbnail)
-            .setAuthor(`Now Playing`, message.client.user.displayAvatarURL())
+            .setAuthor("Now Playing", message.client.user.displayAvatarURL())
             .setDescription(`**${np.title}**\nAuthor: **${np.author}**\nProgress: **${songTime}/${songDuration} (About ${remaining} left)**`)
             .setColor(this.client.brandColor);
         message.send({ embed });

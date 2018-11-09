@@ -1,20 +1,20 @@
 interface PollOptions {
-    name: string;
-    type: string;
     channel: any;
     messageID?: string;
-    question: string;
+    name: string;
     open: boolean;
+    question: string;
     responses: any[];
+    type: string;
 }
 export default class Poll implements PollOptions {
-    public name: string;
-    public type: string;
     public channel: any;
     public messageID: string;
-    public question: string;
+    public name: string;
     public open: boolean;
+    public question: string;
     public responses: any[];
+    public type: string;
 
     public constructor(options: PollOptions) {
         this.name = options.name;

@@ -8,18 +8,18 @@ export default class FoxCommand extends Command {
         super(client, {
             name: "gif",
             description: "Searches for a random gif from GIPHY.",
-            usage: "<name>"
+            usage: "<name>",
         });
     }
 
     public run(message, args) {
         const query = args.join(" ");
-        if (!query) return message.error(" Please specify a gif to search.");
+        if (!query) { return message.error(" Please specify a gif to search."); }
         giphy.random({
             tag: query,
-            rating: "pg"
-        }, (err, res) => {
-            if (err) return message.send(`Hmm, there was an error with this command... \`${err.message}\``);
+            rating: "pg",
+        },           (err, res) => {
+            if (err) { return message.send(`Hmm, there was an error with this command... \`${err.message}\``); }
             const embed = new MessageEmbed()
                 .setImage(res.data.image_url)
                 .setColor("RANDOM");

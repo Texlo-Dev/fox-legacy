@@ -11,10 +11,10 @@ export default class FoxCommand extends Command {
             usage: "<member> [reason]",
             extendedUsage: {
                 member: client.args.member,
-                reason: client.args.reason
+                reason: client.args.reason,
             },
             guildOnly: true,
-            requiredPerms: ["`mod.kickboot`"]
+            requiredPerms: ["`mod.kickboot`"],
         });
     }
 
@@ -23,19 +23,19 @@ export default class FoxCommand extends Command {
     }
 
     public async run(message, args, prefix) {
-        if (!message.guild.me.hasPermission("BAN_MEMBERS")) return message.error(" I do not have the permission Ban Members to perform this operation.");
+        if (!message.guild.me.hasPermission("BAN_MEMBERS")) { return message.error(" I do not have the permission Ban Members to perform this operation."); }
         const member = await this.member(message.mentions.users.first() || args[0], message);
-        if (!member) return message.error(" Please mention a member to softban.");
-        if (member.roles.highest.position >= message.member.roles.highest.position) return message.error(` Sorry, but you cannot perform moderation actions on ${member.displayName}.`);
+        if (!member) { return message.error(" Please mention a member to softban."); }
+        if (member.roles.highest.position >= message.member.roles.highest.position) { return message.error(` Sorry, but you cannot perform moderation actions on ${member.displayName}.`); }
         let reason = args.slice(1).join(" ");
         let modlog = message.guild.config.modlogChannel;
         const enabled = message.guild.config.modLogging;
-        if (!enabled) modlog = null;
+        if (!enabled) { modlog = null; }
 
         const caseEntry = await this.client.mongo.modactions.count({ guildID: message.guild.id, id: undefined, warnpoints: undefined });
         const caseInt = caseEntry + 1;
-        if (!reason) reason = `\nModerator: Please type \`${prefix}reason ${caseInt} <reason>\``;
-        if (message.guild.config.msgAfterMod) await member.send(`You have been softbanned from **${message.guild.name}** with the reason of _${reason}_.`);
+        if (!reason) { reason = `\nModerator: Please type \`${prefix}reason ${caseInt} <reason>\``; }
+        if (message.guild.config.msgAfterMod) { await member.send(`You have been softbanned from **${message.guild.name}** with the reason of _${reason}_.`); }
         const mem = await member.ban({ days: 4 });
         id = mem.id;
 
@@ -56,7 +56,7 @@ export default class FoxCommand extends Command {
             reasonFor: reason,
             embedID: m ? m.id : null,
             createdAt: message.createdAt,
-            action: "Softban"
+            action: "Softban",
         });
 
         await entry.save();

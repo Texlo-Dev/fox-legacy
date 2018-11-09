@@ -1,22 +1,22 @@
+import { Message } from "discord.js";
 import { CustOptions } from "../../types";
 import { FoxGuild, FoxMessage } from "../extensions";
 import { CustomCommands } from "../Mongo";
-import { Message } from "discord.js";
 
 export default class CustomCommand {
-    public name: string;
-    public guildID: string;
-    public guild: FoxGuild;
-    public enabled: boolean;
+    public args: any;
     public category: string;
     public cooldown: number;
+    public deleteCommand: boolean;
     public description: string;
     public dmCommand: boolean;
-    public deleteCommand: boolean;
+    public enabled: boolean;
+    public guild: FoxGuild;
+    public guildID: string;
+    public name: string;
     public requiredPerms: string;
-    public usage: string;
     public template: string;
-    public args: any;
+    public usage: string;
 
     public constructor(guild: FoxGuild, data: CustOptions) {
         Object.defineProperty(this, "guild", { value: guild, writable: false });
@@ -35,11 +35,11 @@ export default class CustomCommand {
 
     }
 
-    public async edit(data: any): Promise<Array<CustomCommand>> {
+    public async edit(data: any): Promise<CustomCommand[]> {
         const command: CustomCommands = await this.guild.client.mongo.customcommands.findOne({ guildID: this.guild.id, name: this.name });
-        if (!command) throw new Error("Command not found in database.");
+        if (!command) { throw new Error("Command not found in database."); }
         for (const key in data) {
-            if (!this.hasOwnProperty(key)) throw new Error(`Invalid Key: ${key}.`);
+            if (!this.hasOwnProperty(key)) { throw new Error(`Invalid Key: ${key}.`); }
             command.set({ [key]: data[key] });
         }
         await command.save();
@@ -47,21 +47,21 @@ export default class CustomCommand {
         return this.guild.commands.array();
     }
 
-    public hasPermission(message: FoxMessage): boolean {
-        return message.guild.perms.check(this.requiredPerms, message);
-    }
-
-    public async execute(message: FoxMessage): Promise<Message| Message[]> {
+    public async execute(message: FoxMessage): Promise<Message | Message[]> {
         let template: string = this.template;
         for await (const variable of Object.keys(this.guild.commands.variables)) {
             const rgx: RegExp = new RegExp(`{${variable}}`, "gi");
-            if (!rgx.test(template)) continue;
+            if (!rgx.test(template)) { continue; }
             template = template.replace(rgx, this.guild.commands.variables[variable](message));
         }
-        const regex = new RegExp(`{(.*?)}`, "gm");
+        const regex = new RegExp("{(.*?)}", "gm");
         template = await this.parseActions(message, template, regex, 1);
-        if (this.deleteCommand) message.delete();
-        return this.dmCommand ? await message.author.send(template) : message.channel.send(template);
+        if (this.deleteCommand) { message.delete(); }
+        return this.dmCommand ? message.author.send(template) : message.channel.send(template);
+    }
+
+    public hasPermission(message: FoxMessage): boolean {
+        return message.guild.perms.check(this.requiredPerms, message);
     }
 
     public async parseActions(message: FoxMessage, str: string, regex: RegExp, index: number): Promise<any> {

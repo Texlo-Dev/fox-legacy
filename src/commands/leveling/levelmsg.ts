@@ -9,7 +9,7 @@ export default class FoxCommand extends Command {
             description: "Shows or sets the current level up message.",
             usage: "[message]",
             guildOnly: true,
-            requiredPerms: ["`leveling.manage`"]
+            requiredPerms: ["`leveling.manage`"],
         });
     }
 
@@ -19,7 +19,7 @@ export default class FoxCommand extends Command {
 
     public async run(message, args) {
         const enabled = message.guild.config.levelMessaging;
-        if (!enabled) return message.error(` Level up message are not enabled. please enable them before continuing.`);
+        if (!enabled) { return message.error(" Level up message are not enabled. please enable them before continuing."); }
         const m = args.join(" ");
         if (!m) {
             const embed = new MessageEmbed()

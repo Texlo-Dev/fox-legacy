@@ -1,7 +1,7 @@
 // tslint:disable:no-magic-numbers
-import polka from "polka";
 import { get } from "axios";
 import { Permissions } from "discord.js";
+import polka from "polka";
 import authMiddleware from "../util/authMiddleware";
 const router = polka();
 

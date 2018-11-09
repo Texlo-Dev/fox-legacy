@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
-import { Command } from "../../util";
 import { get } from "snekfetch";
+import { Command } from "../../util";
 
 const platforms = ["pc", "xbox", "ps4"];
 
@@ -9,17 +9,17 @@ export default class FoxCommand extends Command {
     public constructor(client) {
         super(client, {
             name: "fortnite",
-            description: "Shows fortnite status"
+            description: "Shows fortnite status",
         });
     }
 
     public async run(msg, [platform, ...name]) {
-        if (!platform) return msg.send(`<:nicexmark:495362785010647041>  You must specify a platform. Valid platforms: ${platforms.join(" ")}`);
-        if (!platforms.includes(platform)) return msg.send(`<:nicexmark:495362785010647041>  You must specify a valid platform. Valud platforms: ${platforms.join(" ")}`);
-        if (name.length == 0) return msg.send(`<:nicexmark:495362785010647041>  You must specify a name!`);
+        if (!platform) { return msg.send(`<:nicexmark:495362785010647041>  You must specify a platform. Valid platforms: ${platforms.join(" ")}`); }
+        if (!platforms.includes(platform)) { return msg.send(`<:nicexmark:495362785010647041>  You must specify a valid platform. Valud platforms: ${platforms.join(" ")}`); }
+        if (name.length == 0) { return msg.send("<:nicexmark:495362785010647041>  You must specify a name!"); }
 
         get(`https://api.fortnitetracker.com/v1/profile/${platform}/${name}`).set("TRN-Api-Key", "85f6a824-58c4-4080-8678-ca4f9df5187b").then(res => {
-            if (!res.body.stats) return msg.send(`<:nicexmark:495362785010647041>  This user has no fortnite status!`);
+            if (!res.body.stats) { return msg.send("<:nicexmark:495362785010647041>  This user has no fortnite status!"); }
             const solo = res.body.stats.p2,
                 duo = res.body.stats.p10,
                 squad = res.body.stats.p9,

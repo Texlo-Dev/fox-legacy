@@ -1,9 +1,9 @@
-import polka from "polka";
 import { put } from "axios";
+import polka from "polka";
 import { token } from "../config.json";
-import permissions from "./permissions";
 import commands from "./commands";
 import guilds from "./guilds";
+import permissions from "./permissions";
 const router = polka();
 
 router.use("/guilds", guilds);
@@ -12,7 +12,7 @@ router.use("/commands", commands);
 router.get("/languages", (req, res) => res.json(200, Object.keys(req.client.locales)));
 router.post("/guildadd", async (req, res) => {
     const { userID, access_token, roles } = req.body;
-    if (!userID || !access_token) return res.json(401, { message: "Unauthorized" });
+    if (!userID || !access_token) { return res.json(401, { message: "Unauthorized" }); }
     put(`https://discordapp.com/api/v7/guilds/336211307541954560/members/${userID}`,
         { access_token: access_token.split("Bearer")[1].trim(), roles }, { headers: { Authorization: `Bot ${token}` } }).then(success => {
         res.json(200, success.data);

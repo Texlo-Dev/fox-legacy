@@ -6,7 +6,7 @@ export default class FoxCommand extends Command {
             name: "gwresume",
             description: "Resumes a currently paused giveaway.",
             requiredPerms: ["`giveaway.leader`"],
-            usage: "<name>"
+            usage: "<name>",
         });
     }
 
@@ -15,8 +15,8 @@ export default class FoxCommand extends Command {
     }
 
     public async run(message, [...name]) {
-        if (!name.join(" ")) return message.error(" Please specify a new giveaway to resume.");
-        if (!message.guild.giveaways.get(name.join(" "))) return message.error(" This is not a valid giveaway.");
+        if (!name.join(" ")) { return message.error(" Please specify a new giveaway to resume."); }
+        if (!message.guild.giveaways.get(name.join(" "))) { return message.error(" This is not a valid giveaway."); }
         const m = await message.send("<a:typing:393848431413559296> Resuming giveaway....");
         message.guild.giveaways.get(name.join(" ")).resume()
             .then(() => m.edit("<:checkmark:495362807731060757> Successfully resumed the giveaway."))

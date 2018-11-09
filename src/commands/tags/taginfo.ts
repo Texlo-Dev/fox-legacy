@@ -10,7 +10,7 @@ export default class FoxCommand extends Command {
             guildOnly: true,
             aliases: ["tag-info", "info-tag", "tag-details"],
             requiredPerms: ["`tag.tagger`"],
-            usage: "<tagname>"
+            usage: "<tagname>",
         });
     }
 
@@ -24,11 +24,11 @@ export default class FoxCommand extends Command {
             const filter = m => m.author.id === message.author.id;
             message.reply("What tag would you like to get more info about? This command will be automatically cancelled in 30 seconds, or by you typing `cancel`.");
             const response = await message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ["time"] }).catch(() => null);
-            if (!response) return message.reply("Time was up, so I cancelled the command.");
-            if (response.first().content.match(/cancel/i)) return message.reply("Cancelling command now.");
+            if (!response) { return message.reply("Time was up, so I cancelled the command."); }
+            if (response.first().content.match(/cancel/i)) { return message.reply("Cancelling command now."); }
             const query = await this.client.mongo.tags.findOne({
                 guildID: message.guild.id,
-                tagName: response.first().content
+                tagName: response.first().content,
             });
             if (query) {
                 const id = query.get("author");
@@ -48,7 +48,7 @@ export default class FoxCommand extends Command {
         } else {
             const query = await this.client.mongo.tags.findOne({
                 guildID: message.guild.id,
-                tagName: tagname.toLowerCase()
+                tagName: tagname.toLowerCase(),
             });
             if (query) {
                 const id = query.get("author");

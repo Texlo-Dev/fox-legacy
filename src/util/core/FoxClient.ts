@@ -1,33 +1,43 @@
+import axios, { AxiosResponse } from "axios";
 import { Client, Collection, MessageStore, TextChannel } from "discord.js";
+import translate from "translate";
 import {
     CommandStore,
-    FoxMusic,
     EventStore,
+    FoxMusic,
+    Loader,
     Tools,
-    Loader
 } from "..";
-import translate from "translate";
-import { prefix, isTestFox, ownerID, devs, dbotsKey, googleAPI } from "../../config.json";
-import * as Mongo from "../Mongo";
-import axios, { AxiosResponse } from "axios";
+import { dbotsKey, devs, googleAPI, isTestFox, ownerID, prefix } from "../../config.json";
 import { FoxMessage } from "../extensions";
+import * as Mongo from "../Mongo";
 translate.key = googleAPI;
 
 class FoxClient extends Client {
-    public tools: typeof Tools;
-    public packages: string[];
-    public music: FoxMusic;
+
+    public get args(): object {
+        const obj: object = {
+            member: "mention, ID, or name (Ex: @Jacz#9536, Jacz)",
+            duration: "second, minute, hour, day, week (Ex: 2s, 4m, 8d, 9w)",
+            reason: "string",
+            number: "number (Ex: 50)",
+        };
+        return obj;
+    }
+    public brandColor: number;
     public commandPrefix: string;
     public commands: CommandStore;
-    public events: EventStore;
     public commandsRun: number;
+    public events: EventStore;
     public isTestFox: boolean;
-    public ready: boolean;
-    public translate: Function;
     public locales: any;
-    public permissions: any;
     public mongo: any;
-    public brandColor: number;
+    public music: FoxMusic;
+    public packages: string[];
+    public permissions: any;
+    public ready: boolean;
+    public tools: typeof Tools;
+    public translate: Function;
 
     public constructor() {
         super({ disableEveryone: true });
@@ -57,7 +67,7 @@ class FoxClient extends Client {
             Swedish: "sw",
             Russian: "ru",
             Japanese: "ja",
-            Italian: "it"
+            Italian: "it",
         };
         this.mongo = {
             customcommands: Mongo.CustomCommands,
@@ -70,16 +80,21 @@ class FoxClient extends Client {
             giveaways: Mongo.Giveaways,
             guildconfig: Mongo.GuildSettings,
             polls: Mongo.Polls,
-            patrons: Mongo.Patrons
+            patrons: Mongo.Patrons,
         };
         this.once("ready", async () => this._ready());
     }
 
-    public isOwner(id: string): boolean {
-        return id === ownerID;
+    public async _ready(): Promise<void> {
+        const { loadCommands, loadEvents } = Loader;
+        await loadCommands(this);
+        await loadEvents(this);
+        this.ready = true;
+        this.emit("foxReady");
     }
-    public isDev(id: string): boolean {
-        return this.isOwner(id) || devs.includes(id);
+
+    public capitalizeStr(string: string): string {
+        return string.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
     }
 
     public clean(text: string): string {
@@ -89,90 +104,70 @@ class FoxClient extends Client {
             .replace(new RegExp(`${this.token}`, "g"), "NO YOU");
     }
 
+    public async haste(input: string, extension: string): Promise<string> {
+        return this.http("POST", {
+            url: "https://hastebin.com/documents",
+            body: input,
+        })
+        .then(res => `https://hastebin.com/${res.key}${extension ? `.${extension}` : ""}`)
+        .catch(err => err);
+    }
+
+    public async http(method: string, meta: any): Promise<AxiosResponse> {
+        if (!method || !meta) { throw new Error("Missing Paramaters."); }
+        return axios({
+            method,
+            url: meta.url,
+            data: meta.body || {},
+            headers: meta.headers || {},
+        }).then((res) => res.data);
+    }
+    public isDev(id: string): boolean {
+        return this.isOwner(id) || devs.includes(id);
+    }
+
+    public isOwner(id: string): boolean {
+        return id === ownerID;
+    }
+
+    public async isUpvoter(id: string): Promise<boolean> {
+        if (this.user.id !== "333985343445663749") { return Promise.resolve(true); }
+        const res = await axios({
+            url: "https://discordbots.org/api/bots/333985343445663749/votes",
+            headers: {
+                Authorization: dbotsKey,
+            },
+        });
+        return res.data.map((c: any) => c.id).includes(id);
+    }
+
     public paginate(items: any[], page = 1, pageLength = 10): any {
         const maxPage = Math.ceil(items.length / pageLength);
-        if (page < 1) page = 1;
-        if (page > maxPage) page = maxPage;
+        if (page < 1) { page = 1; }
+        if (page > maxPage) { page = maxPage; }
         const startIndex = (page - 1) * pageLength;
         return {
             items: items.length > pageLength ? items.slice(startIndex, startIndex + pageLength) : items,
             page,
             maxPage,
-            pageLength
+            pageLength,
         };
     }
 
-    public async haste(input: string, extension: string): Promise<String> {
-        return this.http("POST", {
-            url: "https://hastebin.com/documents",
-            body: input
-        }).then(res => `https://hastebin.com/${res.key}${extension ? `.${extension}` : ""}`)
-        .catch(err => err);
-    }
-
-    public async http(method: string, meta: any): Promise<AxiosResponse> {
-        if (!method || !meta) throw new Error("Missing Paramaters.");
-        return axios({
-            method,
-            url: meta.url,
-            data: meta.body || {},
-            headers: meta.headers || {}
-        }).then(res => res.data);
-    }
-
-    public capitalizeStr(string: string): string {
-        return string.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-    }
-
-    public sweepMessages(lifetime = this.options.messageCacheLifetime, commandLifetime = 30000): number | MessageStore {
-        if (typeof lifetime !== "number" || isNaN(lifetime)) throw new TypeError("The lifetime must be a number.");
-        if (lifetime <= 0) {
-            this.emit("debug", "Didn't sweep messages - lifetime is unlimited");
-            return -1;
+    public shuffleArray(arr: any[]): any[] {
+        let i = arr.length, j, temp;
+        if (i === 0) { return arr; }
+        while (--i) {
+            j = Math.floor(Math.random() * (i + 1));
+            temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
         }
-
-        const lifetimeMs = lifetime * 1000;
-        const commandLifetimeMs = commandLifetime * 1000;
-        const now = Date.now();
-        let channels = 0;
-        let messages = 0;
-        let commandMessages = 0;
-
-        for (let channel of this.channels.values()) {
-            let chl = channel as TextChannel;
-
-            if (!chl.messages) continue;
-            channels++;
-
-            for (const message of chl.messages.values()) {
-                let mess = message as FoxMessage;
-                if (mess.command && now - (mess.editedTimestamp || mess.createdTimestamp) > commandLifetimeMs) {
-                    chl.messages.delete(message.id);
-                    commandMessages++;
-                } else if (!mess.command && now - (mess.editedTimestamp || mess.createdTimestamp) > lifetimeMs) {
-                    chl.messages.delete(message.id);
-                    messages++;
-                }
-            }
-        }
-
-        this.emit("debug", `Swept ${messages} messages older than ${lifetime} seconds and ${commandMessages} command messages older than ${commandLifetime} seconds in ${channels} text-based channels`);
-        return messages;
-    }
-
-    public async isUpvoter(id: string): Promise<boolean> {
-        if (this.user.id !== "333985343445663749") return Promise.resolve(true);
-        const res = await axios({
-            url: `https://discordbots.org/api/bots/333985343445663749/votes`,
-            headers: {
-                Authorization: dbotsKey
-            }
-        });
-        return res.data.map((c: any) => c.id).includes(id);
+        return arr;
     }
 
     public spanMs(span: string): number {
-        if (typeof span !== "string") return null;
+        if (typeof span !== "string") { return null; }
         let total = 0;
         const amounts: any = span.split(/[a-z]/); amounts.splice(-1);
         const units = span.split(/\d+/); units.shift();
@@ -191,41 +186,47 @@ class FoxClient extends Client {
             case "s":
                 mult = 1000; break;
             default:
-                mult = null; break;
+                mult = null;
             }
             total += mult * amounts[i];
         }
         return total;
     }
 
-    public get args(): object {
-        const obj: object = {
-            member: `mention, ID, or name (Ex: @Jacz#9536, Jacz)`,
-            duration: `second, minute, hour, day, week (Ex: 2s, 4m, 8d, 9w)`,
-            reason: `string`,
-            number: "number (Ex: 50)"
-        };
-        return obj;
-    }
-
-    public async _ready(): Promise<void> {
-        const { loadCommands, loadEvents } = Loader;
-        await loadCommands(this);
-        await loadEvents(this);
-        this.ready = true;
-        this.emit("foxReady");
-    }
-
-    public shuffleArray(arr: any[]): any[] {
-        let i = arr.length, j, temp;
-        if ( i === 0 ) return arr;
-        while ( --i ) {
-            j = Math.floor( Math.random() * ( i + 1 ) );
-            temp = arr[i];
-            arr[i] = arr[j];
-        arr[j] = temp;
+    public sweepMessages(lifetime = this.options.messageCacheLifetime, commandLifetime = 30000): number | MessageStore {
+        if (typeof lifetime !== "number" || isNaN(lifetime)) { throw new TypeError("The lifetime must be a number."); }
+        if (lifetime <= 0) {
+            this.emit("debug", "Didn't sweep messages - lifetime is unlimited");
+            return -1;
         }
-        return arr;
+
+        const lifetimeMs = lifetime * 1000;
+        const commandLifetimeMs = commandLifetime * 1000;
+        const now = Date.now();
+        let channels = 0;
+        let messages = 0;
+        let commandMessages = 0;
+
+        for (const channel of this.channels.values()) {
+            const chl = channel as TextChannel;
+
+            if (!chl.messages) { continue; }
+            channels++;
+
+            for (const message of chl.messages.values()) {
+                const mess = message as FoxMessage;
+                if (mess.command && now - (mess.editedTimestamp || mess.createdTimestamp) > commandLifetimeMs) {
+                    chl.messages.delete(message.id);
+                    commandMessages++;
+                } else if (!mess.command && now - (mess.editedTimestamp || mess.createdTimestamp) > lifetimeMs) {
+                    chl.messages.delete(message.id);
+                    messages++;
+                }
+            }
+        }
+
+        this.emit("debug", `Swept ${messages} messages older than ${lifetime} seconds and ${commandMessages} command messages older than ${commandLifetime} seconds in ${channels} text-based channels`);
+        return messages;
     }
 }
 

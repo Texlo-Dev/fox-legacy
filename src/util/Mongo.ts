@@ -14,7 +14,7 @@ export class Giveaways extends Model {}
 
 connection.connect()
     .then(() => console.log("MongoDB connection established."))
-    .catch(err => {
+    .catch((err) => {
         console.error(`Error connecting to MongoDB. ${err}`);
         process.exit();
     });

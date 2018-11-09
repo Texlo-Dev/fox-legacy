@@ -1,27 +1,34 @@
-import { Command } from "../../util";
+import { Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public constructor(client: FoxClient) {
         super(client, {
             name: "reload",
             description: "Reloads a command, if it has been changed.",
             usage: "<command>",
-            requiredPerms: ["Bot Owner"]
+            requiredPerms: ["Bot Owner"],
         });
     }
 
-    public hasPermission(message) {
+    public hasPermission(message: FoxMessage): boolean {
         return this.client.isOwner(message.author.id);
     }
 
-    public async run(message, [command]) {
-        if (!command) return message.send("Please specify a command to reload.");
-        const cmd = this.client.commands.get(command);
-        if (!cmd) return message.send(`I cannot find the command \`${command}\``);
-        const m = await message.send(`Attempting to reload ${command}`);
+    public async run(message: FoxMessage, args: string[]): Promise<void> {
+        const command: string = args[0];
+        if (!command) { return message.send("Please specify a command to reload."); }
+        const cmd: Command = this.client.commands.get(command);
+        if (!cmd) { return message.send(`I cannot find the command \`${command}\``); }
+        const m: FoxMessage = await message.send(`Attempting to reload ${command}`);
         await cmd.reload()
-            .catch(e => m.edit({ embed: message.FoxEmbed({ header: "Reload Command" }, `I failed to reload the command **${cmd.name}**.\nError: \`\`\`${e.stack}\`\`\``) }));
-        m.edit({ embed: message.FoxEmbed({ header: "Reload Command", description: `<:check:314349398811475968> Successfully reloaded the command **${cmd.name}**.` }) });
+            .catch(e => m.edit({ embed: message.FoxEmbed({ header: "Reload Command" }, `I failed to reload the command **${cmd.name}**.\nError: \`\`\`${e.stack}\`\`\``) })); // tslint:disable-line
+        m.edit({
+            embed: message.FoxEmbed({
+                header: "Reload Command",
+                description: `<:check:314349398811475968> Successfully reloaded the command **${cmd.name}**.`
+            })
+        });
         if (this.client.shard) {
             await this.client.shard.broadcastEval(`
             const command = this.commands.get('${command}');

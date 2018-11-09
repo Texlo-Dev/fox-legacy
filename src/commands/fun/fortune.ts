@@ -4,7 +4,7 @@ export default class FoxCommand extends Command {
     public constructor(client) {
         super(client, {
             name: "fortune",
-            description: "Displays a random fortune."
+            description: "Displays a random fortune.",
         });
     }
 

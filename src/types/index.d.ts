@@ -1,70 +1,70 @@
-import { User, Message, Guild, GuildMember, StringResolvable } from "discord.js";
+import { Guild, GuildMember, Message, StringResolvable, User } from "discord.js";
 
 export interface Options {
-    name: string;
-    description: string;
     client?: FoxClient;
+    description: string;
     enabled?: boolean;
+    name: string;
 }
 
 export interface CustOptions {
-    name: string;
-    guildID: string;
-    description: string;
-    enabled: boolean;
+    args?: any;
     category: string;
     cooldown: number;
-    dmCommand: boolean;
     deleteCommand: boolean;
+    description: string;
+    dmCommand: boolean;
+    enabled: boolean;
+    guildID: string;
+    name: string;
     requiredPerms: string;
-    args?: any;
-    usage: string;
     template: string;
+    usage: string;
 }
 
 import {
-    Command,
     Banking,
-    CustomCommands,
-    Leveling,
-    PollStore as Polls,
-    FoxPermission,
-    Package,
-    GiveawayStore,
+    Command,
     Config,
-    ServerProtect,
+    CustomCommands,
+    FoxClient,
+    FoxPermission,
+    GiveawayStore,
+    Leveling,
+    Package,
     PermStore,
-    FoxClient
+    PollStore as Polls,
+    ServerProtect,
 } from "../util";
 
-export type FoxConfig = {
-    token: string;
-    clientSecret: string;
-    isTestFox: boolean;
-    clientID: string;
-    prefix: string;
-    googleAPI: string;
-    devs: string[];
-    ownerID: string;
+export interface FoxConfig {
     aiKey: string;
-    scKey: string;
-    gitPass: string;
+    clientID: string;
+    clientSecret: string;
     darkSkyAPI: string;
-    gitName: string;
     dboatsKey: string;
     dbotsKey: string;
+    devs: string[];
     discordbotsKey: string;
-};
+    gitName: string;
+    gitPass: string;
+    googleAPI: string;
+    isTestFox: boolean;
+    ownerID: string;
+    prefix: string;
+    scKey: string;
+    token: string;
+}
 
 export interface CommandInfo {
-    name: string;
-    description: string;
     aliases?: string[];
-    usage?: string;
     cooldown?: number;
-    extendedUsage?: string[];
-    requiredPerms?: string[];
-    guildOnly?: boolean;
-    patreonTier?: number;
+    description: string;
     enabled?: boolean;
+    extendedUsage?: any;
+    guildOnly?: boolean;
+    name: string;
+    patreonTier?: number;
+    requiredPerms?: string[];
+    usage?: string;
 }

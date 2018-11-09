@@ -7,7 +7,7 @@ export default class FoxCommand extends Command {
             description: "Removed a selfrole you have assigned.",
             usage: "<rolename>",
             guildOnly: true,
-            requiredPerms: ["`selfroles.use`"]
+            requiredPerms: ["`selfroles.use`"],
         });
     }
 
@@ -16,11 +16,11 @@ export default class FoxCommand extends Command {
     }
 
     public async run(message, args) {
-        if (!message.guild.me.hasPermission("MANAGE_ROLES")) return message.channel.send("<:nicexmark:495362785010647041>  I am missing the Manage Roles permissions, and therefore cannot remove roles.");
+        if (!message.guild.me.hasPermission("MANAGE_ROLES")) { return message.channel.send("<:nicexmark:495362785010647041>  I am missing the Manage Roles permissions, and therefore cannot remove roles."); }
         const role = await this.role(args.join(" "), message);
-        if (!role) return message.channel.send("<:nicexmark:495362785010647041>  Invalid role detected.");
+        if (!role) { return message.channel.send("<:nicexmark:495362785010647041>  Invalid role detected."); }
         const entry = message.guild.config.selfRoles;
-        if (!entry.some(r => r.id === role.id)) return message.error(` This is not an available self role.`);
+        if (!entry.some(r => r.id === role.id)) { return message.error(" This is not an available self role."); }
         message.member.roles.remove(role);
         return message.FoxEmbed({ header: "Remove Self Role" }, `You have removed the ${role} role.`);
     }

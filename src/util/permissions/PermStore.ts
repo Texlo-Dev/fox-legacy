@@ -17,7 +17,12 @@ export default class PermStore extends Collection<any, any> {
             if (mapped.length) {
                 super.clear();
                 for (const ow of mapped[0].overwrites) {
-                    if (!super.has(ow.target.id)) { super.set(ow.target.id, { identifier: ow.target, overwrites: [ow] }); } else { super.get(ow.target.id).overwrites.push(ow); }
+                    if (!super.has(ow.target.id)) {
+                        super.set(ow.target.id, { identifier: ow.target, overwrites: [ow] });
+                    } else {
+                        super.get(ow.target.id).overwrites
+                            .push(ow);
+                    }
                 }
             } else {
                 const server: Permissions = new this.guild.client.mongo.permissions({
@@ -27,20 +32,22 @@ export default class PermStore extends Collection<any, any> {
                             permission: "automod.freespeech",
                             target: { name: "@everyone", id: this.guild.id },
                             status: "neutral",
-                            channel: null,
+                            channel: undefined,
                         },
                     ],
                 });
                 await server.save();
+
                 return this._cache();
             }
+
             return true;
         } catch (error) {
             console.error(error);
         }
     }
 
-    public async add(perm: string, target: any, status: string, channel: any): Promise<Object> {
+    public async add(perm: string, target: any, status: string, channel?: any): Promise<Object> {
         if (!["neutral", "allowed", "denied"].includes(status)) { throw new Error("Invalid status."); }
         const entry: Permissions = await this.guild.client.mongo.permissions.findOne({ guildID: this.guild.id });
         if (!entry) {

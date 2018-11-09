@@ -9,7 +9,7 @@ export default class FoxCommand extends Command {
             description: "Removes server logging exclusion from a given channel.",
             usage: "[channel]",
             guildOnly: true,
-            requiredPerms: ["`core.manageserver`"]
+            requiredPerms: ["`core.manageserver`"],
         });
     }
 
@@ -20,7 +20,7 @@ export default class FoxCommand extends Command {
     public async run(message, args) {
         const id = args.join(" ") || message.channel.id;
         const channel = await this.channel(id, message);
-        if (!channel) return message.error(`This is not a valid channel.`);
+        if (!channel) { return message.error("This is not a valid channel."); }
         const channels = message.guild.config.logExcluded;
         channels.splice(channels.indexOf(JSON.parse(JSON.stringify(channel))), 1);
         message.guild.config.setArray("logExcluded", channels, true);
