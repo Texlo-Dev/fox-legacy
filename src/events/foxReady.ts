@@ -56,10 +56,11 @@ export default class extends Event {
         console.log(`[Mr.Fox] Shard ${client.shard.id}: ONLINE. ${client.guilds.size} Servers, ${client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()} Users, ${client.channels.size} Channels.`); // tslint:disable-line
         client.setInterval(() => client.tools.checkUnmute(client), 5000);
         if (client.user.id === "333985343445663749") {
+            const shard: number = client.shard.id[0] ? client.shard.id[0] : client.shard.id;
             client.http("POST", {
                 url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
                 body: {
-                    shard_id: client.shard.id[0],
+                    shard_id: shard,
                     shard_count: client.shard.count + 1,
                     server_count: client.guilds.size
                 },

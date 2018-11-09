@@ -33,10 +33,11 @@ export default class GuildDelete extends Event {
         console.log(`Left ${guild.name}`);
         client.user.setActivity(`on shard #${client.shard.id}/${client.shard.count}: ${client.guilds.size} servers | ${client.commandPrefix}help`); // tslint:disable-line
         await GuildDelete.deleteSettings(guild);
+        const shard: number = client.shard.id[0] ? client.shard.id[0] : client.shard.id;
         client.http("POST", {
             url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
             body: {
-                shard_id: client.shard.id[0],
+                shard_id: shard,
                 shard_count: client.shard.count + 1,
                 server_count: client.guilds.size
             },
