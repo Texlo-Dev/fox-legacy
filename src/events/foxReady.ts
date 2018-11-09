@@ -31,8 +31,8 @@ export default class extends Event {
             await (guild as FoxGuild).perms._cache();
             await (guild as FoxGuild).commands.reloadAll();
             await (guild as FoxGuild).polls._cache();
-            await (guild as FoxGuild).giveaways._cache();
-            this.client.emit("giveawayStart", guild);
+            (guild as FoxGuild).giveaways._cache()
+                .then(() => (guild as FoxGuild).giveaways.begin());
         }
     }
 

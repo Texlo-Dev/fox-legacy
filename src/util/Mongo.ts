@@ -1,5 +1,6 @@
+// tslint:disable:max-classes-per-file
 import { Database, Model } from "mongorito";
-const connection = new Database("localhost/encipio");
+const connection: Database = new Database("localhost/encipio");
 export class FoxLeveling extends Model {}
 export class CustomCommands extends Model {}
 export class ModActions extends Model {}
