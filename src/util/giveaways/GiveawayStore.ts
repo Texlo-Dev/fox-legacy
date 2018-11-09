@@ -91,7 +91,7 @@ export default class GiveawayStore extends Collection<any, any> {
     }
 
     public begin(): void {
-        super.forEach((giveaway) => {
+        this.forEach((giveaway) => {
             if (giveaway.running) {
                 this.listenGiveaway(giveaway);
             }

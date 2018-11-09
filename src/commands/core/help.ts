@@ -27,7 +27,7 @@ export default class FoxCommand extends Command {
             if (message.guild) {
                 const filtered: Collection<string, Command> = this.client.commands
                     .filter(c => c.category === "Core" ? true : epkgs.indexOf(c.category) > -1);
-                myCommands = filtered.filter(c => c.hasPermission(message) || c.constructor.hasPermission(message))
+                myCommands = filtered.filter(c => c.hasPermission(message) || c.constructor.hasPermission && c.constructor.hasPermission(message))
                     .filter(able =>
                         message.guild.config.disabledCommands
                         ? message.guild.config.disabledCommands.indexOf(able.name) < 0
