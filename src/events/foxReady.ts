@@ -25,14 +25,15 @@ export default class extends Event {
                 (guild as FoxGuild).permissions.set(foxperm.name, foxperm);
                 this.client.permissions.set(foxperm.name, foxperm);
             }
-            await (guild as FoxGuild).config._loadSettings();
-            await (guild as FoxGuild).banking._loadSettings();
-            await (guild as FoxGuild).packages.forEach(p => p._setEnabled());
-            await (guild as FoxGuild).perms._cache();
-            await (guild as FoxGuild).commands.reloadAll();
-            await (guild as FoxGuild).polls._cache();
-            (guild as FoxGuild).giveaways._cache()
-                .then(() => (guild as FoxGuild).giveaways.begin());
+            const fg: FoxGuild = guild as FoxGuild;
+            await fg.config._loadSettings();
+            await fg.banking._loadSettings();
+            await fg.packages.forEach(p => p._setEnabled());
+            await fg.perms._cache();
+            await fg.commands.reloadAll();
+            await fg.polls._cache();
+            fg.giveaways._cache()
+                .then(() => fg.giveaways.begin());
         }
     }
 
@@ -57,7 +58,11 @@ export default class extends Event {
         if (client.user.id === "333985343445663749") {
             client.http("POST", {
                 url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
-                body: { shard_id: client.shard.id, shard_count: client.shard.count, server_count: client.guilds.size },
+                body: {
+                    shard_id: client.shard.id[0],
+                    shard_count: client.shard.count + 1,
+                    server_count: client.guilds.size
+                },
                 headers: { Authorization: dbotsKey },
             })
             .then(() => console.log("Updated dbots.org status."))
@@ -65,7 +70,11 @@ export default class extends Event {
 
             client.http("POST", {
                 url: `https://bots.discord.pw/api/bots/${client.user.id}/stats`,
-                body: { shard_id: client.shard.id, shard_count: client.shard.count, server_count: client.guilds.size },
+                body: {
+                    shard_id: client.shard.id[0],
+                    shard_count: client.shard.count + 1,
+                    server_count: client.guilds.size
+                },
                 headers: { Authorization: discordbotsKey },
             })
             .then(() => console.log("Updated bots.discord.pw status."))

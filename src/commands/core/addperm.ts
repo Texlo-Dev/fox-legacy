@@ -17,10 +17,12 @@ export default class FoxCommand extends Command {
         return this.client.isOwner(message.author.id);
     }
 
-    public async run(message: FoxMessage, args: string[]): Promise<void> {
-        const name = args[0];
-        const category = args[1];
-        const description = args.slice(2).join(" ");
+    public async run(message: FoxMessage, args: string[]): Promise<any> {
+        const name: string = args[0];
+        const category: string = args[1];
+        const description: string = args
+            .slice(2)
+            .join(" ");
         if (!name) { return message.error("Please specify the permission name."); }
         if (!category) { return message.send("Please specify the permisison category."); }
         if (!description) { return message.send("Please specify the description."); }
@@ -34,6 +36,7 @@ export default class FoxCommand extends Command {
         });
 
         await entry.save();
+
         return message.send(`Successfully added permission ${name}.`);
     }
 

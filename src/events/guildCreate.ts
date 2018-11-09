@@ -60,7 +60,11 @@ export default class GuildCreate extends Event {
 
         client.http("POST", {
             url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
-            body: { shard_id: client.shard.id, shard_count: client.shard.count, server_count: client.guilds.size },
+            body: {
+                shard_id: client.shard.id[0],
+                shard_count: client.shard.count + 1,
+                server_count: client.guilds.size
+            },
             headers: { Authorization: dbotsKey },
         })
         .then(() => console.log("Updated dbots.org status."))
@@ -68,7 +72,11 @@ export default class GuildCreate extends Event {
 
         client.http("POST", {
             url: `https://bots.discord.pw/api/bots/${client.user.id}/stats`,
-            body: { shard_id: client.shard.id, shard_count: client.shard.count, server_count: client.guilds.size },
+            body: {
+                shard_id: client.shard.id[0],
+                shard_count: client.shard.count + 1,
+                server_count: client.guilds.size
+            },
             headers: { Authorization: discordbotsKey },
         })
         .then(() => console.log("Updated bots.discord.pw status."))

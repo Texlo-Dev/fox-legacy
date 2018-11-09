@@ -16,7 +16,7 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public async run(message: FoxMessage, args: string[]): Promise<void> {
+    public async run(message: FoxMessage, args: string[]): Promise<any> {
         const tier: string = args[0];
         if (!tier) { return message.send("Please specify a tier."); }
         const possibleTiers: object = { bronze: 1, silver: 2, gold: 3 };
