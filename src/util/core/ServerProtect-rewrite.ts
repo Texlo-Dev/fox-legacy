@@ -9,6 +9,13 @@ interface ServerProtectOptions {
 }
 
 class ServerProtect {
+
+    public static massRole(str: string): RegExpMatchArray {
+        const roleregex: RegExp = /<@&?([0-9]+)>/g;
+        const everyoneregex: RegExp = /@everyone/g;
+
+        return str.match(roleregex) ? str.match(roleregex) : str.match(everyoneregex);
+    }
     public readonly client: FoxClient;
     public readonly guild: FoxGuild;
     public maxban: number;
@@ -24,13 +31,18 @@ class ServerProtect {
     }
 
     public async ban(member: GuildMember, reason: string): Promise<void> {
-        await member.send(`Mention spam has been detected in your message, and you have been banned, as part of my spam protection package. If you feel like this was a mistake, DM ${member.guild.owner.user.tag}.`).catch(() => 0);
-        member.ban({ days: 3, reason }).catch(() => 0);
+        await member.send(`Mention spam has been detected in your message, and you have been banned, as part of my spam protection package. If you feel like this was a mistake, DM ${member.guild.owner.user.tag}.`).catch(() => 0); // tslint:disable-line
+        member.ban({ days: 3, reason })
+            .catch(() => 0);
         const channel: boolean = await this.guild.config.modLogging;
         if (!channel) { return; }
         const modlog: any = await this.guild.config.modlogChannel;
         if (!modlog) { return; }
-        const caseEntry: number = await this.client.mongo.modactions.count({ guildID: this.guild.id, id: undefined, warnpoints: undefined });
+        const caseEntry: number = await this.client.mongo.modactions.count({
+            guildID: this.guild.id,
+            id: undefined,
+            warnpoints: undefined
+        });
         const caseInt: number = caseEntry + 1;
         const embed: MessageEmbed = new MessageEmbed()
             .setAuthor(this.client.user.tag, this.client.user.displayAvatarURL())
@@ -39,7 +51,8 @@ class ServerProtect {
             .setDescription(`**Action:** Automatic Ban\n**Member:** ${member.user.tag} (${member.id})\n**Reason:** *${reason}*`)
             .setFooter(`Case#${caseInt}`);
         const ch = this.guild.channels.get(modlog.id) as TextChannel;
-        const m = await ch.send({ embed }).catch(() => null);
+        const m = await ch.send({ embed })
+            .catch(() => null);
 
         const entry: ModActions = new this.client.mongo.modactions({
             guildID: this.guild.id,
@@ -49,37 +62,36 @@ class ServerProtect {
             reasonFor: reason,
             modID: this.client.user.id,
             createdAt: m.createdAt,
-            embedID: m ? m.id : null,
+            embedID: m ? m.id : undefined,
         });
         await entry.save();
-    }
-
-    public massRole(str: string): RegExpMatchArray {
-        const roleregex = /<@&?([0-9]+)>/g;
-        const everyoneregex = /@everyone/g;
-        return str.match(roleregex) ? str.match(roleregex) : str.match(everyoneregex);
     }
 
     public async warnMute(member: GuildMember, reason: string): Promise<void> {
         const muteRole: any = this.guild.config.muteRole;
         if (muteRole && member.roles.has(muteRole.id)) { return; }
-        member.roles.add(muteRole.id).catch(() => 0);
-        member.send("I have detected a great amount of spam in your message(s), and I have muted you, as part of my spam protection package.").catch(() => 0);
+        member.roles.add(muteRole.id)
+            .catch(() => 0);
+        member.send("I have detected a great amount of spam in your message(s), and I have muted you, as part of my spam protection package.").catch(() => 0); // tslint:disable-line
 
         const channel: boolean = await this.guild.config.modLogging;
         if (!channel) { return; }
         const modlog: any = await this.guild.config.modlogChannel;
         if (!modlog) { return; }
-        const caseEntry: number = await this.client.mongo.modactions.count({ guildID: this.guild.id, id: undefined, warnpoints: undefined });
+        const caseEntry: number = await this.client.mongo.modactions.count({
+            guildID: this.guild.id,
+            id: undefined, warnpoints: undefined
+        });
         const caseInt: number = caseEntry + 1;
         const embed: MessageEmbed = new MessageEmbed()
             .setAuthor(this.client.user.tag, this.client.user.displayAvatarURL())
             .setColor("RANDOM")
             .setTimestamp()
-            .setDescription(`**Action:** Automatic Mute\n**Member:** ${member.user.tag} (${member.id})\n**Reason:** *${reason}*`)
+            .setDescription(`**Action:** Automatic Mute\n**Member:** ${member.user.tag} (${member.id})\n**Reason:** *${reason}*`) // tslint:disable-line
             .setFooter(`Case#${caseInt}`);
-        const ch = this.guild.channels.get(modlog.id) as TextChannel;
-        const m = await ch.send({ embed }).catch(() => null);
+        const ch: TextChannel = this.guild.channels.get(modlog.id) as TextChannel;
+        const m: any = await ch.send({ embed })
+            .catch(() => undefined);
 
         const entry: ModActions = new this.client.mongo.modactions({
             guildID: this.guild.id,
@@ -89,7 +101,7 @@ class ServerProtect {
             reasonFor: reason,
             modID: this.client.user.id,
             createdAt: m.createdAt,
-            embedID: m ? m.id : null,
+            embedID: m ? m.id : undefined,
             isMute: true,
             hasLeft: true,
         });

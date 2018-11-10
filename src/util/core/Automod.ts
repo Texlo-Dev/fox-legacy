@@ -45,7 +45,7 @@ export const massProtect: (message: FoxMessage) => void = async (message: FoxMes
     if (exempted && exempted.some((channel) => channel.id === message.channel.id)) { return; }
     if (message.guild.perms.check("automod.freespeech", message)) { return; }
     const threshold: number = message.guild.config.mentionLimit;
-    const massrole: RegExpMatchArray = await sp.massRole(message.content);
+    const massrole: RegExpMatchArray = await ServerProtect.massRole(message.content);
     if (massrole && massrole.length >= threshold) {
         message.delete()
             .catch(() => 0);

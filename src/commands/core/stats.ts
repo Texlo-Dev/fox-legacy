@@ -36,7 +36,7 @@ export default class FoxCommand extends Command {
             .addField("Uptime", duration(this.client.uptime).format("d[d], h[h], m[m], s[s]"), true)
             .addField("Load Averages", loadavg().map(o => Math.round(100 * o) / 100).join(", "), true)
             .addField("Memory Usage", `${mem.toFixed(1)} GB/${totalMem.toFixed(1)} GB`, true)
-            .setFooter(`Shard#${message.guild.shardID}`);
+            .setFooter(`Shard#${message.guild.shard}`);
         message.send({ embed });
     }
 

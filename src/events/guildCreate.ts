@@ -58,12 +58,11 @@ export default class GuildCreate extends Event {
             .addField("Need Help?", `Feel free to join the official ${client.user.username} server, where you can receive support, chat with fellow server owners, and make feature requests at https://discord.gg/DfsqmaV.`); // tslint:disable-line
         channel.send({ embed });
 
-        const shard: number = client.shard.id[0] ? client.shard.id[0] : client.shard.id;
         client.http("POST", {
             url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
             body: {
-                shard_id: shard,
-                shard_count: client.shard.count + 1,
+                shard_id: client.shard.id,
+                shard_count: client.shard.count,
                 server_count: client.guilds.size
             },
             headers: { Authorization: dbotsKey },
@@ -74,8 +73,8 @@ export default class GuildCreate extends Event {
         client.http("POST", {
             url: `https://bots.discord.pw/api/bots/${client.user.id}/stats`,
             body: {
-                shard_id: client.shard.id[0],
-                shard_count: client.shard.count + 1,
+                shard_id: client.shard.id,
+                shard_count: client.shard.count,
                 server_count: client.guilds.size
             },
             headers: { Authorization: discordbotsKey },

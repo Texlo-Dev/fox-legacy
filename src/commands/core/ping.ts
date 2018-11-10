@@ -11,11 +11,11 @@ export default class FoxCommand extends Command {
     }
 
     public async run(message: FoxMessage): Promise<void> {
-        const pingmessage: FoxMessage = await message.send("Pinging....");
+        const pingmessage: FoxMessage | FoxMessage[] = await message.send("Pinging....");
         const embed: MessageEmbed = new MessageEmbed()
             .setColor(this.client.brandColor)
             .setAuthor("Ping", this.client.user.displayAvatarURL())
-            .setDescription(`:ping_pong: Pong! Message round-trip took **${pingmessage.createdTimestamp - message.createdTimestamp}ms**.\nClient ping is **${Math.round(this.client.ws.ping)}ms**.`); // tslint:disable-line
+            .setDescription(`:ping_pong: Pong! Message round-trip took **${pingmessage.createdTimestamp - message.createdTimestamp}ms**.\nClient ping is **${Math.round(this.client.ping)}ms**.`); // tslint:disable-line
         pingmessage.edit({ embed });
     }
 
