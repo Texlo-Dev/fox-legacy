@@ -1,7 +1,7 @@
 import { readdir as Folders } from "fs-nextra";
 import { Command, Event, FoxClient } from "..";
 
-export const loadCommands = async (client: FoxClient): Promise<void> => {
+export const loadCommands: (client: FoxClient) => void = async (client: FoxClient): Promise<void> => {
     try {
         const folders: string[] = await Folders(`${process.cwd()}/build/commands/`);
         for (const folder of folders) {
@@ -10,7 +10,6 @@ export const loadCommands = async (client: FoxClient): Promise<void> => {
             for (const file of files) {
                 if (!file.endsWith(".js") || file.startsWith("pkg")) { continue; }
                 const cmd: any = await import(`${process.cwd()}/build/commands/${folder}/${file}`);
-                // const cmd = require(`${process.cwd()}/commands/${folder}/${file}`);
                 const command: Command = new cmd.default(client);
                 command.category = client.capitalizeStr(folder);
                 await client.commands.set(command);
@@ -23,7 +22,7 @@ export const loadCommands = async (client: FoxClient): Promise<void> => {
     }
 };
 
-export const loadEvents = async (client: FoxClient): Promise<void> => {
+export const loadEvents: (client: FoxClient) => void = async (client: FoxClient): Promise<void> => {
     const eventsFolder: string[] = await Folders(`${process.cwd()}/build/events`);
     for (const eventFile of eventsFolder) {
         const evt: any = await import(`${process.cwd()}/build/events/${eventFile.split(".")[0]}`);

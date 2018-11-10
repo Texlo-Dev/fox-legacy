@@ -1,3 +1,4 @@
+// tslint:disable:no-magic-numbers
 import { Banking, Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 const game: any = {};
@@ -9,18 +10,8 @@ export default class FoxCommand extends Command {
             .toString("ascii");
     }
 
-    public static hasPermission(message: FoxMessage) {
+    public static hasPermission(message: FoxMessage): boolean {
         return message.guild.perms.check("games.play", message);
-    }
-
-    public static isCorrect(str: string, obj: any): boolean {
-        const num = Number(str) - 1;
-
-        return this.boolean(str)
-        ? str.match(new RegExp(obj.correct_answer, "i"))
-        : obj.available_answers[num]
-        ? obj.available_answers[num].match(new RegExp(obj.correct_answer)) 
-        : false;
     }
 
     public static regExpEsc(str: string): string {
@@ -54,8 +45,18 @@ export default class FoxCommand extends Command {
         return obj;
     }
 
-    public async run(message: FoxMessage) {
-        const obj = await this.fetchTriviaQ()
+    public isCorrect(str: string, obj: any): boolean {
+        const num: number = Number(str) - 1;
+
+        return this.boolean(str)
+        ? str.match(new RegExp(obj.correct_answer, "i"))
+        : obj.available_answers[num]
+        ? obj.available_answers[num].match(new RegExp(obj.correct_answer)) 
+        : false;
+    }
+
+    public async run(message: FoxMessage): Promise<FoxMessage> {
+        const obj: Object = await this.fetchTriviaQ()
             .catch(() => null);
         if (!obj) { return message.error("It seems like the trivia API is currently down. Please try again later."); }
         let trivia: object = game[`${message.guild.id}${message.author.id}`];
@@ -71,27 +72,27 @@ export default class FoxCommand extends Command {
         const res4: boolean | number = await this.sendQuestion(4, message, trivia);
         if (res4 === 0) { return message.send("Successfuly cancelled the game."); }
         const res5: boolean | number = await this.sendQuestion(5, message, trivia);
-        const res5 = await this.sendQuestion(5, message, trivia);
         if (res5 === 0) { return message.send("Successfuly cancelled the game."); }
     }
 
-    public async sendQuestion(num: number, message: FoxMessage, trivia: any) {
-        let question = 1;
-        const obj: Object = await this.fetchTriviaQ();
+
+    public async sendQuestion(num: number, message: FoxMessage, trivia: any): Promise<any> {
+        let question: number = 1;
+        const obj: any = await this.fetchTriviaQ();
         let res: any;
         num === 1
             ? res = await message.sendPrompt(`Welcome to trivia! Let's get started!\nCategory: *${obj.category}*.\n${obj.type === "boolean" ? `True or False: ${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}` : `${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}`}\n\nPlease enter a number between 1 and 4.`, 15000)
             : res = await message.sendPrompt(`Category: *${obj.category}*.\n${obj.type === "boolean" ? `True or False: ${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}` : `${obj.question}\n${obj.available_answers.map(o => `\n**${question++}.** ${o}`).join("\n")}`}\n\nPlease enter a number between 1 and 4.`, 15000);
         if (res === undefined) { message.channel.send("Time is up!"); }
         if (res === 0) { return 0; }
-        if (!FoxCommand.isCorrect(res, obj)) {
+        if (!this.isCorrect(res, obj)) {
             message.channel.send(`<:nicexmark:495362785010647041>  Sorry, wrong answer! Correct answer is "${obj.correct_answer}".`); // tslint:disable-line
         } else {
             await message.channel.send("Correct!");
             trivia.correct.push(true);
         }
         if (num === 5) {
-            const amount = trivia.correct.length * 2000 || 100;
+            const amount: number = trivia.correct.length * 2000 || 100;
             await message.channel.send(`You answered **${trivia.correct.length}/5** questions correctly.\nTotal payout: ¥${amount}\nThanks for playing!`); // tslint:disable-line
             Banking.addMoney(message.author, { amount, guild: message.guild });
             trivia.correct = [];
