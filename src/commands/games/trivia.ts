@@ -31,14 +31,15 @@ export default class FoxCommand extends Command {
     public async fetchTriviaQ(): Promise<Object> {
         const { results: arr }: any = await this.client.http("GET", {
             url: "https://opentdb.com/api.php?amount=1&encode=base64",
-        }).catch(() => null);
-        if (!arr) { return null; }
+        })
+        .catch(console.error);
+        if (!arr) { return undefined; }
         const obj: any = arr[0];
         obj.type = FoxCommand.atob(obj.type);
         obj.category = FoxCommand.atob(obj.category);
         obj.question = FoxCommand.atob(obj.question);
         obj.correct_answer = FoxCommand.atob(obj.correct_answer);
-        const answers: string[] = obj.incorrect_answers.map(o => FoxCommand.atob.atob(o));
+        const answers: string[] = obj.incorrect_answers.map(o => FoxCommand.atob(o));
         answers.splice(Math.floor(Math.random() * answers.length), 0, obj.correct_answer);
         obj.available_answers = this.client.shuffleArray(answers);
 
@@ -57,7 +58,7 @@ export default class FoxCommand extends Command {
 
     public async run(message: FoxMessage): Promise<FoxMessage> {
         const obj: Object = await this.fetchTriviaQ()
-            .catch(() => null);
+            .catch(console.error);
         if (!obj) { return message.error("It seems like the trivia API is currently down. Please try again later."); }
         let trivia: object = game[`${message.guild.id}${message.author.id}`];
         if (!trivia) {

@@ -6,6 +6,7 @@ export default Structures.extend("Message", (mes) => {
 
         public static combineContentOptions(content: any, options: any): any {
             if (!options) { return isObject(content) ? content : { content }; }
+
             return {...options,  content};
         }
         public client: FoxClient;
@@ -98,14 +99,16 @@ export default Structures.extend("Message", (mes) => {
             }
 
             if (this.responses && typeof options.files === "undefined") {
-                if (options && options.split) { 
+                if (options && options.split) {
                     content = splitMessage(content, options.split);
                 }
                 if (Array.isArray(content)) {
                     const promises = [];
                     if (Array.isArray(this.responses)) {
                         for (let i = 0; i < content.length; i++) {
-                            if (this.responses.length > i) { promises.push(this.responses[i].edit(content[i], options)); } else { promises.push(this.channel.send(content[i])); }
+                            if (this.responses.length > i) { 
+                                promises.push(this.responses[i].edit(content[i], options)); 
+                            } else { promises.push(this.channel.send(content[i])); }
                         }
                         if (this.responses.length > content.length) {
                             for (let i = content.length; i < this.responses.length; i++) { this.responses[i].delete(); }
@@ -114,38 +117,57 @@ export default Structures.extend("Message", (mes) => {
                         promises.push(this.responses.edit(content[0], options));
                         for (let i = 1; i < content.length; i++) { promises.push(this.channel.send(content[i])); }
                     }
+
                     return Promise.all(promises)
                         .then((prm) => {
                             this.responses = prm;
+
                             return prm;
                         });
                 } else if (Array.isArray(this.responses)) {
                     for (let i = this.responses.length - 1; i > 0; i--) { this.responses[i].delete(); }
                     [this.responses] = this.responses;
                 }
+
                 return this.responses.edit(content, options);
             }
             this.channel.stopTyping();
+
             return this.channel.send(content, options)
                 .then((mess) => {
                     if (typeof options.files === "undefined") { this.responses = mess; }
+
                     return mess;
                 });
         }
 
-        public async sendPrompt(prompt: string, time: number, filter: CollectorFilter): Promise<number | string> {
-            await this.channel.send(`${prompt}\nYou have ${time / 1000} seconds to respond, or you can cancel by typing \`cancel\`.`);
-            const collected = await this.channel.awaitMessages(filter ? filter : (m) => m.author.id === this.author.id, { max: 1, time, errors: ["time"] }).catch(() => null);
+        public async sendPrompt(prompt: string, time: number, filter?: CollectorFilter): Promise<number | string> {
+            await this.channel.send(
+                `${prompt}\nYou have ${time / 1000} seconds to respond, or you can cancel by typing \`cancel\`.
+            `);
+            const collected: any = await this.channel.awaitMessages(
+                filter
+                ? filter
+                : (m) => m.author.id === this.author.id, {
+                    max: 1, time, errors: ["time"]
+                }
+            )
+                .catch(() => undefined);
             if (!collected) { return undefined; }
-            if (collected.first().content.match(/cancel/i)) { return 0; } else { return collected.first().content; }
+            if (collected.first().content
+                .match(/cancel/i)) { return 0; } else { return collected.first().content; }
         }
 
         public async success(content: string, options?: MessageOptions): Promise<Message | Message[]> {
-            content = this.guild.config.language !== "English" ? await this.client.translate(content, this.client.locales[this.guild.config.language]) : content;
+            content = this.guild.config.language !== "English" 
+                ? await this.client.translate(content, this.client.locales[this.guild.config.language]) 
+                : content;
+
             return this.channel.send(`<:checkmark:495362807731060757> ${content}`, options);
         }
 
     }
+
     return FoxMessage;
 });
 

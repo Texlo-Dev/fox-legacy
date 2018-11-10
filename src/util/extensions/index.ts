@@ -42,11 +42,11 @@ export interface FoxMessage extends Message {
     command: Command;
     guild: FoxGuild;
     responses: any;
-    error(content: string, options?: MessageOptions): Promise<FoxMessage | FoxMessage[]>;
-    FoxEmbed(options: any, text: string): Promise<FoxMessage | FoxMessage[]>;
-    send(content: any, options?: MessageOptions): Promise<FoxMessage | FoxMessage[]>;
+    error(content: string, options?: MessageOptions): Promise<FoxMessage>;
+    FoxEmbed(options: any, text: string): Promise<FoxMessage>;
+    send(content: any, options?: MessageOptions): Promise<FoxMessage>;
     sendPrompt(prompt: string, time: number, filter: CollectorFilter): Promise<number | string>;
-    success(content: string, options?: MessageOptions): Promise<Message | Message[]>;
+    success(content: string, options?: MessageOptions): Promise<FoxMessage>;
 }
 
 export interface FoxUser extends User {

@@ -1,6 +1,6 @@
 import { Collection, GuildMember, MessageEmbed, Snowflake, TextChannel } from "discord.js";
 import { FoxClient } from "..";
-import { FoxGuild } from "../extensions";
+import { FoxGuild, FoxMessage } from "../extensions";
 import { ModActions } from "../Mongo";
 
 interface ServerProtectOptions {
@@ -48,10 +48,10 @@ class ServerProtect {
             .setAuthor(this.client.user.tag, this.client.user.displayAvatarURL())
             .setColor("RANDOM")
             .setTimestamp()
-            .setDescription(`**Action:** Automatic Ban\n**Member:** ${member.user.tag} (${member.id})\n**Reason:** *${reason}*`)
+            .setDescription(`**Action:** Automatic Ban\n**Member:** ${member.user.tag} (${member.id})\n**Reason:** *${reason}*`) // tslint:disable-line
             .setFooter(`Case#${caseInt}`);
-        const ch = this.guild.channels.get(modlog.id) as TextChannel;
-        const m = await ch.send({ embed })
+        const ch: TextChannel = this.guild.channels.get(modlog.id) as TextChannel;
+        const m: FoxMessage = await ch.send({ embed })
             .catch(() => null);
 
         const entry: ModActions = new this.client.mongo.modactions({

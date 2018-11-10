@@ -1,10 +1,10 @@
-import cors from "cors";
-import polka from "polka";
-import { json as _json, urlencoded } from "body-parser";
-import { FoxClient } from "./util/";
 import respond from "@polka/send-type";
-import { ServerResponse, ClientRequest } from "http";
-const app = polka();
+import { json as _json, urlencoded } from "body-parser";
+import cors from "cors";
+import { ClientRequest, ServerResponse } from "http";
+import polka from "polka";
+import { FoxClient } from "./util/";
+const app: any = polka();
 
 export default (client: FoxClient) => {
     app.use(cors());
@@ -19,8 +19,8 @@ export default (client: FoxClient) => {
         next();
     });
 
-    app.use("/api", require("./api/").default);
-    app.listen(17428, () => {
-        console.log(`> Mr.Fox API running at *:17428`);
+    app.use("/api", require("./api/").default); // tslint:disable-line
+    app.listen(17428, () => { // tslint:disable-line
+        console.log("> Mr.Fox API running at *:17428");
     });
 };

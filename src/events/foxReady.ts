@@ -44,7 +44,7 @@ export default class extends Event {
             throw new Error(`Failed to initialize shard: ${error.stack}`);
         }
         const client: FoxClient = this.client;
-        if (client.shard.id[0] === 0) { import("../api").then(a => a.default(client)); } // tslint:disable-line
+        if (client.shard.id === 0) { import("../api").then(a => a.default(client)); } // tslint:disable-line
         const games: string[] = [
             `on shard #${client.shard.id}/${client.shard.count}: ${client.guilds.size} servers`,
             "Donate to keep us going: https://www.patreon.com/foxdevteam",

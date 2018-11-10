@@ -1,3 +1,4 @@
+// tslint:disable:no-parameter-reassignment
 import axios, { AxiosResponse } from "axios";
 import { Client, Collection, MessageStore, TextChannel } from "discord.js";
 import translate from "translate";
@@ -22,6 +23,7 @@ class FoxClient extends Client {
             reason: "string",
             number: "number (Ex: 50)",
         };
+
         return obj;
     }
     public brandColor: number;
@@ -115,12 +117,15 @@ class FoxClient extends Client {
 
     public async http(method: string, meta: any): Promise<AxiosResponse> {
         if (!method || !meta) { throw new Error("Missing Paramaters."); }
+
         return axios({
             method,
             url: meta.url,
             data: meta.body || {},
             headers: meta.headers || {},
-        }).then((res) => res.data);
+        })
+        .then((res) => res.data)
+        .catch(Promise.reject);
     }
     public isDev(id: string): boolean {
         return this.isOwner(id) || devs.includes(id);
@@ -132,20 +137,23 @@ class FoxClient extends Client {
 
     public async isUpvoter(id: string): Promise<boolean> {
         if (this.user.id !== "333985343445663749") { return Promise.resolve(true); }
-        const res = await axios({
+        const res: AxiosResponse = await axios({
             url: "https://discordbots.org/api/bots/333985343445663749/votes",
             headers: {
                 Authorization: dbotsKey,
             },
         });
-        return res.data.map((c: any) => c.id).includes(id);
+
+        return res.data.map((c: any) => c.id)   
+            .includes(id);
     }
 
-    public paginate(items: any[], page = 1, pageLength = 10): any {
-        const maxPage = Math.ceil(items.length / pageLength);
+    public paginate(items: any[], page: number = 1, pageLength: number = 10): any {
+        const maxPage: number = Math.ceil(items.length / pageLength);
         if (page < 1) { page = 1; }
         if (page > maxPage) { page = maxPage; }
-        const startIndex = (page - 1) * pageLength;
+        const startIndex: number = (page - 1) * pageLength;
+
         return {
             items: items.length > pageLength ? items.slice(startIndex, startIndex + pageLength) : items,
             page,
@@ -163,6 +171,7 @@ class FoxClient extends Client {
             arr[i] = arr[j];
             arr[j] = temp;
         }
+
         return arr;
     }
 
@@ -190,6 +199,7 @@ class FoxClient extends Client {
             }
             total += mult * amounts[i];
         }
+
         return total;
     }
 
