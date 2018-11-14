@@ -11,10 +11,34 @@ const volumes = {
     10: "1",
 };
 
-import { Command } from "../../util";
+import { Command, FoxClient, Queue } from "../../util";
+import { FoxMessage } from "../../util/extensions";
+import { GuildMember, VoiceChannel } from "discord.js";
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public static hasPermission(message: FoxMessage): boolean {
+        return message.guild.perms.check("music.dj", message);
+    }
+
+    public static async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
+        const member: GuildMember = await message.guild.members.fetch(message.author);
+        const amount: number = parseFloat(args[0]);
+        if (!amount) { return message.send(`The current volume for music is **${message.guild.voiceConnection ? message.guild.voiceConnection.dispatcher.volume * 10 : 10}0 %**.`); }
+        if (amount < 1 || amount > 10) {
+            return message.error(" The supported volume range is 1-10, please try again."); 
+        }
+        const voiceChannel: VoiceChannel = member.voice.channel;
+        if (!voiceChannel || voiceChannel.id !== message.guild.voiceConnection.channel.id) { 
+            return message.error("You must be in a voicechannel to change the volume of a current song."); 
+        }
+        const serverQueue: Queue = message.guild.queue;
+        if (!serverQueue) { return message.error(" Nothing is playing, so I shouldn't change the volume."); }
+        message.guild.voiceConnection.dispatcher.setVolume(`${volumes[amount]}`);
+
+        return message.send(`Successfully set the volume to **${amount}0%** <:check:314349398811475968>`);
+    }
+
+    public constructor(client: FoxClient) {
         super(client, {
             name: "volume",
             description: "Changes the volume of the currently playing song.",
@@ -24,23 +48,6 @@ export default class FoxCommand extends Command {
             extendedUsage: { number: client.args.number },
             requiredPerms: ["music.dj"],
         });
-    }
-
-    public hasPermission(message) {
-        return message.guild.perms.check("music.dj", message);
-    }
-
-    public async run(message, args) {
-        const member = await message.guild.members.fetch(message.author);
-        const amount = parseInt(args[0]);
-        if (!amount) { return message.send(`The current volume for music is **${message.guild.voiceConnection ? message.guild.voiceConnection.dispatcher.volume * 10 : 10}0 %**.`); }
-        if (amount < 1 || amount > 10) { return message.error(" The supported volume range is 1-10, please try again."); }
-        const voiceChannel = member.voice.channel;
-        if (!voiceChannel || voiceChannel.id !== message.guild.voiceConnection.channel.id) { return message.reply("You must be in a voicechannel to change the volume of a current song."); }
-        const serverQueue = message.guild.queue;
-        if (!serverQueue) { return message.error(" Nothing is playing, so I shouldn't change the volume."); }
-        message.guild.voiceConnection.dispatcher.setVolume(`${volumes[amount]}`);
-        return message.send(`Successfully set the volume to **${amount}0%** <:check:314349398811475968>`);
     }
 
 }

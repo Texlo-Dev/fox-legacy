@@ -1,7 +1,21 @@
-import { Command } from "../../util";
+import { Command, FoxClient, Queue } from "../../util";
+import { FoxMessage } from "../../util/extensions";
+import { GuildMember } from "discord.js";
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public static hasPermission(message: FoxMessage): boolean {
+        return message.guild.perms.check("music.dj", message);
+    }
+
+    public static async run(message: FoxMessage): Promise<FoxMessage | void> {
+        const member: GuildMember = await message.guild.members.fetch(message.author);
+        if (!member.voice.channel) { return message.error(" You are not currently in a voice channel."); }
+        const serverQueue: Queue = message.guild.queue;
+        if (!serverQueue) { return message.error(" There is nothing playing for me to stop."); }
+        await serverQueue.endAllSongs();
+    }
+
+    public constructor(client: FoxClient) {
         super(client, {
             name: "stop",
             description: "Stops all songs, and leaves the voicechannel.",
@@ -9,18 +23,6 @@ export default class FoxCommand extends Command {
             guildOnly: true,
             requiredPerms: ["`music.dj`"],
         });
-    }
-
-    public hasPermission(message) {
-        return message.guild.perms.check("music.dj", message);
-    }
-
-    public async run(message) {
-        const member = await message.guild.members.fetch(message.author);
-        if (!member.voice.channel) { return message.error(" You are not currently in a voice channel."); }
-        const serverQueue = message.guild.queue;
-        if (!serverQueue) { return message.error(" There is nothing playing for me to stop."); }
-        await serverQueue.endAllSongs();
     }
 
 }
