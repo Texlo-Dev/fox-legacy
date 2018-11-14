@@ -175,5 +175,8 @@
             "check-type-operator",
             "check-rest-spread"
         ]
-    }    
+    },
+    "extends": [
+        "tslint-config-prettier"
+    ] 
 }

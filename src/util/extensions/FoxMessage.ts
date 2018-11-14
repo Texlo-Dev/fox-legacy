@@ -69,19 +69,19 @@ export default Structures.extend("Message", (mes) => {
                     }
                     if (options.embed.description) {
                         options.embed.description = await this.client.translate(
-                            options.embed.description.replace(/\n/g, "xyz"), 
-                            this.client.locales[this.guild.config.language]); 
+                            options.embed.description.replace(/\n/g, "xyz"),
+                            this.client.locales[this.guild.config.language]);
                         }
                     if (options.embed.description) {
-                        options.embed.description = options.embed.description.replace(/xyz/gi, "\n"); 
+                        options.embed.description = options.embed.description.replace(/xyz/gi, "\n");
                     }
                     if (options.embed.author) {
                         options.embed.author.name = await this.client.translate(
-                            options.embed.author.name, this.client.locales[this.guild.config.language]); 
+                            options.embed.author.name, this.client.locales[this.guild.config.language]);
                         }
                     if (options.embed.footer) {
                         options.embed.footer.text = await this.client.translate(
-                            options.embed.footer.text, this.client.locales[this.guild.config.language]); 
+                            options.embed.footer.text, this.client.locales[this.guild.config.language]);
                         }
                     for (const field of options.embed.fields) {
                         field.name = await this.client.translate(
@@ -106,8 +106,8 @@ export default Structures.extend("Message", (mes) => {
                     const promises = [];
                     if (Array.isArray(this.responses)) {
                         for (let i = 0; i < content.length; i++) {
-                            if (this.responses.length > i) { 
-                                promises.push(this.responses[i].edit(content[i], options)); 
+                            if (this.responses.length > i) {
+                                promises.push(this.responses[i].edit(content[i], options));
                             } else { promises.push(this.channel.send(content[i])); }
                         }
                         if (this.responses.length > content.length) {
@@ -159,8 +159,8 @@ export default Structures.extend("Message", (mes) => {
         }
 
         public async success(content: string, options?: MessageOptions): Promise<Message | Message[]> {
-            content = this.guild.config.language !== "English" 
-                ? await this.client.translate(content, this.client.locales[this.guild.config.language]) 
+            content = this.guild.config.language !== "English"
+                ? await this.client.translate(content, this.client.locales[this.guild.config.language])
                 : content;
 
             return this.channel.send(`<:checkmark:495362807731060757> ${content}`, options);

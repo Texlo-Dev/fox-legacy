@@ -32,7 +32,7 @@ export default class extends Event {
                 **Purged by:** ${message.command.executor.tag}
                 **Channel:** ${message.channel}
                 **Purge Count**: ${msgs.size}
-                **Archive Link**: ${await this.client.haste(msgs.map(m => `${m.member.displayName} - ${m.content}`).join("\n"), "bash")}` // tslint:disable-line
+                **Archive Link**: ${await FoxClient.haste(msgs.map(m => `${m.member.displayName} - ${m.content}`).join("\n"), "bash")}` // tslint:disable-line
             )
             .setFooter(message.client.user.username);
         if (!modlog) { return; }

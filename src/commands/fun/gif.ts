@@ -1,29 +1,31 @@
 import { MessageEmbed } from "discord.js";
-import { Command } from "../../util";
-const giphy = require("giphy-api")();
+import giphy from "giphy-api";
+import { Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions";
 
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public static async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
+        const query: string = args.join(" ");
+        if (!query) { return message.error(" Please specify a gif to search."); }
+        const { data: { image_url: img } } = await giphy()
+        .random({
+            tag: query,
+            rating: "pg"
+        });
+        const embed: MessageEmbed = new MessageEmbed()
+            .setImage(img)
+            .setColor("RANDOM");
+
+        return message.send({ embed });
+
+    }
+
+    public constructor(client: FoxClient) {
         super(client, {
             name: "gif",
             description: "Searches for a random gif from GIPHY.",
             usage: "<name>",
-        });
-    }
-
-    public run(message, args) {
-        const query = args.join(" ");
-        if (!query) { return message.error(" Please specify a gif to search."); }
-        giphy.random({
-            tag: query,
-            rating: "pg",
-        },           (err, res) => {
-            if (err) { return message.send(`Hmm, there was an error with this command... \`${err.message}\``); }
-            const embed = new MessageEmbed()
-                .setImage(res.data.image_url)
-                .setColor("RANDOM");
-            message.send({ embed });
         });
     }
 

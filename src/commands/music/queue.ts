@@ -26,7 +26,7 @@ export default class FoxCommand extends Command {
         const timeArr = serverQueue.songs.map(song => parseInt(song.length));
         const totalQueue = duration(timeArr.reduce((p, val) => p + val, 0) - (serverQueue.connection.dispatcher.streamTime / 1000), "seconds").format("m:ss", { trim: false });
         const remaining = duration(serverQueue.songs[0].length - (serverQueue.connection.dispatcher.streamTime / 1000), "seconds").format("m:ss", { trim: false });
-        const paginated = this.client.paginate(serverQueue.songs, page, 10);
+        const paginated = FoxClient.paginate(serverQueue.songs, page, 10);
         let num = 10 * (paginated.page - 1);
         const embed = new MessageEmbed()
             .setColor(this.client.brandColor)

@@ -1,2 +1,2 @@
-export const name = "Economy";
-export const description = "A virtual economy for your server members.";
+export const name: string = "Economy";
+export const description: string = "A virtual economy for your server members.";

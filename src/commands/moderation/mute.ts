@@ -28,7 +28,7 @@ export default class FoxCommand extends Command {
     public async run(message, args, prefix) {
         if (!message.guild.me.hasPermission("MANAGE_ROLES")) { return message.error("Sorry, I do not have the permission Manage Roles to perform this operation."); }
         const member = await this.member(message.mentions.users.first() || args[0], message);
-        const time = this.client.spanMs(args[1]);
+        const time = FoxClient.spanMs(args[1]);
         if (!member) { return message.error("Value 'member' was not supplied, please try again."); }
         if (member.roles.highest ? member.roles.highest.position >= message.member.roles.highest.position : false === true) { return message.error(`Sorry, but you cannot perform moderation actions on ${member.displayName}.`); }
         if (!time) { return message.error("Value 'time' was not supplied, please try again."); }

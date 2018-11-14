@@ -16,7 +16,7 @@ export default class FoxCommand extends Command {
     }
 
     public hasPermission(message: FoxMessage): boolean {
-        return message.guild.owner === message.member || this.client.isOwner(message.author.id);
+        return message.guild.owner === message.member || FoxClient.isOwner(message.author.id);
     }
 
     public async run(message: FoxMessage): Promise<void> {

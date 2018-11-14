@@ -18,7 +18,7 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public async run(message: FoxMessage, args: string[], prefix: string): Promise<void> {
+    public async run(message: FoxMessage, args: string[], prefix: string): Promise<void | FoxMessage> {
         const epkgs: string[] = FoxCommand.checkPackages(message);
         if (!args[0]) {
             let myCommands: Collection<string, Command>;
@@ -27,7 +27,7 @@ export default class FoxCommand extends Command {
             if (message.guild) {
                 const filtered: Collection<string, Command> = this.client.commands
                     .filter(c => c.category === "Core" ? true : epkgs.indexOf(c.category) > -1);
-                myCommands = filtered.filter(c => c.hasPermission(message) || c.constructor.hasPermission && c.constructor.hasPermission(message))
+                myCommands = filtered.filter(c => c.constructor.hasPermission ? c.constructor.hasPermission(message) : c.hasPermission(message))
                     .filter(able =>
                         message.guild.config.disabledCommands
                         ? message.guild.config.disabledCommands.indexOf(able.name) < 0
@@ -49,11 +49,11 @@ export default class FoxCommand extends Command {
             let output = `
                 Welcome to ${this.client.user.username}, an easy-to-use, multipurpose Discord bot!
                 I am currently serving **${res.toLocaleString()}** servers!
-                My current command format for
-                 ${message.guild ? `the server **${message.guild.name}**` : "this DM"} is \`${prefix}<commandname>\`.
+                My current command format for ${message.guild ? `the server **${message.guild.name}**` : "this DM"} is \`${prefix}<commandname>\`.
                 If you'd like to learn more about one of my commands, just type \`${prefix}help <commandname>\`.
-
+    
                 [Add me to your server!](https://mrfoxbot.xyz/servers) | [Offical ${this.client.user.username} server](https://discord.gg/DfsqmaV) | [Support us on Patreon!](https://www.patreon.com/user?u=7413177)
+
                 `; 
             const categories: object = Array.from(myCommands.keys())
                 .reduce((prev, key) => {

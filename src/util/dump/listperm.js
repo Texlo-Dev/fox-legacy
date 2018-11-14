@@ -12,7 +12,7 @@ module.exports = class ListPerm extends Command {
     }
 
     hasPermission(message) {
-        return this.client.isOwner(message.author.id) || message.guild.perms.check('core.manageperm');
+        return FoxClient.isOwner(message.author.id) || message.guild.perms.check('core.manageperm');
     }
 
     async run(message) {

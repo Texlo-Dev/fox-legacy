@@ -71,7 +71,7 @@ export default class FoxCommand extends Command {
 
     public async getTime(message) {
         const res = await message.sendPrompt("How long would you like the giveaway to start?, in time format? Example: 40m for minutes, 3w for weeks.", 15000).catch(() => null);
-        if (res && this.client.spanMs(res) >= 25000 && this.client.spanMs(res) <= 3888000000) {
+        if (res && FoxClient.spanMs(res) >= 25000 && FoxClient.spanMs(res) <= 3888000000) {
             this.args.time = res;
             return this.args;
         } else if (res === 0) {
@@ -99,7 +99,7 @@ export default class FoxCommand extends Command {
             message.guild.giveaways.set(this.args.prize, {
                 name: this.args.name,
                 channel: this.args.channel,
-                endDate: Date.now() + this.client.spanMs(this.args.time),
+                endDate: Date.now() + FoxClient.spanMs(this.args.time),
                 maxWinners: this.args.maxWinners,
                 prize: this.args.prize,
             }).then(() => {

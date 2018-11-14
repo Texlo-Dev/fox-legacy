@@ -5,10 +5,10 @@ const inviteRegex = new RegExp(/\b(?:https?:\/\/)?(?:www\.)?(?:discordapp\.com\/
 export const badWords: (message: FoxMessage) => void = (message: FoxMessage) => {
     if (
         !message.guild
-        || !message.guild.config.bwProtected 
+        || !message.guild.config.bwProtected
         || message.guild.perms.check("automod.freespeech", message)
     ) { return; }
-    if (message.guild.config.allowedBwChannels) { 
+    if (message.guild.config.allowedBwChannels) {
         for (const channel of message.guild.config.allowedBwChannels) {
             if (message.channel.id === channel.id) { return; } }
         }

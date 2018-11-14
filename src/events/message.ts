@@ -59,7 +59,7 @@ export default class MessageEvent extends Event {
         if (typeof command.hasPermission === "function" && !command.hasPermission(message)) {
             return message.error(" _**Sorry, but you do not have permission to use this command.**_");
         } else if (typeof command.constructor.hasPermission === "function" && !command.constructor.hasPermission(message)) {
-            return message.error(" _**Sorry, but you do not have permission to use this command.**_")
+            return message.error(" _**Sorry, but you do not have permission to use this command.**_");
         }
 
         if (!this.client.commands.cooldowns.has(command.name)) {
@@ -90,8 +90,7 @@ export default class MessageEvent extends Event {
                     .catch(() => 0);
             }
             // @ts-ignore
-            if (command.constructor.run) return command.constructor.run(message, args, prefix);
-            else return command.run(message, args, commandPrefix);
+            if (command.constructor.run) { return command.constructor.run(message, args, prefix); } else { return command.run(message, args, commandPrefix); }
         } catch (error) {
             this.client.emit("commandError", message, error);
         }

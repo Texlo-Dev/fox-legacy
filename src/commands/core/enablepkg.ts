@@ -3,6 +3,10 @@ import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
+    public static hasPermission(message: FoxMessage): boolean {
+        return message.guild.owner === message.member || FoxClient.isOwner(message.author.id);
+    }
+
     public constructor(client: FoxClient) {
         super(client, {
             name: "enablepkg",
@@ -13,15 +17,12 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public hasPermission(message: FoxMessage): boolean {
-        return message.guild.owner === message.member || this.client.isOwner(message.author.id);
-    }
-
-    public async run(message: FoxMessage, args: string[]): Promise<void> {
+    public async run(message: FoxMessage, args: string[]): Promise<void | FoxMessage> {
         const pkg: string = args.join(" ");
-        if (!pkg) return message.send("x: Please specify a package to enable.");
-        if (!message.guild.packages.has(this.client.capitalizeStr(pkg)))
+        if (!pkg) { return message.send("x: Please specify a package to enable."); }
+        if (!message.guild.packages.has(this.client.capitalizeStr(pkg))) {
             return message.error("This isn't a valid package.");
+        }
         message.guild.packages.get(this.client.capitalizeStr(pkg))
             .enable();
         const embed: MessageEmbed = new MessageEmbed()

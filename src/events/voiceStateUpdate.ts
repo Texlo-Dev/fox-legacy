@@ -1,4 +1,4 @@
-import { MessageEmbed, TextChannel, VoiceState, VoiceChannel } from "discord.js";
+import { MessageEmbed, TextChannel, VoiceChannel, VoiceState } from "discord.js";
 import { Event, FoxClient } from "../util";
 import { FoxGuild } from "../util/extensions";
 

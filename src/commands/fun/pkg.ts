@@ -1,2 +1,2 @@
-export const name = "Fun";
-export const description = "Fun commands for your members to play with.";
+export const name: string = "Fun";
+export const description: string = "Fun commands for your members to play with.";

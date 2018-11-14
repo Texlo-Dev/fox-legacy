@@ -1,7 +1,13 @@
-import { Command } from "../../util";
+import { User } from "discord.js";
+import { Banking, Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public static hasPermission(message: FoxMessage): boolean {
+        return FoxClient.isOwner(message.author.id);
+    }
+
+    public constructor(client: FoxClient) {
         super(client, {
             name: "removemoney",
             description: "Removes money from a user.",
@@ -12,22 +18,23 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public hasPermission(message) {
-        return message.client.isOwner(message.author.id);
-    }
-
-    public async run(message, args) {
-        const user = await this.user(args[0], message);
-        const amount = parseInt(args[1]);
+    public async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
+        const user: User = await this.user(args[0], message);
+        const amount: number = Number(args[1]);
         if (!user) { return message.error(" Please specify a valid user."); }
         if (!amount) { return message.error(" Please specify an amount of :yen: to remove from this user."); }
-        const result = await message.guild.banking.removeMoney(user, {
+        const result: any = await Banking.removeMoney(user, {
             amount,
             guild: message.guild,
-        }).catch(() => null);
-        if (result === "Account") { return message.reply("Sorry, this user doesn't have a bank account."); }
-        if (result === "Failed") { return message.reply(`You cannot remove more ${message.guild.banking.currency} than they already have!`); }
-        if (result === true) { message.reply(`Successfully removed ${message.guild.banking.currency + amount.toLocaleString()} from **${user.tag}**.`); }
+        })
+        .catch(() => undefined);
+        if (result === "Account") { return message.error("Sorry, this user doesn't have a bank account."); }
+        if (result === "Failed") {
+            return message.error(`You cannot remove more ${message.guild.banking.currency} than they already have!`);
+        }
+        if (result === true) {
+            return message.success(`Successfully removed ${message.guild.banking.currency + amount.toLocaleString()} from **${user.tag}**.`); // tslint:disable-line 
+        }
     }
 
 }

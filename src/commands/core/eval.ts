@@ -26,7 +26,7 @@ export default class FoxCommand extends Command {
     }
 
     public static hasPermission(message: FoxMessage): boolean {
-        return message.client.isOwner(message.author.id);
+        return FoxClient.isOwner(message.author.id);
     }
 
     public depth: number;
@@ -54,7 +54,7 @@ export default class FoxCommand extends Command {
             const maxlength = 1950; //tslint:disable-line
 
             if (ogeval.length > maxlength) {
-                const haste: string = await client.haste(cleanEval, "js")
+                const haste: string = await FoxClient.haste(cleanEval, "js")
                     .catch(() => "");
                 message.send(`\`Output:\` **Evaled code was very very long,** ${haste}`, { translate: false });
             }

@@ -4,6 +4,10 @@ import { FoxMessage } from "../../util/extensions";
 
 export default class FoxCommand extends Command {
 
+    public static hasPermission(message: FoxMessage): boolean {
+        return message.guild.perms.check("economy.consumer", message);
+    }
+
     public constructor(client: FoxClient) {
         super(client, {
             name: "shop",
@@ -13,16 +17,15 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public hasPermission(message: FoxMessage): boolean {
-        return message.guild.perms.check("economy.consumer", message);
-    }
-
-    public async run(message: FoxMessage, args: string[]) {
-        let page = Number(args[0]);
+    public async run(message: FoxMessage, args: string[]): Promise<void> {
+        let page: number = Number(args[0]);
         if (!page) { page = 1; }
-        const paginated = this.client.paginate(message.guild.banking.shopItems.sort((a, b) => a.price > b.price), page, 10);
-        let num = 10 * (paginated.page - 1);
+        const paginated: any = FoxClient.paginate(
+            message.guild.banking.shopItems.sort((a, b) => a.price > b.price), page, 10
+        );
+        let num: number = (paginated.page - 1) * 10;
         message.send(
+            // tslint:disable
             new Embed()
                 .setColor(this.client.brandColor)
                 .setAuthor(`Welcome to ${message.guild.banking.shopName}! Here are your available items for purchase.`, message.guild.iconURL())

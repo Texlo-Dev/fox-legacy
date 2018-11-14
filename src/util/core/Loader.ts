@@ -1,4 +1,4 @@
-import { readdir as Folders } from "fs-nextra";
+import { readdir as Folders } from "fs-nextra"; // tslint:disable-line
 import { Command, Event, FoxClient } from "..";
 
 export const loadCommands: (client: FoxClient) => void = async (client: FoxClient): Promise<void> => {

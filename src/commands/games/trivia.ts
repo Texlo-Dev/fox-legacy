@@ -29,7 +29,7 @@ export default class FoxCommand extends Command {
     }
 
     public async fetchTriviaQ(): Promise<Object> {
-        const { results: arr }: any = await this.client.http("GET", {
+        const { results: arr }: any = await FoxClient.http("GET", {
             url: "https://opentdb.com/api.php?amount=1&encode=base64",
         })
         .catch(console.error);
@@ -41,7 +41,7 @@ export default class FoxCommand extends Command {
         obj.correct_answer = FoxCommand.atob(obj.correct_answer);
         const answers: string[] = obj.incorrect_answers.map(o => FoxCommand.atob(o));
         answers.splice(Math.floor(Math.random() * answers.length), 0, obj.correct_answer);
-        obj.available_answers = this.client.shuffleArray(answers);
+        obj.available_answers = FoxClient.shuffleArray(answers);
 
         return obj;
     }
@@ -52,7 +52,7 @@ export default class FoxCommand extends Command {
         return this.boolean(str)
         ? str.match(new RegExp(obj.correct_answer, "i"))
         : obj.available_answers[num]
-        ? obj.available_answers[num].match(new RegExp(obj.correct_answer)) 
+        ? obj.available_answers[num].match(new RegExp(obj.correct_answer))
         : false;
     }
 
@@ -75,7 +75,6 @@ export default class FoxCommand extends Command {
         const res5: boolean | number = await this.sendQuestion(5, message, trivia);
         if (res5 === 0) { return message.send("Successfuly cancelled the game."); }
     }
-
 
     public async sendQuestion(num: number, message: FoxMessage, trivia: any): Promise<any> {
         let question: number = 1;

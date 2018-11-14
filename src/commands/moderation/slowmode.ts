@@ -20,7 +20,7 @@ export default class FoxCommand extends Command {
 
     public async run(message, [time]) {
         if (time === "disable" || time === "false") { time = 0; } else {
-            time = this.client.spanMs(time) / 1000;
+            time = FoxClient.spanMs(time) / 1000;
             if (!time) { return message.error("You must tell me the time (from 1 second to 2 minutes)"); }
             if (time < 1 || time > 120) { return message.error("Invalid time! Time goes from 1 second to 2 minutes!"); }
         }

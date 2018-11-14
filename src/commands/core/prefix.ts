@@ -5,7 +5,7 @@ import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
     public static hasPermission(message: FoxMessage): boolean {
-        if (message.client.isOwner(message.author.id)) {
+        if (FoxClient.isOwner(message.author.id)) {
             return true;
         } else if (message.guild.perms.check("core.manageserver", message)) {
             return true;

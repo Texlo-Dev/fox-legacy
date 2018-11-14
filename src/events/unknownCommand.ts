@@ -22,7 +22,7 @@ export default class UnknownCommand extends Event {
                 "The **Custom Commands** Package is currently disabled, please enable it before continuing."
             );
         }
-        if (!command.hasPermission(message)) { 
+        if (!command.hasPermission(message)) {
             return message.error("_**Sorry, but you do not have permission to use this command.**_");
         }
         if (!command.enabled) {
@@ -30,7 +30,7 @@ export default class UnknownCommand extends Event {
         }
 
         if (!this.client.commands.cooldowns.has(command.name)) {
-            this.client.commands.cooldowns.set(command.name, new Collection()); 
+            this.client.commands.cooldowns.set(command.name, new Collection());
         }
         const now: number = Date.now();
         const timestamps: Collection<string, number> = this.client.commands.cooldowns.get(command.name);
@@ -66,8 +66,8 @@ export default class UnknownCommand extends Event {
                 .split(/ +/g);
             const cmdName: string = args.shift()
                 .toLowerCase();
-            if (message.guild.commands.get(cmdName)) { 
-                return this.handleCustomCommand(message, message.guild.commands.get(cmdName), args); 
+            if (message.guild.commands.get(cmdName)) {
+                return this.handleCustomCommand(message, message.guild.commands.get(cmdName), args);
             }
             if (message.guild.config.tacMode) {
                 const tag: Tags = await this.client.mongo.tags.findOne({

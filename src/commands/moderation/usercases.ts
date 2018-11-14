@@ -28,7 +28,7 @@ export default class FoxCommand extends Command {
             if (!query) { return message.reply("I couldn't find any recent cases."); }
             const mg = await message.send("<a:typing:393848431413559296> Loading all user cases....");
             const map = query.filter(q => q.get("caseNum") !== undefined);
-            const paginated = this.client.paginate(map, page, 10);
+            const paginated = FoxClient.paginate(map, page, 10);
             const embed = new MessageEmbed()
                 .setTimestamp()
                 .setColor(this.client.brandColor)
@@ -45,7 +45,7 @@ export default class FoxCommand extends Command {
             if (!query) { return message.reply("I couldn't find any recent cases for this user."); }
             const mg = await message.send(`<a:typing:393848431413559296> Loading all user cases for ${user.tag}....`);
             const map = query.filter(q => q.get("caseNum") !== undefined);
-            const paginated = this.client.paginate(map, page, 10);
+            const paginated = FoxClient.paginate(map, page, 10);
             const embed = new MessageEmbed()
                 .setTimestamp()
                 .setColor(this.client.brandColor)

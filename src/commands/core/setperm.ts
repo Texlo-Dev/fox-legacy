@@ -17,7 +17,7 @@ export default class FoxCommand extends Command {
     }
 
     public hasPermission(message: FoxMessage): boolean {
-        return this.client.isOwner(message.author.id) || message.guild.perms.check("core.manageperm", message);
+        return FoxClient.isOwner(message.author.id) || message.guild.perms.check("core.manageperm", message);
     }
 
     public async run(message: FoxMessage, args: string[]): Promise<Message | Message[] | void> {

@@ -21,7 +21,7 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public async run(message: FoxMessage, args: string[]): Promise<void> {
+    public async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
         const user: string = args.join(" ") || message.author.id;
         const member: GuildMember = await this.member(user, message);
         if (!member) { return message.error("No user detected."); }
@@ -50,7 +50,8 @@ export default class FoxCommand extends Command {
             .addField("Account Created:", `${dateFormat(member.user.createdAt)}`)
             .addField("Roles", `${roles.join(", ")}`, true)
             .setFooter(`${member.user.id}`);
-        message.send({ embed });
+
+        return message.send({ embed });
     }
 
 }

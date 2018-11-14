@@ -1,6 +1,6 @@
-import { Command, FoxClient, Banking } from "../../util";
-import { FoxMessage } from "../../util/extensions";
 import { GuildMember } from "discord.js";
+import { Banking, Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
     public static hasPermission(message: FoxMessage): boolean {
@@ -15,11 +15,11 @@ export default class FoxCommand extends Command {
         if (!item) { return message.error("This shop item could not be found."); }
         const member: GuildMember = await message.guild.members.fetch(message.author);
         const balance: number = await Banking.balanceOf(member);
-        if (!balance || (balance - item.price) < 0) { 
-            return message.error("You don't have enough money to make this purchase."); 
+        if (!balance || (balance - item.price) < 0) {
+            return message.error("You don't have enough money to make this purchase.");
         }
-        if (item.maxPurchases && item.buyers.filter(m => m.id === message.author.id).length >= item.maxPurchases) { 
-            return message.error("You have reached the purchase limit for this item."); 
+        if (item.maxPurchases && item.buyers.filter(m => m.id === message.author.id).length >= item.maxPurchases) {
+            return message.error("You have reached the purchase limit for this item.");
         }
         const resp: string | number = await message.sendPrompt(
             `Are you sure that you want to buy the item **${item.name}** for **${message.guild.banking.currency + item.price.toLocaleString()}**?\n\n**Before purchasing, ENABLE YOUR DMs! If you can't recieve the prize due to a blocked DM, there's nothing we can do!!**`, // tslint:disable-line

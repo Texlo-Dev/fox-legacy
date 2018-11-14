@@ -17,22 +17,24 @@ const answers = [
     "Signs point to yes",
 ];
 
-import { Command } from "../../util";
+import { Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public static run(message: FoxMessage, args: string[]): Promise<void | FoxMessage> {
+        const question: string = args.join(" ");
+        if (!question) { return message.error(" Please specify a question."); }
+
+        message.reply(`${answers[Math.floor(Math.random() * answers.length)]} :8ball:`);
+    }
+
+    public constructor(client: FoxClient) {
         super(client, {
             name: "magic8",
             description: "Replies with an answer from the Magic 8 Ball.",
             usage: "[question]",
             aliases: ["8ball"],
         });
-    }
-
-    public run(message, args) {
-        const question = args.join(" ");
-        if (!question) { return message.error(" Please specify a question."); }
-        return message.reply(`${answers[Math.floor(Math.random() * answers.length)]} :8ball:`);
     }
 
 }

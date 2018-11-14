@@ -53,7 +53,7 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public async run(message: FoxMessage, args: string[]): Promise<void> {
+    public async run(message: FoxMessage, args: string[]): Promise<void | FoxMessage> {
         let text: string = args.join(" ");
         if (!text) { return message.error("Missing city."); }
         const mg: FoxMessage = await message.send("<a:typing:393848431413559296> Loading Weather.....");
@@ -73,8 +73,8 @@ export default class FoxCommand extends Command {
             const country: string = data.results[0].address_components.find(cou => cou.types.includes("country"));
             const continent: string = data.results[0].address_components.find(con => con.types.includes("continent"));
 
-            const city: string | {} = locality || governing || country || continent || {};
-            const state: string | {} = locality && governing ? governing : locality ? country : {};
+            const city: any = locality || governing || country || continent || {};
+            const state: any = locality && governing ? governing : locality ? country : {};
             const dsky: AxiosResponse = await axios({
                 url: `https://api.darksky.net/forecast/${darkSkyAPI}/${params}`,
                 params: { exclude: "minutely,hourly,flags", units: "auto" },

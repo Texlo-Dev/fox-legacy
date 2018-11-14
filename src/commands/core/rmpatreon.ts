@@ -3,7 +3,7 @@ import { FoxMessage, FoxUser } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
     public static hasPermission(message: FoxMessage): boolean {
-        return message.client.isDev(message.author.id);
+        return FoxClient.isDev(message.author.id);
     }
 
     public constructor(client: FoxClient) {

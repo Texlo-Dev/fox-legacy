@@ -1,7 +1,13 @@
-import { Command } from "../../util";
+import { User } from "discord.js";
+import { Banking, Command, FoxClient } from "../../util";
+import { FoxMessage, FoxUser } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public static hasPermission(message: FoxMessage): boolean {
+        return FoxClient.isOwner(message.author.id);
+    }
+
+    public constructor(client: FoxClient) {
         super(client, {
             name: "addmoney",
             description: "Gives money to a certain user.",
@@ -12,20 +18,21 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public hasPermission(message) {
-        return message.client.isOwner(message.author.id);
-    }
-
-    public async run(message, args) {
-        const user = await this.user(args[0], message);
-        const amount = parseInt(args[1]);
+    public async run(message: FoxMessage, args: string[]): Promise<void | FoxMessage> {
+        const user: User = await this.user(args[0], message);
+        const amount: number = Number(args[1]);
         if (!user) { return message.error("Please specify a valid user."); }
-        if (!amount) { return message.error(`Please specify a ${message.guild.banking.currency} amount to give to this user.`); }
-        const result = await message.guild.banking.addMoney(user, {
+        if (!amount) {
+            return message.error(`Please specify a ${message.guild.banking.currency} amount to give to this user.`);
+        }
+        const result: boolean = await Banking.addMoney(user, {
             amount,
             guild: message.guild,
-        }).catch(() => null);
-        if (result === true) { message.reply(`Successfully added ${message.guild.banking.currency + amount.toLocaleString()} to **${user.tag}**.`); } else { message.error("There was an error doing that transaction."); }
+        })
+        .catch(() => undefined);
+        if (result === true) {
+            message.success(`Successfully added ${message.guild.banking.currency + amount.toLocaleString()} to **${user.tag}**.`); // tslint:disable-line
+        } else { message.error("There was an error doing that transaction."); }
     }
 
 }

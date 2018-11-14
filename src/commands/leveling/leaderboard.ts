@@ -39,7 +39,7 @@ export default class FoxCommand extends Command {
         }
         let page = parseInt(args[0]);
         if (!page) { page = 1; }
-        const paginated = this.client.paginate(numArr, page, 10);
+        const paginated = FoxClient.paginate(numArr, page, 10);
         let rank = 10 * (paginated.page - 1);
         const num = await paginated.items.map(async a => `**${++rank}.** Level ${levels[a]} (${parseInt(xp[a]).toLocaleString()}) - ${(await this.client.users.fetch(arr[a])).tag}\n`);
         const str = `${(await Promise.all(num)).join(" ")}\n${paginated.maxPage > 1 ? `To see a specific page, just run ${prefix}leaderboard [pagenumber].` : ""}`;

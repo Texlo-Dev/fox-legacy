@@ -2,6 +2,10 @@ import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
+    public static hasPermission(message: FoxMessage): boolean {
+        return FoxClient.isOwner(message.author.id);
+    }
+
     public constructor(client: FoxClient) {
         super(client, {
             name: "reload",
@@ -11,11 +15,7 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public hasPermission(message: FoxMessage): boolean {
-        return this.client.isOwner(message.author.id);
-    }
-
-    public async run(message: FoxMessage, args: string[]): Promise<void> {
+    public async run(message: FoxMessage, args: string[]): Promise<void | FoxMessage> {
         const command: string = args[0];
         if (!command) { return message.send("Please specify a command to reload."); }
         const cmd: Command = this.client.commands.get(command);

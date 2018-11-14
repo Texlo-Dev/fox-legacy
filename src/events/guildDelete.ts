@@ -33,7 +33,7 @@ export default class GuildDelete extends Event {
         console.log(`Left ${guild.name}`);
         client.user.setActivity(`on shard #${client.shard.id}/${client.shard.count}: ${client.guilds.size} servers | ${client.commandPrefix}help`); // tslint:disable-line
         await GuildDelete.deleteSettings(guild);
-        client.http("POST", {
+        FoxClient.http("POST", {
             url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
             body: {
                 shard_id: client.shard.id,
@@ -45,7 +45,7 @@ export default class GuildDelete extends Event {
         .then(() => console.log("Updated dbots.org status."))
         .catch(console.error);
 
-        client.http("POST", {
+        FoxClient.http("POST", {
             url: `https://bots.discord.pw/api/bots/${client.user.id}/stats`,
             body: {
                 shard_id: client.shard.id,
@@ -58,7 +58,7 @@ export default class GuildDelete extends Event {
         .catch(console.error);
 
         const num: number = (await this.client.shard.fetchClientValues("guilds.size")).reduce((prev, val) => prev + val, 0);
-        client.http("POST", {
+        FoxClient.http("POST", {
             url: `https://discord.boats/api/bot/${client.user.id}`,
             body: { server_count: num },
             headers: { Authorization: dboatsKey },

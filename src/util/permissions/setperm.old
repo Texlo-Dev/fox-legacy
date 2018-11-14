@@ -14,7 +14,7 @@ module.exports = class SetPerm extends Command {
     }
 
     hasPermission(message) {
-        return this.client.isOwner(message.author.id) || message.guild.perms.check('core.manageperm');
+        return FoxClient.isOwner(message.author.id) || message.guild.perms.check('core.manageperm');
     }
 
     async run(message, args) {

@@ -13,7 +13,7 @@ export default class extends Event {
     public run(message: FoxMessage, err: Error) {
         const embed = new MessageEmbed()
             .setAuthor("Command Error", message.client.user.displayAvatarURL())
-            .setDescription(`There was an error executing this command: \n\`\`\`${message.client.isOwner(message.author.id) ? err.stack.split(",")[0] : err.message}\`\`\`\nThis error has been recorded.`)
+            .setDescription(`There was an error executing this command: \n\`\`\`${FoxClient.isOwner(message.author.id) ? err.stack.split(",")[0] : err.message}\`\`\`\nThis error has been recorded.`)
             .setTimestamp()
             .setColor(this.client.brandColor)
             .setFooter(message.client.user.username);

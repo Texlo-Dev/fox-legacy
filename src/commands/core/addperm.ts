@@ -1,7 +1,12 @@
+// tslint:disable:no-magic-numbers
 import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 import { Permissions } from "../../util/Mongo";
 export default class FoxCommand extends Command {
+
+    public static hasPermission(message: FoxMessage): boolean {
+        return FoxClient.isOwner(message.author.id);
+    }
 
     public constructor(client: FoxClient) {
         super(client, {
@@ -11,10 +16,6 @@ export default class FoxCommand extends Command {
             guildOnly: true,
             requiredPerms: ["Bot Owner"],
         });
-    }
-
-    public hasPermission(message: FoxMessage): boolean {
-        return this.client.isOwner(message.author.id);
     }
 
     public async run(message: FoxMessage, args: string[]): Promise<any> {

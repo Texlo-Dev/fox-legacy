@@ -58,7 +58,7 @@ export default class GuildCreate extends Event {
             .addField("Need Help?", `Feel free to join the official ${client.user.username} server, where you can receive support, chat with fellow server owners, and make feature requests at https://discord.gg/DfsqmaV.`); // tslint:disable-line
         channel.send({ embed });
 
-        client.http("POST", {
+        FoxClient.http("POST", {
             url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
             body: {
                 shard_id: client.shard.id,
@@ -70,7 +70,7 @@ export default class GuildCreate extends Event {
         .then(() => console.log("Updated dbots.org status."))
         .catch(console.error);
 
-        client.http("POST", {
+        FoxClient.http("POST", {
             url: `https://bots.discord.pw/api/bots/${client.user.id}/stats`,
             body: {
                 shard_id: client.shard.id,
@@ -83,7 +83,7 @@ export default class GuildCreate extends Event {
         .catch(console.error);
 
         const num: number = (await this.client.shard.fetchClientValues("guilds.size")).reduce((prev, val) => prev + val, 0);
-        client.http("POST", {
+        FoxClient.http("POST", {
             url: `https://discord.boats/api/bot/${client.user.id}`,
             body: { server_count: num },
             headers: { Authorization: dboatsKey },

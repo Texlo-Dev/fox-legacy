@@ -1,4 +1,4 @@
-import { GuildMember, MessageEmbed, StreamDispatcher, TextChannel } from "discord.js";
+import { GuildMember, MessageEmbed, StreamDispatcher, TextChannel, VoiceConnection } from "discord.js";
 import YoutubeAPI from "simple-youtube-api";
 import ytdl from "ytdl-core";
 import { googleAPI as apikey } from "../../config.json";
@@ -19,13 +19,15 @@ class FoxMusic {
 
     public async getID(args: string, message: FoxMessage, member: GuildMember) {
         if (args.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
-            const times = [];
+            const times: any[] = [];
             const playlist: any = await youtube.getPlaylist(args);
             const videos: any = await playlist.getVideos();
-            if (videos.length > 5 && !(message.author).patreonTier) { return message.error(" Sorry, but YouTube playlists are limited to 5 songs as a free user. To remove this limit, consider becoming a Patreon today, to recieve exclusive features, including enhanced music playback.\nhttps://www.patreon.com/foxdevteam"); }
+            if (videos.length > 5 && !(message.author).patreonTier) {
+                return message.error("Sorry, but YouTube playlists are limited to 5 songs as a free user. To remove this limit, consider becoming a Patreon today, to recieve exclusive features, including enhanced music playback.\nhttps://www.patreon.com/foxdevteam"); // tslint:disable-line
+            }
 
             for (const video of Object.values(videos)) {
-                const video2 = await youtube.getVideoByID((video as any).id);
+                const video2: any = await youtube.getVideoByID((video as any).id);
                 times.push(video2.durationSeconds);
                 await this.handleVideo(video2, message, member, member.voice.channel, true);
             }
@@ -83,16 +85,17 @@ class FoxMusic {
             length: video.durationSeconds,
             thumbnail: video.thumbnails.standard ? video.thumbnails.standard.url : video.thumbnails.default.url,
         });
-        if (!playlist && parseInt(song.length) > 300 && !upvoter) { return message.error(" Sorry, but the song length limit is currently at 4 minutes for a non-upvoter. In order to remove this limit, upvote Mr.Fox in Discord Bots List today, it's free! https://discordbots.org/bot/333985343445663749"); }
+        if (!message.author.patreonTier) return message.error("At this time, music features are only available for Bronze Patreon subscribers or higher. If you'd like to check out our plans on Patreon, go here: https://patreon.com/foxdevteam"); // tslint:disable-line
+        /* if (!playlist && parseInt(song.length) > 300 && !upvoter) { return message.error("Sorry, but the song length limit is currently at 4 minutes for a non-upvoter. In order to remove this limit, upvote Mr.Fox in Discord Bots List today, it's free! https://discordbots.org/bot/333985343445663749"); }
         if (!playlist && parseInt(song.length) > 600 && !message.author.patreonTier) { return message.error(" Sorry, but the song length limit is currently at 8 minutes for a free user. If you'd like to become a Patreon, where you will gain access to exclusive Patreon-onny features including music, visit our patreon page today and choose a plan that is right for you!\nhttps://www.patreon.com/foxdevteam"); }
-        if (!playlist && parseInt(song.length) > 1800 && message.author.patreonTier < 2) { return message.error(" Sorry, but your current Patreon status does not allow for songs over 30 minutes. To listen to music longer than 30 minutes, please upgrade to a Silver Fox Patreon or higher."); }
+        if (!playlist && parseInt(song.length) > 1800 && message.author.patreonTier < 2) { return message.error(" Sorry, but your current Patreon status does not allow for songs over 30 minutes. To listen to music longer than 30 minutes, please upgrade to a Silver Fox Patreon or higher."); } */
 
         const serverQueue = message.guild.queue;
         if (!serverQueue) {
-            const queueStruct = message.guild.queue = new Queue(this.client, {
+            const queueStruct: Queue = message.guild.queue = new Queue(this.client, {
                 textChannel: message.channel,
                 voiceChannel,
-                connection: null,
+                connection: undefined,
                 songs: [],
                 skippers: [],
                 playing: true,
@@ -100,19 +103,19 @@ class FoxMusic {
             queueStruct.songs.push(song);
 
             try {
-                const connection = await voiceChannel.join();
+                const connection: VoiceConnection = await voiceChannel.join();
                 queueStruct.connection = connection;
                 this.play(message.guild, queueStruct.songs[0]);
             } catch (error) {
                 message.guild.queue = null;
+
                 return message.error(`Sorry, I couldn't join this voice channel: ${error}`);
             }
         } else {
-            if (!playlist && serverQueue.songs.filter(song => song.requestedBy.id === message.author.id).length >= 3 && !message.author.patreonTier) { return message.error(" Your song queue limit is currently at 3 songs as a free user. If you'd like to become a Patreon, where you will gain access to exclusive Patreon-ony features, visit our patreon page today and choose a plan that is right for you!\nhttps://www.patreon.com/foxdevteam"); }
-            if (!playlist && serverQueue.songs.filter(song => song.requestedBy.id === message.author.id).length > 8 && !message.author.patreonTier) { return message.error(" Your song queue limit is currently at 8 songs as a Bronze Fox Patreon. To increase your queue limit, please upgrade to a Silver Fox Patreon or higher."); }
+            if (!playlist && serverQueue.songs.filter(song => song.requestedBy.id === message.author.id).length >= 5 && !message.author.patreonTier > 1) { return message.error(" Your song queue limit is currently at 3 songs as a Bronze Fox Patreon. To increase your queue limit, please consider upgrading to a Silver Fox Patreon or higher here:\nhttps://www.patreon.com/foxdevteam"); }
             serverQueue.songs.push(song);
             if (playlist) { return; }
-            const embed = new MessageEmbed()
+            const embed: MessageEmbed = new MessageEmbed()
                 .setThumbnail(song.thumbnail)
                 .setAuthor("Music", message.client.user.displayAvatarURL())
                 .setDescription(`Successfully added **${song.title}** to the queue!\nAuthor: **${song.author}**\nLength: **${duration(song.length, "seconds").format("m:ss", { trim: false })}**`)
@@ -129,11 +132,14 @@ class FoxMusic {
                 serverQueue.textChannel.send("<:dnd:313956276893646850>  Queue is empty. Queue up some more tunes!");
                 guild.queue = null;
             },         1500);
+
             return;
         }
         serverQueue.skippers = [];
-        const dispatcher: StreamDispatcher = serverQueue.connection.play(ytdl(song.url, { filter: "audioonly" }), { bitrate: "auto" });
-        const embed = new MessageEmbed()
+        const dispatcher: StreamDispatcher = serverQueue.connection.play(
+            ytdl(song.url, { filter: "audioonly" }), { bitrate: "auto" }
+        );
+        const embed: MessageEmbed = new MessageEmbed()
             .setThumbnail(song.thumbnail)
             .setAuthor("Music", this.client.user.displayAvatarURL())
             .setDescription(`Now Playing: **${song.title}**\nAuthor: **${song.author}**\nLength: **${duration(song.length, "seconds").format("m:ss", { trim: false })}**`)

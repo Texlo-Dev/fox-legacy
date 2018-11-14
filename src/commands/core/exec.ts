@@ -3,7 +3,11 @@ import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
 
-    public static async run(message: FoxMessage, args: string[]): Promise<void> {
+    public static hasPermission(message: FoxMessage): boolean {
+        return FoxClient.isOwner(message.author.id);
+    }
+
+    public static async run(message: FoxMessage, args: string[]): Promise<void | FoxMessage> {
         const command: string = args.join(" ");
         if (!command) { return message.send({ embed: { description: "Usage:\n`exec [command]`" } }); }
 
@@ -15,7 +19,7 @@ export default class FoxCommand extends Command {
         ];
         const outMessage: FoxMessage = await message.send(runningMessage);
         const limit = 1750; //tslint:disable-line
-        let stdOut: string = await doExec(command)
+        let stdOut: any = await doExec(command)
             .catch(data => outputErr(outMessage, data));
         stdOut = stdOut.substring(0, limit);
         outMessage.channel.send(`\`Output\`
@@ -33,13 +37,9 @@ export default class FoxCommand extends Command {
             requiredPerms: ["Bot Owner"],
         });
     }
-
-    public hasPermission(message: FoxMessage): boolean {
-        return this.client.isOwner(message.author.id);
-    }
 }
 
-const clean: Function = (text: string): string => {
+const clean: (text: string) => string = (text: string) => {
     const code = 8203; //tslint:disable-line
     if (typeof text === "string") {
         return text.replace("``", `\`${String.fromCharCode(code)}\``);
@@ -48,7 +48,7 @@ const clean: Function = (text: string): string => {
     }
 };
 
-const outputErr: Function = (msg: FoxMessage, stdData: any) => { // tslint:disable-line
+const outputErr: (message: FoxMessage, stdData: any) => void = (msg: FoxMessage, stdData: any) => { // tslint:disable-line
     let {
         stdout,
         stderr,
@@ -63,7 +63,7 @@ const outputErr: Function = (msg: FoxMessage, stdData: any) => { // tslint:disab
     msg.channel.send(`${message}`);
 };
 
-const doExec: Function = (cmd: string, opts = {}): Promise<string> => new Promise((resolve, reject) => {
+const doExec: (cmd: string, opts?: any) => Promise<string | void> = (cmd, opts = {}) => new Promise((resolve, reject) => {
     exec(cmd, opts, (err, stdout, stderr) => {
         if (err) {
             return reject({
