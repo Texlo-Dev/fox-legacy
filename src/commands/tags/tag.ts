@@ -1,7 +1,13 @@
-import { Command } from "../../util";
+import { Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions";
+import { Tags } from "../../util/Mongo";
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public static hasPermission(message: FoxMessage): boolean {
+        return message.guild.perms.check("tag.tagger", message);
+    }
+
+    public constructor(client: FoxClient) {
         super(client, {
             name: "tag",
             description: "Shows a tag!",
@@ -12,35 +18,41 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public hasPermission(message) {
-        return message.guild.perms.check("tag.tagger", message);
-    }
-
-    public async run(message, args) {
-        const tagname = args[0];
+    public async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
+        const tagname: string = args[0];
         if (!tagname) {
-            const filter = m => m.author.id === message.author.id;
-            message.reply("What tag would you like to see? This command will be automatically cancelled in 30 seconds, or by you typing `cancel`.");
-            const response = await message.channel.awaitMessages(filter, { max: 1, time: 30000, errors: ["time"] }).catch(() => null);
-            if (!response) { return message.reply("Time was up, so I cancelled the command."); }
-            if (response.first().content.match(/cancel/i)) { return message.reply("Cancelling command now."); }
-            const tag = await this.client.mongo.tags.findOne({
-                tagName: response.first().content,
-                guildID: message.guild.id,
-            });
-            if (tag) {
-                tag.increment("usage_count");
-                return message.send(tag.get("tagContent"));
+            const response: number | string = await message.sendPrompt(
+                "What tag would you like to see?",
+                30000
+            );
+            switch (response) {
+                case undefined:
+                    return message.error("Time was up, so I cancelled the command.");
+                case 0:
+                    return message.error("Cancelled command.");
+                default:
+                    const tag: Tags = await this.client.mongo.tags.findOne({
+                        tagName: response,
+                        guildID: message.guild.id,
+                    });
+                    if (tag) {
+                        tag.increment("usage_count");
+
+                        return message.send(tag.get("tagContent"));
+                    }
+
+                    return message.error(" Sorry, the tag you're looking for didn't exist.");
             }
-            return message.error(" Sorry, the tag you're looking for didn't exist.");
         } else {
-            const tag = await this.client.mongo.tags.findOne({
+            const tag: Tags = await this.client.mongo.tags.findOne({
                 tagName: tagname.toLowerCase(),
                 guildID: message.guild.id,
             });
             if (tag) {
                 tag.increment("usage_count");
-                message.delete().catch(() => 0);
+                message.delete()
+                .catch(() => 0);
+
                 return message.send(tag.get("tagContent"));
             }
         }

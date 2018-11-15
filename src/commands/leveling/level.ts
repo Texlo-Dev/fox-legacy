@@ -1,5 +1,5 @@
 import { stripIndents } from "common-tags";
-import { MessageEmbed, GuildMember } from "discord.js";
+import { GuildMember, MessageEmbed } from "discord.js";
 import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 import { FoxLeveling } from "../../util/Mongo";
@@ -30,7 +30,7 @@ export default class FoxCommand extends Command {
             });
             if (!entry && member.user.bot) { return message.send("Sorry, bots aren't eligible for banking."); }
             if (!entry && !member.user.bot) {
-                return message.send("That person hasn't started saving money yet. Try again later!"); 
+                return message.send("That person hasn't started saving money yet. Try again later!");
             }
             const embed: MessageEmbed = new MessageEmbed()
                 .setAuthor(`${member.user.username}'s leveling stats`, `${member.user.displayAvatarURL()}`)

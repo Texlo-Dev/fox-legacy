@@ -30,8 +30,8 @@ export default class FoxCommand extends Command {
             return message.error(" The supported volume range is 1-10, please try again.");
         }
         const voiceChannel: VoiceChannel = member.voice.channel;
-        if (!voiceChannel || voiceChannel.id !== message.guild.voiceConnection.channel.id) { 
-            return message.error("You must be in a voicechannel to change the volume of a current song."); 
+        if (!voiceChannel || voiceChannel.id !== message.guild.voiceConnection.channel.id) {
+            return message.error("You must be in a voicechannel to change the volume of a current song.");
         }
         const serverQueue: Queue = message.guild.queue;
         if (!serverQueue) { return message.error(" Nothing is playing, so I shouldn't change the volume."); }

@@ -1,2 +1,2 @@
-export const name = "Welcomer";
-export const description = "Welcome new users to your server with ease.";
+export const name: string = "Welcomer";
+export const description: string = "Welcome new users to your server with ease.";

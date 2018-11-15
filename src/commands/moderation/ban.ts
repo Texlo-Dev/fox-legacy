@@ -1,4 +1,4 @@
-import { MessageEmbed, GuildMember, TextChannel, User } from "discord.js";
+import { GuildMember, MessageEmbed, TextChannel, User } from "discord.js";
 import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 import { ModActions } from "../../util/Mongo";

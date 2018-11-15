@@ -1,6 +1,6 @@
+import { MessageEmbed, TextChannel } from "discord.js";
 import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
-import { TextChannel, MessageEmbed } from "discord.js";
 import { ModActions } from "../../util/Mongo";
 export default class FoxCommand extends Command {
 

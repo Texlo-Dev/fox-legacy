@@ -7,13 +7,14 @@ export default async (message: FoxMessage): Promise<void> => {
         userID: message.author.id,
     });
     if (!entry) { return; }
-    const oldlevel: number = entry.get("level"),
-        oldxp: number = entry.get("XP"),
-        oldNextLevel: number = entry.get("toNextLevel"),
-        oldtotal: number = entry.get("totalXP");
+    const oldlevel: number = entry.get("level");
+    const oldxp: number = entry.get("XP");
+    const oldNextLevel: number = entry.get("toNextLevel");
+    const oldtotal: number = entry.get("totalXP");
     if (!oldlevel || !oldxp || !oldNextLevel || !oldtotal) { return; }
 
-    const memberdata: FoxLeveling = await message.client.mongo.leveling.findOne({ guildID: message.guild.id, userID: message.author.id });
+    const memberdata: FoxLeveling = await message.client.mongo.leveling.findOne({
+        guildID: message.guild.id, userID: message.author.id });
     if (memberdata && !memberdata.get("v2")) {
         memberdata.set({
             guildID: message.guild.id,

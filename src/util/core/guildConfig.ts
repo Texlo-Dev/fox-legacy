@@ -92,12 +92,12 @@ export default class GuildConfig {
     }
 
     public async _loadSettings(): Promise<void> {
-        const settings = await this.guild.client.mongo.guildconfig.findOne({
+        const settings: GuildSettings = await this.guild.client.mongo.guildconfig.findOne({
             guildID: this.guild.id,
             type: "settings",
         });
         if (!settings) {
-            const entry = new this.guild.client.mongo.guildconfig({
+            const entry: GuildSettings = new this.guild.client.mongo.guildconfig({
                 guildID: this.guild.id,
                 type: "settings",
                 prefix: this.prefix,
@@ -129,11 +129,12 @@ export default class GuildConfig {
                 allowedMentionChannels: this.allowedMentionChannels,
                 logExcluded: this.logExcluded,
             });
+
             await entry.save();
         } else {
             for (const key of Object.keys(this)) {
                 if (key === "guild") { continue; }
-                const value = settings.get(key);
+                const value: any = settings.get(key);
                 if (value !== undefined) { this[key] = value; }
             }
         }
@@ -149,6 +150,7 @@ export default class GuildConfig {
         settings.set(key, value);
         await settings.save();
         await this.guild.client.emit("guildConfigUpdate", this.guild);
+
         return new Promise((r) => setTimeout(() => r(this), 25));
     }
 
@@ -157,16 +159,17 @@ export default class GuildConfig {
             guildID: this.guild.id,
             type: "settings",
         });
-        if (settings.get(key) === undefined && !this.hasOwnProperty(key)) { return null; }
+        if (settings.get(key) === undefined && !this.hasOwnProperty(key)) { return undefined; }
         if (isWeb) {
-            const array = value;
+            const array: any = value;
             await settings.unset(key);
             await settings.set({ [key]: array });
             await settings.save();
             await this.guild.client.emit("guildConfigUpdate", this.guild, settings.get(key));
+
             return new Promise((r) => setTimeout(() => r(this), 25));
         } else {
-            const array = settings.get(key) || [];
+            const array: any = settings.get(key) || [];
             if (array.indexOf(value) > -1) {
                 array.splice(array.indexOf(value), 1);
             } else {
@@ -175,6 +178,7 @@ export default class GuildConfig {
             settings.set(key, array);
             await settings.save();
             this.guild.client.emit("guildConfigUpdate", this.guild);
+
             return new Promise((r) => setTimeout(() => r(this), 25));
         }
     }

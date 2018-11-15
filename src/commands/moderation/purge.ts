@@ -1,4 +1,4 @@
-import { Collection, Snowflake, Message } from "discord.js";
+import { Collection, Message, Snowflake } from "discord.js";
 import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {

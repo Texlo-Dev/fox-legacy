@@ -2,8 +2,8 @@
 import { get } from "axios";
 import { Permissions } from "discord.js";
 import polka from "polka";
-import authMiddleware from "../util/authMiddleware";
 import { FoxClient } from "../util";
+import authMiddleware from "../util/authMiddleware";
 const router = polka();
 
 router.get("/", authMiddleware, async (req, res) => {

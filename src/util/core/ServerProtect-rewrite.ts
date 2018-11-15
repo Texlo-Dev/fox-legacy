@@ -3,6 +3,7 @@ import { FoxClient } from "..";
 import { FoxGuild, FoxMessage } from "../extensions";
 import { ModActions } from "../Mongo";
 
+// tslint:disable-next-line:interface-name
 interface ServerProtectOptions {
     maxban: number;
     maxwarn: number;

@@ -45,7 +45,7 @@ export interface FoxMessage extends Message {
     error(content: string, options?: MessageOptions): Promise<FoxMessage>;
     FoxEmbed(options: any, text: string): Promise<FoxMessage>;
     send(content: any, options?: MessageOptions): Promise<FoxMessage>;
-    sendPrompt(prompt: string, time: number, filter: CollectorFilter): Promise<number | string>;
+    sendPrompt(prompt: string, time: number, filter?: CollectorFilter): Promise<number | string>;
     success(content: string, options?: MessageOptions): Promise<FoxMessage>;
 }
 

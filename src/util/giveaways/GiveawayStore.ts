@@ -1,5 +1,5 @@
 // tslint:disable:no-magic-numbers
-import { Collection, MessageEmbed, MessageReaction, TextChannel } from "discord.js";
+import { Collection, MessageEmbed, MessageReaction, TextChannel, User } from "discord.js";
 import moment, { duration } from "moment";
 import { FoxClient } from "..";
 import { FoxGuild, FoxMessage } from "../extensions";
@@ -105,7 +105,7 @@ export default class GiveawayStore extends Collection<any, any> {
             .findOne({ guildID: this.guild.id, name: giveaway.name });
         const message: FoxMessage = channel && channel.messages
             ? await channel.messages.fetch(giveaway.messageID)
-                .catch(() => null)
+                .catch(() => undefined)
             : undefined;
         if (giveaway.ended) { time = 0; }
         if (time <= Date.now() && channel && message && message.reactions && giveaway.running && !giveaway.paused) {
@@ -150,7 +150,9 @@ export default class GiveawayStore extends Collection<any, any> {
                 embed.timestamp = new Date(giveaway.endDate);
                 embed.footer.text = "The Giveaway Ended At";
                 embed.author.name = `We have ${winner.length > 1 ? "some WINNERS!" : "a WINNER!"}`;
-                channel.send(`Congratulations to ${winner.length > 1 ? winner.join(", ") : winner[0]} for winning the giveaway!`);
+                channel.send(
+                `Congratulations to ${winner.length > 1 ? winner.join(", ") : winner[0]} for winning the giveaway!`
+                );
                 message.edit({ embed });
                 gw.set({ running: false, winners: winner, timeRemaining: 0 });
                 await gw.save();
@@ -179,18 +181,25 @@ export default class GiveawayStore extends Collection<any, any> {
     }
 
     public async pause(giveaway: Giveaway): Promise<Object> {
-        const channel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
-        const message = channel ? await channel.messages.fetch(giveaway.messageID).catch(() => null) : null;
-        const gw = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, name: giveaway.name });
+        const channel: TextChannel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
+        const message: FoxMessage = channel
+            ? await channel.messages.fetch(giveaway.messageID)
+                .catch(() => undefined)
+            : undefined;
+        const gw: Giveaways = await this.client.mongo.giveaways.findOne({
+            guildID: this.guild.id,
+            name: giveaway.name
+        });
         if (channel && message && !giveaway.paused) {
-            const embed = message.embeds[0];
-            embed.description = "This giveaway is currently paused. You can still react, but the timer will start when the giveaway is resumed.";
+            const embed: MessageEmbed = message.embeds[0];
+            embed.description = "This giveaway is currently paused. You can still react, but the timer will start when the giveaway is resumed."; // tslint:disable-line
             embed.timestamp = null;
             embed.footer.text = "Giveaway Paused.";
             message.edit({ embed });
             gw.set({ paused: 3000 });
             await gw.save();
             await this._cache();
+
             return new Promise((res) => {
                 setTimeout(() => {
                     res(super.array());
@@ -200,10 +209,11 @@ export default class GiveawayStore extends Collection<any, any> {
     }
 
     public async remove(name: string): Promise<object> {
-        const giveaway = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, name });
+        const giveaway: Giveaways = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, name });
         if (!giveaway) { throw new Error("Could not resolve giveaway."); }
         await giveaway.remove();
         await super.delete(name);
+
         return new Promise((res) => {
             setTimeout(() => {
                 res(this.array());
@@ -212,36 +222,47 @@ export default class GiveawayStore extends Collection<any, any> {
     }
 
     public async reroll(giveaway: Giveaway): Promise<Object> {
-        const channel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
-        const message = channel && channel.messages ? await channel.messages.fetch(giveaway.messageID) : null;
-        const gw = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, name: giveaway.name });
+        const channel: TextChannel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
+        const message: FoxMessage = channel && channel.messages
+            ? await channel.messages.fetch(giveaway.messageID) as FoxMessage
+            : undefined;
+        const gw: Giveaways = await this.client.mongo.giveaways.findOne({
+            guildID: this.guild.id,
+            name: giveaway.name
+        });
         if (channel && message) {
-            const embed = message.embeds[0];
-            let reaction: any = giveaway.reactionEmote ? message.reactions.get(giveaway.reactionEmote.id) : message.reactions.get("495031665803001876");
+            const embed: MessageEmbed = message.embeds[0];
+            let reaction: any = giveaway.reactionEmote
+                ? message.reactions.get(giveaway.reactionEmote.id)
+                : message.reactions.get("495031665803001876");
             if (reaction) { reaction = await reaction.users.fetch(); }
             if (!reaction || !reaction.filter((u) => !u.bot).size) {
                 embed.title = `Giveaway Name: ${giveaway.name}`;
                 embed.description = "Reroll failed due to no new reactions. Ensure that users react, and reroll again.";
                 message.edit({ embed });
+
                 return super.array();
             } else if (reaction.filter((u) => !u.bot).size < giveaway.maxWinners) {
                 embed.title = `Giveaway Name: ${giveaway.name}`;
                 embed.description = "Not enough users reacted, so the reroll was cancelled.";
                 message.edit({ embed });
+
                 return super.array();
             } else {
-                const winner = reaction.filter((u) => !u.bot).random(giveaway.maxWinners);
+                const winner: User[] = reaction.filter((u) => !u.bot)
+                    .random(giveaway.maxWinners);
                 embed.title = `Giveaway Name: ${giveaway.name}`;
-                embed.description = `${winner.length > 1 ? `New Winners: ${winner.join(", ")}` : `New Winner: ${winner[0]}`}\nIf you didn't win this time around, there's always next time!`;
+                embed.description = `${winner.length > 1 ? `New Winners: ${winner.join(", ")}` : `New Winner: ${winner[0]}`}\nIf you didn't win this time around, there's always next time!`; // tslint:disable-line
                 // @ts-ignore
                 embed.timestamp = new Date(giveaway.endDate);
                 embed.footer.text = "The Giveaway Ended At";
                 embed.author.name = "Giveaway Re-rolled!";
-                channel.send(`${winner.length > 1 ? winner.join(", ") : winner[0]}, you are the new ${winner.length > 1 ? "winners!" : "winner!"}`);
+                channel.send(`${winner.length > 1 ? winner.join(", ") : winner[0]}, you are the new ${winner.length > 1 ? "winners!" : "winner!"}`); // tslint:disable-line
                 message.edit({ embed });
                 gw.set({ winners: winner });
                 await gw.save();
                 await this._cache();
+
                 return new Promise((res) => {
                     setTimeout(() => {
                         res(this.array());
@@ -252,20 +273,29 @@ export default class GiveawayStore extends Collection<any, any> {
     }
 
     public async resume(giveaway: Giveaway): Promise<Object> {
-        const channel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
-        const message = channel ? await channel.messages.fetch(giveaway.messageID) : null;
-        const gw = await this.client.mongo.giveaways.findOne({ guildID: this.guild.id, name: giveaway.name });
+        const channel: TextChannel = this.guild.channels.get(giveaway.channel.id) as TextChannel;
+        const message: FoxMessage = channel
+            ? await channel.messages.fetch(giveaway.messageID) as FoxMessage
+            : undefined;
+        const gw: Giveaways = await this.client.mongo.giveaways.findOne({
+            guildID: this.guild.id,
+            name: giveaway.name
+        });
         if (channel && message && giveaway.paused) {
-            const newEnd = (gw.get("endDate") + giveaway.paused) - Date.now();
-            const embed = message.embeds[0];
-            embed.description = embed.description.replace(embed.description, `In order to enter this giveaway, make sure to react with ${giveaway.reactionEmote ? this.guild.emojis.get(giveaway.reactionEmote.id) : "<:phat:495031665803001876>"}.\nPossible winners: **${giveaway.maxWinners}**\nYou have **${newEnd}** remaining to enter.`.replace(newEnd.toString(), `${duration(newEnd, "milliseconds").format("d [days], h [hours], m [minutes and] s [seconds]")}`));
+            const newEnd: number = (gw.get("endDate") + giveaway.paused) - Date.now();
+            const embed: MessageEmbed = message.embeds[0];
+            embed.description = embed.description.replace(
+                embed.description,
+                `In order to enter this giveaway, make sure to react with ${giveaway.reactionEmote ? this.guild.emojis.get(giveaway.reactionEmote.id) : "<:phat:495031665803001876>"}.\nPossible winners: **${giveaway.maxWinners}**\nYou have **${newEnd}** remaining to enter.`.replace(newEnd.toString(), `${duration(newEnd, "milliseconds").format("d [days], h [hours], m [minutes and] s [seconds]")}`) // tslint:disable-line
+            );
             // @ts-ignore
             embed.timestamp = new Date(gw.get("endDate") + giveaway.paused);
             embed.footer.text = "The Giveaway Ends At";
             message.edit({ embed });
-            gw.set({ paused: null, endDate: gw.get("endDate") + giveaway.paused, timeRemaining: newEnd });
+            gw.set({ paused: undefined, endDate: gw.get("endDate") + giveaway.paused, timeRemaining: newEnd });
             await gw.save();
             await this._cache();
+
             return new Promise((res) => {
                 setTimeout(() => {
                     res(this.array());

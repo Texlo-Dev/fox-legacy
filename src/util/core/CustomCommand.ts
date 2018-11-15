@@ -36,14 +36,19 @@ export default class CustomCommand {
     }
 
     public async edit(data: any): Promise<CustomCommand[]> {
-        const command: CustomCommands = await this.guild.client.mongo.customcommands.findOne({ guildID: this.guild.id, name: this.name });
+        const command: CustomCommands = await this.guild.client.mongo.customcommands.findOne({
+            guildID: this.guild.id,
+            name: this.name
+        });
         if (!command) { throw new Error("Command not found in database."); }
         for (const key in data) {
-            if (!this.hasOwnProperty(key)) { throw new Error(`Invalid Key: ${key}.`); }
-            command.set({ [key]: data[key] });
+            if (this.hasOwnProperty(key)) {
+                command.set({ [key]: data[key] });
+            } else { throw new Error(`Invalid keu: ${key}`); }
         }
         await command.save();
         await this.guild.commands.reloadAll();
+
         return this.guild.commands.array();
     }
 
@@ -54,9 +59,10 @@ export default class CustomCommand {
             if (!rgx.test(template)) { continue; }
             template = template.replace(rgx, this.guild.commands.variables[variable](message));
         }
-        const regex = new RegExp("{(.*?)}", "gm");
+        const regex: RegExp = new RegExp("{(.*?)}", "gm");
         template = await this.parseActions(message, template, regex, 1);
         if (this.deleteCommand) { message.delete(); }
+
         return this.dmCommand ? message.author.send(template) : message.channel.send(template);
     }
 
@@ -66,8 +72,8 @@ export default class CustomCommand {
 
     public async parseActions(message: FoxMessage, str: string, regex: RegExp, index: number): Promise<any> {
         index || (index = 1); /* tslint:disable-line */
-        const matches = [];
-        let match;
+        const matches: string[] = [];
+        let match: any;
         while (match = regex.exec(str)) { /* tslint:disable-line */
             matches.push(match[index]);
         }
@@ -77,6 +83,7 @@ export default class CustomCommand {
                 const [action, value] = array;
                 await this.guild.commands.actions[action](message, value);
             }
+
             return str.replace(regex, "".trim());
         } catch (error) {
             return message.send(`There was an error while executing this command. ${error.message}`);

@@ -1,6 +1,6 @@
+import { Role } from "discord.js";
 import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
-import { Role } from "discord.js";
 export default class FoxCommand extends Command {
 
     public static hasPermission(message: FoxMessage): boolean {

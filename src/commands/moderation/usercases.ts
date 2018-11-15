@@ -1,5 +1,5 @@
 import { stripIndents } from "common-tags";
-import { MessageEmbed, Message } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 import { Command, FoxClient } from "../../util";
 import { FoxMessage, FoxUser } from "../../util/extensions";
 import { ModActions } from "../../util/Mongo";

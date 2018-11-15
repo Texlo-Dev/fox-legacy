@@ -67,7 +67,11 @@ export default class PermStore extends Collection<any, any> {
             const ow: any[] = entry.get("overwrites");
             const pm: any = ow.find(o => o.permission === perm && o.target.id === target.id);
             if (!pm) {
-                const obj: object = { permission: perm || "automod.freespeech", target: JSON.parse(JSON.stringify(target)), status: status || "neutral" };
+                const obj: object = {
+                    permission: perm || "automod.freespeech",
+                    target: JSON.parse(JSON.stringify(target)),
+                    status: status || "neutral"
+                };
                 ow.push(obj);
                 entry.set({ overwrites: ow });
                 await entry.save();
@@ -78,26 +82,31 @@ export default class PermStore extends Collection<any, any> {
             }
         }
         await this._cache();
+
         return new Promise(res => setTimeout(() => res(super.array()), 70));
     }
 
     public check(perm: string, member: any, channel?: any): boolean {
-        if (member instanceof Message) {
+        if (member instanceof Message) { // tslint:disable:no-parameter-reassignment
             channel = member.channel;
             member = member.member;
             if (this.guild.ownerID === member.id) { return true; }
             for (const role of member.roles.values()) {
                 const ows: any = super.get(role.id);
                 if (!ows) { continue; }
-                const ow = ows.overwrites.find((o: any) => o.target.id === role.id && o.permission === perm);
+                const ow: any = ows.overwrites.find((o: any) => o.target.id === role.id && o.permission === perm);
                 if (!ow) { continue; }
-                if (ow.status === "denied") { return false; } else if (ow.status === "allowed") { return true; } else { continue; }
+                if (ow.status === "denied") {
+                    return false;
+                } else if (ow.status === "allowed") { return true; } else { continue; }
             }
             const userows: any = super.get(member.id);
             if (!userows) { return; }
             const userow: any = userows.overwrites.find((o: any) => o.target.id === member.id && o.permission === perm);
             if (!userow) { return; }
-            if (userow.status === "denied") { return false; } else if (userow.status === "allowed") { return true; } else { return this._verifyEveryone(perm); }
+            if (userow.status === "denied") {
+                return false;
+            } else if (userow.status === "allowed") { return true; } else { return this._verifyEveryone(perm); }
         }
     }
 
@@ -116,10 +125,12 @@ export default class PermStore extends Collection<any, any> {
     }
 
     private _verifyEveryone(perm: string): boolean {
-        const guildows = super.get(this.guild.id);
-        const ow = guildows.overwrites.find((o: any) => o.permission === perm);
-        if (!ow) { return null; }
-        if (ow.status === "denied") { return false; } else if (ow.status === "allowed") { return true; } else { return null; }
+        const guildows: any = super.get(this.guild.id);
+        const ow: any = guildows.overwrites.find((o: any) => o.permission === perm);
+        if (!ow) { return undefined; }
+        if (ow.status === "denied") {
+            return false;
+        } else if (ow.status === "allowed") { return true; } else { return null; }
     }
 
 }

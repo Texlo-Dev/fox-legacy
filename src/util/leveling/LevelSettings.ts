@@ -1,9 +1,32 @@
-import { GuildMember, TextChannel } from "discord.js";
+import { GuildMember, MessageMentions, TextChannel } from "discord.js";
 import { FoxGuild, FoxMessage } from "../extensions";
 import { FoxLeveling } from "../Mongo";
 import LevelMigrate from "./migrator";
 
 export default class Leveling {
+
+    public static generateXp(level: number): number {
+        if (level >= 60) { return level * 20; }
+        if (level >= 35) { return level * 10; } else if (level >= 27) { return Leveling.randomNum(110, 115); } else { return Leveling.randomNum(10, 15); }
+    }
+
+    public static randomNum(min: number, max: number): number {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    public static checkEligibility(member: GuildMember, channel: TextChannel): boolean {
+        const excludedRoles: Role[] = (member.guild as FoxGuild).leveling.excludedRoles;
+        const excludedChannels: TextChannel[] = (member.guild as FoxGuild).leveling.excludedChannels;
+        if (excludedRoles.length && excludedRoles.some((role) => member.roles.has(role.id))) {
+            return undefined;
+        } else if (excludedChannels.length && excludedChannels.some((c) => c.id === channel.id)) { return undefined; }
+
+        return true;
+    }
+
     public guild: FoxGuild;
     public promoRoles: any[];
     public messageLocation: string;
@@ -21,12 +44,12 @@ export default class Leveling {
     }
 
     public async _loadSettings(): Promise<void> {
-        const settings = await this.guild.client.mongo.leveling.findOne({
+        const settings: FoxLeveling = await this.guild.client.mongo.leveling.findOne({
             guildID: this.guild.id,
             type: "settings",
         });
         if (!settings) {
-            const levelsettings = new this.guild.client.mongo.leveling({
+            const levelsettings: FoxLeveling = new this.guild.client.mongo.leveling({
                 guildID: this.guild.id,
                 type: "settings",
             });
@@ -34,7 +57,7 @@ export default class Leveling {
         } else {
             for (const key of Object.keys(this)) {
                 if (key === "guild") { continue; }
-                const value = settings.get(key);
+                const value: any = settings.get(key);
                 if (value === undefined) { continue; }
                 this[key] = value;
             }
@@ -73,11 +96,17 @@ export default class Leveling {
         await LevelMigrate(message);
         await this._loadSettings();
 
-        const memberdata: FoxLeveling = await this.guild.client.mongo.leveling.findOne({ guildID: message.guild.id, userID: message.author.id });
+        const memberdata: FoxLeveling = await this.guild.client.mongo.leveling.findOne({
+            guildID: message.guild.id,
+            userID: message.author.id
+        });
         if (memberdata) {
             const level: number = memberdata.get("level");
             const calculatedXp: number = Leveling.generateXp(level);
-            memberdata.set({ xp: memberdata.get("xp") + calculatedXp, totalXP: memberdata.get("totalXP") + calculatedXp });
+            memberdata.set({
+                xp: memberdata.get("xp") + calculatedXp,
+                totalXP: memberdata.get("totalXP") + calculatedXp
+            });
             await memberdata.save();
             if (memberdata.get("xp") >= memberdata.get("tonextlevel")) {
                 memberdata.set({
@@ -89,7 +118,7 @@ export default class Leveling {
                 message.client.emit("levelUp", message, memberdata.get("level"));
             }
         } else {
-            const entry = new this.guild.client.mongo.leveling({
+            const entry: FoxLeveling = new this.guild.client.mongo.leveling({
                 guildID: message.guild.id,
                 userID: message.author.id,
                 level: 1,
@@ -102,8 +131,12 @@ export default class Leveling {
     }
 
     public async rankOf(member: any): Promise<number> {
-        const data: FoxLeveling[] = await member.client.mongo.leveling.sort("totalXP", "desc").find({ guildID: member.guild.id });
-        const mapped = data.map((c) => `${c.get("userID")}`);
+        const data: FoxLeveling[] = await member.client.mongo.leveling.sort(
+            "totalXP", "desc"
+        )
+        .find({ guildID: member.guild.id });
+        const mapped: string[] = data.map((c) => `${c.get("userID")}`);
+
         return mapped.indexOf(member.id) + 1;
     }
 
@@ -112,33 +145,16 @@ export default class Leveling {
             guildID: member.guild.id,
             userID: member.id,
         });
-        if (!entry) { return null; }
+        if (!entry) { return undefined; }
+
         return entry.get("level");
     }
 
-    public static generateXp(level: number): number {
-        if (level >= 60) { return level * 20; }
-        if (level >= 35) { return level * 10; } else if (level >= 27) { return Leveling.randomNum(110, 115); } else { return Leveling.randomNum(10, 15); }
-    }
-
-    public static randomNum(min: number, max: number): number {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    public static checkEligibility(member: GuildMember, channel: TextChannel): boolean {
-        const excludedRoles = (member.guild as FoxGuild).leveling.excludedRoles;
-        const excludedChannels = (member.guild as FoxGuild).leveling.excludedChannels;
-        if (excludedRoles.length && excludedRoles.some((role) => member.roles.has(role.id))) { return null; } else if (excludedChannels.length && excludedChannels.some((c) => c.id === channel.id)) { return null; }
-        return true;
-    }
-
     public static validate(message: FoxMessage): boolean | number {
-        const text = message.content.toLowerCase();
-        const mentions = message.mentions;
+        const text: string = message.content.toLowerCase();
+        const mentions: MessageMentions = message.mentions;
 
-        const substantialWords = [
+        const substantialWords: string[] = [
             "js", "javascript", "node", "nodejs", "code", "pars", "script", "clojure", "sql",
             "discord", "moment", "snekfetch", "dithcord", "guide", "video", "bot", "dev", "git",
             "github", "discord.js", "snekie", "mod.banhammer", "mrfox", "rtexel", "jacz", "the", "this",
@@ -147,15 +163,22 @@ export default class Leveling {
         ].concat(Object.keys(process.binding("natives")));
 
         // Words that might indicate that this message is lower quality
-        const insubstantialWords = ["lol", "lul", "lel", "kek", "xd", "¯\\_(ツ)_/¯", "dicksword", "gus", "kys", "dumbass",
-                                    "!", "-", ".", message.guild.config.prefix];
-        const necessarySubstance = 10;
+        const insubstantialWords: string[] = [
+            "lol", "lul", "lel", "kek", "xd", "¯\\_(ツ)_/¯", "dicksword", "gus", "kys", "dumbass",
+            "!", "-", ".", message.guild.config.prefix
+        ];
+        const necessarySubstance: number = 10;
         if (mentions.roles.some((r) => [message.guild.id].includes(r.id))) { return false; }
-        let substance = 0;
+        let substance: number = 0;
         if (text.length > "lol xD".length) (substance += 400) * ((substance - 5) / 1995) + 7; // tslint:disable-line
         substance += substantialWords.reduce((num, word) => text.includes(word) ? num + 2 : num, 0);
         substance -= insubstantialWords.reduce((num, word) => text.includes(word) ? num + 1 : num, 0);
-        if (mentions.users.size > 0) { substance -= mentions.users.size; } else if (mentions.roles.size > 3) { substance -= mentions.roles.size; } else if (mentions.channels.size > 5) { substance -= mentions.channels.size; } else { substance += 2; }
+        if (mentions.users.size > 0) {
+            substance -= mentions.users.size;
+         } else if (mentions.roles.size > 3) {
+             substance -= mentions.roles.size;
+        } else if (mentions.channels.size > 5) { substance -= mentions.channels.size; } else { substance += 2; }
+
         return substance >= necessarySubstance;
     }
 

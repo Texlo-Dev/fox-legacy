@@ -1,7 +1,7 @@
+import { MessageEmbed } from "discord.js";
 import moment, { duration } from "moment";
 import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
-import { MessageEmbed } from "discord.js";
 export default class FoxCommand extends Command {
 
     public static hasPermission(message: FoxMessage): boolean {
