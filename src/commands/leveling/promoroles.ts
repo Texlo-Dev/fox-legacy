@@ -25,7 +25,10 @@ export default class FoxCommand extends Command {
             .setColor(this.client.brandColor)
             .setTimestamp()
             .setFooter(this.client.user.username)
-            .setDescription(array.map(r => `${message.guild.roles.get(r.id)}: Unlocked at Level ${r.rank}`).join("\n") || "No roles were found.");
+            .setDescription(
+                array.map(r =>
+                    `${message.guild.roles.get(r.id)}: Unlocked at Level ${r.rank}`).join("\n") || "No roles were found." // tslint:disable-line
+            );
 
         return message.send({ embed });
     }

@@ -1,4 +1,4 @@
-// tslint:disable:no-parameter-reassignment no-magic-numbers
+// tslint:disable:no-parameter-reassignment no-magic-numbers interface-name
 import axios, { AxiosResponse } from "axios";
 import { Client, Collection, MessageStore, TextChannel } from "discord.js";
 import translate from "translate";
@@ -14,10 +14,17 @@ import { FoxMessage } from "../extensions";
 import * as Mongo from "../Mongo";
 translate.key = googleAPI;
 
+interface ClientArguments {
+    duration: string;
+    member: string;
+    number: string;
+    reason: string;
+}
+
 class FoxClient extends Client {
 
-    public get args(): object {
-        const obj: object = {
+    public get args(): ClientArguments {
+        const obj: ClientArguments = {
             member: "mention, ID, or name (Ex: @Jacz#9536, Jacz)",
             duration: "second, minute, hour, day, week (Ex: 2s, 4m, 8d, 9w)",
             reason: "string",

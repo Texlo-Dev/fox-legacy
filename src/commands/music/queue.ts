@@ -24,11 +24,19 @@ export default class FoxCommand extends Command {
         if (!page) { page = 1; }
         const serverQueue: Queue = message.guild.queue;
         if (!serverQueue) { return message.error(" It looks like there are no songs in the queue."); }
-        const timeArr: number[] = serverQueue.songs.map(song => parseInt(song.length));
-        const totalQueue = duration(timeArr.reduce((p, val) => p + val, 0) - (serverQueue.connection.dispatcher.streamTime / 1000), "seconds").format("m:ss", { trim: false });
-        const remaining = duration(serverQueue.songs[0].length - (serverQueue.connection.dispatcher.streamTime / 1000), "seconds").format("m:ss", { trim: false });
-        const paginated = FoxClient.paginate(serverQueue.songs, page, 10);
-        let num = 10 * (paginated.page - 1);
+        const timeArr: number[] = serverQueue.songs.map(song => parseFloat(song.length));
+        const totalQueue: string = duration(
+            timeArr.reduce((p, val) => p + val, 0) - (serverQueue.connection.dispatcher.streamTime / 1000),
+            "seconds"
+        )
+        .format("m:ss", { trim: false });
+        const remaining: string = duration(
+            serverQueue.songs[0].length - (serverQueue.connection.dispatcher.streamTime / 1000),
+            "seconds"
+        )
+        .format("m:ss", { trim: false });
+        const paginated: any = FoxClient.paginate(serverQueue.songs, page, 10);
+        let num: number = (paginated.page - 1) * 10;
         const embed: MessageEmbed = new MessageEmbed()
             .setColor(this.client.brandColor)
             .setAuthor("Music Queue", this.client.user.displayAvatarURL())

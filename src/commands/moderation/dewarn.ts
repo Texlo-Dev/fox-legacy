@@ -1,9 +1,15 @@
-import { MessageEmbed } from "discord.js";
-import { Command } from "../../util";
+import { GuildMember, MessageEmbed, TextChannel } from "discord.js";
+import { Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions";
+import { ModActions } from "../../util/Mongo";
 
 export default class FoxCommand extends Command {
 
-    public constructor(client) {
+    public static hasPermission(message: FoxMessage): boolean {
+        return message.guild.perms.check("mod.warning", message);
+    }
+
+    public constructor(client: FoxClient) {
         super(client, {
             name: "dewarn",
             description: "Removes warning points from a user.",
@@ -18,36 +24,47 @@ export default class FoxCommand extends Command {
         });
     }
 
-    public hasPermission(message) {
-        return message.guild.perms.check("mod.warning", message);
-    }
-
-    public async run(message, args, prefix) {
-        let modlog = await message.guild.config.modlogChannel;
-        const enabled = await message.guild.config.modLogging;
+    public async run(message: FoxMessage, args: string[], prefix: string) {
+        let modlog: TextChannel = await message.guild.config.modlogChannel;
+        const enabled: boolean = await message.guild.config.modLogging;
         if (!enabled) { modlog = null; }
-        const caseEntry = await this.client.mongo.modactions.count({ guildID: message.guild.id, id: undefined, warnpoints: undefined });
-        const caseInt = caseEntry + 1;
-        let reason = args.slice(2).join(" ");
-        const member = await this.member(message.mentions.users.first() || args[0], message);
-        const points = parseFloat(args[1]);
+        const caseEntry: number = await this.client.mongo.modactions.count({
+            guildID: message.guild.id,
+            id: undefined,
+            warnpoints: undefined
+        });
+        const caseInt: number = caseEntry + 1;
+        let reason: string = args.slice(2)
+            .join(" ");
+        const member: GuildMember = await this.member(message.mentions.users.first() || args[0], message);
+        const points: number = parseFloat(args[1]);
         if (!member) { return message.error("Value 'member' was not supplied. Please try again."); }
-        if (member.roles.highest.position >= message.member.roles.highest.position) { return message.error(`Sorry, but you cannot perform moderation actions on ${member.displayName}.`); }
-        const query = await this.client.mongo.modactions.findOne({ guildID: message.guild.id, userID: member.id, action: undefined, id: undefined });
+        if (member.roles.highest.position >= message.member.roles.highest.position) {
+            return message.error(`Sorry, but you cannot perform moderation actions on ${member.displayName}.`);
+        }
+        const query: ModActions = await this.client.mongo.modactions.findOne({
+            guildID: message.guild.id,
+            userID: member.id,
+            action: undefined,
+            id: undefined
+        });
         if (!query) { return message.error("This member has no warning points, so ignoring command."); }
         if (!points) { return message.error("Value 'points' was not specifed."); }
-        if (query.get("warnpoints") < points) { return message.error("You cannot de-warn more warning points than the member has."); }
+        if (query.get("warnpoints") < points) {
+            return message.error("You cannot de-warn more warning points than the member has.");
+        }
         if (!reason) { reason = `\nModerator: Please type \`${prefix}reason ${caseInt} <reason>\``; }
 
-        const embed = new MessageEmbed()
+        const embed: MessageEmbed = new MessageEmbed()
             .setTimestamp()
             .setColor("RANDOM")
             .setAuthor(message.author.tag, message.author.displayAvatarURL())
-            .setDescription(`**Action:** De-warn\n**Member:** ${member.user.tag} (${member.user.id})\n**Points:** ${points}\n**Reason:** ${reason}`)
+            .setDescription(`**Action:** De-warn\n**Member:** ${member.user.tag} (${member.user.id})\n**Points:** ${points}\n**Reason:** ${reason}`) // tslint:disable-line
             .setFooter(`Case#${caseInt}`);
         message.send(`Successfully de-warned **${member.user.tag}** :ok_hand:`);
-        const m = message.guild.channels.get(modlog.id).send({ embed });
-        const entry = new this.client.mongo.modactions({
+        const m: any = await (message.guild.channels.get(modlog.id) as TextChannel)
+            .send({ embed });
+        const entry: ModActions = new this.client.mongo.modactions({
             guildID: message.guild.id,
             caseNum: caseInt,
             userID: member.user.id,
@@ -60,10 +77,12 @@ export default class FoxCommand extends Command {
         });
         await entry.save();
 
-        const current = query.get("warnpoints");
+        const current: number = query.get("warnpoints");
         current - points !== 0 ? query.set({ warnpoints: current - points }) : query.remove();
         await query.save();
-        if (message.guild.config.msgAfterMod) { await member.send(`You have been de-warned (${points} points) on **${message.guild.name}** with the reason of _${reason}_.`); }
+        if (message.guild.config.msgAfterMod) {
+            await member.send(`You have been de-warned (${points} points) on **${message.guild.name}** with the reason of _${reason}_.`); // tslint:disable-line
+        }
     }
 
 }

@@ -27,17 +27,22 @@ export default class FoxCommand extends Command {
         const user: string = args[0];
         let reason: string = args.slice(1)
             .join(" ");
-        const member: GuildMember = await this.member(message.mentions.users.first() || user, message);
+        let member: GuildMember | User = await this.member(message.mentions.users.first() || user, message);
+        if (!member) {
+            const theuser: User = await this.user(message.mentions.users.first() || args[0], message);
+            if (!theuser) return message.error("Please specifify a valid member or user to ban.");
+            member = theuser;
+        }
         if (!message.guild.me.hasPermission("BAN_MEMBERS")) {
             return message.error("I do not have adequate permissions to perform this operation.");
         }
         if (!member) { return message.error("Value 'member' was not supplied, please try again."); }
-        if (member.roles.highest.position >= message.member.roles.highest.position) {
+        if (member instanceof GuildMember && member.roles.highest.position >= message.member.roles.highest.position) {
             return message.error(`Sorry, but you cannot perform moderation actions on ${member.displayName}.`);
         }
         let modlog: TextChannel = message.guild.config.modlogChannel;
         const enabled: boolean = message.guild.config.modLogging;
-        if (!enabled) { modlog = null; }
+        if (!enabled) { modlog = undefined; }
 
         const caseEntry: number = await this.client.mongo.modactions.count({
             guildID: message.guild.id,
@@ -47,24 +52,30 @@ export default class FoxCommand extends Command {
         if (!reason) { reason = `Moderator: Please type \`${prefix}reason ${caseInt} <reason>\``; }
 
         if (message.guild.config.msgAfterMod) {
-            await member.send(`You have been banned from **${message.guild.name}** with the reason of _${reason}_.`); 
+            await member.send(`You have been banned from **${message.guild.name}** with the reason of _${reason}_.`)
+            .catch(() => undefined);
         }
         const banUser: User = await message.guild.members.ban(member, {
             days: 4,
             reason,
         })
         .catch(() => undefined);
-        if (!banUser) { return message.reply("<:nicexmark:495362785010647041> Sorry, but I couldn't ban this user."); }
+        if (!banUser) {
+            return message.error("Sorry, but I couldn't ban this user.");
+        }
 
         const embed: MessageEmbed = new MessageEmbed()
             .setTimestamp()
             .setColor("RANDOM")
             .setAuthor(message.author.tag, message.author.displayAvatarURL())
-            .setDescription(`**Action:** Ban\n**Member:** ${(await this.client.users.fetch(member.id)).tag} (${member.id})\n**Reason:** ${reason}`)
+            .setDescription(`**Action:** Ban\n**Member:** ${(await this.client.users.fetch(member.id)).tag} (${member.id})\n**Reason:** ${reason}`) // tslint:disable-line
             .setFooter(`Case#${caseInt}`);
-        message.send(`I have banned **${(await this.client.users.fetch(member.id)).tag}**, with the reason of **${reason}**. :ok_hand:`);
+        message.send(`I have banned **${(await this.client.users.fetch(member.id)).tag}**, with the reason of **${reason}**. :ok_hand:`); // tslint:disable-line
 
-        const m: FoxMessage = modlog ? await message.guild.channels.get(modlog.id).send({ embed }) : undefined;
+        const m: any = modlog
+            ? (await message.guild.channels.get(modlog.id) as TextChannel)
+                .send({ embed })
+            : undefined;
         const entry: ModActions = new this.client.mongo.modactions({
             guildID: message.guild.id,
             caseNum: caseInt,

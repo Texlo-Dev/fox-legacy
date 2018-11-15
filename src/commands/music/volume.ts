@@ -1,4 +1,4 @@
-const volumes = {
+const volumes: object = {
     1: "0.1",
     2: "0.2",
     3: "0.3",
@@ -11,9 +11,9 @@ const volumes = {
     10: "1",
 };
 
+import { GuildMember, VoiceChannel } from "discord.js";
 import { Command, FoxClient, Queue } from "../../util";
 import { FoxMessage } from "../../util/extensions";
-import { GuildMember, VoiceChannel } from "discord.js";
 export default class FoxCommand extends Command {
 
     public static hasPermission(message: FoxMessage): boolean {
@@ -23,9 +23,11 @@ export default class FoxCommand extends Command {
     public static async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
         const member: GuildMember = await message.guild.members.fetch(message.author);
         const amount: number = parseFloat(args[0]);
-        if (!amount) { return message.send(`The current volume for music is **${message.guild.voiceConnection ? message.guild.voiceConnection.dispatcher.volume * 10 : 10}0 %**.`); }
+        if (!amount) {
+            return message.send(`The current volume for music is **${message.guild.voiceConnection ? message.guild.voiceConnection.dispatcher.volume * 10 : 10}0 %**.`); // tslint:disable-line
+        }
         if (amount < 1 || amount > 10) {
-            return message.error(" The supported volume range is 1-10, please try again."); 
+            return message.error(" The supported volume range is 1-10, please try again.");
         }
         const voiceChannel: VoiceChannel = member.voice.channel;
         if (!voiceChannel || voiceChannel.id !== message.guild.voiceConnection.channel.id) { 

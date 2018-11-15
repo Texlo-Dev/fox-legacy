@@ -1,2 +1,2 @@
-export const name = "Moderation";
-export const description = "Give you and your moderators awesome moderation tools.";
+export const name: string = "Moderation";
+export const description: string = "Give you and your moderators awesome moderation tools.";

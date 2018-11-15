@@ -1,6 +1,6 @@
+import { GuildMember } from "discord.js";
 import { Command, FoxClient, Queue } from "../../util";
 import { FoxMessage } from "../../util/extensions";
-import { GuildMember } from "discord.js";
 export default class FoxCommand extends Command {
 
     public static hasPermission(message: FoxMessage): boolean {

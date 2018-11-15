@@ -1,6 +1,6 @@
+import { GuildMember, Permissions, VoiceChannel } from "discord.js";
 import { Command, FoxClient, FoxMusic } from "../../util";
 import { FoxMessage } from "../../util/extensions";
-import { GuildMember, VoiceChannel, Permissions } from "discord.js";
 export default class FoxCommand extends Command {
 
     public static hasPermission(message: FoxMessage): boolean {
@@ -19,7 +19,7 @@ export default class FoxCommand extends Command {
     }
 
     public async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
-        const search: strint = args.join(" ");
+        const search: string = args.join(" ");
         if (!search) { return message.error("Please specify a song to play."); }
         const member: GuildMember = await message.guild.members.fetch(message.author);
         const music: FoxMusic = this.client.music;

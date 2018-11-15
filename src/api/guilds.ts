@@ -3,6 +3,7 @@ import { get } from "axios";
 import { Permissions } from "discord.js";
 import polka from "polka";
 import authMiddleware from "../util/authMiddleware";
+import { FoxClient } from "../util";
 const router = polka();
 
 router.get("/", authMiddleware, async (req, res) => {
@@ -342,7 +343,7 @@ router.post("/:guildID/giveaways", authMiddleware, async (req, res) => {
     const struct = {
         name,
         channel,
-        endDate: Date.now() + req.client.spanMs(time),
+        endDate: Date.now() + FoxClient.spanMs(time),
         maxWinners,
         reactionEmote,
     };
