@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "@discordjs/uws": "^11.149.1",
+    "@k3rn31p4nic/google-translate-api": "^1.0.5",
     "@polka/send-type": "^0.5.0",
     "@types/axios": "^0.14.0",
+    "@types/google-translate-api": "^2.3.0",
     "@types/moment-duration-format": "^2.2.2",
     "@types/mongorito": "^3.0.0",
     "@types/node": "^10.12.1",

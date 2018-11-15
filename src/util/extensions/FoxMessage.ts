@@ -25,7 +25,7 @@ export default Structures.extend("Message", (mes) => {
 
         public async error(content: string, options?: MessageOptions): Promise<Message | Message[]> {
             content = this.guild.config.language !== "English" // tslint:disable-line
-                ? await this.client.translate(content, this.client.locales[this.guild.config.language])
+                ? (await this.client.translate(content, { from: "en", to: this.client.locales[this.guild.config.language] })).text
                 : content;
 
             return this.channel.send(`<:nicexmark:495362785010647041> ${content}`, options);
@@ -45,7 +45,7 @@ export default Structures.extend("Message", (mes) => {
         public async send(content: any, options?: MessageOptions): Promise<Message | Message[]> {
             content = this.guild.config.language !== "English" // tslint:disable-line
                 ? options && options.translate !== false
-                ? await this.client.translate(content, this.client.locales[this.guild.config.language])
+                ? (await this.client.translate(content, { from: "en", to: this.client.locales[this.guild.config.language] })).text
                 : content
                 : content;
 
@@ -62,39 +62,42 @@ export default Structures.extend("Message", (mes) => {
                 if (options.embed && this.guild.config.language !== "English") {
                     this.channel.startTyping();
                     if (options.embed.title) {
-                        options.embed.title = await this.client.translate(
+                        ({ text: options.embed.title } = await this.client.translate(
                             options.embed.title,
-                            this.client.locales[this.guild.config.language]
-                        );
+                            { from: "en", to: this.client.locales[this.guild.config.language] }
+                        ));
                     }
                     if (options.embed.description) {
-                        options.embed.description = await this.client.translate(
+                        ({ text: options.embed.description } = await this.client.translate(
                             options.embed.description.replace(/\n/g, "xyz"),
-                            this.client.locales[this.guild.config.language]);
+                            { from: "en", to: this.client.locales[this.guild.config.language] }));
                         }
                     if (options.embed.description) {
                         options.embed.description = options.embed.description.replace(/xyz/gi, "\n");
                     }
                     if (options.embed.author) {
-                        options.embed.author.name = await this.client.translate(
-                            options.embed.author.name, this.client.locales[this.guild.config.language]);
+                        ({ text: options.embed.author.name } = await this.client.translate(
+                            options.embed.author.name, {
+                                from: "en",
+                                to: this.client.locales[this.guild.config.language]
+                            }));
                         }
                     if (options.embed.footer) {
-                        options.embed.footer.text = await this.client.translate(
-                            options.embed.footer.text, this.client.locales[this.guild.config.language]);
+                        ({ text: options.embed.footer.text } = await this.client.translate(
+                            options.embed.footer.text, { to: this.client.locales[this.guild.config.language] }));
                         }
                     for (const field of options.embed.fields) {
-                        field.name = await this.client.translate(
+                        ({ text: field.name } = await this.client.translate(
                             field.name,
-                            this.client.locales[this.guild.config.language]
-                        );
+                            { from: "en", to: this.client.locales[this.guild.config.language] }
+                        ));
                     }
                 }
             } catch (error) {
                 this.channel.stopTyping();
 
                 return this.channel.send(
-                    `<:nicexmark:495362785010647041> I could not translate this command. ${error}`
+                    `<:nicexmark:495362785010647041> I could not translate this command. ${error.message}`
                 );
             }
 
@@ -160,7 +163,12 @@ export default Structures.extend("Message", (mes) => {
 
         public async success(content: string, options?: MessageOptions): Promise<Message | Message[]> {
             content = this.guild.config.language !== "English"
-                ? await this.client.translate(content, this.client.locales[this.guild.config.language])
+                ? (
+                    await this.client.translate(content, {
+                        from: "en",
+                        to: this.client.locales[this.guild.config.language]
+                    })
+                ).text
                 : content;
 
             return this.channel.send(`<:checkmark:495362807731060757> ${content}`, options);

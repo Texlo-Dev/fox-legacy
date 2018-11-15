@@ -26,7 +26,10 @@ class CommandStore extends Collection<string, Command> {
         const command: Command = this.get(name);
         if (!command) { return false; }
         super.delete(command.name);
-        if (command.aliases && command.aliases.length) { for (const alias of command.aliases) { this.aliases.delete(alias); } }
+        if (command.aliases && command.aliases.length) {
+            for (const alias of command.aliases) { this.aliases.delete(alias); }
+        }
+
         return true;
     }
 
@@ -40,7 +43,10 @@ class CommandStore extends Collection<string, Command> {
 
     public set(command: Command): Command {
         super.set(command.name, command);
-        if (command.aliases && command.aliases.length) { for (const alias of command.aliases) { this.aliases.set(alias, command); } }
+        if (command.aliases && command.aliases.length) { 
+            for (const alias of command.aliases) { this.aliases.set(alias, command); } 
+        }
+
         return command;
     }
 

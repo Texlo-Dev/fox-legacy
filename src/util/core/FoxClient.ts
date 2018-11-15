@@ -1,7 +1,7 @@
 // tslint:disable:no-parameter-reassignment no-magic-numbers interface-name
+import translate from "@k3rn31p4nic/google-translate-api";
 import axios, { AxiosResponse } from "axios";
 import { Client, Collection, MessageStore, TextChannel } from "discord.js";
-import translate from "translate";
 import {
     CommandStore,
     EventStore,
@@ -12,7 +12,6 @@ import {
 import { dbotsKey, devs, googleAPI, isTestFox, ownerID, prefix } from "../../config.json";
 import { FoxMessage } from "../extensions";
 import * as Mongo from "../Mongo";
-translate.key = googleAPI;
 
 interface ClientArguments {
     duration: string;

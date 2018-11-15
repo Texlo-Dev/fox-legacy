@@ -7,11 +7,13 @@ export default class FoxCommand extends Command {
         return message.guild.perms.check("polls.pollster", message);
     }
 
-    public static async run(message: FoxMessage, args: string[]): Promise<void> {
+    public static async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
         const name: string = args[0];
         if (!name) { return message.error("Please set a name for this poll that is one word and contains no spaces."); }
         const type: string = args[1];
-        if (["simple", "open"].indexOf(type) < 0) { return message.error('Invalid poll type. Must be "simple".'); }
+        if (["simple", "open"].indexOf(type) < 0) {
+            return message.error('Invalid poll type. Must be "simple".');
+        }
         const question: string = args.slice(2)
             .join(" ");
         if (!question) { return message.send("You must specify a question to ask."); }
