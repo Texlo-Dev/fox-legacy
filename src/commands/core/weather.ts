@@ -107,16 +107,18 @@ export default class FoxCommand extends Command {
                 .setTextFont("20px Roboto")
                 .addText(
                     city.long_name
-                    ? await this.client.translate(city.long_name, this.client.locales[message.guild.config.language])
+                    ? (await this.client.translate(
+                        city.long_name, await this.client.locales[message.guild.config.language]
+                    )).text
                         .catch(() => city.long_name)
                     : "Unknown", 35, 50
                 )
                 .setTextFont("16px Roboto")
                 .addText(
                     state.long_name
-                    ? await this.client
-                        .translate(state.long_name, await this.client.locales[message.guild.config.language])
-                        .catch(() => state.long_name)
+                    ? (await this.client.translate(
+                        state.long_name, await this.client.locales[message.guild.config.language]
+                    )).text
                     : "", 35, 72.5
                 )
                 .setTextFont("48px Roboto Mono")

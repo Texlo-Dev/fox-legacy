@@ -1,14 +1,19 @@
-import { CollectorFilter, Message, MessageEmbed, MessageOptions, Structures, Util as splitMessage } from "discord.js";
+import { CollectorFilter, Message, MessageEmbed, MessageOptions, Structures, Util } from "discord.js";
 import { FoxGuild } from ".";
 import { Command, FoxClient } from "..";
 export default Structures.extend("Message", (mes) => {
     class FoxMessage extends mes {
 
         public static combineContentOptions(content: any, options: any): any {
-            if (!options) { return isObject(content) ? content : { content }; }
+            if (!options) { return this._isObject(content) ? content : { content }; }
 
             return {...options,  content};
         }
+
+        private static _isObject(input: any): boolean {
+            return Object.prototype.toString.call(input) === "[object Object]";
+        }
+
         public client: FoxClient;
         public command: Command;
         public guild: FoxGuild;
@@ -16,7 +21,7 @@ export default Structures.extend("Message", (mes) => {
 
         public constructor(...args) {
             super(...args);
-            this.command = null;
+            this.command = undefined;
         }
 
         public _registerCommand(command: Command): void {
@@ -41,13 +46,15 @@ export default Structures.extend("Message", (mes) => {
                 .setFooter(options.footer || this.client.user.username)
                 .setAuthor(options.header || "", this.client.user.displayAvatarURL());
 
-            return this.send(null, { embed: foxembed });
+            return this.send(null, { embed: foxembed }); // tslint:disable-line
         }
 
         public async send(content: any, options?: MessageOptions): Promise<Message | Message[]> {
             content = this.guild.config.language !== "English" // tslint:disable-line
                 ? options && options.translate !== false
-                ? (await this.client.translate(content, { from: "en", to: this.client.locales[this.guild.config.language] })).text
+                ? (await this.client.translate(
+                    content, { from: "en", to: this.client.locales[this.guild.config.language] }
+                )).text
                 : content
                 : content;
 
@@ -104,23 +111,27 @@ export default Structures.extend("Message", (mes) => {
             }
 
             if (this.responses && typeof options.files === "undefined") {
-                if (options && options.split) {
-                    content = splitMessage(content, options.split);
+                if (options && options.split) { // tslint:disable-next-line
+                    content = Util.splitMessage(content, options.split);
                 }
                 if (Array.isArray(content)) {
-                    const promises = [];
+                    const promises: any[] = [];
                     if (Array.isArray(this.responses)) {
-                        for (let i = 0; i < content.length; i++) {
+                        for (let i: number = 0; i < content.length; i++) {
                             if (this.responses.length > i) {
                                 promises.push(this.responses[i].edit(content[i], options));
                             } else { promises.push(this.channel.send(content[i])); }
                         }
                         if (this.responses.length > content.length) {
-                            for (let i = content.length; i < this.responses.length; i++) { this.responses[i].delete(); }
+                            for (let i: number = content.length; i < this.responses.length; i++) {
+                                this.responses[i].delete();
+                            }
                         }
                     } else {
                         promises.push(this.responses.edit(content[0], options));
-                        for (let i = 1; i < content.length; i++) { promises.push(this.channel.send(content[i])); }
+                        for (let i: number = 1; i < content.length; i++) {
+                            promises.push(this.channel.send(content[i]));
+                        }
                     }
 
                     return Promise.all(promises)
@@ -130,7 +141,7 @@ export default Structures.extend("Message", (mes) => {
                             return prm;
                         });
                 } else if (Array.isArray(this.responses)) {
-                    for (let i = this.responses.length - 1; i > 0; i--) { this.responses[i].delete(); }
+                    for (let i: number = this.responses.length - 1; i > 0; i--) { this.responses[i].delete(); }
                     [this.responses] = this.responses;
                 }
 
@@ -153,7 +164,8 @@ export default Structures.extend("Message", (mes) => {
             const collected: any = await this.channel.awaitMessages(
                 filter
                 ? filter
-                : (m) => m.author.id === this.author.id, {
+                : (m) => m.author.id === this.author.id,
+                {
                     max: 1, time, errors: ["time"]
                 }
             )
@@ -164,9 +176,10 @@ export default Structures.extend("Message", (mes) => {
         }
 
         public async success(content: string, options?: MessageOptions): Promise<Message | Message[]> {
-            content = this.guild.config.language !== "English"
-                ? (
-                    await this.client.translate(content, {
+            content = this.guild.config.language !== "English" // tslint:disable-line
+                ? (await this.client.translate(
+                    content,
+                    {
                         from: "en",
                         to: this.client.locales[this.guild.config.language]
                     })
@@ -180,7 +193,3 @@ export default Structures.extend("Message", (mes) => {
 
     return FoxMessage;
 });
-
-function isObject(input: any): boolean {
-    return Object.prototype.toString.call(input) === "[object Object]";
-}
