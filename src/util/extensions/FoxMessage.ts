@@ -25,7 +25,9 @@ export default Structures.extend("Message", (mes) => {
 
         public async error(content: string, options?: MessageOptions): Promise<Message | Message[]> {
             content = this.guild.config.language !== "English" // tslint:disable-line
-                ? (await this.client.translate(content, { from: "en", to: this.client.locales[this.guild.config.language] })).text
+                ? (await this.client.translate(
+                    content, { from: "en", to: this.client.locales[this.guild.config.language] }
+                )).text
                 : content;
 
             return this.channel.send(`<:nicexmark:495362785010647041> ${content}`, options);
@@ -39,7 +41,7 @@ export default Structures.extend("Message", (mes) => {
                 .setFooter(options.footer || this.client.user.username)
                 .setAuthor(options.header || "", this.client.user.displayAvatarURL());
 
-            return this.send(null, foxembed);
+            return this.send(null, { embed: foxembed });
         }
 
         public async send(content: any, options?: MessageOptions): Promise<Message | Message[]> {
