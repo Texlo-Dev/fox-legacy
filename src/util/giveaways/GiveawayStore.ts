@@ -17,17 +17,17 @@ export default class GiveawayStore extends Collection<any, any> {
         Object.defineProperty(this, "client", { value: guild.client });
     }
 
-    public async _cache(): Promise<boolean> {
+    public async _cache(): Promise<GiveawayStore> {
         const giveaways: Giveaways[] = await this.client.mongo.giveaways.find({ guildID: this.guild.id });
         if (!giveaways) { return; }
         const mapped: any[] = giveaways.map((g) => g.get());
         if (!mapped.length) { return; }
-        for (const giveaway of mapped) {
+        for await (const giveaway of mapped) {
             const gw: Giveaway = new Giveaway(this.guild, giveaway);
             super.set(gw.name, gw);
         }
 
-        return true;
+        return this;
     }
 
     public async add(name: string, giveaway: any): Promise<object> {
@@ -74,20 +74,6 @@ export default class GiveawayStore extends Collection<any, any> {
         } catch (error) {
             throw error;
         }
-    }
-
-    public array(): Giveaway[] {
-        const arr: Giveaway[] = super.array();
-        for (const gw of arr) {
-            // @ts-ignore
-            gw.endDate = moment(new Date(gw.endDate))
-                .format("MM/DD/YY [at] h:mm A");
-            // @ts-ignore
-            gw.timeRemaining = duration(gw.timeRemaining, "milliseconds")
-                .format("d [days], h [hours], m [minutes], s [seconds]");
-        }
-
-        return arr;
     }
 
     public begin(): void {
@@ -292,14 +278,14 @@ export default class GiveawayStore extends Collection<any, any> {
             embed.timestamp = new Date(gw.get("endDate") + giveaway.paused);
             embed.footer.text = "The Giveaway Ends At";
             message.edit({ embed });
-            gw.set({ paused: undefined, endDate: gw.get("endDate") + giveaway.paused, timeRemaining: newEnd });
+            gw.set({ paused: !giveaway.paused, endDate: gw.get("endDate") + giveaway.paused, timeRemaining: newEnd });
             await gw.save();
             await this._cache();
 
             return new Promise((res) => {
                 setTimeout(() => {
                     res(this.array());
-                },         50);
+                },         75);
             });
         }
     }

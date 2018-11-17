@@ -16,12 +16,12 @@ export default class extends Event {
         if (!guild) { return; }
         const member: GuildMember = await guild.members.fetch(user.id);
         const client: FoxClient = channel.client as FoxClient;
-        await guild.config._loadSettings();
-        guild.packages.forEach(p => p._setEnabled());
         const ownerRole: Role = guild.roles.find(role => role.name === "Server Owner");
         if (ownerRole) {
             if (client.user.id === "334841053276405760") { return; }
-            const ownerCheck: boolean = await client.shard.broadcastEval(`this.guilds.some(g => g.ownerID === '${user.id}')`);
+            const ownerCheck: any[] = await client.shard.broadcastEval(
+                `this.guilds.some(g => g.ownerID === '${user.id}')`
+            );
             if (ownerCheck.some(bool => bool === true)) {
                 if (!member.roles.has(ownerRole.id)) {
                     member.roles.add(ownerRole);

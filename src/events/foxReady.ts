@@ -33,7 +33,7 @@ export default class extends Event {
             await fg.commands.reloadAll();
             await fg.polls._cache();
             fg.giveaways._cache()
-                .then(() => fg.giveaways.begin());
+                .then(() => this.client.emit("giveawayStart", fg));
         }
     }
 

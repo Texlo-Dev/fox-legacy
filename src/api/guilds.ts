@@ -1,17 +1,21 @@
 // tslint:disable:no-magic-numbers
 import { get } from "axios";
 import { Permissions } from "discord.js";
+import moment, { duration } from "moment";
 import polka from "polka";
-import { FoxClient } from "../util";
+import { FoxClient, Giveaway } from "../util";
 import authMiddleware from "../util/authMiddleware";
-const router = polka();
+const router: any = polka();
 
 router.get("/", authMiddleware, async (req, res) => {
-    let { data: guilds } = await get("https://discordapp.com/api/users/@me/guilds", { headers: { Authorization: `Bearer ${req.auth}` } }).catch(() => 0);
+    let { data: guilds } = await get("https://discordapp.com/api/users/@me/guilds", {
+        headers: { Authorization: `Bearer ${req.auth}` }
+    })
+    .catch(() => 0);
     if (!guilds) { return res.json(401, { error: "Invalid Credentials." }); }
     guilds = guilds.filter(guild => guild.owner || new Permissions(guild.permissions).has("MANAGE_GUILD"));
     for (const guild of guilds) {
-        const arr = await req.client.shard.broadcastEval(`this.guilds.has('${guild.id}')`);
+        const arr: any[] = await req.client.shard.broadcastEval(`this.guilds.has('${guild.id}')`);
         guild.canManage = arr.some(a => a === true);
         guild.iconURL = `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.jpg?size=128`;
     }
@@ -165,22 +169,32 @@ router.get("/:guildID/roles", authMiddleware, async (req, res) => {
 router.get("/:guildID/giveaways", authMiddleware, async (req, res) => {
     const guildID = req.params.guildID;
     try {
-        const resp = await req.client.shard.broadcastEval(`
+        const resp: any = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
                 const guild = this.guilds.get('${guildID}');
                 guild.giveaways._cache()
                 guild.giveaways.array();
             }
-        `).catch(err => { throw err; });
+        `)
+        .catch(err => { throw err; });
         if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
-        res.json(200, resp.filter(g => g)[0]);
+        const arr: Giveaway[] = resp.filter(g => g)[0];
+        for await (const gw of arr) {
+            // @ts-ignore
+            gw.endDate = moment(new Date(gw.endDate))
+                .format("MM/DD/YY [at] h:mm A");
+            // @ts-ignore
+            gw.timeRemaining = duration(gw.timeRemaining, "milliseconds")
+                .format("d [days], h [hours], m [minutes], s [seconds]");
+        }
+        res.json(200, arr);
     } catch (error) {
         res.json(500, { error: error.message });
     }
 });
 
 router.get("/:guildID/polls", authMiddleware, async (req, res) => {
-    const guildID = req.params.guildID;
+    const guildID: string = req.params.guildID;
     try {
         const resp = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
@@ -340,7 +354,7 @@ router.post("/:guildID/giveaways", authMiddleware, async (req, res) => {
     if (!guildID || !name || !channel || !maxWinners || !time) {
         return res.json(500, { message: "Missing one or more parameters." });
     }
-    const struct = {
+    const struct: object = {
         name,
         channel,
         endDate: Date.now() + FoxClient.spanMs(time),
@@ -348,14 +362,24 @@ router.post("/:guildID/giveaways", authMiddleware, async (req, res) => {
         reactionEmote,
     };
     try {
-        const resp = await req.client.shard.broadcastEval(`
+        const resp: any[] = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
                 const guild = this.guilds.get('${guildID}');
                 guild.giveaways.add('${decodeURIComponent(name)}', ${JSON.stringify(struct)}).then(r => r)
             }
-        `).catch(err => { throw err; });
+        `)
+        .catch(err => { throw err; });
         if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
-        res.json(200, resp.filter(g => g)[0]);
+        const arr: Giveaway[] = resp.filter(g => g)[0];
+        for await (const gw of arr) {
+            // @ts-ignore
+            gw.endDate = moment(new Date(gw.endDate))
+                .format("MM/DD/YY [at] h:mm A");
+            // @ts-ignore
+            gw.timeRemaining = duration(gw.timeRemaining, "milliseconds")
+                .format("d [days], h [hours], m [minutes], s [seconds]");
+        }
+        res.json(200, arr);
     } catch (error) {
         res.json(500, { error: error.message });
     }
@@ -365,12 +389,13 @@ router.delete("/:guildID/giveaways/:name", authMiddleware, async (req, res) => {
     const { guildID, name } = req.params;
     if (!guildID || !name) { return res.json(500, { message: "Missing parameters." }); }
     try {
-        const resp = await req.client.shard.broadcastEval(`
+        const resp: any[] = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
                 const guild = this.guilds.get('${guildID}');
                 guild.giveaways.remove('${decodeURIComponent(name)}').then(r => r);
             }
-        `).catch(err => { throw err; });
+        `)
+        .catch(err => { throw err; });
         if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
         res.json(200, resp.filter(g => g)[0]);
     } catch (error) {
@@ -399,9 +424,19 @@ router.patch("/:guildID/giveaways/:name", authMiddleware, async (req, res) => {
                     giveaway.resume().then(r => r);
                 }
             }
-        `).catch(err => { throw err; });
+        `)
+        .catch(err => { throw err; });
         if (!resp.filter(g => g)) { throw new Error("Could Not resolve guild."); }
-        res.json(200, resp.filter(g => g)[0]);
+        const arr: Giveaway[] = resp.filter(g => g)[0];
+        for await (const gw of arr) {
+            // @ts-ignore
+            gw.endDate = moment(new Date(gw.endDate))
+                .format("MM/DD/YY [at] h:mm A");
+            // @ts-ignore
+            gw.timeRemaining = duration(gw.timeRemaining, "milliseconds")
+                .format("d [days], h [hours], m [minutes], s [seconds]");
+        }
+        res.json(200, arr);
     } catch (error) {
         res.json(500, { error: error.message });
     }

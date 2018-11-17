@@ -15,14 +15,14 @@ export default class extends Event {
         if (!gw.timeout) {
             const timeout: NodeJS.Timeout = this.client.setInterval(() => {
                 gw._cache()
-                .then(gw.begin);
+                .then(() => gw.begin());
             }, 3000);
             gw.timeout = timeout;
         } else {
             this.client.clearTimeout(gw.timeout);
             const timeout: NodeJS.Timeout = this.client.setInterval(() => {
                 gw._cache()
-                .then(gw.begin);
+                .then(() => gw.begin());
             }, 7000);
             gw.timeout = timeout;
         }
