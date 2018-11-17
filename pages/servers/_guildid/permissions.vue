@@ -12,7 +12,9 @@
           <div class="box">
             <h3 class="subtitle has-text-centered has-text-white">
               Roles/Members
-              <button class="button is-small is-grey-darker is-rounded" @click="selectMenu = true" ><font-awesome-icon size="0.8x" icon="plus"/></button>
+              <button class="button is-small is-grey is-rounded" @click="selectMenu = true" >
+                <p>Add</p> &nbsp;<font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+              </button>
             </h3>
             <b-select v-if="selectMenu" v-model="selectedRole" class="has-text-centered" placeholder="None" @input="createOverwrite(selectedRole)">
               <option
@@ -36,53 +38,50 @@
           </div>
         </div>
         <div class="column is-9">
-          <div class="box">
-            <div class="block">
-              <b-radio v-for="(cmd, category) of permissions" v-model="activeCat" :key="category" :native-value="category">
-                {{ category }}
-              </b-radio>
-            </div>
-            <div class="is-divider"/>
-            <div class="content">
-              <h3 class="title has-text-white">{{ activeCat }} Permissions</h3>
-              <div v-for="perm of permissions[activeCat]" :key="perm.name">
-                <nav class="level is-mobile">
-                  <div class="level-left">
-                    <div class="level-item">
-                      <p class="subtitle has-text-white">
-                        {{ capitalize(perm.name.split('.')[1]) }}
-                      </p>
-                    </div>
-                    <div class="level-item">
-                      <div class="group">
-                        <button v-if="activeOW.find(a => a.permission === perm.name) && activeOW.find(a => a.permission === perm.name).status === 'denied'" class="perm deny selected">
-                          <img src="https://discordapp.com/assets/46eac82bb5b3ccd5049e8b3a96910327.svg">
-                        </button>
-                        <button v-else class="perm deny" @click="savePerm(perm.name, 'denied')">
-                          <img src="https://discordapp.com/assets/132b1ce1c085ff84256f3b16943bc782.svg">
-                        </button>
-                        <button v-if="!activeOW.find(a => a.permission === perm.name) || activeOW.find(a => a.permission === perm.name).status === 'neutral'" class="perm pass selected">
-                          <img src="https://discordapp.com/assets/f081fef9b7d9610309e65b5282bd0ca9.svg">
-                        </button>
-                        <button v-else class="perm pass" @click="savePerm(perm.name, 'neutral')">
-                          <img src="https://discordapp.com/assets/bbc9e257da833d4b7d22c82a1de8a0a0.svg">
-                        </button>
-                        <button v-if="activeOW.find(a => a.permission === perm.name) && activeOW.find(a => a.permission === perm.name).status === 'allowed'" class="perm allow selected">
-                          <img src="https://discordapp.com/assets/7b5b950896ff4214b058f76ba0e84a7b.svg">
-                        </button>
-                        <button v-else class="perm allow" @click="savePerm(perm.name, 'allowed')">
-                          <img src="https://discordapp.com/assets/ffeba954d48c1ac993679084cee38746.svg">
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </nav>
-                <p>{{ perm.description }}</p>
-                <br>
-              </div>
-              <button v-show="activeTarget.id !== $route.params.guildid" class="button is-danger is-outlined" @click="permDelete(activeTarget)">Remove {{ activeTarget.name || activeTarget.tag }}</button>
-            </div>
+          <div class="block">
+            <b-radio v-for="(cmd, category) of permissions" v-model="activeCat" :key="category" :native-value="category">
+              <p>{{ category }}</p>
+            </b-radio>
           </div>
+          <div class="is-divider"/>
+          <h3 class="title has-text-white">{{ activeCat }} Permissions</h3>
+          <div v-for="perm of permissions[activeCat]" :key="perm.name">
+            <nav class="level is-mobile">
+              <div class="level-left">
+                <div class="level-item">
+                  <p class="subtitle has-text-white">
+                    {{ perm.name.split('.')[1].toUpperCase() }}
+                  </p>
+                </div>
+                <div class="level-item">
+                  <div class="group">
+                    <button v-if="activeOW.find(a => a.permission === perm.name) && activeOW.find(a => a.permission === perm.name).status === 'denied'" class="perm deny selected">
+                      <img src="https://discordapp.com/assets/46eac82bb5b3ccd5049e8b3a96910327.svg">
+                    </button>
+                    <button v-else class="perm deny" @click="savePerm(perm.name, 'denied')">
+                      <img src="https://discordapp.com/assets/132b1ce1c085ff84256f3b16943bc782.svg">
+                    </button>
+                    <button v-if="!activeOW.find(a => a.permission === perm.name) || activeOW.find(a => a.permission === perm.name).status === 'neutral'" class="perm pass selected">
+                      <img src="https://discordapp.com/assets/f081fef9b7d9610309e65b5282bd0ca9.svg">
+                    </button>
+                    <button v-else class="perm pass" @click="savePerm(perm.name, 'neutral')">
+                      <img src="https://discordapp.com/assets/bbc9e257da833d4b7d22c82a1de8a0a0.svg">
+                    </button>
+                    <button v-if="activeOW.find(a => a.permission === perm.name) && activeOW.find(a => a.permission === perm.name).status === 'allowed'" class="perm allow selected">
+                      <img src="https://discordapp.com/assets/7b5b950896ff4214b058f76ba0e84a7b.svg">
+                    </button>
+                    <button v-else class="perm allow" @click="savePerm(perm.name, 'allowed')">
+                      <img src="https://discordapp.com/assets/ffeba954d48c1ac993679084cee38746.svg">
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </nav>
+            <p>{{ perm.description }}</p>
+            <br>
+          </div>
+          <button v-show="activeTarget.id !== $route.params.guildid" class="button is-danger is-outlined" @click="permDelete(activeTarget)">Remove {{ activeTarget.name || activeTarget.tag }}</button>
+
         </div>
       </div>
     </div>
@@ -280,6 +279,11 @@ select {
 .b-radio.radio .control-label:hover {
   color: #f37934;
 }
+
+.check {
+  background-color: #2b2f33;
+}
+
 .message-body {
   background-color: #242424;
 }

@@ -20,12 +20,19 @@
           </div>
           <br>
           <div class="level-item has-text-centered">
-            <nuxt-link :to="`/servers/${this.$route.params.guildid}`" :class="{ 'is-outlined': selected === 1 }" class="button is-hidden-mobile is-primary"><p class="has-text-weight-bold">Packages</p></nuxt-link>
-            <nuxt-link :to="`/servers/${this.$route.params.guildid}`" :class="{ 'is-outlined': selected === 1 }" class="button is-hidden-desktop is-hidden-tablet-only  is-small is-primary"><p class="has-text-weight-bold">Packages</p></nuxt-link>
-            <nuxt-link :to="`/servers/${this.$route.params.guildid}/permissions`" :class="{ 'is-outlined': selected === 0 }" class="button is-hidden-mobile is-primary"><p class="has-text-weight-bold">Permissions</p></nuxt-link>
-            <nuxt-link :to="`/servers/${this.$route.params.guildid}/permissions`" :class="{ 'is-outlined': selected === 0 }" class="button is-hidden-desktop is-hidden-tablet-only is-small is-primary"><p class="has-text-weight-bold">Permissions</p></nuxt-link>
-            <nuxt-link to="/servers" class="button is-hidden-mobile is-success"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
-            <nuxt-link to="/servers" class="button is-success is-hidden-desktop is-hidden-tablet-only is-small"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
+            <b-field>
+              <b-radio-button size="is-small">
+                <nuxt-link :to="`/servers/${this.$route.params.guildid}`" :class="{ 'is-outlined': selected === 1 }" class="is-primary"><p class="has-text-weight-bold">Packages</p></nuxt-link>
+              </b-radio-button>
+              <b-radio-button type="is-link" size="is-small">
+                <nuxt-link :to="`/servers/${this.$route.params.guildid}/permissions`" :class="{ 'is-outlined': selected === 0 }" class="is-primary"><p class="has-text-weight-bold">Permissions</p></nuxt-link>
+              </b-radio-button>
+              <b-radio-button type="is-success" size="is-small">
+                <nuxt-link to="/servers" class="is-success"><p class="has-text-weight-bold">Change Server</p></nuxt-link>
+              </b-radio-button>
+
+            </b-field>
+          
           </div>
         </nav>
       </div>

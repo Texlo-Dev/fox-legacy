@@ -17,4 +17,5 @@ dist
 .env
 components.save*/
 pages.save*/
-static/FoxLogov2.png
+static/
+assets
