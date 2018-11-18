@@ -1,4 +1,4 @@
-import { GuildMember, MessageEmbed, StreamDispatcher, TextChannel, VoiceConnection } from "discord.js";
+import { GuildMember, MessageEmbed, StreamDispatcher, TextChannel, VoiceConnection, VoiceChannel } from "discord.js";
 import YoutubeAPI from "simple-youtube-api";
 import ytdl from "ytdl-core";
 import { googleAPI as apikey } from "../../config.json";
@@ -17,12 +17,12 @@ class FoxMusic {
         this.client = client;
     }
 
-    public async getID(args: string, message: FoxMessage, member: GuildMember) {
+    public async getID(args: string, message: FoxMessage, member: GuildMember): Promise<FoxMessage> {
         if (args.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/)) {
             const times: any[] = [];
             const playlist: any = await youtube.getPlaylist(args);
             const videos: any = await playlist.getVideos();
-            if (videos.length > 5 && !(message.author).patreonTier) {
+            if (videos.length > 5 && !message.author.patreonTier) {
                 return message.error("Sorry, but YouTube playlists are limited to 5 songs as a free user. To remove this limit, consider becoming a Patreon today, to recieve exclusive features, including enhanced music playback.\nhttps://www.patreon.com/foxdevteam"); // tslint:disable-line
             }
 
@@ -32,13 +32,14 @@ class FoxMusic {
                 await this.handleVideo(video2, message, member, member.voice.channel, true);
             }
 
-            const timeArr = times.map(parseInt);
-            const time = timeArr.reduce((prev, val) => prev + val, 0);
-            const embed = new MessageEmbed()
+            const timeArr: number[] = times.map(parseInt);
+            const time: number = timeArr.reduce((prev, val) => prev + val, 0);
+            const embed: MessageEmbed = new MessageEmbed()
                 .setAuthor("Music", this.client.user.displayAvatarURL())
                 .setDescription(`Playlist **${playlist.title}** has been added to the queue!\nAuthor: **${playlist.channel.title}**\nLength: Around **${duration(time, "seconds").format("h [hours and] m [minutes].")}**`)
                 .setColor(this.client.brandColor);
-            message.send({ embed });
+
+            return message.send({ embed });
         } else {
             try {
                 const video = await youtube.getVideo(args);
@@ -78,9 +79,9 @@ class FoxMusic {
         }
     }
 
-    public async handleVideo(video, message: FoxMessage, member, voiceChannel, playlist = false) {
-        const upvoter = message.author;
-        const song = new Song(this.client, {
+    public async handleVideo(video, message: FoxMessage, member: GuildMember, voiceChannel: VoiceChannel, playlist = false): Promise<FoxMessage> { // tslint:disable-line
+        const upvoter: FoxUser = message.author;
+        const song: Song = new Song(this.client, {
             title: video.title,
             author: video.channel.title,
             url: `https://www.youtube.com/watch?v=${video.id}`,
@@ -88,7 +89,6 @@ class FoxMusic {
             length: video.durationSeconds,
             thumbnail: video.thumbnails.standard ? video.thumbnails.standard.url : video.thumbnails.default.url,
         });
-        if (!message.author.patreonTier) return message.error("At this time, music features are only available for Bronze Patreon subscribers or higher. If you'd like to check out our plans on Patreon, go here: https://patreon.com/foxdevteam"); // tslint:disable-line
 
         const serverQueue: Queue = message.guild.queue;
         if (!serverQueue) {
@@ -114,7 +114,8 @@ class FoxMusic {
         } else {
             if (!playlist && serverQueue.songs.filter(song =>
                 song.requestedBy.id === message.author.id).length >= 5 && message.author.patreonTier < 2) {
-                    return message.error("Your song queue limit is currently at 3 songs as a Bronze Fox Patreon. To increase your queue limit, please consider upgrading to a Silver Fox Patreon or higher here:\nhttps://www.patreon.com/foxdevteam");
+                    return message.error(
+                        "Your song queue limit is currently at 3 songs as a Bronze Fox Patreon. To increase your queue limit, please consider upgrading to a Silver Fox Patreon or higher here:\nhttps://www.patreon.com/foxdevteam");
             }
             serverQueue.songs.push(song);
             if (playlist) { return; }

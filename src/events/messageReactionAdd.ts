@@ -22,7 +22,12 @@ export default class extends Event {
         const role: any = reactionRoles
             .filter(r => r.messageID === message.id)
             .find(r => r.emoji.id === reaction.emoji.id);
-        if (role && message.guild.roles.has(role.id)) { member.roles.add(role.id); }
+        if (role && message.guild.roles.has(role.id)) {
+            if (config.reactRoleLimit) await Promise.all(
+                reactionRoles.map(async rl => message.member.roles.remove(rl.id)
+            ));
+            await member.roles.add(role.id);
+        }
 
         return this;
     }

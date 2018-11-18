@@ -1,8 +1,13 @@
 // tslint:disable:no-magic-numbers
 import { Collection, TextChannel } from "discord.js";
-import { Command, Event, FoxClient } from "../util";
+import { Command, Event, FoxClient, Package } from "../util";
 import { badWords, invProtect, massProtect, spamProtect } from "../util/core/Automod";
 import { FoxMessage, FoxUser } from "../util/extensions";
+const tiers: object = {
+    1: "**Bronze**",
+    2: "Silver",
+    3: "Gold"
+};
 
 export default class MessageEvent extends Event {
 
@@ -49,16 +54,26 @@ export default class MessageEvent extends Event {
         if (typeof user.patreonTier !== "number") { await user._setTier(); }
         if (command.guildOnly && !message.guild) {
             return message.send("Sorry, this command can only be ran in a guild channel.");
-        }
-        if (
+        } else if (
             message.guild.config.disabledCommands
             ? message.guild.config.disabledCommands.indexOf(command.name) > -1
             : undefined
         ) { return message.error(" This command has been disabled by the server administrator."); }
-        if (!message.guild.packages.get(command.category).enabled) return message.error(`The **${this.client.capitalizeStr(command.category)}** package is currently disabled.`); // tslint:disable-line
-        if (typeof command.hasPermission === "function" && !command.hasPermission(message)) {
+        const pkg: Package = message.guild.packages.get(command.category);
+        if (!pkg.enabled) return message.error(
+            `The **${this.client.capitalizeStr(command.category)}** package is currently disabled.`
+        );
+        else if (pkg.patreonTier > (message.guild.owner.user as FoxUser).patreonTier)
+            return message.error(
+                `This package requires that ${message.guild.ownerID === message.author.id ? `you have at least the ${tiers[pkg.patreonTier.toString()]} Patreon tier to use. Check out our various patreon plans and perks here: https://www.patreon.com/join/foxdevteam?` : `your server owner has the the ${tiers[pkg.patreonTier.toString()]} Patreon tier to use. If you want to use this package immediately, choose your patreon tier today, and get some cool rewards. https://www.patreon.com/join/foxdevteam` // tslint:disable-line
+                }
+            `);
+        else if (typeof command.hasPermission === "function" && !command.hasPermission(message)) {
             return message.error(" _**Sorry, but you do not have permission to use this command.**_");
-        } else if (typeof command.constructor.hasPermission === "function" && !command.constructor.hasPermission(message)) {
+        } else if (
+            typeof command.constructor.hasPermission === "function"
+            && !command.constructor.hasPermission(message)
+            ) {
             return message.error(" _**Sorry, but you do not have permission to use this command.**_");
         }
 

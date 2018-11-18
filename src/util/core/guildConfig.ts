@@ -34,6 +34,8 @@ export default class GuildConfig {
     public readonly packages: string[];
     public readonly prefix: string;
     public reactionRoles: any[];
+    public readonly reactRoleLimit: number;
+    public readonly selfRoleLimit: number;
     public selfRoles: any[];
     public readonly serverlogChannel: any;
     public readonly serverLogging: boolean;
@@ -69,6 +71,8 @@ export default class GuildConfig {
         this.mentionLimit = undefined;
         this.messageLogging = undefined;
         this.modLogging = undefined;
+        this.selfRoleLimit = undefined;
+        this.reactRoleLimit = undefined;
         this.massProtected = undefined;
         this.serverLogging = undefined;
         this.levelMessaging = undefined;

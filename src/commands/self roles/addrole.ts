@@ -15,8 +15,14 @@ export default class FoxCommand extends Command {
         if (!role) { return message.error("Invalid role detected."); }
         const entry: Role[] = message.guild.config.selfRoles;
         if (!entry.some(r => r.id === role.id)) { return message.error("This is not an available self role."); }
+        const rolefilter: Role[] = entry.filter(e => message.member.roles.has(e.id));
+        if (message.guild.config.selfRoleLimit && rolefilter.length) await Promise.all(
+            entry.map(async rl => message.member.roles.remove(rl.id)
+        ));
         message.member.roles.add(role)
-        .then(() => message.FoxEmbed({ header: "Add Self Role" }, `You  have been added to the ${role} role.`))
+        .then(() => message.FoxEmbed(
+            { header: "Self Role" },
+            `You have ${message.guild.config.selfRoleLimit ? "switched to" : "been added"} to the ${role} role.`))
         .catch(error => message.error(`I could not give this role. ${error.message}`));
     }
 

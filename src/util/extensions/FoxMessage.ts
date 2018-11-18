@@ -1,6 +1,7 @@
 import { CollectorFilter, Message, MessageEmbed, MessageOptions, Structures, Util } from "discord.js";
 import { FoxGuild } from ".";
 import { Command, FoxClient } from "..";
+
 export default Structures.extend("Message", (mes) => {
     class FoxMessage extends mes {
 
