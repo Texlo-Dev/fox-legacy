@@ -12,29 +12,47 @@
       <div class="is-divider"/>
     </div>
     <div v-if="!loading && config" class="container">
-      <div class="box">
-        <div class="content">
-          <h1 class="title has-text-white has-text-left">Available Self Roles</h1>
-          <b-field custom-class="has-text-white">
-            <b-taginput
-              v-model="config.selfRoles"
-              :allow-new="false"
-              :data="filteredRoles"
-              ellipsis
-              rounded
-              autocomplete
-              type="is-grey"
-              field="name"
-              size="is-medium"
-              placeholder="Add a Role"
-              custom-class="has-text-white"
-              @typing="getRoleNames"/>
-            <p class="control">
-              <button class="button is-primary is-medium" @click="settingArrayUpdate({ selfRoles: config.selfRoles })">Save</button>
-            </p>
-          </b-field>
+      <div class="columns">
+        <div class="column is-8">
+          <div class="box">
+            <div class="content">
+              <h1 class="title has-text-white has-text-left">Available Self Roles</h1>
+              <b-field custom-class="has-text-white">
+                <b-taginput
+                  v-model="config.selfRoles"
+                  :allow-new="false"
+                  :data="filteredRoles"
+                  ellipsis
+                  rounded
+                  autocomplete
+                  type="is-grey"
+                  field="name"
+                  size="is-medium"
+                  placeholder="Add a Role"
+                  custom-class="has-text-white"
+                  @typing="getRoleNames"/>
+                <p class="control">
+                  <button class="button is-primary is-medium" @click="settingArrayUpdate({ selfRoles: config.selfRoles })">Save</button>
+                </p>
+              </b-field>
+            </div>
+          </div>
+
+        </div>
+        <div class="column is-4">
+          <div class="box">
+            <h1 class="title has-text-white has-text-left">Settings</h1>
+            <div class="field">
+              <b-checkbox 
+                v-model="config.selfRoleLimit"
+                @click.native="settingUpdate('selfRoleLimit', !config.selfRoleLimit)"
+              >Single Role Mode
+              </b-checkbox>
+            </div>
+          </div>
         </div>
       </div>
+      
       <div class="is-divider"/>
 
     </div>

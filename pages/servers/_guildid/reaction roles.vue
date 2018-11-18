@@ -13,7 +13,7 @@
     </div>
     <div class="container">
       <div class="columns">
-        <div class="column is-one-half is-multiline">
+        <div class="column is-8 is-multiline">
           <div class="box is-small">
             <div class="content">
               <nav class="level">
@@ -29,17 +29,21 @@
                 </div>
               </nav>
               <div v-if="config.reactionRoles.length" class="columns is-multiline">
-                <div v-for="role of config.reactionRoles" v-if="config.reactionRoles" :key="role.id" class="column is-one-quarter">
+                <div v-for="role of config.reactionRoles" v-if="config.reactionRoles" :key="role.id" class="column is-narrow">
                   <div class="box" style="background-color: #34383c">
                     <div class="content">
-                      <p class="subtitle has-text-white">Message: {{ role.alias }}</p>
+                      <p class="subtitle has-text-white">Message: {{ role.alias }}
+                        <button class="button is-small is-danger" @click="deleteRole(role)">
+                          Delete <font-awesome-icon size="0.8x" pull="right" icon="trash-alt"/>
+                        </button>
+
+                      </p>
                       <span>Emoji: {{ role.emoji.name }} </span><span><img :src="role.emoji.url" align="center" height="25" width="25"></span>
                       <br>
                       Role: @{{ role.name }}
                       <br>
                       Message ID: {{ role.messageID }}
                     </div>
-                    <button class="button is-danger" @click="deleteRole(role)">Delete</button>
                   </div>
                                     
                 </div> 
@@ -52,8 +56,19 @@
           </div>
 
         </div>
+        <div class="column is-4">
+          <div class="box">
+            <h1 class="title has-text-white has-text-left">Settings</h1>
+            <div class="field">
+              <b-checkbox 
+                v-model="config.reactRoleLimit"
+                @click.native="settingUpdate('reactRoleLimit', !config.reactRoleLimit)"
+              >Single Role Mode
+              </b-checkbox>
+            </div>
+          </div>
+        </div>
       </div>
-
     </div>
     <b-modal :active.sync="toggleAdd" has-modal-card>
       <div class="modal-card">
@@ -193,6 +208,7 @@ export default {
         for (const key in this.roleData) {
           this.roleData[key] = null;
         }
+        this.toggleAdd = false;
       } catch (error) {
         reactionRoles.splice(reactionRoles.indexOf(role), 1);
       }
