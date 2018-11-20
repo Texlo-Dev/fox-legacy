@@ -13,6 +13,7 @@ import {
     PermStore,
     PollStore as Polls,
     ServerProtect,
+    TicketStore,
 } from "..";
 
 // @ts-ignore
@@ -31,6 +32,7 @@ export interface FoxGuild extends Guild {
     queue: any;
     serverprotect: ServerProtect;
     shard: number;
+    tickets: TicketStore;
 }
 
 // @ts-ignore

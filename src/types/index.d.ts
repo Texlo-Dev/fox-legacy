@@ -22,6 +22,16 @@ export interface CustOptions {
     usage: string;
 }
 
+export interface TicketOptions {
+    agents: FoxUser[];
+    author: FoxUser;
+    channel?: any;
+    createdAt: number;
+    topic: string;
+    id: number;
+    open: boolean;
+}
+
 import {
     Banking,
     Command,
@@ -36,6 +46,7 @@ import {
     PollStore as Polls,
     ServerProtect,
 } from "../util";
+import { FoxUser } from "../util/extensions";
 
 export interface FoxConfig {
     aiKey: string;

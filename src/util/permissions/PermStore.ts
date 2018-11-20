@@ -1,4 +1,4 @@
-import { Collection, Message } from "discord.js";
+import { Collection, GuildMember, Message, Role } from "discord.js";
 import { FoxGuild } from "../extensions";
 import { Permissions } from "../Mongo";
 export default class PermStore extends Collection<any, any> {
@@ -86,10 +86,20 @@ export default class PermStore extends Collection<any, any> {
         return new Promise(res => setTimeout(() => res(super.array()), 70));
     }
 
-    public check(perm: string, member: any, channel?: any): boolean {
-        if (member instanceof Message) { // tslint:disable:no-parameter-reassignment
-            channel = member.channel;
-            member = member.member;
+    public check(perm: string, member: GuildMember | Role | Message, channel?: any): boolean {
+        if (member instanceof Role) {
+            const ows: any = super.get(member.id);
+            if (!ows) { return; }
+            const ow: any = ows.overwrites.find((o: any) => o.target.id === member.id && o.permission === perm);
+            if (!ow) { return; }
+            if (ow.status === "denied") {
+                return false;
+            } else if (ow.status === "allowed") { return true; } else { return; }
+        } else {
+            if (member instanceof Message) { // tslint:disable:no-parameter-reassignment
+                channel = member.channel;
+                member = member.member;
+            }
             if (this.guild.ownerID === member.id) { return true; }
             for (const role of member.roles.values()) {
                 const ows: any = super.get(role.id);

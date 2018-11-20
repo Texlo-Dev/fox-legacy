@@ -28,6 +28,8 @@ import FoxMusic from "./music/FoxMusic";
 import Queue from "./music/Queue";
 import Song from "./music/Song";
 
+import TicketStore from "./tickets/TicketStore";
+
 import FoxPermission from "./permissions/FoxPermission";
 import PermStore from "./permissions/PermStore";
 
@@ -54,6 +56,7 @@ export {
     Guild,
     FoxMessage,
     FoxUser,
+    TicketStore,
     Giveaway,
     GiveawayStore,
     Leveling,

@@ -32,6 +32,7 @@ export default class extends Event {
             await fg.perms._cache();
             await fg.commands.reloadAll();
             await fg.polls._cache();
+            await fg.tickets._cache();
             fg.giveaways._cache()
                 .then(() => this.client.emit("giveawayStart", fg));
         }

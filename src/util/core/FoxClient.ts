@@ -168,6 +168,7 @@ class FoxClient extends Client {
             modactions: Mongo.ModActions,
             banking: Mongo.FoxBank,
             tags: Mongo.Tags,
+            tickets: Mongo.Tickets,
             selfroles: Mongo.SelfRoles,
             permissions: Mongo.Permissions,
             giveaways: Mongo.Giveaways,
