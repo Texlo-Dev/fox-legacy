@@ -58,7 +58,7 @@
               </div>
               <div v-else>
                 <b-field custom-class="has-text-white">
-                  <b-select v-model="tickets.logchannel" placeholder="Select a category">
+                  <b-select v-model="tickets.logchannel" placeholder="Select a channel">
                     <option
                       v-for="channel of channels"
                       :value="channel"
