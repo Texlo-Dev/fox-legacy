@@ -17,7 +17,8 @@ router.get("/languages", (req, res) => res.json(200, Object.keys(req.client.loca
 
 router.post("/embed", authMiddleware, async (req, res) => {
     const user: FoxUser = await req.client.users.fetch(req.auth);
-    if (user.patreonTier < 1)
+    const tier: number = await user._setTier();
+    if (tier < 1)
         return res.json(401, {
             error: "At this time, you must be a Bronze Patron or higher to use the embed generator." 
         });
