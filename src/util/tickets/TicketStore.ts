@@ -76,7 +76,7 @@ export default class TicketStore extends Collection<any, any> {
             const logchannel: TextChannel = this.guild.channels.get(this.logchannel.id) as TextChannel;
             const logembed: MessageEmbed = new MessageEmbed()
             .setColor(this.client.brandColor)
-            .setAuthor(member.tag, member.displayAvatarURL())
+            .setAuthor(`Ticket ${ticket.id} | ${member.tag}`, member.displayAvatarURL())
             .setDescription(
             `New Support ticket from ${member.username}.
             **Topic:** ${ticket.topic}

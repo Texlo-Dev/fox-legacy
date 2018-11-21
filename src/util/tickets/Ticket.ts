@@ -1,4 +1,4 @@
-import { MessageEmbed, TextChannel, Message } from "discord.js";
+import { Message, MessageEmbed, TextChannel } from "discord.js";
 import { TicketOptions } from "../../types";
 import { FoxGuild, FoxUser } from "../extensions";
 import { Tickets } from "../Mongo";

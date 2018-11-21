@@ -143,7 +143,7 @@ class FoxClient extends Client {
         this.commandsRun = 0;
         this.isTestFox = isTestFox;
         this.permissions = new Collection();
-        this.brandColor = 0x242424;
+        this.brandColor = 0xE76D27;
         this.ready = false;
         this.translate = translate;
         this.locales = {
