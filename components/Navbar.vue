@@ -48,21 +48,29 @@
             <div class="navbar-end">
               <div v-if="$auth.loggedIn" id="userbutton" class="navbar-item">
                 <img :src="getAvatar" height="30" width="30" style="border-radius: 50px">&nbsp;&nbsp;
-                <b-dropdown v-if="$auth.loggedIn">
+                <b-dropdown v-if="$auth.loggedIn" position="is-bottom-left">
                   <p slot="trigger" class="subtitle has-text-weight-semi-bold">
                     {{ $auth.user.username }}
                     &nbsp;<font-awesome-icon size="1x" icon="angle-down" />
                   </p>
                   <b-dropdown-item has-link @click="showNav = !showNav">
                     <nuxt-link to="/servers">
-                      <p class="has-text-primary has-text-centered">
+                      <p class="has-text-primary has-text-right">
                         <font-awesome-icon size="1x" icon="server" />
                         Servers
                       </p>
                     </nuxt-link>
                   </b-dropdown-item>
+                  <b-dropdown-item has-link>
+                    <nuxt-link to="/embed">
+                      <p class="has-text-success has-text-right">
+                        Embed Generator
+                        <font-awesome-icon size="1x" icon="cogs" />
+                      </p>
+                    </nuxt-link>
+                  </b-dropdown-item>
                   <b-dropdown-item @click="logout()">
-                    <p class="has-text-danger has-text-centered">
+                    <p class="has-text-danger has-text-right">
                       <font-awesome-icon size="1x" icon="sign-out-alt" />
                       Log Out
                     </p>
