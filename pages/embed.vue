@@ -61,29 +61,8 @@
               <b-field :type="{ 'is-danger': errors.has('Description') }" :message="errors.first('Description')">
                 <b-input v-validate="'max:2048'" v-model="embed.description" name="Description" type="textarea" placeholder="Description" />
               </b-field>
-              <b-field label="Color -" custom-class="has-text-white">
-                &nbsp;<svg height="32" width="32">
-                  <circle :fill="embed.color" cx="16" cy="16" r="15" />
-                </svg>
-                &nbsp;<button class="button is-rounded is-small is-black" type="button" @click="toggleColor = true">Change</button>
-                <b-modal :active.sync="toggleColor">
-                  <div class="box">
-                    <div class="columns is-centered">
-                      <div class="column is-half">
-                        <h3 class="title has-text-white">
-                          Change Color
-                        </h3>
-                        <br>
-                        <p class="subtitle has-text-white">
-                          All HTML Color codes are supported.
-                        </p>
-                      </div>
-                      <div class="column is-half">
-                        <chrome :value="embed.color" class="has-text-centered" @input="changeColor"/>
-                      </div>
-                    </div>
-                  </div>
-                </b-modal>
+              <b-field label="Color" custom-class="has-text-white">
+                <b-input v-model="embed.color" :value="embed.color" type="color" />
               </b-field>
               <b-field :type="{ 'is-danger': errors.has('Author Name') }" :message="errors.first('Author Name')" label="Author" custom-class="has-text-white">
                 <b-input v-validate="'max:256'" v-model="embed.author.name" name="Author Name" placeholder="Author Name"/>
