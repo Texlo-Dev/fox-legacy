@@ -70,7 +70,7 @@ export default class GuildCreate extends Event {
         .then(() => console.log("Updated dbots.org status."))
         .catch(console.error);
 
-        FoxClient.http("POST", {
+        /* FoxClient.http("POST", {
             url: `https://bots.discord.pw/api/bots/${client.user.id}/stats`,
             body: {
                 shard_id: client.shard.id,
@@ -80,7 +80,7 @@ export default class GuildCreate extends Event {
             headers: { Authorization: discordbotsKey },
         })
         .then(() => console.log("Updated bots.discord.pw status."))
-        .catch(console.error);
+        .catch(console.error); */
 
         const num: number = (await this.client.shard.fetchClientValues("guilds.size")).reduce((prev, val) => prev + val, 0);
         FoxClient.http("POST", {
