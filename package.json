@@ -33,11 +33,9 @@
     "dateformat": "^3.0.2",
     "discord.js": "github:discordjs/discord.js#18f065867ce7f8369e2c660b62b093e092433822",
     "erlpack": "github:discordapp/erlpack",
-    "esm": "^3.0.84",
     "fs-nextra": "^0.3.7",
     "giphy-api": "^1.2.7",
     "google": "^2.1.0",
-    "image-downloader": "^3.4.1",
     "jaczfetch": "github:MrJacz/jaczfetch",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.1",
@@ -46,7 +44,6 @@
     "node-gyp-build": "^3.5.0",
     "node-opus": "^0.2.9",
     "polka": "^0.5.1",
-    "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
     "simple-youtube-api": "^5.0.1",
     "snekfetch": "^4.0.4",
@@ -56,13 +53,11 @@
     "ytdl-core": "github:fent/node-ytdl-core#master"
   },
   "devDependencies": {
-    "cross-env": "^5.2.0",
-    "eslint": "^4.15.0",
-    "eslint-plugin-import": "^2.14.0",
-    "ts-node": "^7.0.1",
+    "prettier": "1.15.2",
+    "prettier-tslint": "^0.4.0",
     "tsc-watch": "^1.0.30",
     "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0"
+    "tslint-config-prettier": "^1.16.0"
   },
   "repository": {
     "type": "git",

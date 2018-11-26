@@ -14,18 +14,19 @@ export class Permissions extends Model {}
 export class Giveaways extends Model {}
 export class Tickets extends Model {}
 
-connection.connect()
-.then(() => console.log("MongoDB connection established."))
-.catch(error => {
+connection
+  .connect()
+  .then(() => console.log("MongoDB connection established."))
+  .catch(error => {
     console.error(`Error connecting to MongoDB. ${error}`);
     process.exit();
-});
+  });
 connection.register(GuildSettings);
 connection.register(FoxLeveling);
 connection.register(ModActions);
 connection.register(CustomCommands);
 connection.register(Tags);
-connection.register(Tickets)
+connection.register(Tickets);
 connection.register(FoxBank);
 connection.register(SelfRoles);
 connection.register(Polls);
