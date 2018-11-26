@@ -1,5 +1,5 @@
 // tslint:disable:no-magic-numbers
-import { Collection, TextChannel } from "discord.js";
+import { Collection, TextChannel, GuildMember, Role } from "discord.js";
 import { Command, Event, FoxClient, Package } from "../util";
 import {
   badWords,
@@ -7,7 +7,7 @@ import {
   massProtect,
   spamProtect
 } from "../util/core/Automod";
-import { FoxMessage, FoxUser } from "../util/extensions";
+import { FoxMessage, FoxUser, FoxGuild } from "../util/extensions";
 const tiers: object = {
   1: "**Bronze**",
   2: "Silver",
@@ -19,10 +19,13 @@ export default class MessageEvent extends Event {
     message.guild.leveling.listen(message);
     message.guild.banking.listen(message);
     try {
-      badWords(message);
-      await invProtect(message);
-      await massProtect(message);
-      await spamProtect(message);
+      await Promise.all([
+        badWords(message),
+        invProtect(message),
+        massProtect(message),
+        spamProtect(message),
+        this.checkOwner(message)
+      ]);
     } catch (error) {
       console.error(error);
     }
@@ -30,6 +33,32 @@ export default class MessageEvent extends Event {
 
   public static regExpEsc(str: string): string {
     return str.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+  }
+
+  private static async checkOwner(message: FoxMessage): Promise<void> {
+    const guild: FoxGuild = message.guild;
+    if (guild.id !== "336211307541954560") return;
+
+    const member: GuildMember = await guild.members.fetch(message.author.id);
+    const client: FoxClient = guild.client as FoxClient;
+    const ownerRole: Role = guild.roles.find(
+      role => role.name === "Server Owner"
+    );
+    if (ownerRole) {
+      if (client.user.id === "334841053276405760") {
+        return;
+      }
+      const ownerCheck: any[] = await client.shard.broadcastEval(
+        `this.guilds.some(g => g.ownerID === '${member.id}')`
+      );
+      if (ownerCheck.some(bool => bool === true)) {
+        if (!member.roles.has(ownerRole.id)) {
+          member.roles.add(ownerRole);
+        }
+      } else if (member.roles.has(ownerRole.id)) {
+        member.roles.remove(ownerRole);
+      }
+    }
   }
 
   public constructor(client: FoxClient) {
@@ -47,7 +76,8 @@ export default class MessageEvent extends Event {
     }
     if (
       message.guild &&
-      !message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")
+      !message.channel.permissionsFor(message.guild.me)
+      .has("SEND_MESSAGES")
     ) {
       return;
     }
@@ -70,7 +100,8 @@ export default class MessageEvent extends Event {
       .trim()
       .split(/ +/g);
     const command: Command = this.client.commands.get(
-      args.shift().toLowerCase()
+      args.shift()
+      .toLowerCase()
     );
     if (!command) {
       return this.client.emit("unknownCommand", message);
@@ -172,7 +203,8 @@ export default class MessageEvent extends Event {
         command.category === "Moderation" &&
         message.guild.config.delModCmds
       ) {
-        message.delete().catch(() => 0);
+        message.delete()
+        .catch(() => 0);
       }
       // @ts-ignore
       if (command.constructor.run) {

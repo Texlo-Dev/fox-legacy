@@ -155,7 +155,13 @@ class FoxClient extends Client {
   public translate: Function;
 
   public constructor() {
-    super({ disableEveryone: true });
+    super({
+      disableEveryone: true,
+      disabledEvents: [
+        "TYPING_START", "TYPING_STOP", "GUILD_SYNC", "RELATIONSHIP_ADD",
+        "RELATIONSHIP_REMOVE", "USER_SETTINGS_UPDATE", "USER_NOTE_UPDATE", "VOICE_SERVER_UPDATE"
+      ]
+    });
     this.tools = Tools;
     this.packages = [];
     this.music = new FoxMusic(this);
