@@ -175,10 +175,15 @@ export default {
             ));
           } catch (error) {
             this.$nuxt.$loading.fail();
-            this.$toast.open({
-              message: `Error deleting tag. ${error}`,
+            this.$dialog.alert({
+              title: "Error",
+              message: `Error Code ${error.response.status}: ${
+                error.response.data.error
+              }`,
               type: "is-danger",
-              duration: 3000
+              hasIcon: true,
+              icon: "times-circle",
+              iconPack: "fa"
             });
           } finally {
             this.$nuxt.$loading.finish();
@@ -206,10 +211,15 @@ export default {
         this.currentag.name = null;
         this.currentag.content = null;
       } catch (error) {
-        this.$toast.open({
-          message: `Unable to add this tag: ${error}`,
+        this.$dialog.alert({
+          title: "Error",
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
           type: "is-danger",
-          duration: 4000
+          hasIcon: true,
+          icon: "times-circle",
+          iconPack: "fa"
         });
       }
     },
@@ -235,9 +245,15 @@ export default {
           duration: 3500
         });
       } catch (error) {
-        this.$toast.open({
-          message: `Unable to edit this setting: ${error}`,
-          type: "is-danger"
+        this.$dialog.alert({
+          title: "Error",
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
+          type: "is-danger",
+          hasIcon: true,
+          icon: "times-circle",
+          iconPack: "fa"
         });
         this.$refs[`${key}-switch`][0].newValue = !value;
       }
@@ -262,9 +278,15 @@ export default {
         });
         this.modalActive = false;
       } catch (error) {
-        this.$snackbar.open({
-          message: `Unable to edit these settings: ${error.message}`,
-          type: "is-danger"
+        this.$dialog.alert({
+          title: "Error",
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
+          type: "is-danger",
+          hasIcon: true,
+          icon: "times-circle",
+          iconPack: "fa"
         });
       }
     },
@@ -296,9 +318,15 @@ export default {
           duration: 3500
         });
       } catch (error) {
-        this.$snackbar.open({
-          message: `Unable to edit this command: ${error.message}`,
-          type: "is-danger"
+        this.$dialog.alert({
+          title: "Error",
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
+          type: "is-danger",
+          hasIcon: true,
+          icon: "times-circle",
+          iconPack: "fa"
         });
         this.$refs[`${data}-switch`][0].newValue = !bool;
       }
@@ -330,9 +358,9 @@ export default {
         .catch(error => {
           this.$dialog.alert({
             title: "Error",
-            message: `There was an error disabling this package.\n"${
-              error.message
-            }"`,
+            message: `Error Code ${error.response.status}: ${
+              error.response.data.error
+            }`,
             type: "is-danger",
             hasIcon: true,
             icon: "times-circle",
