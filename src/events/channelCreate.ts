@@ -17,6 +17,7 @@ export default class extends Event {
   }
 
   public async run(channel: GuildChannel): Promise<void> {
+    if (channel.type !== "text") return;
     const guild: FoxGuild = channel.guild as FoxGuild;
     const enabled: boolean = guild.config.serverLogging;
     const log: TextChannel = guild.config.serverlogChannel;

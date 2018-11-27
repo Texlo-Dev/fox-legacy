@@ -16,14 +16,12 @@ interface ClientArguments {
 
 class FoxClient extends Client {
   public get args(): ClientArguments {
-    const obj: ClientArguments = {
+    return {
       member: "mention, ID, or name (Ex: @Jacz#9536, Jacz)",
       duration: "second, minute, hour, day, week (Ex: 2s, 4m, 8d, 9w)",
       reason: "string",
       number: "number (Ex: 50)"
     };
-
-    return obj;
   }
 
   public static async haste(input: string, extension: string): Promise<string> {

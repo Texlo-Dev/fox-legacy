@@ -4,6 +4,12 @@ import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 
 export default class FoxCommand extends Command {
+  public static hasPermission(message: FoxMessage): boolean {
+    return (
+      message.guild.owner === message.member ||
+      FoxClient.isOwner(message.author.id)
+    );
+  }
   public constructor(client: FoxClient) {
     super(client, {
       name: "packages",
@@ -13,14 +19,7 @@ export default class FoxCommand extends Command {
     });
   }
 
-  public hasPermission(message: FoxMessage): boolean {
-    return (
-      message.guild.owner === message.member ||
-      FoxClient.isOwner(message.author.id)
-    );
-  }
-
-  public async run(message: FoxMessage): Promise<void> {
+  public async run(message: FoxMessage): Promise<FoxMessage> {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Command Packages", this.client.user.displayAvatarURL())
       .setTimestamp()
@@ -44,7 +43,7 @@ export default class FoxCommand extends Command {
                   .prefix}disablepkg [packagename]\`. Ex: f)disablepkg music
             `
       );
-    message.send({ embed });
-    message.guild.packages.forEach(p => p._setEnabled());
+
+    return message.send({ embed });
   }
 }

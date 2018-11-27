@@ -14,7 +14,8 @@ router.get("/", authMiddleware, async (req, res) => {
     {
       headers: { Authorization: `Bearer ${req.auth}` }
     }
-  ).catch(() => 0);
+  )
+  .catch(() => 0);
   if (!guilds) {
     return res.json(401, { error: "Invalid Credentials." });
   }
@@ -752,19 +753,8 @@ router.patch("/:guildID/packages", authMiddleware, async (req, res) => {
     const resp: any[] = await req.client.shard.broadcastEval(`
             if (this.guilds.has('${guildID}')) {
                 const guild = this.guilds.get('${guildID}');
-                if (${enabled}) {
-                    (async () => {
-                        await guild.packages.get('${pkg}').enable()
-                        await guild.config._loadSettings();
-                        guild.packages.forEach(p => p._setEnabled());
-                    })();
-                } else {
-                    (async () => {
-                        await guild.packages.get('${pkg}').disable()
-                        await guild.config._loadSettings();
-                        guild.packages.forEach(p => p._setEnabled());
-                    })();
-                }
+                const pkg = guild.packages.get('${pkg}');
+                ${enabled} ? pkg.enable().then(r => r) : pkg.disable().then(r => r);
             }
         `);
     if (!resp.filter(g => g)) {

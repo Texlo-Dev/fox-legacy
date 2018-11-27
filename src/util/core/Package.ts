@@ -50,7 +50,11 @@ export default class Package {
     }
     packages.splice(packages.indexOf(this.name), 1);
     query.set({ packages });
-    await query.save();
+    query
+      .save()
+      .then(() => this.guild.config._loadSettings())
+      .then(() => (this.enabled = false))
+      .then(() => true);
 
     return true;
   }
@@ -71,8 +75,11 @@ export default class Package {
     }
     arr.push(this.name);
     query.set({ packages: arr });
-    await query.save();
 
-    return true;
+    return query
+      .save()
+      .then(() => this.guild.config._loadSettings())
+      .then(() => (this.enabled = true))
+      .then(() => true);
   }
 }

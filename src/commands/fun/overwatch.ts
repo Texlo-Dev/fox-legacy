@@ -1,44 +1,44 @@
-import { get } from "snekfetch";
-import { Command } from "../../util";
-const userValidator = new RegExp("^\\w{3,12}[\\#]\\d{4,5}$"); // eslint-disable-line
-const platforms = ["PC", "PSN", "XBL"];
+import { Command, FoxClient } from "../../util";
+import { FoxMessage } from "../../util/extensions";
+import { MessageEmbed } from "discord.js";
+const userValidator: RegExp = new RegExp("^\\w{3,12}[\\#]\\d{4,5}$");
+const platforms: string[] = ["PC", "PSN", "XBL"];
 export default class FoxCommand extends Command {
-  public constructor(client) {
+  // Jacz spent a lot of time writing this beautiful function. Shame I'm about to tear it apart, as I do.
+  public static async getData(tag: string, platform: string): Promise<Object> {
+    const { us, kr, eu } = await FoxClient.http("GET", {
+      url: `https://owapi.net/api/v3/u/${tag.replace(
+        "#",
+        "-"
+      )}/stats?platform=${platform.toLowerCase()}`
+    })
+    .catch(err => { throw err; });
+    const stats: any = us.stats || kr.stats || eu.stats;
+    const comp: any = stats.competitive;
+    const quick: any = stats.quickplay;
+    const obj: any = {
+      level: `${quick.overall_stats.prestige * 100 + // tslint:disable-line
+        quick.overall_stats.level}`,
+      quick,
+      comp
+    };
+
+    return obj;
+  }
+  public constructor(client: FoxClient) {
     super(client, {
       name: "overwatch",
       description: "Get another user's Overwatch stats",
       usage: "<user> [PC|PSN|XBL]"
     });
   }
-  // Jacz spent a lot of time writing this beautiful function. Shame I'm about to tear it apart, as I do.
-  public getData(tag, platform) {
-    return new Promise(async (res, rej) => {
-      const {
-        body: { us, kr, eu }
-      } = await get(
-        `https://owapi.net/api/v3/u/${tag.replace(
-          "#",
-          "-"
-        )}/stats?platform=${platform.toLowerCase()}`
-      ).catch(rej);
-      const Stats = us.stats || kr.stats || eu.stats;
-      const comp = Stats.competitive;
-      const quick = Stats.quickplay;
-      const obj = {
-        level: `${quick.overall_stats.prestige * 100 +
-          quick.overall_stats.level}`,
-        quick,
-        comp
-      };
-      return res(obj);
-    });
-  }
-  // NOT USING THE CONSTRUCTOR FOR A MULTITUDE OF REASONS, NOT *JUST* BECAUSE I'M STUBBORN AND LAZY. THAT'S PART OF IT THOUGH.
-  public makeEmbed(owStats, cmdMeta) {
+  /* NOT USING THE CONSTRUCTOR FOR A MULTITUDE OF REASONS,
+  NOT *JUST* BECAUSE I'M STUBBORN AND LAZY. THAT'S PART OF IT THOUGH. */
+  public makeEmbed(owStats: any, cmdMeta: any): MessageEmbed  {
     const { platform, owUser } = cmdMeta;
     const { quick: owQuick, comp: owComp, level: owLevel } = owStats;
     // API Doesn't include comp data if player has never played comp
-    const cmdEmbed = {
+    const cmdEmbed: any = {
       timestamp: new Date(),
       title: `Overwatch stats for ${owUser} on ${platform.toUpperCase()}:`,
       color: this.client.brandColor,
@@ -122,7 +122,10 @@ export default class FoxCommand extends Command {
     // End of function
   }
 
-  public async run(message, [battlenettag, platform = "PC"]) {
+  public async run(
+    message: FoxMessage,
+    [battlenettag, platform = "PC"]: [string, string]
+  ): Promise<FoxMessage> {
     // ~~hand~~ user input sanitization
     if (!battlenettag) {
       return message.error("Please specify a user.");
@@ -133,12 +136,13 @@ export default class FoxCommand extends Command {
     if (!userValidator.test(battlenettag)) {
       return message.error(`Invalid User: "${battlenettag}"`);
     }
-    const commandMsg = await message.send(
+    const commandMsg: FoxMessage = await message.send(
       `:check: Getting Overwatch stats for ${battlenettag}. This may take a minute.`
     );
     // If the user input is correct, send our API request
-    const owStats = await this.getData(battlenettag, platform).catch(err => {
-      switch (err.status) {
+    const owStats: any = await FoxCommand.getData(battlenettag, platform)
+    .catch(err => {
+      switch (err.response.status) { // tslint:disable:no-magic-numbers
         case 404:
           commandMsg.edit(
             `<:nicexmark:495362785010647041> User ${battlenettag} not found.`
@@ -161,11 +165,13 @@ export default class FoxCommand extends Command {
             }`
           );
       }
-      return null;
+
+      return;
     });
     if (!owStats) {
       return;
     }
+
     return commandMsg.edit({
       embed: this.makeEmbed(owStats, { platform, owUser: battlenettag })
     });

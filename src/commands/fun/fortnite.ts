@@ -42,7 +42,11 @@ export default class FoxCommand extends Command {
       headers: {
         "TRN-Api-Key": "85f6a824-58c4-4080-8678-ca4f9df5187b"
       }
-    });
+    }).catch(() => undefined);
+    if (!res)
+      return msg.error(
+        "The Fortnite API is currently down, please try again later."
+      );
     if (!res.body.stats) {
       return msg.error("This user has no fortnite status!");
     }
@@ -141,7 +145,7 @@ export default class FoxCommand extends Command {
       )
       .setFooter("Powered by fortnitetracker.com");
 
-    msg.send(embed);
+    return msg.send(embed);
   }
 
   public constructor(client: FoxClient) {
