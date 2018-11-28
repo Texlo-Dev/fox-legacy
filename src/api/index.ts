@@ -124,6 +124,7 @@ router.post("/guildadd", async (req, res) => {
 });
 
 const tiers: Object = { 2128906: 3, 2128899: 2, 2128892: 1 };
+const colors: Object = { 3: 0xE0B51A, 2: 0xA3A3A3, 1: 0xDA6B14 };
 router.post("/patreon", async (req, res) => {
   const event: any = req.headers["x-patreon-event"];
   const {
@@ -156,7 +157,7 @@ router.post("/patreon", async (req, res) => {
               },
               timestamp: new Date(),
               title: "Pledge Deleted.",
-              description: `Patreon ID: ${ID}\\nFull Name: ${full_name}\\nDiscord: ${
+              description: `**Patreon ID:** ${ID}\\n**Full Name:** ${full_name}\\n**Discord:** ${
                 user.tag
               } (${user_id})`
             }
@@ -173,7 +174,7 @@ router.post("/patreon", async (req, res) => {
             "https://discordapp.com/api/v7/channels/505522778984677376/messages",
           body: {
             embed: {
-              color: 0x00ff00,
+              color: colors[tiers[tier].toString()],
               thumbnail: {
                 url: user.displayAvatarURL()
               },
@@ -186,10 +187,10 @@ router.post("/patreon", async (req, res) => {
                 event === "members:pledge:create"
                   ? "New Pledge!"
                   : "Pledge Updated!",
-              description: `Patreon ID: ${ID}
-              Full Name: ${full_name}
-              Discord: ${user.tag} (${user_id})
-              Tier: ${tiers[tier]}`
+              description: `**Patreon ID:** ${ID}
+              **Full Name:** ${full_name}
+              **Discord:** ${user.tag} (${user_id})
+              **Tier:** ${tiers[tier]}`
             }
           },
           headers: { Authorization: `Bot ${req.client.token}` }
