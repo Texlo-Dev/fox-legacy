@@ -137,7 +137,7 @@ router.post("/patreon", async (req, res) => {
       }
     } = included[1].data.attributes;
     const ID: string = included[1].data.id;
-    const user: FoxUser = await this.client.users.fetch(user_id);
+    const user: FoxUser = await req.client.users.fetch(user_id);
     switch (event) {
       case "members:pledge:delete":
         await user.removePatreon();
@@ -165,7 +165,9 @@ router.post("/patreon", async (req, res) => {
             embed: {
               color: 0x00ff00,
               title:
-                event === "members:pledge:create" ? "New Pledge!" : "Pledge Updated!",
+                event === "members:pledge:create"
+                  ? "New Pledge!"
+                  : "Pledge Updated!",
               description: `Patreon ID: ${ID}
               Full Name: ${full_name}
               Discord ID: ${user_id}
