@@ -147,8 +147,18 @@ router.post("/patreon", async (req, res) => {
           body: {
             embed: {
               color: 0xff0000,
+              thumbnail: {
+                url: user.displayAvatarURL()
+              },
+              footer: {
+                text: "Mr.Fox",
+                icon_url: req.client.user.displayAvatarURL()
+              },
+              timestamp: new Date(),
               title: "Pledge Deleted.",
-              description: `Patreon ID: ${ID}\\nFull Name: ${full_name}\\nDiscord ID: ${user_id}`
+              description: `Patreon ID: ${ID}\\nFull Name: ${full_name}\\nDiscord: ${
+                user.tag
+              } (${user_id})`
             }
           },
           headers: { Authorization: `Bot ${req.client.token}` }
@@ -164,13 +174,21 @@ router.post("/patreon", async (req, res) => {
           body: {
             embed: {
               color: 0x00ff00,
+              thumbnail: {
+                url: user.displayAvatarURL()
+              },
+              footer: {
+                text: "Mr.Fox",
+                icon_url: req.client.user.displayAvatarURL()
+              },
+              timestamp: new Date(),
               title:
                 event === "members:pledge:create"
                   ? "New Pledge!"
                   : "Pledge Updated!",
               description: `Patreon ID: ${ID}
               Full Name: ${full_name}
-              Discord ID: ${user_id}
+              Discord: ${user.tag} (${user_id})
               Tier: ${tiers[tier]}`
             }
           },
