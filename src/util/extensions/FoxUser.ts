@@ -63,5 +63,6 @@ export default Structures.extend("User", u => {
       return true;
     }
   }
+
   return FoxUser;
 });

@@ -1,6 +1,6 @@
+import { MessageEmbed } from "discord.js";
 import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
-import { MessageEmbed } from "discord.js";
 const userValidator: RegExp = new RegExp("^\\w{3,12}[\\#]\\d{4,5}$");
 const platforms: string[] = ["PC", "PSN", "XBL"];
 export default class FoxCommand extends Command {
@@ -11,8 +11,9 @@ export default class FoxCommand extends Command {
         "#",
         "-"
       )}/stats?platform=${platform.toLowerCase()}`
-    })
-    .catch(err => { throw err; });
+    }).catch(err => {
+      throw err;
+    });
     const stats: any = us.stats || kr.stats || eu.stats;
     const comp: any = stats.competitive;
     const quick: any = stats.quickplay;
@@ -34,7 +35,7 @@ export default class FoxCommand extends Command {
   }
   /* NOT USING THE CONSTRUCTOR FOR A MULTITUDE OF REASONS,
   NOT *JUST* BECAUSE I'M STUBBORN AND LAZY. THAT'S PART OF IT THOUGH. */
-  public makeEmbed(owStats: any, cmdMeta: any): MessageEmbed  {
+  public makeEmbed(owStats: any, cmdMeta: any): MessageEmbed {
     const { platform, owUser } = cmdMeta;
     const { quick: owQuick, comp: owComp, level: owLevel } = owStats;
     // API Doesn't include comp data if player has never played comp
@@ -46,8 +47,7 @@ export default class FoxCommand extends Command {
       thumbnail: { url: `${owQuick.overall_stats.avatar}` },
       author: {
         name: "Overwatch Stats",
-        icon_url:
-          "https://cdn.discordapp.com/avatars/333985343445663749/42a1a4f26b3a407898974fb3573b2257.png"
+        icon_url: this.client.user.displayAvatarURL()
       },
       fields: [
         {
@@ -140,34 +140,37 @@ export default class FoxCommand extends Command {
       `:check: Getting Overwatch stats for ${battlenettag}. This may take a minute.`
     );
     // If the user input is correct, send our API request
-    const owStats: any = await FoxCommand.getData(battlenettag, platform)
-    .catch(err => {
-      switch (err.response.status) { // tslint:disable:no-magic-numbers
-        case 404:
-          commandMsg.edit(
-            `<:nicexmark:495362785010647041> User ${battlenettag} not found.`
-          );
-          break;
-        case 429:
-          commandMsg.edit(
-            "<:nicexmark:495362785010647041> API Error 429: API is overloaded. Please wait a bit and try again."
-          );
-          break;
-        case 502:
-          commandMsg.edit(
-            "<:nicexmark:495362785010647041> API Error 502: Bad gateway (API is down). Please try again later."
-          );
-          break;
-        default:
-          commandMsg.edit(
-            `<:nicexmark:495362785010647041> Unknown API Error: Please try again in a few minutes. Error code: ${
-              err.status
-            }`
-          );
-      }
+    const owStats: any = await FoxCommand.getData(battlenettag, platform).catch(
+      err => {
+        switch (
+          err.response.status // tslint:disable:no-magic-numbers
+        ) {
+          case 404:
+            commandMsg.edit(
+              `<:nicexmark:495362785010647041> User ${battlenettag} not found.`
+            );
+            break;
+          case 429:
+            commandMsg.edit(
+              "<:nicexmark:495362785010647041> API Error 429: API is overloaded. Please wait a bit and try again."
+            );
+            break;
+          case 502:
+            commandMsg.edit(
+              "<:nicexmark:495362785010647041> API Error 502: Bad gateway (API is down). Please try again later."
+            );
+            break;
+          default:
+            commandMsg.edit(
+              `<:nicexmark:495362785010647041> Unknown API Error: Please try again in a few minutes. Error code: ${
+                err.status
+              }`
+            );
+        }
 
-      return;
-    });
+        return;
+      }
+    );
     if (!owStats) {
       return;
     }

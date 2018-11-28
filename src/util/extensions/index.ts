@@ -69,4 +69,5 @@ export interface FoxUser extends User {
   _setTier(): Promise<number>;
   _setUpvoter(): Promise<boolean>;
   addPatreon(tier: number): Promise<boolean>;
+  removePatreon(): Promise<boolean>;
 }

@@ -34,6 +34,7 @@ export interface TicketOptions {
   channel?: any;
   createdAt: number;
   id: number;
+  messageID: string;
   open: boolean;
   topic: string;
 }

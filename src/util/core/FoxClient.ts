@@ -1,11 +1,14 @@
 // tslint:disable:no-parameter-reassignment no-magic-numbers interface-name
 import translate from "@k3rn31p4nic/google-translate-api";
 import axios, { AxiosResponse } from "axios";
-import { Client, Collection, TextChannel } from "discord.js";
+import { Client, Collection, TextChannel, Util } from "discord.js";
 import { CommandStore, EventStore, FoxMusic, Loader, Tools } from "..";
 import { dbotsKey, devs, isTestFox, ownerID, prefix } from "../../config.json";
 import { FoxMessage } from "../extensions";
 import * as Mongo from "../Mongo";
+const THRESHOLD: number = 1000 * 60 * 20;
+const EPOCH: number = 1420070400000;
+const EMPTY: string = "0000100000000000000000";
 
 interface ClientArguments {
   duration: string;
@@ -156,8 +159,14 @@ class FoxClient extends Client {
     super({
       disableEveryone: true,
       disabledEvents: [
-        "TYPING_START", "TYPING_STOP", "GUILD_SYNC", "RELATIONSHIP_ADD",
-        "RELATIONSHIP_REMOVE", "USER_SETTINGS_UPDATE", "USER_NOTE_UPDATE", "VOICE_SERVER_UPDATE"
+        "TYPING_START",
+        "TYPING_STOP",
+        "GUILD_SYNC",
+        "RELATIONSHIP_ADD",
+        "RELATIONSHIP_REMOVE",
+        "USER_SETTINGS_UPDATE",
+        "USER_NOTE_UPDATE",
+        "VOICE_SERVER_UPDATE"
       ]
     });
     this.tools = Tools;
@@ -239,6 +248,53 @@ class FoxClient extends Client {
     });
 
     return res.data.map((c: any) => c.id).includes(id);
+  }
+
+  public memorySweep(): void {
+    const OLD_SNOWFLAKE: string = Util.binaryToID(
+      (Date.now() - THRESHOLD - EPOCH).toString(2).padStart(42, "0") + EMPTY
+    );
+    let presences: number = 0;
+    let guildMembers: number = 0;
+    let emojis: number = 0;
+    let messages: number = 0;
+    let users: number = 0;
+
+    // Per-Guild sweeper
+    for (const guild of this.guilds.values()) {
+      // Clear presences
+      presences += guild.presences.size;
+      guild.presences.clear();
+
+      // Clear members that haven't send a message in the last 30 minutes
+      const { me } = guild;
+      for (const [id, member] of guild.members) {
+        if (member === me) continue;
+        if (member.voice) continue;
+        if (member.lastMessageID && member.lastMessageID > OLD_SNOWFLAKE)
+          continue;
+        guildMembers++;
+        guild.members.delete(id);
+      }
+
+      // Clear emojis
+      emojis += guild.emojis.size;
+      guild.emojis.clear();
+    }
+
+    // Per-Channel sweeper
+    for (const channel of this.channels.values()) {
+      if (!channel.messages) continue;
+      messages += channel.messages.sweep(msg => msg.id < OLD_SNOWFLAKE);
+      channel.lastMessageID = null;
+    }
+
+    // Per-User sweeper
+    for (const user of this.users.values()) {
+      if (user.lastMessageID && user.lastMessageID > OLD_SNOWFLAKE) continue;
+      this.users.delete(user.id);
+      users++;
+    }
   }
 
   public sweepMessages(

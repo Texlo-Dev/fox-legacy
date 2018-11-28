@@ -12,7 +12,7 @@ export default class FoxCommand extends Command {
     });
   }
 
-  public async run(message: FoxMessage): Promise<void> {
+  public async run(message: FoxMessage): Promise<FoxMessage> {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor(
         `${this.client.user.username} Information`,
@@ -45,6 +45,7 @@ export default class FoxCommand extends Command {
                 ${(await this.client.users.fetch("131857875973701633")).tag}
                 `
       );
-    message.send({ embed });
+
+    return message.send({ embed });
   }
 }

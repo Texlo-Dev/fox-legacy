@@ -1,4 +1,5 @@
-import Axios, { put } from "axios";
+// @ts-ignore
+import Axios, { post, put } from "axios";
 import { MessageEmbed, WebhookClient } from "discord.js";
 import polka from "polka";
 import { token } from "../config.json";
@@ -136,54 +137,48 @@ router.post("/patreon", async (req, res) => {
       }
     } = included[1].data.attributes;
     const ID: string = included[1].data.id;
-    if (event === "pledge:delete") {
-      await req.client.shard.broadcastEval(`
-                const guild = this.guilds.get('336211307541954560');
-                if(guild) {
-                    guild.channels.get('505522778984677376').send({
-                        embed: {
-                            color: 0xFF0000,
-                            title: 'DELETE',
-                            description: 'Patreon ID: ${ID}\\nFull Name: ${full_name}\\nDiscord ID: ${user_id}'
-                        }
-                    });
-                }
-            `);
+    const user: FoxUser = await this.client.users.fetch(user_id);
+    switch (event) {
+      case "members:pledge:delete":
+        await user.removePatreon();
+        await FoxClient.http("POST", {
+          url:
+            "https://discordapp.com/api/v7/channels/505522778984677376/messages",
+          body: {
+            embed: {
+              color: 0xff0000,
+              title: "Pledge Deleted.",
+              description: `Patreon ID: ${ID}\\nFull Name: ${full_name}\\nDiscord ID: ${user_id}`
+            }
+          },
+          headers: { Authorization: `Bot ${req.client.token}` }
+        });
+        break;
 
-      await req.client.shard.broadcastEval(`
-                if(this.users.has('${user_id}')) {
-                    this.users.get('${user_id}').removePatreon();
-                }
-            `);
-    } else {
-      const tier: string = included[2].data.id;
-
-      await req.client.shard.broadcastEval(`
-                const guild = this.guilds.get('336211307541954560');
-                if(guild) {
-                    guild.channels.get('505522778984677376').send({
-                        embed: {
-                            color: 0x00FF00,
-                            title: 'ADD/UPDATE',
-                            description:
-                            'Patreon ID: ${ID}
-                            Full Name: ${full_name}
-                            Discord ID: ${user_id}
-                            Tier: ${tiers[tier]}'
-                        }
-                    });
-                }
-            `);
-
-      await req.client.shard.broadcastEval(`
-                if(this.users.has('${user_id}')) {
-                    this.users.get('${user_id}').addPatreon(${tiers[tier]});
-                }
-            `);
+      default:
+        const tier: string = included[2].data.id;
+        await user.addPatreon(tiers[tier]);
+        await FoxClient.http("POST", {
+          url:
+            "https://discordapp.com/api/v7/channels/505522778984677376/messages",
+          body: {
+            embed: {
+              color: 0x00ff00,
+              title:
+                event === "members:pledge:create" ? "New Pledge!" : "Pledge Updated!",
+              description: `Patreon ID: ${ID}
+              Full Name: ${full_name}
+              Discord ID: ${user_id}
+              Tier: ${tiers[tier]}`
+            }
+          },
+          headers: { Authorization: `Bot ${req.client.token}` }
+        });
     }
-    res.json(200, { message: "Success" });
+
+    return res.json(200, { message: "Success" });
   } catch (error) {
-    res.json(500, { error: error.message });
+    return res.json(500, { error: error.message });
   }
 });
 

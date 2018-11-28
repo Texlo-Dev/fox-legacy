@@ -20,7 +20,10 @@ export default class extends Event {
     }
 
     const { d: data } = event;
-    const user: FoxUser = this.client.users.get(data.user_id) as FoxUser;
+    const user: FoxUser = (await this.client.users
+      .fetch(data.user_id)
+      .catch(() => undefined)) as FoxUser;
+    if (!user) return;
     const channel: TextChannel = this.client.channels.get(
       data.channel_id
     ) as TextChannel;
