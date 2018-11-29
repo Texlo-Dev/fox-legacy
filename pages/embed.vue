@@ -83,6 +83,10 @@
               <b-field :type="{ 'is-danger': errors.has('Field Entry') }" :message="errors.first('Field Entry')" custom-class="has-text-white">
                 <b-input v-validate="'max:256'" v-model="currfield.name" name="Field Entry" placeholder="Name"/>
                 <b-input v-validate="'max:1024'" v-model="currfield.value" name="Field Entry" placeholder="Value"/>
+                &nbsp;&nbsp;
+                <b-checkbox v-model="currfield.inline" custom-class="has-text-white">
+                  Inline Field
+                </b-checkbox>
                 <p class="control">
                   <button class="button is-black" type="button" @click="addfield()">Add Field</button>
                 </p>
@@ -90,6 +94,10 @@
               <b-field v-for="field of embed.fields" :key="field.name" :type="{ 'is-danger': errors.has('Field Entry') }" :message="errors.first('Field Entry')">
                 <b-input v-validate="'max:256'" v-model="field.name" name="Field Entry"/>
                 <b-input v-validate="'max:1024'" v-model="field.value" name="Field Entry"/>
+                &nbsp;
+                <b-checkbox v-model="field.inline">
+                  Inline
+                </b-checkbox>
               </b-field>
               <b-field :type="{ 'is-danger': errors.has('Footer Text') }" :message="errors.first('Footer Text')" label="Footer" custom-class="has-text-white">
                 <b-input v-validate="'max:2048'" v-model="embed.footer.text" name="Footer Text" placeholder="Text"/>
@@ -158,7 +166,8 @@ export default {
       prompts: [],
       currfield: {
         name: null,
-        value: null
+        value: null,
+        inline: false
       },
       embed: {
         color: "#eff",
@@ -246,5 +255,12 @@ export default {
 <style>
 .select.is-empty select {
   color: #eff;
+}
+.check {
+  background-color: #242424;
+}
+.b-checkbox.checkbox .control-label {
+  color: #eff;
+  font-family: "Poppins";
 }
 </style>
