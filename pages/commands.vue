@@ -35,9 +35,6 @@
                 </ul>
               </aside>
             </div>
-
-					
-							
           </div>
           <div class="column is-three-quarters">
             <div class="box">
@@ -55,24 +52,6 @@
           </div>
 					
         </div>
-        <!--<h1 v-for="(cmd, category) in commands" class="subtitle has-text-white">
-					{{ category }}
-					<br><br>
-					<div class="columns is-multiline ">
-						<div v-for="cmd of commands[category]" class="column is-one-third">
-							<div class="box">
-								<div class="content">
-									<h4 class="subtitle has-text-grey">
-										{{ cmd.name }}
-									</h4>
-									<p class="has-text-left">{{ cmd.description }}</p>
-									<p class="has-text-left">Usage: <strong class="has-text-white has-text-left">{{ `${cmd.name} ${cmd.usage ? cmd.usage : ''}` }}</strong></p>
-									<p class="has-text-left">Required Permission(s): {{ cmd.reqPermString != false ? cmd.reqPermString.join(', ') : 'None' }}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</h1>-->
       </div>
 
     </section>

@@ -46,6 +46,13 @@
               </a>
             </div>
             <div class="navbar-end">
+              <div class="navbar-item">
+                <a href="https://patreon.com/foxdevteam" target="_blank" class="button patreon is-small is-danger">
+                  <font-awesome-icon :icon="['fab', 'patreon']" size="1x" />
+                  &nbsp;
+                  Donate to Fox
+                </a>
+              </div>
               <div v-if="$auth.loggedIn" id="userbutton" class="navbar-item">
                 <img :src="getAvatar" height="30" width="30" style="border-radius: 50px">&nbsp;&nbsp;
                 <b-dropdown v-if="$auth.loggedIn" position="is-bottom-left">
@@ -116,5 +123,9 @@ export default {
 <style>
 #userbutton {
   cursor: pointer;
+}
+
+.patreonbutton {
+  background-color: #f96854;
 }
 </style>
