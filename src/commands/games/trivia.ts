@@ -29,7 +29,8 @@ export default class FoxCommand extends Command {
   public async fetchTriviaQ(): Promise<Object> {
     const { results: arr }: any = await FoxClient.http("GET", {
       url: "https://opentdb.com/api.php?amount=1&encode=base64"
-    }).catch(console.error);
+    })
+    .catch(console.error);
     if (!arr) {
       return undefined;
     }
