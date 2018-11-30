@@ -25,7 +25,7 @@ export default class FoxCommand extends Command {
         " Please specify the name of the tag you want to create."
       );
     }
-    const doesExist: Tags = await this.client.mongo.tags.findOne({
+    const doesExist: Tags = await Tags.findOne({
       guildID: message.guild.id,
       tagName: tagname
     });
@@ -44,7 +44,7 @@ export default class FoxCommand extends Command {
         case 0:
           return message.error("Cancelled command.");
         default:
-          const entry: Tags = new this.client.mongo.tags({
+          const entry: Tags = new Tags({
             guildID: message.guild.id,
             tagName: tagname.toLowerCase(),
             tagContent: response,

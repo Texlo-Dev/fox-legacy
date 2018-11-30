@@ -15,14 +15,10 @@ export default Structures.extend("User", u => {
 
     public async _setTier(): Promise<number> {
       const client: FoxClient = this.client as FoxClient;
-      const tier: Patrons = await client.mongo.patrons.findOne({
+      const tier: Patrons = await Patrons.findOne({
         userID: this.id
       });
-      if (!tier) {
-        this.patreonTier = 0;
-      } else {
-        this.patreonTier = tier.get("tier");
-      }
+      this.patreonTier = tier ? tier.get("tier") : 0;
 
       return this.patreonTier;
     }
@@ -38,11 +34,11 @@ export default Structures.extend("User", u => {
     public async addPatreon(tier: number): Promise<boolean> {
       this.patreonTier = tier;
       const client: FoxClient = this.client as FoxClient;
-      const user: Patrons = await client.mongo.patrons.findOne({
+      const user: Patrons = await Patrons.findOne({
         userID: this.id
       });
       if (!user) {
-        const entry: Patrons = new client.mongo.patrons({
+        const entry: Patrons = new Patrons({
           userID: this.id,
           tier
         });
@@ -58,7 +54,7 @@ export default Structures.extend("User", u => {
     public async removePatreon(): Promise<boolean> {
       this.patreonTier = 0;
       const client: FoxClient = this.client as FoxClient;
-      await client.mongo.patrons.remove({ userID: this.id });
+      await Patrons.remove({ userID: this.id });
 
       return true;
     }

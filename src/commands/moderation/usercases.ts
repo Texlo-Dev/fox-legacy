@@ -30,7 +30,7 @@ export default class FoxCommand extends Command {
       message
     )) as FoxUser;
     if (!user) {
-      const query: ModActions[] = await this.client.mongo.modactions
+      const query: ModActions[] = await ModActions
         .sort("caseNum", "asc")
         .find({
           guildID: message.guild.id
@@ -75,7 +75,7 @@ export default class FoxCommand extends Command {
 
       return mg.edit({ embed });
     } else {
-      const query: ModActions[] = await this.client.mongo.modactions
+      const query: ModActions[] = await ModActions
         .sort("caseNum", "asc")
         .find({
           guildID: message.guild.id,

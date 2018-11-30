@@ -30,7 +30,7 @@ export default class FoxCommand extends Command {
         case 0:
           return message.error("Cancelled command.");
         default:
-          const tag: Tags = await this.client.mongo.tags.findOne({
+          const tag: Tags = await Tags.findOne({
             tagName: response,
             guildID: message.guild.id
           });
@@ -45,7 +45,7 @@ export default class FoxCommand extends Command {
           );
       }
     } else {
-      const tag: Tags = await this.client.mongo.tags.findOne({
+      const tag: Tags = await Tags.findOne({
         tagName: tagname.toLowerCase(),
         guildID: message.guild.id
       });

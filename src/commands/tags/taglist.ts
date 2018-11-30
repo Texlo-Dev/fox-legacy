@@ -20,7 +20,7 @@ export default class FoxCommand extends Command {
   }
 
   public async run(message: FoxMessage): Promise<FoxMessage> {
-    const tag: Tags[] = await this.client.mongo.tags.find({
+    const tag: Tags[] = await Tags.find({
       guildID: message.guild.id
     });
     const str: string =

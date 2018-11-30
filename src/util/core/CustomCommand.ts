@@ -35,7 +35,7 @@ export default class CustomCommand {
   }
 
   public async edit(data: any): Promise<CustomCommand[]> {
-    const command: CustomCommands = await this.guild.client.mongo.customcommands.findOne(
+    const command: CustomCommands = await CustomCommands.findOne(
       {
         guildID: this.guild.id,
         name: this.name

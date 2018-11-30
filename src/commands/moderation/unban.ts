@@ -38,7 +38,7 @@ export default class FoxCommand extends Command {
       return message.error(" Value 'id' was not specified, please try again.");
     }
     let modlog: TextChannel = message.guild.config.modlogChannel;
-    const caseEntry: number = await this.client.mongo.modactions.count({
+    const caseEntry: number = await ModActions.count({
       guildID: message.guild.id,
       id: undefined,
       warnpoints: undefined
@@ -78,7 +78,7 @@ export default class FoxCommand extends Command {
     const m: any = modlog
       ? await message.guild.channels.get(modlog.id).send({ embed })
       : undefined;
-    const entry: ModActions = new this.client.mongo.modactions({
+    const entry: ModActions = new ModActions({
       guildID: message.guild.id,
       caseNum: caseInt,
       userID: id,

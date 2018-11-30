@@ -24,7 +24,7 @@ export default class GiveawayStore extends Collection<any, any> {
   }
 
   public async _cache(): Promise<GiveawayStore> {
-    const giveaways: Giveaways[] = await this.client.mongo.giveaways.find({
+    const giveaways: Giveaways[] = await Giveaways.find({
       guildID: this.guild.id
     });
     if (!giveaways) {
@@ -58,7 +58,7 @@ export default class GiveawayStore extends Collection<any, any> {
       reactionEmote: giveaway.reactionEmote,
       paused: false
     };
-    const newGiveaway: Giveaways = new this.client.mongo.giveaways(data);
+    const newGiveaway: Giveaways = new Giveaways(data);
     try {
       await newGiveaway.save();
       const gw: Giveaway = new Giveaway(this.guild, data);
@@ -90,7 +90,7 @@ export default class GiveawayStore extends Collection<any, any> {
       ) as TextChannel).send(embed);
       gw.messageID = m.id;
       super.set(gw.name, gw);
-      const entry: Giveaways = await this.client.mongo.giveaways.findOne({
+      const entry: Giveaways = await Giveaways.findOne({
         guildID: this.guild.id,
         endDate: gw.endDate,
         name: gw.name
@@ -125,7 +125,7 @@ export default class GiveawayStore extends Collection<any, any> {
     const channel: TextChannel = this.guild.channels.get(
       giveaway.channel.id
     ) as TextChannel;
-    const gw: Giveaways = await this.client.mongo.giveaways.findOne({
+    const gw: Giveaways = await Giveaways.findOne({
       guildID: this.guild.id,
       name: giveaway.name
     });
@@ -244,7 +244,7 @@ export default class GiveawayStore extends Collection<any, any> {
     const message: FoxMessage = channel
       ? await channel.messages.fetch(giveaway.messageID).catch(() => undefined)
       : undefined;
-    const gw: Giveaways = await this.client.mongo.giveaways.findOne({
+    const gw: Giveaways = await Giveaways.findOne({
       guildID: this.guild.id,
       name: giveaway.name
     });
@@ -268,7 +268,7 @@ export default class GiveawayStore extends Collection<any, any> {
   }
 
   public async remove(name: string): Promise<object> {
-    const giveaway: Giveaways = await this.client.mongo.giveaways.findOne({
+    const giveaway: Giveaways = await Giveaways.findOne({
       guildID: this.guild.id,
       name
     });
@@ -293,7 +293,7 @@ export default class GiveawayStore extends Collection<any, any> {
       channel && channel.messages
         ? ((await channel.messages.fetch(giveaway.messageID)) as FoxMessage)
         : undefined;
-    const gw: Giveaways = await this.client.mongo.giveaways.findOne({
+    const gw: Giveaways = await Giveaways.findOne({
       guildID: this.guild.id,
       name: giveaway.name
     });
@@ -359,7 +359,7 @@ export default class GiveawayStore extends Collection<any, any> {
     const message: FoxMessage = channel
       ? ((await channel.messages.fetch(giveaway.messageID)) as FoxMessage)
       : undefined;
-    const gw: Giveaways = await this.client.mongo.giveaways.findOne({
+    const gw: Giveaways = await Giveaways.findOne({
       guildID: this.guild.id,
       name: giveaway.name
     });

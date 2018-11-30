@@ -8,7 +8,7 @@ export default class FoxCommand extends Command {
   public static async run(
     message: FoxMessage,
     [...word]: string[]
-  ): Promise<void> {
+  ): Promise<FoxMessage> {
     await message.delete().catch(() => 0);
     const wd: string = word.join(" ");
     if (!wd) {

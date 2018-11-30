@@ -29,7 +29,7 @@ export default class FoxCommand extends Command {
     if (!enabled) {
       modlog = null;
     }
-    const caseEntry: number = await this.client.mongo.modactions.count({
+    const caseEntry: number = await ModActions.count({
       guildID: message.guild.id,
       id: undefined,
       warnpoints: undefined
@@ -55,7 +55,7 @@ export default class FoxCommand extends Command {
         }.`
       );
     }
-    const query: ModActions = await this.client.mongo.modactions.findOne({
+    const query: ModActions = await ModActions.findOne({
       guildID: message.guild.id,
       userID: member.id,
       action: undefined,
@@ -92,7 +92,7 @@ export default class FoxCommand extends Command {
     const m: any = await (message.guild.channels.get(
       modlog.id
     ) as TextChannel).send({ embed });
-    const entry: ModActions = new this.client.mongo.modactions({
+    const entry: ModActions = new ModActions({
       guildID: message.guild.id,
       caseNum: caseInt,
       userID: member.user.id,

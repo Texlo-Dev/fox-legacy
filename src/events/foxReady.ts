@@ -14,7 +14,7 @@ export default class extends Event {
   }
 
   public async init(): Promise<void> {
-    const permfind: Permissions[] = await this.client.mongo.permissions.find({
+    const permfind: Permissions[] = await Permissions.find({
       guildID: undefined
     });
     let perms: any[] = permfind.map(perm => perm.get());

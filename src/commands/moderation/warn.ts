@@ -29,7 +29,7 @@ export default class FoxCommand extends Command {
     if (!enabled) {
       modlog = undefined;
     }
-    const caseEntry: number = await this.client.mongo.modactions.count({
+    const caseEntry: number = await ModActions.count({
       guildID: message.guild.id,
       id: undefined,
       warnpoints: undefined
@@ -62,7 +62,7 @@ export default class FoxCommand extends Command {
       reason = `\nModerator: Please type \`${prefix}reason ${caseInt} <reason>\``;
     }
 
-    const dbEntry: ModActions = await this.client.mongo.modactions.findOne({
+    const dbEntry: ModActions = await ModActions.findOne({
       guildID: message.guild.id,
       userID: member.id,
       action: undefined,
@@ -70,7 +70,7 @@ export default class FoxCommand extends Command {
     });
     const query: ModActions = dbEntry;
     if (!query) {
-      const newentry: ModActions = new this.client.mongo.modactions({
+      const newentry: ModActions = new ModActions({
         guildID: message.guild.id,
         userID: member.id,
         warnpoints: points
@@ -104,7 +104,7 @@ export default class FoxCommand extends Command {
           embed
         })
       : undefined;
-    const entry: ModActions = new this.client.mongo.modactions({
+    const entry: ModActions = new ModActions({
       guildID: message.guild.id,
       caseNum: caseInt,
       userID: member.user.id,
@@ -133,7 +133,7 @@ export default class FoxCommand extends Command {
         `You have not set up autokick and autoban warning point amounts. To do so, use ${prefix}warnban and ${prefix}warnkick.`
       ); // tslint:disable-line
     }
-    const check: ModActions = await this.client.mongo.modactions.findOne({
+    const check: ModActions = await ModActions.findOne({
       guildID: message.guild.id,
       userID: member.id,
       action: undefined,

@@ -30,7 +30,7 @@ export default class FoxCommand extends Command {
     if (!description) {
       return message.send("Please specify the description.");
     }
-    const entry: Permissions = new this.client.mongo.permissions({
+    const entry: Permissions = new Permissions({
       name,
       description,
       category,

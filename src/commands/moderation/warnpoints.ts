@@ -20,7 +20,7 @@ export default class FoxCommand extends Command {
       member = undefined;
     }
     if (!member) {
-      const query: ModActions = await this.client.mongo.modactions.findOne({
+      const query: ModActions = await ModActions.findOne({
         guildID: message.guild.id,
         userID: message.author.id,
         action: undefined,
@@ -61,7 +61,7 @@ export default class FoxCommand extends Command {
         return message.send({ embed });
       }
     } else {
-      const query: ModActions = await this.client.mongo.modactions.findOne({
+      const query: ModActions = await ModActions.findOne({
         guildID: message.guild.id,
         userID: member.id,
         action: undefined,

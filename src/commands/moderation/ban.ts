@@ -68,7 +68,7 @@ export default class FoxCommand extends Command {
       modlog = undefined;
     }
 
-    const caseEntry: number = await this.client.mongo.modactions.count({
+    const caseEntry: number = await ModActions.count({
       guildID: message.guild.id,
       id: undefined,
       warnpoints: undefined
@@ -118,7 +118,7 @@ export default class FoxCommand extends Command {
           embed
         })
       : undefined;
-    const entry: ModActions = new this.client.mongo.modactions({
+    const entry: ModActions = new ModActions({
       guildID: message.guild.id,
       caseNum: caseInt,
       userID: banUser.id,

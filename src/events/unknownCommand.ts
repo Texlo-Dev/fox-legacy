@@ -103,7 +103,7 @@ export default class UnknownCommand extends Event {
         );
       }
       if (message.guild.config.tacMode) {
-        const tag: Tags = await this.client.mongo.tags.findOne({
+        const tag: Tags = await Tags.findOne({
           tagName: args[0],
           guildID: message.guild.id
         });

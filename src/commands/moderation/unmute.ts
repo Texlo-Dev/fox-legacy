@@ -69,7 +69,7 @@ export default class FoxCommand extends Command {
         .then(mg => mg.delete({ timeout: 2000 }));
     }
 
-    const caseEntry: number = await this.client.mongo.modactions.count({
+    const caseEntry: number = await ModActions.count({
       guildID: message.guild.id,
       id: undefined,
       warnpoints: undefined
@@ -87,7 +87,7 @@ export default class FoxCommand extends Command {
         "I don't have permissions to remove this role. Make sure that the role is below mine, and I have the Manage Role permission."
       );
     } // tslint:disable-line
-    const q: ModActions = await this.client.mongo.modactions.findOne({
+    const q: ModActions = await ModActions.findOne({
       guildID: message.guild.id,
       userID: member.id,
       isMute: true
@@ -120,7 +120,7 @@ export default class FoxCommand extends Command {
         })
       : undefined;
 
-    const entry: ModActions = new this.client.mongo.modactions({
+    const entry: ModActions = new ModActions({
       guildID: message.guild.id,
       caseNum: caseInt,
       userID: mem.user.id,

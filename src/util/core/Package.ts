@@ -35,7 +35,7 @@ export default class Package {
   }
 
   public async disable(): Promise<boolean> {
-    const query: GuildSettings = await this.guild.client.mongo.guildconfig.findOne(
+    const query: GuildSettings = await GuildSettings.findOne(
       {
         guildID: this.guild.id,
         type: "settings"
@@ -60,7 +60,7 @@ export default class Package {
   }
 
   public async enable(): Promise<boolean> {
-    const query: GuildSettings = await this.guild.client.mongo.guildconfig.findOne(
+    const query: GuildSettings = await GuildSettings.findOne(
       {
         guildID: this.guild.id,
         type: "settings"

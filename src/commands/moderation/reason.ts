@@ -42,7 +42,7 @@ export default class FoxCommand extends Command {
     if (!caseNum) {
       return message.send("Please specify a case number.");
     }
-    const modCase: ModActions = await this.client.mongo.modactions.findOne({
+    const modCase: ModActions = await ModActions.findOne({
       caseNum,
       guildID: message.guild.id
     });

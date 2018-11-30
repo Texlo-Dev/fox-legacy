@@ -78,7 +78,7 @@ export default class CustomCommands extends Collection<any, any> {
       template: data.template
     };
 
-    const entry: any = new this.guild.client.mongo.customcommands(obj);
+    const entry: any = new CustomCommands(obj);
     try {
       await entry.save();
       const command: CustomCommand = new CustomCommand(this.guild, obj);
@@ -95,9 +95,7 @@ export default class CustomCommands extends Collection<any, any> {
   }
 
   public async reloadAll(): Promise<boolean> {
-    const commands: CCMongo[] = await this.guild.client.mongo.customcommands.find(
-      { guildID: this.guild.id }
-    );
+    const commands: CCMongo[] = await CCMongo.find({ guildID: this.guild.id });
     if (!commands) {
       return;
     }
@@ -118,9 +116,10 @@ export default class CustomCommands extends Collection<any, any> {
     if (!super.has(command)) {
       throw new Error("Command does not exist in server.");
     }
-    const entry: CCMongo = await this.guild.client.mongo.customcommands.findOne(
-      { guildID: this.guild.id, name: command }
-    );
+    const entry: CCMongo = await CCMongo.findOne({
+      guildID: this.guild.id,
+      name: command
+    });
     if (!entry) {
       throw new Error("Could not resolve command in database.");
     }

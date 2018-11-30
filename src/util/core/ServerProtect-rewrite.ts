@@ -55,7 +55,7 @@ class ServerProtect {
     if (!modlog) {
       return;
     }
-    const caseEntry: number = await this.client.mongo.modactions.count({
+    const caseEntry: number = await ModActions.count({
       guildID: this.guild.id,
       id: undefined,
       warnpoints: undefined
@@ -74,7 +74,7 @@ class ServerProtect {
     const ch: TextChannel = this.guild.channels.get(modlog.id) as TextChannel;
     const m: FoxMessage = await ch.send({ embed }).catch(() => null);
 
-    const entry: ModActions = new this.client.mongo.modactions({
+    const entry: ModActions = new ModActions({
       guildID: this.guild.id,
       caseNum: caseInt,
       userID: member.user.id,
@@ -107,7 +107,7 @@ class ServerProtect {
     if (!modlog) {
       return;
     }
-    const caseEntry: number = await this.client.mongo.modactions.count({
+    const caseEntry: number = await ModActions.count({
       guildID: this.guild.id,
       id: undefined,
       warnpoints: undefined
@@ -126,7 +126,7 @@ class ServerProtect {
     const ch: TextChannel = this.guild.channels.get(modlog.id) as TextChannel;
     const m: any = await ch.send({ embed }).catch(() => undefined);
 
-    const entry: ModActions = new this.client.mongo.modactions({
+    const entry: ModActions = new ModActions({
       guildID: this.guild.id,
       caseNum: caseInt,
       userID: member.user.id,

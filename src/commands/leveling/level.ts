@@ -23,7 +23,7 @@ export default class FoxCommand extends Command {
   public async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
     const member: GuildMember = await this.member(args[0], message);
     if (member) {
-      const entry: FoxLeveling = await this.client.mongo.leveling.findOne({
+      const entry: FoxLeveling = await FoxLeveling.findOne({
         guildID: message.guild.id,
         userID: member.id
       });
@@ -55,7 +55,7 @@ export default class FoxCommand extends Command {
 
       return message.send({ embed });
     } else {
-      const entry: FoxLeveling = await this.client.mongo.leveling.findOne({
+      const entry: FoxLeveling = await FoxLeveling.findOne({
         guildID: message.guild.id,
         userID: message.author.id
       });

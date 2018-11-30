@@ -26,7 +26,7 @@ export default class FoxCommand extends Command {
     if (!num) {
       return message.error("Please specify a valid integer.");
     }
-    const entry: ModActions = await this.client.mongo.modactions.findOne({
+    const entry: ModActions = await ModActions.findOne({
       guildID: message.guild.id,
       caseNum: num
     });

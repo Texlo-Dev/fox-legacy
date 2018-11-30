@@ -1,4 +1,4 @@
-import { MessageEmbed, TextChannel } from "discord.js";
+import { GuildAuditLogs, MessageEmbed, TextChannel } from "discord.js";
 import { Event, FoxClient } from "../util";
 import { FoxMessage } from "../util/extensions";
 
@@ -31,6 +31,10 @@ export default class extends Event {
     if (message.guild.config.enabledEvents.indexOf(this.name) < 0) {
       return;
     }
+    const logs: GuildAuditLogs = await message.guild.fetchAuditLogs({
+      type: "MESSAGE_DELETE",
+      limit: 1
+    });
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Message Deleted", message.client.user.displayAvatarURL({}))
       .setTimestamp()
@@ -41,6 +45,7 @@ export default class extends Event {
         `
                 **Channel:** ${message.channel}
                 **Author:** ${message.author.tag}
+                **Deleted By:** ${logs.entries.first().executor.tag}
                 **Content:**
                 ${message.content}
 

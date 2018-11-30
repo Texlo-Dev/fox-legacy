@@ -23,7 +23,7 @@ export default class FoxCommand extends Command {
     args: string[],
     prefix: string
   ): Promise<FoxMessage> {
-    const data: FoxLeveling[] = await this.client.mongo.leveling
+    const data: FoxLeveling[] = await FoxLeveling
       .sort({
         level: "desc",
         totalXP: "desc"

@@ -96,14 +96,14 @@ export default class GuildConfig {
   }
 
   public async _loadSettings(): Promise<void> {
-    const settings: GuildSettings = await this.guild.client.mongo.guildconfig.findOne(
+    const settings: GuildSettings = await GuildSettings.findOne(
       {
         guildID: this.guild.id,
         type: "settings"
       }
     );
     if (!settings) {
-      const entry: GuildSettings = new this.guild.client.mongo.guildconfig({
+      const entry: GuildSettings = new GuildSettings({
         guildID: this.guild.id,
         type: "settings",
         prefix: this.prefix,
@@ -151,7 +151,7 @@ export default class GuildConfig {
   }
 
   public async set(key: string, value: any): Promise<Boolean | Object> {
-    const settings: GuildSettings = await this.guild.client.mongo.guildconfig.findOne(
+    const settings: GuildSettings = await GuildSettings.findOne(
       {
         guildID: this.guild.id,
         type: "settings"
@@ -175,7 +175,7 @@ export default class GuildConfig {
     value: string[] | string,
     isWeb?: boolean
   ): Promise<Object> {
-    const settings: GuildSettings = await this.guild.client.mongo.guildconfig.findOne(
+    const settings: GuildSettings = await GuildSettings.findOne(
       {
         guildID: this.guild.id,
         type: "settings"

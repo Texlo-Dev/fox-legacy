@@ -18,7 +18,7 @@ export default class FoxCommand extends Command {
   }
 
   public async run(message: FoxMessage): Promise<FoxMessage> {
-    const value: FoxBank = await this.client.mongo.banking.findOne({
+    const value: FoxBank = await FoxBank.findOne({
       guildID: message.guild.id,
       userID: message.author.id
     });

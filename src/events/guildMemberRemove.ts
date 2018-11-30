@@ -15,7 +15,7 @@ export default class extends Event {
   public async checkAutoMute(member: GuildMember): Promise<void> {
     const guild: FoxGuild = member.guild as FoxGuild;
     if (guild.config.muteRole && member.roles.has(guild.config.muteRole.id)) {
-      const query: ModActions = await this.client.mongo.modactions.findOne({
+      const query: ModActions = await ModActions.findOne({
         guildID: guild.id,
         userID: member.id,
         isMute: true,
@@ -25,7 +25,7 @@ export default class extends Event {
       query.set({ hasLeft: true });
       await query.save();
     } else {
-      const query: ModActions = await this.client.mongo.modactions.findOne({
+      const query: ModActions = await ModActions.findOne({
         guildID: guild.id,
         userID: member.id,
         isMute: true,

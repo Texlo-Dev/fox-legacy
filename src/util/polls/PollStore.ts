@@ -19,7 +19,7 @@ export default class PollStore extends Collection<any, any> {
   }
 
   public async _cache(): Promise<boolean> {
-    const polls: Polls[] = await this.guild.client.mongo.polls.find({
+    const polls: Polls[] = await Polls.find({
       guildID: this.guild.id
     });
     if (!polls) {
@@ -63,11 +63,11 @@ export default class PollStore extends Collection<any, any> {
     if (!obj.question.endsWith("?")) {
       obj.question += "?";
     }
-    const newPoll: Polls = new this.guild.client.mongo.polls(data);
+    const newPoll: Polls = new Polls(data);
     try {
       await newPoll.save();
-      const pl = new Poll(data);
-      let num = 1;
+      const pl: Poll = new Poll(data);
+      let num: number = 1;
       const embed: MessageEmbed = new MessageEmbed()
         .setColor(this.guild.client.brandColor)
         .setTimestamp()
@@ -100,7 +100,7 @@ export default class PollStore extends Collection<any, any> {
       }
       pl.messageID = m.id;
       super.set(pl.name, pl);
-      const entry: Polls = await this.guild.client.mongo.polls.findOne({
+      const entry: Polls = await Polls.findOne({
         guildID: this.guild.id,
         name: pl.name
       });
@@ -130,7 +130,7 @@ export default class PollStore extends Collection<any, any> {
     }
 
     try {
-      const pl: Polls = await this.guild.client.mongo.polls.findOne({
+      const pl: Polls = await Polls.findOne({
         guildID: this.guild.id,
         name: poll.name
       });
@@ -178,7 +178,7 @@ export default class PollStore extends Collection<any, any> {
     if (!super.has(name)) {
       throw new Error("Poll does not exists in collection.");
     }
-    const poll: Polls = await this.guild.client.mongo.polls.findOne({
+    const poll: Polls = await Polls.findOne({
       guildID: this.guild.id,
       name
     });
@@ -195,3 +195,4 @@ export default class PollStore extends Collection<any, any> {
     });
   }
 }
+
