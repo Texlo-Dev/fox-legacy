@@ -305,7 +305,7 @@ class FoxClient extends Client {
         url: `https://discordbots.org/api/bots/${this.user.id}/stats`,
         body: {
           shard_id: shard,
-          shard_count: this.shard.totalShardCount,
+          shard_count: this.options.totalShardCount,
           server_count: count
         },
         headers: { Authorization: dbotsKey }
