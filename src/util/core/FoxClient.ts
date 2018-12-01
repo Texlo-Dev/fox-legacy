@@ -310,7 +310,6 @@ class FoxClient extends Client {
         },
         headers: { Authorization: dbotsKey }
       })
-      .then(() => console.log("Updated dbots.org status."))
       .catch(console.error);
 
       FoxClient.http("POST", {
@@ -318,7 +317,6 @@ class FoxClient extends Client {
         body: { server_count: servercount.reduce((prev, val) => prev + val, 0) },
         headers: { Authorization: dboatsKey }
       })
-      .then(() => console.log("Updated dboats.org status."))
       .catch(console.error);
     }
   }
