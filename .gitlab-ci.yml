@@ -16,13 +16,13 @@ build:
   script:
     - npm run build
   only:
-    - master
+    - site
 
 release:
   stage: release
   image: docker:latest
   only:
-    - "master"
+    - "site"
   services:
     - docker:dind
   variables:
@@ -41,7 +41,7 @@ deploy:
   stage: deploy
   image: gitlab/dind:latest
   only:
-    - "master"
+    - "site"
   environment: production
   services:
     - docker:dind
