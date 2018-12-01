@@ -62,7 +62,9 @@ export default class FoxCommand extends Command {
         }.`
       );
     }
-    let modlog: TextChannel = message.guild.config.modlogChannel;
+    let modlog: TextChannel = message.guild.config.modlogChannel
+      ? await this.channel(message.guild.config.modlogChannel.id, message).catch(() => undefined)
+      : undefined;
     const enabled: boolean = message.guild.config.modLogging;
     if (!enabled) {
       modlog = undefined;
@@ -107,14 +109,14 @@ export default class FoxCommand extends Command {
         } (${member.id})\n**Reason:** ${reason}`
       ) // tslint:disable-line
       .setFooter(`Case#${caseInt}`);
-    message.send(
+    await message.send(
       `I have banned **${
         (await this.client.users.fetch(member.id)).tag
       }**, with the reason of **${reason}**. :ok_hand:`
     ); // tslint:disable-line
 
     const m: any = modlog
-      ? ((await message.guild.channels.get(modlog.id)) as TextChannel).send({
+      ? await modlog.send({
           embed
         })
       : undefined;

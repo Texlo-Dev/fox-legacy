@@ -40,7 +40,7 @@ export default class FoxCommand extends Command {
       .setTimestamp()
       .addField("Version", `${version}`, true)
       .addField("Servers", `${num.toLocaleString()}`, true)
-      .addField("Total Shards", this.client.shard.count, true)
+      .addField("Total Shards", this.client.options.totalShardCount, true)
       .addField("Users", `${users.toLocaleString()}`, true)
       .addField("Channels", channel.toLocaleString(), true)
       .addField(
@@ -65,7 +65,9 @@ export default class FoxCommand extends Command {
         `${mem.toFixed(1)} GB/${totalMem.toFixed(1)} GB`,
         true
       )
-      .setFooter(`Shard#${message.guild.shard}`);
+      .setFooter(
+        `Cluster ${this.client.shard.id} | Shard ${message.guild.shardID}`
+      );
     message.send({ embed });
   }
 }

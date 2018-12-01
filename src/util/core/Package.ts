@@ -1,5 +1,6 @@
 // tslint:disable-next-line:file-name-casing
-import { FoxGuild, Options } from "../../types";
+import { Options } from "../../types";
+import { FoxGuild } from "../extensions";
 import { GuildSettings } from "../Mongo";
 
 interface PackageOptions extends Options {

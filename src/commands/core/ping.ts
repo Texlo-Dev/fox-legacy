@@ -19,7 +19,7 @@ export default class FoxCommand extends Command {
       .setDescription(
         `:ping_pong: Pong! Message round-trip took **${pingmessage.createdTimestamp -
           message.createdTimestamp}ms**.\nClient ping is **${Math.round(
-          this.client.ping
+          this.client.ws.ping
         )}ms**.`
       ); // tslint:disable-line
     pingmessage.edit({ embed });

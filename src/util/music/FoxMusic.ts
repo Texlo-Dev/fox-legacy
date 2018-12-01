@@ -151,6 +151,7 @@ class FoxMusic {
         queueStruct.connection = connection;
         this.play(message.guild, queueStruct.songs[0]);
       } catch (error) {
+        console.error(error);
         message.guild.queue = null;
 
         return message.error(
@@ -161,12 +162,12 @@ class FoxMusic {
       if (
         !playlist &&
         serverQueue.songs.filter(
-          song => song.requestedBy.id === message.author.id
+          s => s.requestedBy.id === message.author.id
         ).length >= 5 &&
         message.author.patreonTier < 2
       ) {
         return message.error(
-          "Your song queue limit is currently at 3 songs as a Bronze Fox Patreon. To increase your queue limit, please consider upgrading to a Silver Fox Patreon or higher here:\nhttps://www.patreon.com/foxdevteam"
+          "Your song queue limit is currently at 3 songs as a Bronze Fox Patreon. To increase your queue limit, please consider upgrading to a Silver Fox Patreon or higher here:https://www.patreon.com/foxdevteam"
         );
       }
       serverQueue.songs.push(song);
@@ -184,7 +185,8 @@ class FoxMusic {
           })}**`
         )
         .setColor(this.client.brandColor);
-      message.send({ embed });
+
+      return message.send({ embed });
     }
   }
 

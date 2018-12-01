@@ -1,8 +1,14 @@
-import { ShardingManager } from "discord.js";
-import { token } from "./config.json";
-const Manager: ShardingManager = new ShardingManager(`${__dirname}/run.js`, {
-  totalShards: 2,
+import { ShardingManager } from "kurasuta";
+import { join } from "path";
+import { isTestFox, token } from "./config.json";
+import { FoxClient } from "./util/";
+const sharder: ShardingManager = new ShardingManager(join(__dirname, "run"), {
+  shardCount: 2,
   token,
-  respawn: true
-}); // tslint:disable
-Manager.spawn(Manager.totalShards, 3000);
+  respawn: true,
+  client: FoxClient,
+  development: isTestFox,
+  ipcSocket: "12000"
+});
+
+sharder.spawn();

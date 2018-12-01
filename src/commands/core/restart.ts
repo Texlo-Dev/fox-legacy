@@ -17,23 +17,22 @@ export default class FoxCommand extends Command {
   public async run(
     message: FoxMessage,
     [shard = "all"]: string[]
-  ): Promise<any[] | void> {
+  ): Promise<FoxMessage> {
     if (shard === "all") {
-      await message.send("<:check:314349398811475968> Restarted all shards.");
+      await message.send("<:check:314349398811475968> Restarted all clusters.");
 
-      return this.client.shard.broadcastEval("process.exit()");
+      return this.client.shard.restartAll();
     }
     const num: number = Number(shard);
     if (!shard && !num) {
-      await message.success(` Restarted shard ${this.client.shard.id}.`);
+      await message.success(`Restarted cluster ${this.client.shard.id}.`);
       process.exit();
-    } else if (shard && num === undefined) {
-      return message.send("Please give a shard number to reload.");
+    } else if (shard && !num) {
+      return message.error("Please give a shard number to reload.");
     } else {
-      await message.success(`Restarted shard ${num}.`);
-      this.client.shard.broadcastEval(
-        `if (this.shard.id === ${num}) process.exit()`
-      );
+      await message.success(`Restarted cluster ${num}`);
+
+      return this.client.shard.restart(num);
     }
   }
 }

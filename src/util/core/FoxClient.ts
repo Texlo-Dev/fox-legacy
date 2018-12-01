@@ -155,7 +155,7 @@ class FoxClient extends Client {
   public tools: typeof Tools;
   public translate: Function;
 
-  public constructor() {
+  public constructor(options = {}) {
     super({
       disableEveryone: true,
       disabledEvents: [
@@ -167,7 +167,8 @@ class FoxClient extends Client {
         "USER_SETTINGS_UPDATE",
         "USER_NOTE_UPDATE",
         "VOICE_SERVER_UPDATE"
-      ]
+      ],
+      ...options
     });
     this.tools = Tools;
     this.packages = [];

@@ -25,7 +25,7 @@ export default class FoxCommand extends Command {
       .addField("Version", `${version}`, true)
       .addField(
         "Lead Developer",
-        this.client.users.get("288855795951599617").tag,
+        (await this.user("288855795951599617", message)).tag,
         true
       )
       .addField("Servers", `${this.client.guilds.size.toLocaleString()}`, true)

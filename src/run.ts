@@ -1,10 +1,14 @@
-import { FoxClient } from "./util/";
-import "./util/extensions/FoxMessage.js";
-import "./util/extensions/FoxGuild.js";
-import "./util/extensions/FoxUser.js";
+import { BaseCluster } from "kurasuta";
 import { token } from "./config.json";
-new FoxClient().login(token);
+import "./util/extensions/FoxGuild.js";
+import "./util/extensions/FoxMessage.js";
+import "./util/extensions/FoxUser.js";
 
+export default class extends BaseCluster {
+  public launch(): void {
+    this.client.login(token);
+  }
+}
 process.on("unhandledRejection", (error: Error) =>
   console.log(`unhandledRejection:\n${error.stack}`)
 );

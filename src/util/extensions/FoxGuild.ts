@@ -30,7 +30,6 @@ export default Structures.extend("Guild", guild => {
     public polls: Polls;
     public queue: any;
     public serverprotect: ServerProtect;
-    public readonly shard: number;
     public tickets: TicketStore;
 
     public constructor(...args: any) {
@@ -44,7 +43,7 @@ export default Structures.extend("Guild", guild => {
         maxban: 9
       });
       this.queue = null;
-      this.shard = this.client.shard.id;
+      
       this.leveling = new Leveling(this as any);
       this.banking = new Banking(this as any);
       this.polls = new Polls(this as any);
