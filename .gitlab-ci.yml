@@ -10,7 +10,9 @@ stages:
 
 build:
   stage: build
-  image: node
+  image: node:8-alpine
+  variables:
+    NODE_ENV: "production"
   before_script:
     - npm install
   script:
