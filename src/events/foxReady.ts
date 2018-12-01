@@ -78,7 +78,7 @@ export default class extends Event {
     ); // tslint:disable-line
     client.setInterval(() => client.tools.checkUnmute(client), 5000);
     if (client.user.id === "333985343445663749") {
-      client.setInterval(client.postStats, 180000);
+      client.setInterval(() => client.postStats(), 180000);
     }
   }
 }
