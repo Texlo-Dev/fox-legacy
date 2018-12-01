@@ -40,11 +40,6 @@ export default class GuildCreate extends Event {
   public async run(guild: FoxGuild): Promise<void> {
     const client: FoxClient = guild.client;
     console.log(`Joined ${guild.name}`);
-    client.user.setActivity(
-      `on shard #${client.shard.id}/${client.shard.count}: ${
-        client.guilds.size
-      } servers`
-    );
     await GuildCreate.initializeServer(guild).catch(console.error);
     let channel: any = guild.channels
       .filter(

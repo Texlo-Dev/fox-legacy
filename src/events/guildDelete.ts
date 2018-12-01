@@ -32,13 +32,8 @@ export default class GuildDelete extends Event {
   }
 
   public async run(guild: FoxGuild): Promise<void> {
-    const client: FoxClient = guild.client;
+    const client: FoxClient = this.client;
     console.log(`Left ${guild.name}`);
-    client.user.setActivity(
-      `on shard #${client.shard.id}/${client.shard.count}: ${
-        client.guilds.size
-      } servers | ${client.commandPrefix}help`
-    ); // tslint:disable-line
     await GuildDelete.deleteSettings(guild);
     /* FoxClient.http("POST", {
       url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
