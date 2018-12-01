@@ -12,3 +12,8 @@ const sharder: ShardingManager = new ShardingManager(join(__dirname, "run"), {
 });
 
 sharder.spawn();
+sharder
+  .on("ready", cluster =>
+    console.log(`[Cluster ${cluster.id}] spawn complete.`)
+  )
+  .on("shardReady", shard => console.log(`[Shard ${shard}] spawn complete.`));

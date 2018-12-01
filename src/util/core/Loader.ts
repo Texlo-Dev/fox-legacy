@@ -7,9 +7,6 @@ export const loadCommands: (client: FoxClient) => void = async (
   try {
     const folders: string[] = await Folders(`${process.cwd()}/build/commands/`);
     for (const folder of folders) {
-      console.log(
-        `[Mr.Fox] Initialized ${client.capitalizeStr(folder)} Package.`
-      );
       const files: string[] = await Folders(
         `${process.cwd()}/build/commands/${folder}/`
       );
@@ -27,6 +24,7 @@ export const loadCommands: (client: FoxClient) => void = async (
         client.packages.push(command.category);
       }
     }
+    console.log("[Mr.Fox] Initialized all packages.");
   } catch (e) {
     throw e;
   }

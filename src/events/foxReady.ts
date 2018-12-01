@@ -54,7 +54,7 @@ export default class extends Event {
       import("../api").then(a => a.default(client));
     } // tslint:disable-line
     const games: string[] = [
-      `on shard #${client.shard.id}/${client.shard.count}: ${
+      `on shard #${client.shard.id}/${client.options.tot}: ${
         client.guilds.size
       } servers`,
       "Donate to keep us going: https://www.patreon.com/foxdevteam",
@@ -70,9 +70,9 @@ export default class extends Event {
       600000
     );
     console.log(
-      `[Mr.Fox] Shard ${client.shard.id}: ONLINE. ${
-        client.guilds.size
-      } Servers, ${client.guilds
+      `[Cluster ${client.shard.id}] READY. ${
+        client.options.shardCount
+      } Shards, ${client.guilds.size} Servers, ${client.guilds
         .reduce((a, b) => a + b.memberCount, 0)
         .toLocaleString()} Users, ${client.channels.size} Channels.`
     ); // tslint:disable-line
