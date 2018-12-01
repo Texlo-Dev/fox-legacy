@@ -50,23 +50,20 @@ router.patch("/:guildID", authMiddleware, async (req, res) => {
     return res.json(400, { error: "Missing or invalid parameters." });
   }
   try {
-    const resp: any[] = await req.client.shard
-      .broadcastEval(
-        `
+    const resp: any[] = await req.client.shard.broadcastEval(
+      `
             if (this.guilds.has('${guildID}')) {
                 const guild = this.guilds.get('${guildID}');
                 guild.perms.add('${perm}', ${JSON.stringify(
-          target
-        )}, '${status}').then(r => r);
+        target
+      )}, '${status}').then(r => r);
             }
         `
-      )
-      .catch(err => {
-        throw err;
-      });
+    );
     if (!resp.filter(g => g)) {
       throw new Error("Could Not resolve guild.");
     }
+    console.log(resp.filter(g => g)[0]);
     res.json(200, resp.filter(g => g)[0]);
   } catch (error) {
     console.error(error);
