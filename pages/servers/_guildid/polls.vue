@@ -290,11 +290,10 @@ export default {
         this.$nuxt.$loading.fail;
         this.$dialog.alert({
           title: "Error",
-          message: `There was an error adding this poll.\n"${error.message}"`,
-          type: "is-danger",
-          hasIcon: true,
-          icon: "times-circle",
-          iconPack: "fa"
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
+          type: "is-danger"
         });
       } finally {
         this.$nuxt.$loading.finish();
@@ -354,13 +353,10 @@ export default {
         .catch(error => {
           this.$dialog.alert({
             title: "Error",
-            message: `There was an error disabling this package.\n"${
-              error.message
-            }"`,
-            type: "is-danger",
-            hasIcon: true,
-            icon: "times-circle",
-            iconPack: "fa"
+            message: `Error Code ${error.response.status}: ${
+              error.response.data.error
+            }`,
+            type: "is-danger"
           });
         });
     }

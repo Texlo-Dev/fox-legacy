@@ -106,13 +106,10 @@ export default {
         .catch(error => {
           this.$dialog.alert({
             title: "Error",
-            message: `There was an error enabling this package.\n"${
-              error.message
-            }"`,
-            type: "is-danger",
-            hasIcon: true,
-            icon: "times-circle",
-            iconPack: "fa"
+            message: `Error Code ${error.response.status}: ${
+              error.response.data.error
+            }`,
+            type: "is-danger"
           });
         });
     }

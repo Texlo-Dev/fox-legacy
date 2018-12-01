@@ -262,9 +262,9 @@ export default {
             this.$nuxt.$loading.fail();
             this.$dialog.alert({
               title: "Error",
-              message: `There was an error performing this action. "${
-                error.message
-              }"`,
+              message: `Error Code ${error.response.status}: ${
+                error.response.data.error
+              }`,
               type: "is-danger"
             });
           } finally {
@@ -310,9 +310,9 @@ export default {
         this.$nuxt.$loading.fail();
         this.$dialog.alert({
           title: "Error",
-          message: `There was an error starting this giveaway. "${
-            error.message
-          }"`,
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
           type: "is-danger"
         });
       } finally {
@@ -341,8 +341,11 @@ export default {
           duration: 3500
         });
       } catch (error) {
-        this.$toast.open({
-          message: `Unable to edit this setting: ${error}`,
+        this.$dialog.alert({
+          title: "Error",
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
           type: "is-danger"
         });
         this.$refs[`${key}-switch`][0].newValue = !value;
@@ -368,8 +371,11 @@ export default {
         });
         this.modalActive = false;
       } catch (error) {
-        this.$snackbar.open({
-          message: `Unable to edit these settings: ${error.message}`,
+        this.$dialog.alert({
+          title: "Error",
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
           type: "is-danger"
         });
       }
@@ -402,8 +408,11 @@ export default {
           duration: 3500
         });
       } catch (error) {
-        this.$snackbar.open({
-          message: `Unable to edit this command: ${error.message}`,
+        this.$dialog.alert({
+          title: "Error",
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
           type: "is-danger"
         });
         this.$refs[`${data}-switch`][0].newValue = !bool;
@@ -436,13 +445,10 @@ export default {
         .catch(error => {
           this.$dialog.alert({
             title: "Error",
-            message: `There was an error disabling this package.\n"${
-              error.message
-            }"`,
-            type: "is-danger",
-            hasIcon: true,
-            icon: "times-circle",
-            iconPack: "fa"
+            message: `Error Code ${error.response.status}: ${
+              error.response.data.error
+            }`,
+            type: "is-danger"
           });
         });
     },

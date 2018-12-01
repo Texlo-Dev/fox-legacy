@@ -202,13 +202,10 @@ export default {
         .catch(error => {
           this.$dialog.alert({
             title: "Error",
-            message: `There was an error disabling this package.\n"${
-              error.message
-            }"`,
-            type: "is-danger",
-            hasIcon: true,
-            icon: "times-circle",
-            iconPack: "fa"
+            message: `Error Code ${error.response.status}: ${
+              error.response.data.error
+            }`,
+            type: "is-danger"
           });
         });
     },
@@ -233,9 +230,10 @@ export default {
             ));
           } catch (error) {
             this.$dialog.alert({
-              message: `There was an error while deleting this command. "${
-                error.message
-              }"`,
+              title: "Error",
+              message: `Error Code ${error.response.status}: ${
+                error.response.data.error
+              }`,
               type: "is-danger"
             });
           }
@@ -274,9 +272,9 @@ export default {
       } catch (error) {
         this.$dialog.alert({
           title: "Error",
-          message: `There was an error performing this action. "${
-            error.message
-          }"`,
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
           type: "is-danger"
         });
       }
@@ -299,8 +297,11 @@ export default {
           duration: 3500
         });
       } catch (error) {
-        this.$snackbar.open({
-          message: `Unable to edit this command: ${error.message}`,
+        this.$dialog.alert({
+          title: "Error",
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
           type: "is-danger"
         });
         this.$refs[`${data}-switch`][0].newValue = !bool;

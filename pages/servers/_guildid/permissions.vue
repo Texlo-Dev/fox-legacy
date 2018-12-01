@@ -183,8 +183,8 @@ export default {
           } catch (error) {
             this.$dialog.alert({
               title: "Error",
-              message: `There was an error deleting this message. ${
-                error.message
+              message: `Error Code ${error.response.status}: ${
+                error.response.data.error
               }`,
               type: "is-danger"
             });
@@ -213,9 +213,9 @@ export default {
       } catch (error) {
         this.$dialog.alert({
           title: "Error",
-          message: `There was an error adding this overwrite. "${
-            error.message
-          }"`,
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
           type: "is-danger"
         });
       }
@@ -244,9 +244,9 @@ export default {
         ));
         this.$dialog.alert({
           title: "Error",
-          message: `There was an error setting this permission. "${
-            error.message
-          }"`,
+          message: `Error Code ${error.response.status}: ${
+            error.response.data.error
+          }`,
           type: "is-danger"
         });
       } finally {
