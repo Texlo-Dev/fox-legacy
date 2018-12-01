@@ -54,7 +54,7 @@ export default class extends Event {
       import("../api").then(a => a.default(client));
     } // tslint:disable-line
     const games: string[] = [
-      `on shard #${client.shard.id}/${client.options.tot}: ${
+      `with ${
         client.guilds.size
       } servers`,
       "Donate to keep us going: https://www.patreon.com/foxdevteam",
