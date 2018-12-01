@@ -1,21 +1,19 @@
 cache:
   key: "$CI_BUILD_REF_NAME node:8-alpine"
   paths:
-  - node_modules/
+    - node_modules/
+
 stages:
   - build
   - test
   - release
   - deploy
+
 build:
   stage: build
   image: node
   before_script:
-  - npm install
-  cache:
-    paths:
-    - node_modules/
-    pages:
+    - npm install
   script:
     - npm run build
   only:
@@ -49,7 +47,7 @@ release:
     - docker:dind
   variables:
     DOCKER_DRIVER: "overlay"
-before_script:
+  before_script:
     - docker version
     - "docker info"
     - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
