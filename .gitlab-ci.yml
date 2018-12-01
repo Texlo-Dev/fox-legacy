@@ -14,10 +14,14 @@ build:
   variables:
     NODE_ENV: "production"
   before_script:
-    - echo $FOXENV | base64 -d > ./.env
+    - echo $FOXENV | base64 -d > .env/
     - npm install
   script:
     - npm run build
+  artifacts:
+    paths:
+     - server/
+     - public/
   only:
     - site
 
@@ -35,10 +39,10 @@ release:
     - "docker info"
     - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
   script:
-    - "docker build -t registry.gitlab.com/rtexel/${CI_PROJECT_PATH}:latest --pull ."
-    - "docker push registry.gitlab.com/rtexel/${CI_PROJECT_PATH}:latest"
+    - "docker build -t registry.gitlab.com/rtexel/fox:latest --pull ."
+    - "docker push registry.gitlab.com/rtexel/fox:latest"
   after_script:
-    - "docker logout registry.gitlab.com/rtexel"
+    - "docker logout registry.gitlab.com/"
 
 deploy:
   stage: deploy
