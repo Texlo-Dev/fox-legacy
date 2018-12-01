@@ -3,7 +3,7 @@ import translate from "@k3rn31p4nic/google-translate-api";
 import axios, { AxiosResponse } from "axios";
 import { Client, Collection, TextChannel, Util } from "discord.js";
 import { CommandStore, EventStore, FoxMusic, Loader, Tools } from "..";
-import { dbotsKey, devs, isTestFox, ownerID, prefix } from "../../config.json";
+import { dboatsKey, dbotsKey, devs, isTestFox, ownerID, prefix } from "../../config.json";
 import { FoxMessage } from "../extensions";
 import * as Mongo from "../Mongo";
 const THRESHOLD: number = 1000 * 60 * 20;
@@ -295,6 +295,31 @@ class FoxClient extends Client {
       if (user.lastMessageID && user.lastMessageID > OLD_SNOWFLAKE) continue;
       this.users.delete(user.id);
       users++;
+    }
+  }
+
+  public async postStats(): Promise<void> {
+    const servercount: any[] = await this.shard.fetchClientValues("guilds.size");
+    for (const [shard, count]  of servercount.entries()) {
+      FoxClient.http("POST", {
+        url: `https://discordbots.org/api/bots/${this.user.id}/stats`,
+        body: {
+          shard_id: shard,
+          shard_count: this.shard.totalShardCount,
+          server_count: count
+        },
+        headers: { Authorization: dbotsKey }
+      })
+      .then(() => console.log("Updated dbots.org status."))
+      .catch(console.error);
+
+      FoxClient.http("POST", {
+        url: `https://discord.boats/api/bot/${this.user.id}`,
+        body: { server_count: servercount.reduce((prev, val) => prev + val, 0) },
+        headers: { Authorization: dboatsKey }
+      })
+      .then(() => console.log("Updated dboats.org status."))
+      .catch(console.error);
     }
   }
 

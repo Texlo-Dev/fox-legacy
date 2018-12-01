@@ -40,7 +40,7 @@ export default class GuildDelete extends Event {
       } servers | ${client.commandPrefix}help`
     ); // tslint:disable-line
     await GuildDelete.deleteSettings(guild);
-    FoxClient.http("POST", {
+    /* FoxClient.http("POST", {
       url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
       body: {
         shard_id: client.shard.id,
@@ -62,7 +62,7 @@ export default class GuildDelete extends Event {
             headers: { Authorization: discordbotsKey },
         })
         .then(() => console.log("Updated bots.discord.pw status."))
-        .catch(console.error); */
+        .catch(console.error);
 
     const num: number = (await this.client.shard.fetchClientValues(
       "guilds.size"
@@ -73,7 +73,7 @@ export default class GuildDelete extends Event {
       headers: { Authorization: dboatsKey }
     })
       .then(() => console.log("Updated dboats.org status."))
-      .catch(console.error);
+      .catch(console.error); */
 
     const webhook: WebhookClient = new WebhookClient(
       "364566963621462017",
