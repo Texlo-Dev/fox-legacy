@@ -4,26 +4,8 @@ cache:
     - node_modules/
 
 stages:
-  - build
   - release
   - deploy
-
-build:
-  stage: build
-  image: node:8-alpine
-  variables:
-    NODE_ENV: "production"
-  before_script:
-    - echo $FOXENV | base64 -d > .env
-    - npm install
-  script:
-    - npm run build
-  artifacts:
-    paths:
-     - server/
-     - public/
-  only:
-    - site
 
 release:
   stage: release
@@ -38,6 +20,7 @@ release:
     - docker version
     - "docker info"
     - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+    - echo $FOXENV | base64 -d > .env
   script:
     - "docker build -t registry.gitlab.com/rtexel/fox:latest --pull ."
     - "docker push registry.gitlab.com/rtexel/fox:latest"
