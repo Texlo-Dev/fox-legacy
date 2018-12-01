@@ -3,7 +3,7 @@ version: "3"
 services:
   nuxt:
     container_name: nuxt
-    build: ./
+    image: registry.gitlab.com/rtexel/fox:latest;
     restart: always
     ports:
       - "3000:3000"
