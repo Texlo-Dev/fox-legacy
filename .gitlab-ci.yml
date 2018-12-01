@@ -1,5 +1,5 @@
 cache:
-  key: "$CI_BUILD_REF_NAME node:8-alpine"
+  key: "$CI_BUILD_REF_NAME node:10.10-alpine"
   paths:
     - node_modules/
 
@@ -20,7 +20,7 @@ release:
     - docker version
     - "docker info"
     - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
-    - echo $FOXENV | base64 -d > .env
+    - echo ${FOXENV} | base64 -d > .env
   script:
     - "docker build -t registry.gitlab.com/rtexel/fox:latest --pull ."
     - "docker push registry.gitlab.com/rtexel/fox:latest"
