@@ -122,7 +122,7 @@ export default class FoxCommand extends Command {
     const song: string = args.slice(1).join(" ");
     if (!platform || !["yt", "sc"].includes(platform)) {
       return message.error(
-        "Invalid platform.\nAvailable platforms-\nyt = YouTube\nsc = SoundCloud"
+        "Invalid platform.\nAvailable platforms- \nyt = YouTube\nsc = SoundCloud"
       );
     }
     if (!song) return message.error("Please specify a song to play.");
