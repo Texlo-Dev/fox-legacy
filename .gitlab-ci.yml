@@ -38,5 +38,5 @@ deploy:
     - ssh-add ~/.ssh/id_rsa
     - ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
   script:
-    - scp -r docker-compose.yml root@68.183.20.215:~/
+    - scp -r docker-compose.yml root@${SERVER_IP}:~/
     - ssh root@${SERVER_IP} "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY}; docker-compose -f docker-compose.yml stop; docker-compose -f docker-compose.yml rm nuxt --force; docker pull registry.gitlab.com/rtexel/fox:latest; docker-compose -f docker-compose.yml up -d"
