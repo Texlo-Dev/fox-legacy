@@ -91,7 +91,7 @@
                   </b-dropdown-item>
                 </b-dropdown>
               </div>
-              <div v-else class="navbar-item">
+              <div v-else class="navbar-item has-text-centered">
                 <button
                   v-if="!$auth.loggedIn"
                   class="button is-rounded is-black is-inverted is-outlined"
