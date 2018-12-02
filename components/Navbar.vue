@@ -8,7 +8,11 @@
               <img id="foxlogo" :src="require('../assets/FoxLogov2.png')">
               <h1 class="title">Fox</h1>&nbsp;
             </nuxt-link>
-            <div :class="{ 'is-active': showNav }" class="navbar-burger burger" @click="showNav = !showNav">
+            <div
+              :class="{ 'is-active': showNav }"
+              class="navbar-burger is-centered burger"
+              @click="showNav = !showNav"
+            >
               <span/>
               <span/>
               <span/>
@@ -17,13 +21,17 @@
           <div :class="{ 'is-active': showNav }" class="navbar-menu">
             <div class="navbar-start" @click="showNav = !showNav">
               <nuxt-link class="navbar-item has-text-weight-bold" to="/about">
-                <h1 class="subtitle has-text-left">About</h1>
+                <h1 class="subtitle has-text-centered">About</h1>
               </nuxt-link>
-              <a href="https://docs.mrfoxbot.xyz" target="_blank" class="navbar-item has-text-weight-bold">
-                <h1 class="subtitle has-text-left">Documentation</h1>
+              <a
+                href="https://docs.mrfoxbot.xyz"
+                target="_blank"
+                class="navbar-item has-text-weight-bold"
+              >
+                <h1 class="subtitle has-text-centered">Documentation</h1>
               </a>
               <nuxt-link class="navbar-item has-text-weight-bold" to="/commands">
-                <h1 class="subtitle has-text-left">Commands</h1>
+                <h1 class="subtitle has-text-centered">Commands</h1>
               </nuxt-link>
               <!--<div class="navbar-item has-dropdown is-hoverable has-text-weight-semi-bold">
                 <a class="navbar-link">
@@ -42,50 +50,53 @@
                 </div>
               </div>-->
               <a class="navbar-item has-text-weight-semi-bold" href="https://discord.gg/3R4Em2w">
-                <h2 class="subtitle">Support</h2>
+                <h2 class="subtitle has-text-centered">Support</h2>
               </a>
             </div>
             <div class="navbar-end">
-              <div class="navbar-item">
-                <a href="https://patreon.com/foxdevteam" target="_blank" class="button patreon is-small is-danger">
-                  <font-awesome-icon :icon="['fab', 'patreon']" size="1x" />
-                  &nbsp;
-                  Donate to Fox
+              <div class="navbar-item has-text-centered">
+                <a
+                  href="https://patreon.com/foxdevteam"
+                  target="_blank"
+                  class="button is-centered patreon is-small is-danger"
+                >
+                  <font-awesome-icon :icon="['fab', 'patreon']" size="1x"/>&nbsp; Donate to Fox
                 </a>
               </div>
-              <div v-if="$auth.loggedIn" id="userbutton" class="navbar-item">
+              <div v-if="$auth.loggedIn" id="userbutton" class="navbar-item has-text-centered">
                 <img :src="getAvatar" height="30" width="30" style="border-radius: 50px">&nbsp;&nbsp;
                 <b-dropdown v-if="$auth.loggedIn" position="is-bottom-left">
                   <p slot="trigger" class="subtitle has-text-weight-semi-bold">
-                    {{ $auth.user.username }}
-                    &nbsp;<font-awesome-icon size="1x" icon="angle-down" />
+                    {{ $auth.user.username }} &nbsp;
+                    <font-awesome-icon size="1x" icon="angle-down"/>
                   </p>
                   <b-dropdown-item has-link @click="showNav = !showNav">
                     <nuxt-link to="/servers">
                       <p class="has-text-primary has-text-right">
-                        <font-awesome-icon size="1x" icon="server" />
-                        Servers
+                        <font-awesome-icon size="1x" icon="server"/>&nbsp;Servers
                       </p>
                     </nuxt-link>
                   </b-dropdown-item>
                   <b-dropdown-item has-link>
                     <nuxt-link to="/embed">
-                      <p class="has-text-success has-text-right">
-                        Embed Generator
-                        <font-awesome-icon size="1x" icon="cogs" />
+                      <p class="has-text-success has-text-right">&nbsp;Embed Generator
+                        <font-awesome-icon size="1x" icon="cogs"/>
                       </p>
                     </nuxt-link>
                   </b-dropdown-item>
                   <b-dropdown-item @click="logout()">
                     <p class="has-text-danger has-text-right">
-                      <font-awesome-icon size="1x" icon="sign-out-alt" />
-                      Log Out
+                      <font-awesome-icon size="1x" icon="sign-out-alt"/>&nbsp;Log Out
                     </p>
                   </b-dropdown-item>
                 </b-dropdown>
               </div>
               <div v-else class="navbar-item">
-                <button v-if="!$auth.loggedIn" class="button is-rounded is-black is-inverted is-outlined" @click="$auth.loginWith('discord')">
+                <button
+                  v-if="!$auth.loggedIn"
+                  class="button is-rounded is-black is-inverted is-outlined"
+                  @click="$auth.loginWith('discord')"
+                >
                   <font-awesome-icon :icon="['fab', 'discord']" size="s" pull="left"/>
                   <p>Login</p>
                 </button>

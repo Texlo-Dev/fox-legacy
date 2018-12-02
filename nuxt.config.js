@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 dotenv.config();
-global.File = typeof window === "undefined" ? Object : window.File;
 export default {
   mode: "universal",
   router: {
@@ -13,8 +12,8 @@ export default {
     server_error_details: "Fox is having an off day. We all have them."
   },
   /*
-  ** Headers of the page
-  */
+   ** Headers of the page
+   */
   head: {
     title: "Mr.Fox - The multipurpose, cunning Discord Bot.",
     bodyAttrs: { class: "has-navbar-fixed-top" },
@@ -44,23 +43,23 @@ export default {
   },
 
   /*
-  ** Customize the progress-bar color
-  */
+   ** Customize the progress-bar color
+   */
   loading: { color: "#f37934", height: "3px" },
 
   /*
-  ** Global CSS
-  */
+   ** Global CSS
+   */
   css: ["@/assets/global.css"],
 
   /*
-  ** Plugins to load before mounting the App
-  */
+   ** Plugins to load before mounting the App
+   */
   plugins: [{ src: "~/plugins/vuecharts", ssr: false }],
 
   /*
-  ** Nuxt.js modules
-  */
+   ** Nuxt.js modules
+   */
   modules: [
     // Doc: https://github.com/nuxt-community/axios-module#usage
     "@nuxtjs/axios",
@@ -115,8 +114,8 @@ export default {
     exclude: ["/callback", "/serveradd", "/s"]
   },
   /*
-  ** Discord Oauth
-  */
+   ** Discord Oauth
+   */
   auth: {
     rewriteRedirects: true,
     redirect: {
@@ -154,8 +153,8 @@ export default {
       "A fully-modular, multipurpose bot for Discord. Which happens to be very cunning."
   },
   /*
-  ** Axios module configuration
-  */
+   ** Axios module configuration
+   */
   axios: {
     proxy: true,
     proxyHeaders: false
@@ -165,8 +164,8 @@ export default {
     "/api/": process.env.APIURL
   },
   /*
-  ** Build configuration
-  */
+   ** Build configuration
+   */
 
   build: {
     extractCSS: true,

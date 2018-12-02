@@ -6,17 +6,21 @@
           <h1 class="title has-text-white has-text-left">&nbsp;Self Roles</h1>
         </div>
         <div class="level-left">
-          <a class="button is-danger" @click="confirmPkg('Self Roles')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Self Roles')"
+          ><p class="has-text-weight-bold">Disable</p></a
+          >
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div v-if="!loading && config" class="container">
       <div class="columns">
         <div class="column is-8">
           <div class="box">
             <div class="content">
-              <h1 class="title has-text-white has-text-left">Available Self Roles</h1>
+              <h1 class="title has-text-white has-text-left">
+                Available Self Roles
+              </h1>
               <b-field custom-class="has-text-white">
                 <b-taginput
                   v-model="config.selfRoles"
@@ -30,31 +34,37 @@
                   size="is-medium"
                   placeholder="Add a Role"
                   custom-class="has-text-white"
-                  @typing="getRoleNames"/>
+                  @typing="getRoleNames"
+                />
                 <p class="control">
-                  <button class="button is-primary is-medium" @click="settingArrayUpdate({ selfRoles: config.selfRoles })">Save</button>
+                  <button
+                    class="button is-primary is-medium"
+                    @click="settingArrayUpdate({ selfRoles: config.selfRoles })"
+                  >
+                    Save
+                  </button>
                 </p>
               </b-field>
             </div>
           </div>
-
         </div>
         <div class="column is-4">
           <div class="box">
             <h1 class="title has-text-white has-text-left">Settings</h1>
             <div class="field">
-              <b-checkbox 
+              <b-checkbox
                 v-model="config.selfRoleLimit"
-                @click.native="settingUpdate('selfRoleLimit', !config.selfRoleLimit)"
+                @click.native="
+                  settingUpdate('selfRoleLimit', !config.selfRoleLimit)
+                "
               >Single Role Mode
               </b-checkbox>
             </div>
           </div>
         </div>
       </div>
-      
-      <div class="is-divider"/>
 
+      <div class="is-divider" />
     </div>
     <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
@@ -62,20 +72,21 @@
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
-                      @input="toggleCommand(command.name, !command.enabled)"/>
+            <b-switch
+              :ref="`${command.name}-switch`"
+              :value="command.enabled"
+              size="is-medium"
+              type="is-primary"
+              @input="toggleCommand(command.name, !command.enabled)"
+            />
           </h1>
 
           <p>{{ command.description }}</p>
         </div>
       </div>
-
     </div>
-
   </section>
-    
 </template>
-
 
 <script>
 import API from "~/API.js";

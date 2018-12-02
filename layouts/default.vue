@@ -1,8 +1,7 @@
 <template>
   <div>
-    <navbar v-if="$store.state.pwaStart !== 'Yes'"/>
-    <dashtabs v-if="isDash && $route.params.guildid" />
-    <nuxt/>
+    <navbar v-if="$store.state.pwaStart !== 'Yes'" />
+    <dashtabs v-if="isDash && $route.params.guildid" /> <nuxt />
   </div>
 </template>
 
@@ -27,7 +26,6 @@ export default {
   font-family: "Poppins";
 }
 </style>
-
 
 <style lang="scss">
 @import "~bulma/sass/utilities/_all";

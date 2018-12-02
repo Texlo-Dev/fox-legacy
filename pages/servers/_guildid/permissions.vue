@@ -1,10 +1,8 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title has-text-white has-text-left">
-        Server Permissions
-      </h1>
-      <div class="is-divider"/>
+      <h1 class="title has-text-white has-text-left">Server Permissions</h1>
+      <div class="is-divider" />
     </div>
     <div class="container">
       <div class="columns is-multiline">
@@ -12,25 +10,47 @@
           <div class="box">
             <h3 class="subtitle has-text-centered has-text-white">
               Roles/Members
-              <button class="button is-small is-grey is-rounded" @click="selectMenu = true" >
-                <p>Add</p> &nbsp;<font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+              <button
+                class="button is-small is-grey is-rounded"
+                @click="selectMenu = true"
+              >
+                <p>Add</p>
+                &nbsp;<font-awesome-icon size="0.8x" pull="right" icon="plus" />
               </button>
             </h3>
-            <b-select v-if="selectMenu" v-model="selectedRole" class="has-text-centered" placeholder="None" @input="createOverwrite(selectedRole)">
+            <b-select
+              v-if="selectMenu"
+              v-model="selectedRole"
+              class="has-text-centered"
+              placeholder="None"
+              @input="createOverwrite(selectedRole)"
+            >
               <option
                 v-for="role of roles"
                 :value="role"
                 :key="role.id"
-                @input="createOverwrite(role)">
+                @input="createOverwrite(role)"
+              >
                 {{ role.name }}
               </option>
             </b-select>
-            <br v-if="selectMenu">
+            <br v-if="selectMenu" >
             <aside class="menu">
               <ul class="menu-list">
-                <li v-for="ow of overwrites" :key="ow.id" class="has-text-centered">
-                  <a :class="{ 'is-active': activeTarget.id === ow.identifier.id }" @click="pointTarget(ow)">
-                    <p class="has-text-white">{{ ow.identifier.name || ow.identifier.tag }}</p>
+                <li
+                  v-for="ow of overwrites"
+                  :key="ow.id"
+                  class="has-text-centered"
+                >
+                  <a
+                    :class="{
+                      'is-active': activeTarget.id === ow.identifier.id
+                    }"
+                    @click="pointTarget(ow)"
+                  >
+                    <p class="has-text-white">
+                      {{ ow.identifier.name || ow.identifier.tag }}
+                    </p>
                   </a>
                 </li>
               </ul>
@@ -39,49 +59,104 @@
         </div>
         <div class="column is-9">
           <div class="block">
-            <b-radio v-for="(cmd, category) of permissions" v-model="activeCat" :key="category" :native-value="category">
+            <b-radio
+              v-for="(cmd, category) of permissions"
+              v-model="activeCat"
+              :key="category"
+              :native-value="category"
+            >
               <p>{{ category }}</p>
             </b-radio>
           </div>
-          <div class="is-divider"/>
+          <div class="is-divider" />
           <h3 class="title has-text-white">{{ activeCat }} Permissions</h3>
           <div v-for="perm of permissions[activeCat]" :key="perm.name">
             <nav class="level is-mobile">
               <div class="level-left">
                 <div class="level-item">
                   <p class="subtitle has-text-white">
-                    {{ perm.name.split('.')[1].toUpperCase() }}
+                    {{ perm.name.split(".")[1].toUpperCase() }}
                   </p>
                 </div>
                 <div class="level-item">
                   <div class="group">
-                    <button v-if="activeOW.find(a => a.permission === perm.name) && activeOW.find(a => a.permission === perm.name).status === 'denied'" class="perm deny selected">
-                      <img src="https://discordapp.com/assets/46eac82bb5b3ccd5049e8b3a96910327.svg">
+                    <button
+                      v-if="
+                        activeOW.find(a => a.permission === perm.name) &&
+                          activeOW.find(a => a.permission === perm.name)
+                          .status === 'denied'
+                      "
+                      class="perm deny selected"
+                    >
+                      <img
+                        src="https://discordapp.com/assets/46eac82bb5b3ccd5049e8b3a96910327.svg"
+                      >
                     </button>
-                    <button v-else class="perm deny" @click="savePerm(perm.name, 'denied')">
-                      <img src="https://discordapp.com/assets/132b1ce1c085ff84256f3b16943bc782.svg">
+                    <button
+                      v-else
+                      class="perm deny"
+                      @click="savePerm(perm.name, 'denied')"
+                    >
+                      <img
+                        src="https://discordapp.com/assets/132b1ce1c085ff84256f3b16943bc782.svg"
+                      >
                     </button>
-                    <button v-if="!activeOW.find(a => a.permission === perm.name) || activeOW.find(a => a.permission === perm.name).status === 'neutral'" class="perm pass selected">
-                      <img src="https://discordapp.com/assets/f081fef9b7d9610309e65b5282bd0ca9.svg">
+                    <button
+                      v-if="
+                        !activeOW.find(a => a.permission === perm.name) ||
+                          activeOW.find(a => a.permission === perm.name)
+                          .status === 'neutral'
+                      "
+                      class="perm pass selected"
+                    >
+                      <img
+                        src="https://discordapp.com/assets/f081fef9b7d9610309e65b5282bd0ca9.svg"
+                      >
                     </button>
-                    <button v-else class="perm pass" @click="savePerm(perm.name, 'neutral')">
-                      <img src="https://discordapp.com/assets/bbc9e257da833d4b7d22c82a1de8a0a0.svg">
+                    <button
+                      v-else
+                      class="perm pass"
+                      @click="savePerm(perm.name, 'neutral')"
+                    >
+                      <img
+                        src="https://discordapp.com/assets/bbc9e257da833d4b7d22c82a1de8a0a0.svg"
+                      >
                     </button>
-                    <button v-if="activeOW.find(a => a.permission === perm.name) && activeOW.find(a => a.permission === perm.name).status === 'allowed'" class="perm allow selected">
-                      <img src="https://discordapp.com/assets/7b5b950896ff4214b058f76ba0e84a7b.svg">
+                    <button
+                      v-if="
+                        activeOW.find(a => a.permission === perm.name) &&
+                          activeOW.find(a => a.permission === perm.name)
+                          .status === 'allowed'
+                      "
+                      class="perm allow selected"
+                    >
+                      <img
+                        src="https://discordapp.com/assets/7b5b950896ff4214b058f76ba0e84a7b.svg"
+                      >
                     </button>
-                    <button v-else class="perm allow" @click="savePerm(perm.name, 'allowed')">
-                      <img src="https://discordapp.com/assets/ffeba954d48c1ac993679084cee38746.svg">
+                    <button
+                      v-else
+                      class="perm allow"
+                      @click="savePerm(perm.name, 'allowed')"
+                    >
+                      <img
+                        src="https://discordapp.com/assets/ffeba954d48c1ac993679084cee38746.svg"
+                      >
                     </button>
                   </div>
                 </div>
               </div>
             </nav>
             <p>{{ perm.description }}</p>
-            <br>
+            <br >
           </div>
-          <button v-show="activeTarget.id !== $route.params.guildid" class="button is-danger is-outlined" @click="permDelete(activeTarget)">Remove {{ activeTarget.name || activeTarget.tag }}</button>
-
+          <button
+            v-show="activeTarget.id !== $route.params.guildid"
+            class="button is-danger is-outlined"
+            @click="permDelete(activeTarget)"
+          >
+            Remove {{ activeTarget.name || activeTarget.tag }}
+          </button>
         </div>
       </div>
     </div>

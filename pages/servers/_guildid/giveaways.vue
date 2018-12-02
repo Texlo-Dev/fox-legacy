@@ -6,10 +6,12 @@
           <h1 class="title has-text-white has-text-left">&nbsp;Giveaways</h1>
         </div>
         <div class="level-left">
-          <a class="button is-danger" @click="confirmPkg('Giveaways')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Giveaways')"
+          ><p class="has-text-weight-bold">Disable</p></a
+          >
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div class="container">
       <div class="columns">
@@ -18,74 +20,169 @@
             <nav class="level">
               <div class="level-left">
                 <div class="level-item">
-                  <h1 class="title has-text-left has-text-white">Recent Giveaways</h1>
+                  <h1 class="title has-text-left has-text-white">
+                    Recent Giveaways
+                  </h1>
                 </div>
                 <div class="level-item">
-                  <br>
-                  <button class="button is-grey is-rounded" @click="toggleAdd = true">
-                    Add Giveaway <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                  <br >
+                  <button
+                    class="button is-grey is-rounded"
+                    @click="toggleAdd = true"
+                  >
+                    Add Giveaway
+                    <font-awesome-icon size="0.8x" pull="right" icon="plus" />
                   </button>
                 </div>
               </div>
             </nav>
             <div v-if="giveaways.length" class="columns is-multiline">
-              <div v-for="gw of giveaways" :key="gw.name" class="column is-one-third">
+              <div
+                v-for="gw of giveaways"
+                :key="gw.name"
+                class="column is-one-third"
+              >
                 <div class="box" style="background-color: #34383c">
                   <div class="content">
                     <span>
                       <p class="subtitle has-text-white">
                         {{ gw.name }}
-                        <b-tag v-if="gw.paused" class="is-warning">Paused</b-tag>
-                        <b-tag v-else-if="gw.running" class="is-success">Running</b-tag>
-                        <b-tag v-else-if="!gw.running" class="is-pink">Ended</b-tag>
-                        &nbsp;<button v-if="!gw.running" class="button is-link is-small" @click="gwAction(gw, 'reroll')">
-                          Reroll <font-awesome-icon size="0.8x" pull="right" icon="redo"/>
+                        <b-tag v-if="gw.paused" class="is-warning"
+                        >Paused</b-tag
+                        >
+                        <b-tag v-else-if="gw.running" class="is-success"
+                        >Running</b-tag
+                        >
+                        <b-tag v-else-if="!gw.running" class="is-pink"
+                        >Ended</b-tag
+                        >
+                        &nbsp;<button
+                          v-if="!gw.running"
+                          class="button is-link is-small"
+                          @click="gwAction(gw, 'reroll')"
+                        >
+                          Reroll
+                          <font-awesome-icon
+                            size="0.8x"
+                            pull="right"
+                            icon="redo"
+                          />
                         </button>
-                        <button v-if="!gw.running" class="button is-small is-danger" @click="gwAction(gw, 'delete')">
-                          Delete <font-awesome-icon size="0.8x" pull="right" icon="trash-alt"/>
+                        <button
+                          v-if="!gw.running"
+                          class="button is-small is-danger"
+                          @click="gwAction(gw, 'delete')"
+                        >
+                          Delete
+                          <font-awesome-icon
+                            size="0.8x"
+                            pull="right"
+                            icon="trash-alt"
+                          />
                         </button>
-                        <button v-if="gw.running && !gw.paused" class="button is-warning is-small" @click="gwAction(gw, 'pause')">
-                          Pause <font-awesome-icon size="0.8x" pull="right" icon="pause"/>
+                        <button
+                          v-if="gw.running && !gw.paused"
+                          class="button is-warning is-small"
+                          @click="gwAction(gw, 'pause')"
+                        >
+                          Pause
+                          <font-awesome-icon
+                            size="0.8x"
+                            pull="right"
+                            icon="pause"
+                          />
                         </button>
-                        <button v-if="gw.paused" class="button is-primary is-small" @click="gwAction(gw, 'resume')">
-                          Resume <font-awesome-icon size="0.8x" pull="right" icon="play"/>
+                        <button
+                          v-if="gw.paused"
+                          class="button is-primary is-small"
+                          @click="gwAction(gw, 'resume')"
+                        >
+                          Resume
+                          <font-awesome-icon
+                            size="0.8x"
+                            pull="right"
+                            icon="play"
+                          />
                         </button>
-                        <button v-if="gw.running" class="button is-danger is-small" @click="gwAction(gw, 'end')">
-                          End <font-awesome-icon size="0.8x" pull="right" icon="ban"/>
+                        <button
+                          v-if="gw.running"
+                          class="button is-danger is-small"
+                          @click="gwAction(gw, 'end')"
+                        >
+                          End
+                          <font-awesome-icon
+                            size="0.8x"
+                            pull="right"
+                            icon="ban"
+                          />
                         </button>
                       </p>
                     </span>
 
                     <span v-if="!gw.paused && gw.running">
-                      - Time Remaining: {{ gw.timeRemaining }}
-                      <br>
-                      - Max Winners: {{ gw.maxWinners }}
-                      <br>
-                      - Channel: <a id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`" target="_blank">#{{ gw.channel.name }}</a>
+                      - Time Remaining: {{ gw.timeRemaining }} <br >
+                      - Max Winners: {{ gw.maxWinners }} <br >
+                      - Channel:
+                      <a
+                        id="channel"
+                        :href="
+                          `https://discordapp.com/channels/${
+                            $route.params.guildid
+                          }/${gw.channel.id}`
+                        "
+                        target="_blank"
+                      >#{{ gw.channel.name }}</a
+                      >
                     </span>
-                    <span v-else-if="gw.paused"> 
-                      <br>
-                      - Channel: <a id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`" target="_blank">#{{ gw.channel.name }}</a>
+                    <span v-else-if="gw.paused">
+                      <br >
+                      - Channel:
+                      <a
+                        id="channel"
+                        :href="
+                          `https://discordapp.com/channels/${
+                            $route.params.guildid
+                          }/${gw.channel.id}`
+                        "
+                        target="_blank"
+                      >#{{ gw.channel.name }}</a
+                      >
                     </span>
                     <span v-else>
-                      - Channel: <a id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${gw.channel.id}`" target="_blank">#{{ gw.channel.name }}</a>
-                      <br>
-                      - Ended: {{ gw.endDate }}
-                      <br>
-                      - Winners: {{ gw.winners.map(w => `${w.username}#${w.discriminator}`).join(', ') || 'None' }}
+                      - Channel:
+                      <a
+                        id="channel"
+                        :href="
+                          `https://discordapp.com/channels/${
+                            $route.params.guildid
+                          }/${gw.channel.id}`
+                        "
+                        target="_blank"
+                      >#{{ gw.channel.name }}</a
+                      >
+                      <br >
+                      - Ended: {{ gw.endDate }} <br >
+                      - Winners:
+                      {{
+                        gw.winners
+                          .map(w => `${w.username}#${w.discriminator}`)
+                          .join(", ") || "None"
+                      }}
                     </span>
-            
                   </div>
                 </div>
               </div>
             </div>
             <div v-else>
-              <p>No giveaways found. Click the "Add Giveaway" button to start a giveaway.</p>
+              <p>
+                No giveaways found. Click the "Add Giveaway" button to start a
+                giveaway.
+              </p>
             </div>
           </div>
         </div>
       </div>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
@@ -93,8 +190,13 @@
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
-                      @input="toggleCommand(command.name, !command.enabled)"/>
+            <b-switch
+              :ref="`${command.name}-switch`"
+              :value="command.enabled"
+              size="is-medium"
+              type="is-primary"
+              @input="toggleCommand(command.name, !command.enabled)"
+            />
           </h1>
           <p>{{ command.description }}</p>
         </div>
@@ -107,31 +209,77 @@
         </header>
         <section class="modal-card-body">
           <form id="gw" @submit.prevent="validateForm">
-            <b-field :type="{ 'is-danger': errors.has('giveaway name') }" :message="errors.first('giveaway name')" label="Giveaway name" custom-class="has-text-white">
-              <b-input v-validate="'required|max:20'" v-model="gw.name" name="giveaway name"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('giveaway name') }"
+              :message="errors.first('giveaway name')"
+              label="Giveaway name"
+              custom-class="has-text-white"
+            >
+              <b-input
+                v-validate="'required|max:20'"
+                v-model="gw.name"
+                name="giveaway name"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('duration') }" :message="errors.first('duration')" label="Duration" custom-class="has-text-white">
-              <b-input v-validate="'required|max:4'" v-model="gw.time" name="duration"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('duration') }"
+              :message="errors.first('duration')"
+              label="Duration"
+              custom-class="has-text-white"
+            >
+              <b-input
+                v-validate="'required|max:4'"
+                v-model="gw.time"
+                name="duration"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('max winners') }" :message="errors.first('max winners')" label="Maximum # of Winners" custom-class="has-text-white">
-              <b-input v-validate="'required|integer|between:1,10'" v-model="gw.maxWinners" type="number" name="max winners"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('max winners') }"
+              :message="errors.first('max winners')"
+              label="Maximum # of Winners"
+              custom-class="has-text-white"
+            >
+              <b-input
+                v-validate="'required|integer|between:1,10'"
+                v-model="gw.maxWinners"
+                type="number"
+                name="max winners"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('channel') }" :message="errors.first('channel')" label="Select Channel" custom-class="has-text-white">
-              <b-select v-validate="'required'" v-model="gw.channel" name="channel" placeholder="None">
+            <b-field
+              :type="{ 'is-danger': errors.has('channel') }"
+              :message="errors.first('channel')"
+              label="Select Channel"
+              custom-class="has-text-white"
+            >
+              <b-select
+                v-validate="'required'"
+                v-model="gw.channel"
+                name="channel"
+                placeholder="None"
+              >
                 <option
                   v-for="channel of channels"
                   :value="channel"
-                  :key="channel.id">
+                  :key="channel.id"
+                >
                   #{{ channel.name }}
                 </option>
               </b-select>
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('emoji') }" :message="errors.first('emoji')" label="Select Emoji" custom-class="has-text-white">
-              <b-select v-validate="'required'" v-model="gw.emoji" name="emoji" placeholder="None">
-                <option
-                  v-for="emoji of emojis"
-                  :value="emoji"
-                  :key="emoji.id">
+            <b-field
+              :type="{ 'is-danger': errors.has('emoji') }"
+              :message="errors.first('emoji')"
+              label="Select Emoji"
+              custom-class="has-text-white"
+            >
+              <b-select
+                v-validate="'required'"
+                v-model="gw.emoji"
+                name="emoji"
+                placeholder="None"
+              >
+                <option v-for="emoji of emojis" :value="emoji" :key="emoji.id">
                   {{ emoji.name }}
                 </option>
               </b-select>
@@ -139,7 +287,13 @@
           </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-danger is-outlined" type="button" @click="toggleAdd= false">Close</button>
+          <button
+            class="button is-danger is-outlined"
+            type="button"
+            @click="toggleAdd = false"
+          >
+            Close
+          </button>
           <button class="button is-primary" type="submit" form="gw">Add</button>
         </footer>
       </div>

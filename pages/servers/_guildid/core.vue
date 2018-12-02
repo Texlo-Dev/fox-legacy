@@ -6,21 +6,25 @@
           <h1 class="title has-text-white has-text-left">&nbsp;Core</h1>
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
-    <div class="container" style ="position:relative">
+    <div class="container" style="position:relative">
       <h1 class="title has-text-white has-text-left">Settings</h1>
       <div class="columns is-multiline">
         <div class="column is-narrow">
           <div class="box">
             <div class="content">
               <h3 class="has-text-white has-text-left">
-                Prefix
-                <br><br>
+                Prefix <br ><br >
                 <b-field>
-                  <b-input id="grey" v-model="config.prefix" maxlength="10"/>
+                  <b-input id="grey" v-model="config.prefix" maxlength="10" />
                   <p class="control">
-                    <button class="button is-primary" @click="setPrefix(config.prefix)">Save</button>
+                    <button
+                      class="button is-primary"
+                      @click="setPrefix(config.prefix)"
+                    >
+                      Save
+                    </button>
                   </p>
                 </b-field>
               </h3>
@@ -34,10 +38,17 @@
               <h3 class="has-text-white has-text-left">Bot Language</h3>
               <b-field>
                 <b-select id="grey" v-model="config.language">
-                  <option v-for="lang of languages" :key="lang" :value="lang">{{ lang }}</option>
+                  <option v-for="lang of languages" :key="lang" :value="lang">{{
+                    lang
+                  }}</option>
                 </b-select>
                 <p class="control">
-                  <button class="button is-primary" @click="settingUpdate('language', config.language)">Save</button>
+                  <button
+                    class="button is-primary"
+                    @click="settingUpdate('language', config.language)"
+                  >
+                    Save
+                  </button>
                 </p>
               </b-field>
               <p>The primary language for all of Mr.Fox's commands.</p>
@@ -45,7 +56,7 @@
           </div>
         </div>
       </div>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
@@ -53,14 +64,18 @@
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
-                      @input="toggleCommand(command.name, !command.enabled)"/>
+            <b-switch
+              :ref="`${command.name}-switch`"
+              :value="command.enabled"
+              size="is-medium"
+              type="is-primary"
+              @input="toggleCommand(command.name, !command.enabled)"
+            />
           </h1>
 
           <p>{{ command.description }}</p>
         </div>
       </div>
-
     </div>
   </section>
 </template>

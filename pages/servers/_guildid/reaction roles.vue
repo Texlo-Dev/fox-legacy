@@ -3,13 +3,17 @@
     <div class="container">
       <nav class="level is-mobile">
         <div class="level-left">
-          <h1 class="title has-text-white has-text-left">&nbsp;Reaction Roles</h1>
+          <h1 class="title has-text-white has-text-left">
+            &nbsp;Reaction Roles
+          </h1>
         </div>
         <div class="level-left">
-          <a class="button is-danger" @click="confirmPkg('Reaction Roles')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Reaction Roles')"
+          ><p class="has-text-weight-bold">Disable</p></a
+          >
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div class="container">
       <div class="columns">
@@ -19,50 +23,81 @@
               <nav class="level">
                 <div class="level-left">
                   <div class="level-item">
-                    <h1 class="title has-text-left has-text-white">Current Reaction Roles</h1>
+                    <h1 class="title has-text-left has-text-white">
+                      Current Reaction Roles
+                    </h1>
                   </div>
                   <div class="level-item">
-                    <button class="button is-grey is-rounded" @click="toggleAdd = true">
-                      Add Role <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                    <button
+                      class="button is-grey is-rounded"
+                      @click="toggleAdd = true"
+                    >
+                      Add Role
+                      <font-awesome-icon size="0.8x" pull="right" icon="plus" />
                     </button>
                   </div>
                 </div>
               </nav>
-              <div v-if="config.reactionRoles.length" class="columns is-multiline">
-                <div v-for="role of config.reactionRoles" v-if="config.reactionRoles" :key="role.id" class="column is-narrow">
+              <div
+                v-if="config.reactionRoles.length"
+                class="columns is-multiline"
+              >
+                <div
+                  v-for="role of config.reactionRoles"
+                  v-if="config.reactionRoles"
+                  :key="role.id"
+                  class="column is-narrow"
+                >
                   <div class="box" style="background-color: #34383c">
                     <div class="content">
-                      <p class="subtitle has-text-white">Message: {{ role.alias }}
-                        <button class="button is-small is-danger" @click="deleteRole(role)">
-                          Delete <font-awesome-icon size="0.8x" pull="right" icon="trash-alt"/>
+                      <p class="subtitle has-text-white">
+                        Message: {{ role.alias }}
+                        <button
+                          class="button is-small is-danger"
+                          @click="deleteRole(role)"
+                        >
+                          Delete
+                          <font-awesome-icon
+                            size="0.8x"
+                            pull="right"
+                            icon="trash-alt"
+                          />
                         </button>
-
                       </p>
-                      <span>Emoji: {{ role.emoji.name }} </span><span><img :src="role.emoji.url" align="center" height="25" width="25"></span>
-                      <br>
-                      Role: @{{ role.name }}
-                      <br>
+                      <span>Emoji: {{ role.emoji.name }} </span
+                      ><span
+                      ><img
+                        :src="role.emoji.url"
+                        align="center"
+                        height="25"
+                        width="25"
+                      ></span>
+
+                      <br >
+                      Role: @{{ role.name }} <br >
                       Message ID: {{ role.messageID }}
                     </div>
                   </div>
-                                    
-                </div> 
+                </div>
               </div>
               <div v-else>
-                <p>No Reaction Roles found. Click the "Add Role" button to get started.</p>
+                <p>
+                  No Reaction Roles found. Click the "Add Role" button to get
+                  started.
+                </p>
               </div>
             </div>
-
           </div>
-
         </div>
         <div class="column is-4">
           <div class="box">
             <h1 class="title has-text-white has-text-left">Settings</h1>
             <div class="field">
-              <b-checkbox 
+              <b-checkbox
                 v-model="config.reactRoleLimit"
-                @click.native="settingUpdate('reactRoleLimit', !config.reactRoleLimit)"
+                @click.native="
+                  settingUpdate('reactRoleLimit', !config.reactRoleLimit)
+                "
               >Single Role Mode
               </b-checkbox>
             </div>
@@ -77,28 +112,62 @@
         </header>
         <section class="modal-card-body">
           <form id="reactroles" @submit.prevent="validateForm">
-            <b-field :type="{ 'is-danger': errors.has('Message Name') }" :message="errors.first('Message Name')" label="Message Name" custom-class="has-text-white">
-              <b-input v-validate="'required|max:15'" v-model="roleData.alias" name="Message Name"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('Message Name') }"
+              :message="errors.first('Message Name')"
+              label="Message Name"
+              custom-class="has-text-white"
+            >
+              <b-input
+                v-validate="'required|max:15'"
+                v-model="roleData.alias"
+                name="Message Name"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('Message ID') }" :message="errors.first('Message ID')" label="Base Message ID" custom-class="has-text-white">
-              <b-input v-validate="'required|max:21'" v-model="roleData.messageID" name="Message ID"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('Message ID') }"
+              :message="errors.first('Message ID')"
+              label="Base Message ID"
+              custom-class="has-text-white"
+            >
+              <b-input
+                v-validate="'required|max:21'"
+                v-model="roleData.messageID"
+                name="Message ID"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('role') }" :message="errors.first('role')" label="Select Role" custom-class="has-text-white">
-              <b-select v-validate="'required'" id="modalselect" v-model="roleData.role" name="role" placeholder="None">
-                <option
-                  v-for="role of roles"
-                  :value="role"
-                  :key="role.id">
+            <b-field
+              :type="{ 'is-danger': errors.has('role') }"
+              :message="errors.first('role')"
+              label="Select Role"
+              custom-class="has-text-white"
+            >
+              <b-select
+                v-validate="'required'"
+                id="modalselect"
+                v-model="roleData.role"
+                name="role"
+                placeholder="None"
+              >
+                <option v-for="role of roles" :value="role" :key="role.id">
                   {{ role.name }}
                 </option>
               </b-select>
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('emoji') }" :message="errors.first('emoji')" label="Select Emoji" custom-class="has-text-white">
-              <b-select v-validate="'required'" id="modalselect" v-model="roleData.emoji" name="emoji" placeholder="None">
-                <option
-                  v-for="emoji of emojis"
-                  :value="emoji"
-                  :key="emoji.id">
+            <b-field
+              :type="{ 'is-danger': errors.has('emoji') }"
+              :message="errors.first('emoji')"
+              label="Select Emoji"
+              custom-class="has-text-white"
+            >
+              <b-select
+                v-validate="'required'"
+                id="modalselect"
+                v-model="roleData.emoji"
+                name="emoji"
+                placeholder="None"
+              >
+                <option v-for="emoji of emojis" :value="emoji" :key="emoji.id">
                   {{ emoji.name }}
                 </option>
               </b-select>
@@ -106,14 +175,21 @@
           </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-danger is-outlined" type="button" @click="toggleAdd = false">Close</button>
-          <button class="button is-primary" type="submit" form="reactroles">Add</button>
+          <button
+            class="button is-danger is-outlined"
+            type="button"
+            @click="toggleAdd = false"
+          >
+            Close
+          </button>
+          <button class="button is-primary" type="submit" form="reactroles">
+            Add
+          </button>
         </footer>
       </div>
     </b-modal>
   </section>
 </template>
-
 
 <script>
 import secret from "~/secrets";

@@ -6,7 +6,9 @@
           <h1 class="title has-text-white has-text-left">&nbsp;Tickets</h1>
         </div>
         <div class="level-left">
-          <a class="button is-danger" @click="confirmPkg('Tickets')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Tickets')">
+            <p class="has-text-weight-bold">Disable</p>
+          </a>
         </div>
       </nav>
       <div class="is-divider"/>
@@ -17,12 +19,14 @@
         <div class="column is-3">
           <div class="box">
             <div class="content">
-              <h3 class="title has-text-white has-text-left">
-                Tickets Category
-              </h3>
+              <h3 class="title has-text-white has-text-left">Tickets Category</h3>
               <div v-if="!prompts.includes('category')">
-                <p class="subtitle has-text-white">{{ tickets.category ? tickets.category.name : "None" }}
-                  <button class="button is-small is-primary" @click="prompts.push('category')">Change</button>
+                <p class="subtitle has-text-white">
+                  {{ tickets.category ? tickets.category.name : "None" }}
+                  <button
+                    class="button is-small is-primary"
+                    @click="prompts.push('category')"
+                  >Change</button>
                 </p>
               </div>
               <div v-else>
@@ -31,15 +35,18 @@
                     <option
                       v-for="category of categories"
                       :value="category"
-                      :key="category.id">
-                      {{ category.name }}
-                    </option>
+                      :key="category.id"
+                    >{{ category.name }}</option>
                   </b-select>
                   <p class="control">
-                    <button class="button is-primary" @click="dropdownSave('category', 'category', tickets.category)">Save</button>
+                    <button
+                      class="button is-primary"
+                      @click="
+                        dropdownSave('category', 'category', tickets.category)
+                      "
+                    >Save</button>
                   </p>
                 </b-field>
-
               </div>
             </div>
           </div>
@@ -47,14 +54,23 @@
         <div class="column is-3">
           <div class="box">
             <div class="content">
-              <h3 class="title has-text-white has-text-left">
-                Ticket Logging Channel
-              </h3>
+              <h3 class="title has-text-white has-text-left">Ticket Logging Channel</h3>
               <div v-if="!prompts.includes('logchannel')">
-                <a v-if="tickets.logchannel" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${tickets.logchannel.id}`" target="_blank">#{{ tickets.logchannel.name }}
-                </a>
-                <p v-else class="subtitle has-text-white">No Channel</p>
-                &nbsp;<button class="button is-small is-primary" @click="prompts.push('logchannel')">Change</button>
+                <a
+                  v-if="tickets.logchannel"
+                  id="channel"
+                  :href="
+                    `https://discordapp.com/channels/${$route.params.guildid}/${
+                      tickets.logchannel.id
+                    }`
+                  "
+                  target="_blank"
+                >#{{ tickets.logchannel.name }}</a>
+                <p v-else class="subtitle has-text-white">No Channel</p>&nbsp;
+                <button
+                  class="button is-small is-primary"
+                  @click="prompts.push('logchannel')"
+                >Change</button>
               </div>
               <div v-else>
                 <b-field custom-class="has-text-white">
@@ -62,40 +78,54 @@
                     <option
                       v-for="channel of channels"
                       :value="channel"
-                      :key="channel.id">
-                      {{ channel.name }}
-                    </option>
+                      :key="channel.id"
+                    >{{ channel.name }}</option>
                   </b-select>
                   <p class="control">
-                    <button class="button is-primary" @click="dropdownSave('logchannel', 'Log Channel', tickets.logchannel)">Save</button>
+                    <button
+                      class="button is-primary"
+                      @click="
+                        dropdownSave(
+                          'logchannel',
+                          'Log Channel',
+                          tickets.logchannel
+                        )
+                      "
+                    >Save</button>
                   </p>
                 </b-field>
-
               </div>
             </div>
           </div>
-
-
         </div>
         <div class="column is-3">
           <div class="box">
             <div class="content">
-              <h3 class="title has-text-white has-text-left">
-                New Ticket Message
-              </h3>
+              <h3 class="title has-text-white has-text-left">New Ticket Message</h3>
               <div v-if="!prompts.includes('message')">
-                <p class="subtitle has-text-white">{{ tickets.message || "None" }}
-                  <button class="button is-small is-primary" @click="prompts.push('message')">Change</button>
+                <p class="subtitle has-text-white">
+                  {{ tickets.message || "None" }}
+                  <button
+                    class="button is-small is-primary"
+                    @click="prompts.push('message')"
+                  >Change</button>
                 </p>
               </div>
               <div v-else>
                 <b-field>
                   <b-input v-model="tickets.message" type="textarea" maxlength="1500" expanded/>
                   <p class="control">
-                    <button class="button is-primary" @click="settingUpdate('message', tickets.message, { bool: false, hideToast: true })">Save</button>
+                    <button
+                      class="button is-primary"
+                      @click="
+                        settingUpdate('message', tickets.message, {
+                          bool: false,
+                          hideToast: true
+                        })
+                      "
+                    >Save</button>
                   </p>
                 </b-field>
-
               </div>
             </div>
           </div>
@@ -103,16 +133,15 @@
         <div class="column is-3">
           <div class="box">
             <div class="field">
-              <b-checkbox 
+              <b-checkbox
                 v-model="tickets.pingagents"
                 @click.native="settingUpdate('pingagents', !tickets.pingagents)"
-              >Ping support agents on ticket create
-              </b-checkbox>
+              >Ping support agents on ticket create</b-checkbox>
             </div>
           </div>
         </div>
       </div>
-      <div class="is-divider" />
+      <div class="is-divider"/>
     </div>
     <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
@@ -120,14 +149,18 @@
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
-                      @input="toggleCommand(command.name, !command.enabled)"/>
+            <b-switch
+              :ref="`${command.name}-switch`"
+              :value="command.enabled"
+              size="is-medium"
+              type="is-primary"
+              @input="toggleCommand(command.name, !command.enabled)"
+            />
           </h1>
 
           <p>{{ command.description }}</p>
         </div>
       </div>
-
     </div>
   </section>
 </template>
@@ -314,5 +347,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

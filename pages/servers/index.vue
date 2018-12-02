@@ -1,26 +1,35 @@
 <template>
   <section class="section">
     <br class="is-hidden-touch">
-    <h1 class="title has-text-white">
-      Select A Server
-    </h1>
+    <h1 class="title has-text-white">Select A Server</h1>
     <div v-for="guild in guilds" v-if="guilds" :key="guild.id" class="container has-text-centered">
       <b-tooltip :label="guild.name" type="is-light" position="is-left">
         <figure v-if="guild.canManage && guild.icon" class="image is-128x128">
           <img :src="guild.iconURL" class="is-rounded" @click="enterDash(guild)">
         </figure>
-        <a v-else-if="guild.canManage && !guild.icon" class="sicon" @click="enterDash(guild)">{{ getInitials(guild.name) }}</a>
+        <a
+          v-else-if="guild.canManage && !guild.icon"
+          class="sicon"
+          @click="enterDash(guild)"
+        >{{ getInitials(guild.name) }}</a>
         <figure v-else-if="guild.icon" class="image is-128x128">
-          <a @click="popup(guild)"><img :src="guild.iconURL" class="is-rounded"></a>
+          <a @click="popup(guild)">
+            <img :src="guild.iconURL" class="is-rounded">
+          </a>
         </figure>
-        <a v-else class="sicon" @click="popup(guild)">{{ getInitials(guild.name) }}</a>
+        <a v-else class="sicon" @click="popup(guild)">
+          {{
+          getInitials(guild.name)
+          }}
+        </a>
       </b-tooltip>
       <br>
       <br>
     </div>
     <div v-show="!guilds.length" class="container">
       <h1 class="subtitle has-text-centered has-text-white">
-        No servers. Make sure you are the owner of at least one server, or have the Manage Server Permission to use the dashboard.
+        No servers. Make sure you are the owner of at least one server, or have
+        the Manage Server Permission to use the dashboard.
       </h1>
     </div>
   </section>

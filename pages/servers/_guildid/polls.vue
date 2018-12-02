@@ -6,10 +6,12 @@
           <h1 class="title has-text-white has-text-left">&nbsp;Polls</h1>
         </div>
         <div class="level-left">
-          <a class="button is-danger" @click="confirmPkg('Polls')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Polls')"
+          ><p class="has-text-weight-bold">Disable</p></a
+          >
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div class="container">
       <div class="columns">
@@ -19,52 +21,98 @@
               <nav class="level">
                 <div class="level-left">
                   <div class="level-item">
-                    <h1 class="title has-text-left has-text-white">Current Polls</h1>
+                    <h1 class="title has-text-left has-text-white">
+                      Current Polls
+                    </h1>
                   </div>
                   <div class="level-item">
-                    <button class="button is-grey is-rounded" @click="toggleAdd = true">
-                      Add Poll <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                    <button
+                      class="button is-grey is-rounded"
+                      @click="toggleAdd = true"
+                    >
+                      Add Poll
+                      <font-awesome-icon size="0.8x" pull="right" icon="plus" />
                     </button>
                   </div>
                 </div>
               </nav>
               <div v-if="polls.length" class="columns is-multiline">
-                <div v-for="poll of polls" :key="poll.name" class="column is-one-quarter">
+                <div
+                  v-for="poll of polls"
+                  :key="poll.name"
+                  class="column is-one-quarter"
+                >
                   <div class="box" style="background-color: #34383c">
                     <div class="content">
                       <span>
                         <p class="subtitle has-text-white">
-                          {{ poll.question }}
-                          <br><br>
-                          <b-tag v-if="poll.open" class="is-success">Open</b-tag>
+                          {{ poll.question }} <br ><br >
+                          <b-tag v-if="poll.open" class="is-success"
+                          >Open</b-tag
+                          >
                           <b-tag v-else class="is-pink">Closed</b-tag>
-                          &nbsp;<button v-if="!poll.open" class="button is-small is-danger" @click="pollAction(poll, 'delete')">
-                            Delete <font-awesome-icon size="0.8x" pull="right" icon="trash-alt"/>
+                          &nbsp;<button
+                            v-if="!poll.open"
+                            class="button is-small is-danger"
+                            @click="pollAction(poll, 'delete')"
+                          >
+                            Delete
+                            <font-awesome-icon
+                              size="0.8x"
+                              pull="right"
+                              icon="trash-alt"
+                            />
                           </button>
-                          <button v-else class="button is-small is-pink" @click="pollAction(poll, 'close')">
-                            Stop <font-awesome-icon size="0.8x" pull="right" icon="stop"/>
+                          <button
+                            v-else
+                            class="button is-small is-pink"
+                            @click="pollAction(poll, 'close')"
+                          >
+                            Stop
+                            <font-awesome-icon
+                              size="0.8x"
+                              pull="right"
+                              icon="stop"
+                            />
                           </button>
                         </p>
                         <span>
-                          - Type: {{ poll.type === 'simple' ? 'Simple': 'Open-Ended' }}
-                          <br>
-                          - Channel: <a id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${poll.channel.id}`" target="_blank">#{{ poll.channel.name }}</a>
+                          - Type:
+                          {{
+                            poll.type === "simple" ? "Simple" : "Open-Ended"
+                          }}
+                          <br >
+                          - Channel:
+                          <a
+                            id="channel"
+                            :href="
+                              `https://discordapp.com/channels/${
+                                $route.params.guildid
+                              }/${poll.channel.id}`
+                            "
+                            target="_blank"
+                          >#{{ poll.channel.name }}</a
+                          >
                         </span>
-                        <pie-chart v-if="!poll.open && showChart" :data="createChart(poll)" />
-
+                        <pie-chart
+                          v-if="!poll.open && showChart"
+                          :data="createChart(poll)"
+                        />
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
               <div v-else>
-                <p>No Polls found. Click the "Add Poll" button to get started.</p>
+                <p>
+                  No Polls found. Click the "Add Poll" button to get started.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
@@ -72,7 +120,13 @@
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary" @input="toggleCommand(command.name, !command.enabled)"/>
+            <b-switch
+              :ref="`${command.name}-switch`"
+              :value="command.enabled"
+              size="is-medium"
+              type="is-primary"
+              @input="toggleCommand(command.name, !command.enabled)"
+            />
           </h1>
 
           <p>{{ command.description }}</p>
@@ -86,24 +140,63 @@
         </header>
         <section class="modal-card-body">
           <form id="polls" @submit.prevent="validateForm">
-            <b-field :type="{ 'is-danger': errors.has('poll name') }" :message="errors.first('poll name')" label="Poll Name" custom-class="has-text-white">
-              <b-input v-validate="'required|max:20'" v-model="plData.name" name="poll name"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('poll name') }"
+              :message="errors.first('poll name')"
+              label="Poll Name"
+              custom-class="has-text-white"
+            >
+              <b-input
+                v-validate="'required|max:20'"
+                v-model="plData.name"
+                name="poll name"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('question') }" :message="errors.first('question')" label="Question" custom-class="has-text-white">
-              <b-input v-validate="'required|max:75'" v-model="plData.question" name="giveaway name"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('question') }"
+              :message="errors.first('question')"
+              label="Question"
+              custom-class="has-text-white"
+            >
+              <b-input
+                v-validate="'required|max:75'"
+                v-model="plData.question"
+                name="giveaway name"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('channel') }" :message="errors.first('channel')" label="Select Channel" custom-class="has-text-white">
-              <b-select v-validate="'required'" v-model="plData.channel" name="channel" placeholder="None">
+            <b-field
+              :type="{ 'is-danger': errors.has('channel') }"
+              :message="errors.first('channel')"
+              label="Select Channel"
+              custom-class="has-text-white"
+            >
+              <b-select
+                v-validate="'required'"
+                v-model="plData.channel"
+                name="channel"
+                placeholder="None"
+              >
                 <option
                   v-for="channel of channels"
                   :value="channel"
-                  :key="channel.id">
+                  :key="channel.id"
+                >
                   #{{ channel.name }}
                 </option>
               </b-select>
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('type') }" :message="errors.first('type')" label="Select Type" custom-class="has-text-white">
-              <b-select v-validate="'required'" v-model="plData.type" name="type" placeholder="None">
+            <b-field
+              :type="{ 'is-danger': errors.has('type') }"
+              :message="errors.first('type')"
+              label="Select Type"
+              custom-class="has-text-white"
+            >
+              <b-select
+                v-validate="'required'"
+                v-model="plData.type"
+                name="type"
+                placeholder="None"
+              >
                 <option value="simple">Simple</option>
                 <option value="open">Open-Ended</option>
               </b-select>
@@ -117,18 +210,26 @@
                 maxtags="4"
                 maxlength="35"
                 placeholder="Add Response"
-                custom-class="has-text-white"/>
+                custom-class="has-text-white"
+              />
             </b-field>
           </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-danger is-outlined" type="button" @click="toggleAdd = false">Close</button>
-          <button class="button is-primary" type="submit" form="polls">Add</button>
+          <button
+            class="button is-danger is-outlined"
+            type="button"
+            @click="toggleAdd = false"
+          >
+            Close
+          </button>
+          <button class="button is-primary" type="submit" form="polls">
+            Add
+          </button>
         </footer>
       </div>
     </b-modal>
   </section>
-    
 </template>
 
 <script>

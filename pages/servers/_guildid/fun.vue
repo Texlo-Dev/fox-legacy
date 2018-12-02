@@ -6,10 +6,12 @@
           <h1 class="title has-text-white has-text-left">&nbsp;Fun</h1>
         </div>
         <div class="level-left">
-          <a class="button is-danger" @click="confirmPkg('Fun')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Fun')"
+          ><p class="has-text-weight-bold">Disable</p></a
+          >
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
@@ -17,20 +19,21 @@
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
-                      @input="toggleCommand(command.name, !command.enabled)"/>
+            <b-switch
+              :ref="`${command.name}-switch`"
+              :value="command.enabled"
+              size="is-medium"
+              type="is-primary"
+              @input="toggleCommand(command.name, !command.enabled)"
+            />
           </h1>
 
           <p>{{ command.description }}</p>
         </div>
       </div>
-
     </div>
-
   </section>
-    
 </template>
-
 
 <script>
 import API from "~/API.js";

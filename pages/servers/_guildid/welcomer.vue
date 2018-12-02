@@ -6,10 +6,12 @@
           <h1 class="title has-text-white has-text-left">&nbsp;Welcomer</h1>
         </div>
         <div class="level-left">
-          <a class="button is-danger" @click="confirmPkg('Welcomer')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Welcomer')"
+          ><p class="has-text-weight-bold">Disable</p></a
+          >
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div v-if="!loading && config" class="container">
       <h1 class="title has-text-white has-text-left">Package Settings</h1>
@@ -18,8 +20,7 @@
           <div class="box">
             <div class="content">
               <h3 class="has-text-white has-text-left">
-                Automatic Roles
-                <br><br>
+                Automatic Roles <br ><br >
                 <b-field custom-class="has-text-white">
                   <b-taginput
                     v-model="config.autoRoles"
@@ -32,13 +33,24 @@
                     field="name"
                     placeholder="Add a Role"
                     custom-class="has-text-white"
-                    @typing="getRoleNames"/>
+                    @typing="getRoleNames"
+                  />
                   <p class="control">
-                    <button class="button is-primary" @click="settingArrayUpdate({ autoRoles: config.autoRoles })">Save</button>
+                    <button
+                      class="button is-primary"
+                      @click="
+                        settingArrayUpdate({ autoRoles: config.autoRoles })
+                      "
+                    >
+                      Save
+                    </button>
                   </p>
                 </b-field>
               </h3>
-              <p>Role(s) that will be given to all members upon joining your server.</p>
+              <p>
+                Role(s) that will be given to all members upon joining your
+                server.
+              </p>
             </div>
           </div>
         </div>
@@ -48,22 +60,36 @@
               <h3 class="has-text-white has-text-left">
                 Welcome Messaging
                 <span v-if="config.welcomeEnabled">
-                  <b-switch ref="welcomeEnabled-switch" size="is-small" value="true" type="is-primary"
-                            @click.native="settingUpdate('welcomeEnabled', false)"/>
-                  <button class="button is-rounded is-small is-grey" @click="toggleAdd = true">
-                    Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
+                  <b-switch
+                    ref="welcomeEnabled-switch"
+                    size="is-small"
+                    value="true"
+                    type="is-primary"
+                    @click.native="settingUpdate('welcomeEnabled', false)"
+                  />
+                  <button
+                    class="button is-rounded is-small is-grey"
+                    @click="toggleAdd = true"
+                  >
+                    Manage
+                    <font-awesome-icon size="0.8x" pull="right" icon="wrench" />
                   </button>
                 </span>
                 <span v-else>
-                  <b-switch ref="welcomeEnabled-switch" size="is-small" value="false" type="is-primary"
-                            @click.native="settingUpdate('welcomeEnabled', true)"/>
+                  <b-switch
+                    ref="welcomeEnabled-switch"
+                    size="is-small"
+                    value="false"
+                    type="is-primary"
+                    @click.native="settingUpdate('welcomeEnabled', true)"
+                  />
                 </span>
               </h3>
-              <p>Send a friendly message to a member when they join your server.</p>
-
+              <p>
+                Send a friendly message to a member when they join your server.
+              </p>
             </div>
           </div>
-
         </div>
         <div class="column is-one-third">
           <div class="box">
@@ -71,15 +97,29 @@
               <h3 class="has-text-white has-text-left">
                 Goodbye Messaging
                 <span v-if="config.goodbyeEnabled">
-                  <b-switch ref="goodbyeEnabled-switch" size="is-small" value="true" type="is-primary"
-                            @click.native="settingUpdate('goodbyeEnabled', false)"/>
-                  <button class="button is-rounded is-small is-grey" @click="toggleGoodbye = true">
-                    Manage <font-awesome-icon size="0.8x" pull="right" icon="wrench"/>
+                  <b-switch
+                    ref="goodbyeEnabled-switch"
+                    size="is-small"
+                    value="true"
+                    type="is-primary"
+                    @click.native="settingUpdate('goodbyeEnabled', false)"
+                  />
+                  <button
+                    class="button is-rounded is-small is-grey"
+                    @click="toggleGoodbye = true"
+                  >
+                    Manage
+                    <font-awesome-icon size="0.8x" pull="right" icon="wrench" />
                   </button>
                 </span>
                 <span v-else>
-                  <b-switch ref="goodbyeEnabled-switch" size="is-small" value="false" type="is-primary"
-                            @click.native="settingUpdate('goodbyeEnabled', true)"/>
+                  <b-switch
+                    ref="goodbyeEnabled-switch"
+                    size="is-small"
+                    value="false"
+                    type="is-primary"
+                    @click.native="settingUpdate('goodbyeEnabled', true)"
+                  />
                 </span>
               </h3>
               <p>Notify with a message when a user has left the server.</p>
@@ -87,7 +127,6 @@
           </div>
         </div>
       </div>
-
     </div>
     <b-modal :active.sync="toggleGoodbye" has-modal-card>
       <div class="modal-card">
@@ -96,34 +135,79 @@
         </header>
         <section class="modal-card-body">
           <form id="goodbye" @submit.prevent="validateGoodbye">
-            <b-field :type="{ 'is-danger': errors.has('Message') }" :message="errors.first('Message')" label="Message" custom-class="has-text-white">
-              <b-input v-validate="'required|max:1980'" v-model="config.goodbyeMsg" name="Message" type="textarea" expanded/>
+            <b-field
+              :type="{ 'is-danger': errors.has('Message') }"
+              :message="errors.first('Message')"
+              label="Message"
+              custom-class="has-text-white"
+            >
+              <b-input
+                v-validate="'required|max:1980'"
+                v-model="config.goodbyeMsg"
+                name="Message"
+                type="textarea"
+                expanded
+              />
             </b-field>
-            <p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class="inlinecode has-text-grey">{server}</code>= Server name. <code id="vars" class="inlinecode has-text-grey">{position}</code>= Join position.</p>
-            <br>
-            <b-field :type="{ 'is-danger': errors.has('Location') }" :message="errors.first('Location')" label="Goodbye Channel" custom-class="has-text-white">
-              <b-select v-validate="'required'" id="modalselect" v-model="config.goodbyeChannel" name="Location" placeholder="None">
+            <p>
+              <code id="vars" class="inlinecode has-text-grey">{user}</code>=
+              User Name.
+              <code id="vars" class="inlinecode has-text-grey">{server}</code>=
+              Server name.
+              <code id="vars" class="inlinecode has-text-grey">{position}</code
+              >= Join position.
+            </p>
+            <br >
+            <b-field
+              :type="{ 'is-danger': errors.has('Location') }"
+              :message="errors.first('Location')"
+              label="Goodbye Channel"
+              custom-class="has-text-white"
+            >
+              <b-select
+                v-validate="'required'"
+                id="modalselect"
+                v-model="config.goodbyeChannel"
+                name="Location"
+                placeholder="None"
+              >
                 <option
                   v-for="channel of channels"
                   :value="channel"
-                  :key="channel.id">
+                  :key="channel.id"
+                >
                   #{{ channel.name }}
                 </option>
               </b-select>
             </b-field>
             <b-field>
-              <b-switch v-model="config.goodbyeEmbed" type="is-primary" @click.native="settingUpdate('goodbyeEmbed', !config.goodbyeEmbed, { hideToast: true, keepModal: true })">
+              <b-switch
+                v-model="config.goodbyeEmbed"
+                type="is-primary"
+                @click.native="
+                  settingUpdate('goodbyeEmbed', !config.goodbyeEmbed, {
+                    hideToast: true,
+                    keepModal: true
+                  })
+                "
+              >
                 <p class="has-text-white has-text-weight-bold">Embed Message</p>
               </b-switch>
             </b-field>
-          </form>	
+          </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-danger is-outlined" @click="toggleGoodbye = false">Close</button>
-          <button class="button is-primary" form="goodbye" type="submit">Save</button>
+          <button
+            class="button is-danger is-outlined"
+            @click="toggleGoodbye = false"
+          >
+            Close
+          </button>
+          <button class="button is-primary" form="goodbye" type="submit">
+            Save
+          </button>
         </footer>
       </div>
-
     </b-modal>
     <b-modal :active.sync="toggleAdd" has-modal-card>
       <div class="modal-card">
@@ -132,39 +216,83 @@
         </header>
         <section class="modal-card-body">
           <form id="welcome" @submit.prevent="validateWelcome">
-            <b-field :type="{ 'is-danger': errors.has('Message') }" :message="errors.first('Message')" label="Message" custom-class="has-text-white">
-              <b-input v-validate="'required|max:1980'" v-model="config.welcomeMsg" name="Message" type="textarea" expanded/>
+            <b-field
+              :type="{ 'is-danger': errors.has('Message') }"
+              :message="errors.first('Message')"
+              label="Message"
+              custom-class="has-text-white"
+            >
+              <b-input
+                v-validate="'required|max:1980'"
+                v-model="config.welcomeMsg"
+                name="Message"
+                type="textarea"
+                expanded
+              />
             </b-field>
-            <p><code id="vars" class="inlinecode has-text-grey">{user}</code>= User Name. <code id="vars" class="inlinecode has-text-grey">{server}</code>= Server name. <code id="vars" class="inlinecode has-text-grey">{position}</code>= Join position.</p>
-            <br>
-            <b-field :type="{ 'is-danger': errors.has('Location') }" :message="errors.first('Location')" label="Welcome Location" custom-class="has-text-white">
-              <b-select v-validate="'required'" id="modalselect" v-model="config.welcomeLocation" name="Location" placeholder="None">
+            <p>
+              <code id="vars" class="inlinecode has-text-grey">{user}</code>=
+              User Name.
+              <code id="vars" class="inlinecode has-text-grey">{server}</code>=
+              Server name.
+              <code id="vars" class="inlinecode has-text-grey">{position}</code
+              >= Join position.
+            </p>
+            <br >
+            <b-field
+              :type="{ 'is-danger': errors.has('Location') }"
+              :message="errors.first('Location')"
+              label="Welcome Location"
+              custom-class="has-text-white"
+            >
+              <b-select
+                v-validate="'required'"
+                id="modalselect"
+                v-model="config.welcomeLocation"
+                name="Location"
+                placeholder="None"
+              >
                 <option value="DM">DM Member</option>
                 <option
                   v-for="channel of channels"
                   :value="channel"
-                  :key="channel.id">
+                  :key="channel.id"
+                >
                   #{{ channel.name }}
                 </option>
               </b-select>
             </b-field>
             <b-field>
-              <b-switch v-model="config.welcomerEmbed" type="is-primary" @click.native="settingUpdate('welcomerEmbed', !config.welcomerEmbed, { hideToast: true, keepModal: true })">
+              <b-switch
+                v-model="config.welcomerEmbed"
+                type="is-primary"
+                @click.native="
+                  settingUpdate('welcomerEmbed', !config.welcomerEmbed, {
+                    hideToast: true,
+                    keepModal: true
+                  })
+                "
+              >
                 <p class="has-text-white has-text-weight-bold">Embed Message</p>
               </b-switch>
             </b-field>
-          </form>	
+          </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-danger is-outlined" @click="toggleAdd = false">Close</button>
-          <button class="button is-primary" form="welcome" type="submit">Save</button>
+          <button
+            class="button is-danger is-outlined"
+            @click="toggleAdd = false"
+          >
+            Close
+          </button>
+          <button class="button is-primary" form="welcome" type="submit">
+            Save
+          </button>
         </footer>
       </div>
-
     </b-modal>
   </section>
 </template>
-
 
 <script>
 import API from "~/API.js";

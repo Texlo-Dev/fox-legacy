@@ -5,19 +5,40 @@
         <p class="modal-card-title">Edit Shop Item</p>
       </header>
       <section class="modal-card-body">
-        <b-field :type="{ 'is-danger': errors.has('Name') }" :message="errors.first('Name')" custom-class="has-text-white" label="Item Name">
-          <b-input v-validate="'required'" v-model="currItem.name" name="Name"/>
+        <b-field
+          :type="{ 'is-danger': errors.has('Name') }"
+          :message="errors.first('Name')"
+          custom-class="has-text-white"
+          label="Item Name"
+        >
+          <b-input
+            v-validate="'required'"
+            v-model="currItem.name"
+            name="Name"
+          />
         </b-field>
-        <b-field :type="{ 'is-danger': errors.has('Price') }" :message="errors.first('Price')" custom-class="has-text-white" label="Price">
-          <b-input v-validate="'required'" v-model.number="currItem.price" type="number" name="Price" />
+        <b-field
+          :type="{ 'is-danger': errors.has('Price') }"
+          :message="errors.first('Price')"
+          custom-class="has-text-white"
+          label="Price"
+        >
+          <b-input
+            v-validate="'required'"
+            v-model.number="currItem.price"
+            type="number"
+            name="Price"
+          />
         </b-field>
         <b-field custom-class="has-text-white" label="Role Reward">
-          <b-select id="modalselect" v-model="currItem.role" name="role" placeholder="None">
+          <b-select
+            id="modalselect"
+            v-model="currItem.role"
+            name="role"
+            placeholder="None"
+          >
             <option :value="null">None</option>
-            <option
-              v-for="role of roles"
-              :value="role"
-              :key="role.id">
+            <option v-for="role of roles" :value="role" :key="role.id">
               {{ role.name }}
             </option>
           </b-select>
@@ -27,16 +48,24 @@
             <p class="has-text-white has-text-weight-bold">Limit Purchases?</p>
           </b-switch>
         </b-field>
-        <b-field v-show="currItem.limitPurchases" custom-class="has-text-white" label="Maximun # of Purchases allowed">
+        <b-field
+          v-show="currItem.limitPurchases"
+          custom-class="has-text-white"
+          label="Maximun # of Purchases allowed"
+        >
           <b-input v-model.number="currItem.maxPurchases" type="number" />
         </b-field>
         <b-field custom-class="has-text-white" label="Value (if custom item)">
-          <b-input v-model="currItem.value" type="textarea"/>
+          <b-input v-model="currItem.value" type="textarea" />
         </b-field>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-danger is-outlined" @click="$parent.close()">Cancel</button>
-        <button class="button is-primary" type="submit" form="edititem">Edit</button>
+        <button class="button is-danger is-outlined" @click="$parent.close()">
+          Cancel
+        </button>
+        <button class="button is-primary" type="submit" form="edititem">
+          Edit
+        </button>
       </footer>
     </div>
   </form>
@@ -106,5 +135,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -6,10 +6,12 @@
           <h1 class="title has-text-white has-text-left">&nbsp;Economy</h1>
         </div>
         <div class="level-left">
-          <a class="button is-danger" @click="confirmPkg('Economy')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Economy')"
+          ><p class="has-text-weight-bold">Disable</p></a
+          >
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div class="container">
       <h1 class="title has-text-white has-text-left">Settings</h1>
@@ -20,43 +22,77 @@
               <h3 class="has-text-white has-text-left">Shop Name:</h3>
               <div v-if="!prompts.includes('shopName')">
                 <p class="subtitle has-text-white">{{ banking.shopName }}</p>
-                <button class="button is-small is-primary" @click="prompts.push('shopName')">Change</button>
+                <button
+                  class="button is-small is-primary"
+                  @click="prompts.push('shopName')"
+                >
+                  Change
+                </button>
               </div>
               <div v-else>
                 <form id="sname" @submit.prevent="vername">
-                  <b-field :type="{ 'is-danger': errors.has('Shop Name') }" :message="errors.first('Shop Name')">
-                    <b-input v-validate="'required|max:30'" id="grey" v-model="banking.shopName" name="Shop Name"/>
+                  <b-field
+                    :type="{ 'is-danger': errors.has('Shop Name') }"
+                    :message="errors.first('Shop Name')"
+                  >
+                    <b-input
+                      v-validate="'required|max:30'"
+                      id="grey"
+                      v-model="banking.shopName"
+                      name="Shop Name"
+                    />
                     <p class="control">
-                      <button class="button is-primary" type="submit" form="sname">Save</button>
+                      <button
+                        class="button is-primary"
+                        type="submit"
+                        form="sname"
+                      >
+                        Save
+                      </button>
                     </p>
                   </b-field>
                 </form>
               </div>
-
             </div>
           </div>
         </div>
         <div class="column is-one-third">
           <div class="box">
             <div class="content">
-              <h3 class="has-text-white has-text-left">
-                Shop Currency: 
-              </h3>
+              <h3 class="has-text-white has-text-left">Shop Currency:</h3>
               <div v-if="!prompts.includes('currency')">
                 <p class="subtitle has-text-white">{{ banking.currency }}</p>
-                <button class="button is-small is-primary" @click="prompts.push('currency')">Change</button>
+                <button
+                  class="button is-small is-primary"
+                  @click="prompts.push('currency')"
+                >
+                  Change
+                </button>
               </div>
               <div v-else>
                 <form id="crcy" @submit.prevent="vercurrency">
-                  <b-field :type="{ 'is-danger': errors.has('Currency') }" :message="errors.first('Currency')">
-                    <b-input v-validate="'required|max:4'" id="grey" v-model="banking.currency" name="Currency"/>
+                  <b-field
+                    :type="{ 'is-danger': errors.has('Currency') }"
+                    :message="errors.first('Currency')"
+                  >
+                    <b-input
+                      v-validate="'required|max:4'"
+                      id="grey"
+                      v-model="banking.currency"
+                      name="Currency"
+                    />
                     <p class="control">
-                      <button class="button is-primary" type="submit" form="crcy">Save</button>
+                      <button
+                        class="button is-primary"
+                        type="submit"
+                        form="crcy"
+                      >
+                        Save
+                      </button>
                     </p>
                   </b-field>
                 </form>
               </div>
-
             </div>
           </div>
         </div>
@@ -64,8 +100,7 @@
           <div class="box">
             <div class="content">
               <h3 class="has-text-white">
-                Exempted Channels
-                <br><br>
+                Exempted Channels <br ><br >
                 <b-field custom-class="has-text-white">
                   <b-taginput
                     v-model="banking.excludedChannels"
@@ -78,15 +113,26 @@
                     field="name"
                     placeholder="Add a Channel"
                     custom-class="has-text-white"
-                    @typing="getChannelNames"/>
+                    @typing="getChannelNames"
+                  />
                   <p class="control">
-                    <button class="button is-primary" @click="bankingUpdate('excludedChannels', banking.excludedChannels, { bool: false })">Save</button>
+                    <button
+                      class="button is-primary"
+                      @click="
+                        bankingUpdate(
+                          'excludedChannels',
+                          banking.excludedChannels,
+                          { bool: false }
+                        )
+                      "
+                    >
+                      Save
+                    </button>
                   </p>
                 </b-field>
               </h3>
               <h3 class="has-text-white">
-                Exempted Roles
-                <br><br>
+                Exempted Roles <br ><br >
                 <b-field custom-class="has-text-white">
                   <b-taginput
                     v-model="banking.excludedRoles"
@@ -99,16 +145,25 @@
                     field="name"
                     placeholder="Add a Role"
                     custom-class="has-text-white"
-                    @typing="getRoleNames"/>
+                    @typing="getRoleNames"
+                  />
                   <p class="control">
-                    <button class="button is-primary" @click="bankingUpdate('excludedRoles', banking.excludedRoles, { bool: false })">Save</button>
+                    <button
+                      class="button is-primary"
+                      @click="
+                        bankingUpdate('excludedRoles', banking.excludedRoles, {
+                          bool: false
+                        })
+                      "
+                    >
+                      Save
+                    </button>
                   </p>
                 </b-field>
               </h3>
             </div>
           </div>
         </div>
-
       </div>
       <div class="is-divider" />
     </div>
@@ -121,35 +176,66 @@
                 <h1 class="title has-text-white has-text-left">Shop Items</h1>
               </div>
               <div class="level-item">
-                <button class="button is-grey is-rounded" @click="toggleAdd = true">
-                  Add Item <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                <button
+                  class="button is-grey is-rounded"
+                  @click="toggleAdd = true"
+                >
+                  Add Item
+                  <font-awesome-icon size="0.8x" pull="right" icon="plus" />
                 </button>
               </div>
             </div>
           </nav>
           <div v-if="banking.shopItems.length" class="columns is-multiline">
-            <div v-for="item of banking.shopItems" :key="item.name" class="column is-one-quarter">
+            <div
+              v-for="item of banking.shopItems"
+              :key="item.name"
+              class="column is-one-quarter"
+            >
               <div class="box" style="background-color: #34383c">
                 <div class="content">
                   <span>
                     <p class="subtitle has-text-white">
-                      {{ item.name }}
-                      &nbsp;<button class="button is-small is-success" @click="editItem(item)">
-                        Edit <font-awesome-icon size="0.8x" pull="right" icon="cogs"/>
+                      {{ item.name }} &nbsp;<button
+                        class="button is-small is-success"
+                        @click="editItem(item)"
+                      >
+                        Edit
+                        <font-awesome-icon
+                          size="0.8x"
+                          pull="right"
+                          icon="cogs"
+                        />
                       </button>
-                      <button class="button is-small is-danger" @click="shopAction('remove', item)">
-                        Delete <font-awesome-icon size="0.8x" pull="right" icon="trash-alt"/>
+                      <button
+                        class="button is-small is-danger"
+                        @click="shopAction('remove', item)"
+                      >
+                        Delete
+                        <font-awesome-icon
+                          size="0.8x"
+                          pull="right"
+                          icon="trash-alt"
+                        />
                       </button>
                     </p>
-                    <p>- Price: {{ banking.currency + item.price.toLocaleString() }}</p>
-                    <p>- Role Reward: {{ item.role ? `@${item.role.name}` : 'None' }}</p>
+                    <p>
+                      - Price:
+                      {{ banking.currency + item.price.toLocaleString() }}
+                    </p>
+                    <p>
+                      - Role Reward:
+                      {{ item.role ? `@${item.role.name}` : "None" }}
+                    </p>
                   </span>
                 </div>
               </div>
             </div>
           </div>
           <div v-else>
-            <p>No Shop items found. Click the "Add Item" button to get started</p>
+            <p>
+              No Shop items found. Click the "Add Item" button to get started
+            </p>
           </div>
         </div>
       </div>
@@ -161,14 +247,18 @@
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
-                      @input="toggleCommand(command.name, !command.enabled)"/>
+            <b-switch
+              :ref="`${command.name}-switch`"
+              :value="command.enabled"
+              size="is-medium"
+              type="is-primary"
+              @input="toggleCommand(command.name, !command.enabled)"
+            />
           </h1>
 
           <p>{{ command.description }}</p>
         </div>
       </div>
-
     </div>
     <b-modal :active.sync="toggleAdd" has-modal-card>
       <div class="modal-card">
@@ -177,44 +267,83 @@
         </header>
         <section class="modal-card-body">
           <form id="shopitem" @submit.prevent="verifyForm">
-            <b-field :type="{ 'is-danger': errors.has('Name') }" :message="errors.first('Name')" custom-class="has-text-white" label="Item Name">
-              <b-input v-validate="'required'" v-model="currItem.name" name="Name"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('Name') }"
+              :message="errors.first('Name')"
+              custom-class="has-text-white"
+              label="Item Name"
+            >
+              <b-input
+                v-validate="'required'"
+                v-model="currItem.name"
+                name="Name"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('Price') }" :message="errors.first('Price')" custom-class="has-text-white" label="Price">
-              <b-input v-validate="'required'" v-model.number="currItem.price" type="number" name="Price" />
+            <b-field
+              :type="{ 'is-danger': errors.has('Price') }"
+              :message="errors.first('Price')"
+              custom-class="has-text-white"
+              label="Price"
+            >
+              <b-input
+                v-validate="'required'"
+                v-model.number="currItem.price"
+                type="number"
+                name="Price"
+              />
             </b-field>
             <b-field custom-class="has-text-white" label="Role Reward">
-              <b-select id="modalselect" v-model="currItem.role" name="role" placeholder="None">
+              <b-select
+                id="modalselect"
+                v-model="currItem.role"
+                name="role"
+                placeholder="None"
+              >
                 <option :value="null">None</option>
-                <option
-                  v-for="role of roles"
-                  :value="role"
-                  :key="role.id">
+                <option v-for="role of roles" :value="role" :key="role.id">
                   {{ role.name }}
                 </option>
               </b-select>
             </b-field>
             <b-field>
               <b-switch v-model.number="currItem.limitPurchases">
-                <p class="has-text-white has-text-weight-bold">Limit Purchases?</p>
+                <p class="has-text-white has-text-weight-bold">
+                  Limit Purchases?
+                </p>
               </b-switch>
             </b-field>
-            <b-field v-show="currItem.limitPurchases" custom-class="has-text-white" label="Maximun # of Purchases allowed">
+            <b-field
+              v-show="currItem.limitPurchases"
+              custom-class="has-text-white"
+              label="Maximun # of Purchases allowed"
+            >
               <b-input v-model.number="currItem.maxPurchases" type="number" />
             </b-field>
-            <b-field custom-class="has-text-white" label="Value (if custom item)">
-              <b-input v-model="currItem.value" type="textarea"/>
+            <b-field
+              custom-class="has-text-white"
+              label="Value (if custom item)"
+            >
+              <b-input v-model="currItem.value" type="textarea" />
             </b-field>
-            <p>Note: Whatever you type here will be sent to the member's DMs after they buy the item.</p>
+            <p>
+              Note: Whatever you type here will be sent to the member's DMs
+              after they buy the item.
+            </p>
           </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-danger is-outlined" @click="toggleAdd = false">Cancel</button>
-          <button class="button is-primary" type="submit" form="shopitem">Add</button>
+          <button
+            class="button is-danger is-outlined"
+            @click="toggleAdd = false"
+          >
+            Cancel
+          </button>
+          <button class="button is-primary" type="submit" form="shopitem">
+            Add
+          </button>
         </footer>
       </div>
     </b-modal>
-
   </section>
 </template>
 

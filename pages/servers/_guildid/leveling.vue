@@ -6,10 +6,12 @@
           <h1 class="title has-text-white has-text-left">&nbsp;Leveling</h1>
         </div>
         <div class="level-left">
-          <a class="button is-danger" @click="confirmPkg('Leveling')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Leveling')"
+          ><p class="has-text-weight-bold">Disable</p></a
+          >
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div v-if="!loading && config" class="container">
       <h1 class="title has-text-white has-text-left">Package Settings</h1>
@@ -20,58 +22,139 @@
               <h3 class="has-text-white has-text-left">
                 Level-Up Messaging
                 <span v-if="config.levelMessaging">
-                  <b-switch ref="levelMessaging-switch" size="is-small" value="true" type="is-primary"
-                            @click.native="settingUpdate('levelMessaging', false)"/>
+                  <b-switch
+                    ref="levelMessaging-switch"
+                    size="is-small"
+                    value="true"
+                    type="is-primary"
+                    @click.native="settingUpdate('levelMessaging', false)"
+                  />
                   <section>
-                    <br>
-                    <p class="subtitle title has-text-white has-text-left">Location:</p>
+                    <br >
+                    <p class="subtitle title has-text-white has-text-left">
+                      Location:
+                    </p>
                     <div v-if="!prompts.includes('leveloc')">
-                      <a v-if="leveling.messageLocation.name" id="channel" :href="`https://discordapp.com/channels/${$route.params.guildid}/${leveling.messageLocation.id}`">#{{ leveling.messageLocation.name }}
+                      <a
+                        v-if="leveling.messageLocation.name"
+                        id="channel"
+                        :href="
+                          `https://discordapp.com/channels/${
+                            $route.params.guildid
+                          }/${leveling.messageLocation.id}`
+                        "
+                      >#{{ leveling.messageLocation.name }}
                       </a>
-                      <p v-else class="subtitle has-text-white">Direct Message</p>
-                      &nbsp;<button class="button is-small is-primary" @click="prompts.push('leveloc')">Change</button>
+                      <p v-else class="subtitle has-text-white">
+                        Direct Message
+                      </p>
+                      &nbsp;<button
+                        class="button is-small is-primary"
+                        @click="prompts.push('leveloc')"
+                      >
+                        Change
+                      </button>
                     </div>
                     <div v-else>
                       <b-field custom-class="has-text-white">
-                        <b-select v-model="leveling.messageLocation" placeholder="Select a location">
+                        <b-select
+                          v-model="leveling.messageLocation"
+                          placeholder="Select a location"
+                        >
                           <option value="DM">Direct Message</option>
                           <option
                             v-for="channel of channels"
                             :value="channel"
-                            :key="channel.id">
+                            :key="channel.id"
+                          >
                             #{{ channel.name }}
                           </option>
                         </b-select>
                         <p class="control">
-                          <button class="button is-primary" @click="dropdownSave('messageLocation', 'Level Message location', leveling.messageLocation)">Save</button>
+                          <button
+                            class="button is-primary"
+                            @click="
+                              dropdownSave(
+                                'messageLocation',
+                                'Level Message location',
+                                leveling.messageLocation
+                              )
+                            "
+                          >
+                            Save
+                          </button>
                         </p>
                       </b-field>
                     </div>
                   </section>
                   <section>
-                    <br>
-                    <p class="subtitle title has-text-white has-text-left">Message:</p>
+                    <br >
+                    <p class="subtitle title has-text-white has-text-left">
+                      Message:
+                    </p>
                     <div v-if="!prompts.includes('levelmsg')">
-                      <p class="subtitle has-text-white" style="font-size: 15px">{{ config.levelMsg }}</p>
-                      &nbsp;<button class="button is-small is-primary" @click="prompts.push('levelmsg')">Change</button>
+                      <p
+                        class="subtitle has-text-white"
+                        style="font-size: 15px"
+                      >
+                        {{ config.levelMsg }}
+                      </p>
+                      &nbsp;<button
+                        class="button is-small is-primary"
+                        @click="prompts.push('levelmsg')"
+                      >
+                        Change
+                      </button>
                     </div>
                     <div v-else>
                       <b-field>
-                        <b-input v-model="config.levelMsg" type="textarea" maxlength="1980" expanded/>
+                        <b-input
+                          v-model="config.levelMsg"
+                          type="textarea"
+                          maxlength="1980"
+                          expanded
+                        />
                         <p class="control">
-                          <button class="button is-primary" @click="settingUpdate('levelMsg', config.levelMsg, { bool: false, hideToast: true })">Save</button>
+                          <button
+                            class="button is-primary"
+                            @click="
+                              settingUpdate('levelMsg', config.levelMsg, {
+                                bool: false,
+                                hideToast: true
+                              })
+                            "
+                          >
+                            Save
+                          </button>
                         </p>
                       </b-field>
-                      <p style="font-size: 15px" class="subtitle has-text-white"><code id="vars" class="inlinecode has-text-white ">{user}</code>= User name. <code id="vars" class="has-text-white inlinecode">{level}</code>= User's new level.</p>
+                      <p
+                        style="font-size: 15px"
+                        class="subtitle has-text-white"
+                      >
+                        <code id="vars" class="inlinecode has-text-white "
+                        >{user}</code
+                        >= User name.
+                        <code id="vars" class="has-text-white inlinecode"
+                        >{level}</code
+                        >= User's new level.
+                      </p>
                     </div>
                   </section>
                 </span>
                 <span v-else>
-                  <b-switch ref="levelMessaging-switch" size="is-small" value="false" type="is-primary"
-                            @click.native="settingUpdate('levelMessaging', true)"/>
+                  <b-switch
+                    ref="levelMessaging-switch"
+                    size="is-small"
+                    value="false"
+                    type="is-primary"
+                    @click.native="settingUpdate('levelMessaging', true)"
+                  />
                 </span>
               </h3>
-              <p v-if="!config.levelMessaging">Send a message to a member when they level up.</p>
+              <p v-if="!config.levelMessaging">
+                Send a message to a member when they level up.
+              </p>
             </div>
           </div>
         </div>
@@ -79,33 +162,54 @@
           <div class="box">
             <div class="content">
               <h3 class="has-text-white">
-                Level Up Roles 
-                <button class="button is-rounded is-small is-grey" @click="promoModal = true">
-                  Add Role <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+                Level Up Roles
+                <button
+                  class="button is-rounded is-small is-grey"
+                  @click="promoModal = true"
+                >
+                  Add Role
+                  <font-awesome-icon size="0.8x" pull="right" icon="plus" />
                 </button>
-                <br><br>
+                <br ><br >
                 <b-taglist>
-                  <b-tag v-for="role of leveling.promoRoles" v-if="leveling.promoRoles.length" :key="role"
-                         type="is-grey"
-                         closable
-                         @close="confirmDelete(role)"
+                  <b-tag
+                    v-for="role of leveling.promoRoles"
+                    v-if="leveling.promoRoles.length"
+                    :key="role"
+                    type="is-grey"
+                    closable
+                    @close="confirmDelete(role)"
                   >
                     @{{ role.name }} - Rank {{ role.rank }}
                   </b-tag>
                 </b-taglist>
                 <section v-if="leveling.promoRoles.length">
-                  <p class="has-text-white subtitle">When a user unlocks a role:</p>
-                  <b-checkbox v-model="leveling.stackRoles" size="is-medium" required @click.native="levelingUpdate('stackRoles', true)">
+                  <p class="has-text-white subtitle">
+                    When a user unlocks a role:
+                  </p>
+                  <b-checkbox
+                    v-model="leveling.stackRoles"
+                    size="is-medium"
+                    required
+                    @click.native="levelingUpdate('stackRoles', true)"
+                  >
                     Stack Roles
                   </b-checkbox>
-                  <br><br>
-                  <b-checkbox :true-value="false" v-model="leveling.stackRoles" size="is-medium" required @click.native="levelingUpdate('stackRoles', false)">
+                  <br ><br >
+                  <b-checkbox
+                    :true-value="false"
+                    v-model="leveling.stackRoles"
+                    size="is-medium"
+                    required
+                    @click.native="levelingUpdate('stackRoles', false)"
+                  >
                     Remove Previous Role
                   </b-checkbox>
                 </section>
               </h3>
-              <p v-if="!leveling.promoRoles.length">No Roles added. Click the "Add Role" button to add a role.</p>
-
+              <p v-if="!leveling.promoRoles.length">
+                No Roles added. Click the "Add Role" button to add a role.
+              </p>
             </div>
           </div>
         </div>
@@ -113,8 +217,7 @@
           <div class="box">
             <div class="content">
               <h3 class="has-text-white">
-                Exempted Channels
-                <br><br>
+                Exempted Channels <br ><br >
                 <b-field custom-class="has-text-white">
                   <b-taginput
                     v-model="leveling.excludedChannels"
@@ -127,15 +230,26 @@
                     field="name"
                     placeholder="Add a Channel"
                     custom-class="has-text-white"
-                    @typing="getChannelNames"/>
+                    @typing="getChannelNames"
+                  />
                   <p class="control">
-                    <button class="button is-primary" @click="levelingUpdate('excludedChannels', leveling.excludedChannels, { bool: false })">Save</button>
+                    <button
+                      class="button is-primary"
+                      @click="
+                        levelingUpdate(
+                          'excludedChannels',
+                          leveling.excludedChannels,
+                          { bool: false }
+                        )
+                      "
+                    >
+                      Save
+                    </button>
                   </p>
                 </b-field>
               </h3>
               <h3 class="has-text-white">
-                Exempted Roles
-                <br><br>
+                Exempted Roles <br ><br >
                 <b-field custom-class="has-text-white">
                   <b-taginput
                     v-model="leveling.excludedRoles"
@@ -148,9 +262,21 @@
                     field="name"
                     placeholder="Add a Role"
                     custom-class="has-text-white"
-                    @typing="getRoleNames"/>
+                    @typing="getRoleNames"
+                  />
                   <p class="control">
-                    <button class="button is-primary" @click="levelingUpdate('excludedRoles', leveling.excludedRoles, { bool: false })">Save</button>
+                    <button
+                      class="button is-primary"
+                      @click="
+                        levelingUpdate(
+                          'excludedRoles',
+                          leveling.excludedRoles,
+                          { bool: false }
+                        )
+                      "
+                    >
+                      Save
+                    </button>
                   </p>
                 </b-field>
               </h3>
@@ -158,8 +284,7 @@
           </div>
         </div>
       </div>
-      <div class="is-divider"/>
-
+      <div class="is-divider" />
     </div>
     <div class="container" style="position: relative">
       <h1 class="title has-text-white has-text-left">Commands</h1>
@@ -167,52 +292,78 @@
         <div class="content">
           <h1 class="has-text-white has-text-left">
             {{ command.name }}
-            <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-medium" type="is-primary"
-                      @input="toggleCommand(command.name, !command.enabled)"/>
+            <b-switch
+              :ref="`${command.name}-switch`"
+              :value="command.enabled"
+              size="is-medium"
+              type="is-primary"
+              @input="toggleCommand(command.name, !command.enabled)"
+            />
           </h1>
 
           <p>{{ command.description }}</p>
         </div>
       </div>
-
     </div>
 
-    <b-modal v-if="roles" :active.sync="promoModal" size="is-large" has-modal-card>
+    <b-modal
+      v-if="roles"
+      :active.sync="promoModal"
+      size="is-large"
+      has-modal-card
+    >
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
           <p class="modal-card-title">Add Promotion Role</p>
         </header>
         <section class="modal-card-body">
           <form id="promo" @submit.prevent="validatePromo">
-            <b-field :type="{ 'is-danger': errors.has('role') }" :message="errors.first('role')" label="Select Role" custom-class="has-text-white">
-              <b-select v-validate="'required'" v-model="roleData.role" name="role" placeholder="None">
-                <option
-                  v-for="role of roles"
-                  :value="role"
-                  :key="role.id">
+            <b-field
+              :type="{ 'is-danger': errors.has('role') }"
+              :message="errors.first('role')"
+              label="Select Role"
+              custom-class="has-text-white"
+            >
+              <b-select
+                v-validate="'required'"
+                v-model="roleData.role"
+                name="role"
+                placeholder="None"
+              >
+                <option v-for="role of roles" :value="role" :key="role.id">
                   {{ role.name }}
                 </option>
               </b-select>
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('Rank') }" custom-class="has-text-white" label="Promotion Level">
-              <b-input v-validate="'required'" v-model.number="roleData.rank" name="Rank"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('Rank') }"
+              custom-class="has-text-white"
+              label="Promotion Level"
+            >
+              <b-input
+                v-validate="'required'"
+                v-model.number="roleData.rank"
+                name="Rank"
+              />
             </b-field>
           </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-danger is-outlined" type="button" @click="promoModal = false">Close</button>
-          <button class="button is-primary" type="submit" form="promo">Save</button>
+          <button
+            class="button is-danger is-outlined"
+            type="button"
+            @click="promoModal = false"
+          >
+            Close
+          </button>
+          <button class="button is-primary" type="submit" form="promo">
+            Save
+          </button>
         </footer>
       </div>
-
     </b-modal>
-
   </section>
-
-
-    
 </template>
-
 
 <script>
 import API from "~/API.js";

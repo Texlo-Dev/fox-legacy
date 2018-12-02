@@ -1,19 +1,15 @@
 <template>
   <div>
-    <br class="is-hidden-touch">
+    <br class="is-hidden-touch" >
     <section class="section">
       <div class="container">
-        <h1 class="title has-text-white">
-          Commands
-        </h1>
-        <div class="is-divider"/>
-        <br>
+        <h1 class="title has-text-white">Commands</h1>
+        <div class="is-divider" />
+        <br >
         <p class="has-text-centered">
           &#60;&#62; indicates required arguments.
         </p>
-        <p class="has-text-centered">
-          [] indicates optional arguments.
-        </p>
+        <p class="has-text-centered">[] indicates optional arguments.</p>
         <p class="has-text-centered">
           | separates multiple possible arguments.
         </p>
@@ -21,17 +17,24 @@
     </section>
 
     <section class="section">
-
       <div class="container">
         <div class="columns">
-          <div class="column is-one-quarter">	
+          <div class="column is-one-quarter">
             <div class="box">
-              <h1 class="title has-text-white">
-                Select Category
-              </h1>
+              <h1 class="title has-text-white">Select Category</h1>
               <aside class="menu">
                 <ul class="menu-list">
-                  <li v-for="(cmd, category) of commands" :key="category" class="has-text-centered"><a :class="{ 'is-active': activeCat === category }" @click="scrollTo(category)"><p class="has-text-white">{{ category }} </p></a></li>
+                  <li
+                    v-for="(cmd, category) of commands"
+                    :key="category"
+                    class="has-text-centered"
+                  >
+                    <a
+                      :class="{ 'is-active': activeCat === category }"
+                      @click="scrollTo(category)"
+                    ><p class="has-text-white">{{ category }}</p></a
+                    >
+                  </li>
                 </ul>
               </aside>
             </div>
@@ -42,22 +45,22 @@
                 {{ activeCat }}
               </h3>
               <div class="content">
-                <b-table 
+                <b-table
                   :paginated="willPaginate(activeCat)"
                   :current-page.sync="activePage"
                   :pagination-simple="true"
-                  :data="commands[activeCat]" :columns="columns" per-page="7" class="has-text-white"/>	
+                  :data="commands[activeCat]"
+                  :columns="columns"
+                  per-page="7"
+                  class="has-text-white"
+                />
               </div>
             </div>
           </div>
-					
         </div>
       </div>
-
     </section>
-
   </div>
-
 </template>
 
 <script>

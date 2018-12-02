@@ -3,13 +3,20 @@
     <div class="container">
       <nav class="level is-mobile">
         <div class="level-left">
-          <h1 style="font-size: 20px" class="title has-text-white has-text-left">Custom Commands</h1>
+          <h1
+            style="font-size: 20px"
+            class="title has-text-white has-text-left"
+          >
+            Custom Commands
+          </h1>
         </div>
         <div class="level-right">
-          <a class="button is-danger" @click="confirmPkg('Custom Commands')"><p class="has-text-weight-bold">Disable</p></a>
+          <a class="button is-danger" @click="confirmPkg('Custom Commands')"
+          ><p class="has-text-weight-bold">Disable</p></a
+          >
         </div>
       </nav>
-      <div class="is-divider"/>
+      <div class="is-divider" />
     </div>
     <div class="container" style="position: relative">
       <nav class="level">
@@ -18,15 +25,22 @@
             <h1 class="title has-text-left has-text-white">Commands</h1>
           </div>
           <div class="level-item">
-            <button class="button is-grey-darker is-rounded" @click="toggleAdd = true">
-              New Command <font-awesome-icon size="0.8x" pull="right" icon="plus"/>
+            <button
+              class="button is-grey-darker is-rounded"
+              @click="toggleAdd = true"
+            >
+              New Command
+              <font-awesome-icon size="0.8x" pull="right" icon="plus" />
             </button>
           </div>
         </div>
       </nav>
       <div v-if="!commands.length" class="box">
         <div class="content">
-          <p>You don't have any custom commands. Click the "New Command" Button to create a command.</p>
+          <p>
+            You don't have any custom commands. Click the "New Command" Button
+            to create a command.
+          </p>
         </div>
       </div>
       <div v-for="command of commands" v-else :key="command.name" class="box">
@@ -36,26 +50,42 @@
               <div class="level-item">
                 <h1 class="has-text-white has-text-left">
                   {{ command.name }}
-                  <b-switch :ref="`${command.name}-switch`" :value="command.enabled" size="is-small" type="is-primary"
-                            @input="toggleCommand(command.name, !command.enabled)"/>
-            
+                  <b-switch
+                    :ref="`${command.name}-switch`"
+                    :value="command.enabled"
+                    size="is-small"
+                    type="is-primary"
+                    @input="toggleCommand(command.name, !command.enabled)"
+                  />
                 </h1>
               </div>
               <div class="level-item">
-                <button class="button is-primary is-outlined" @cmdedit="cmdEdited" @click="editCommand(command)">Edit<font-awesome-icon icon="cogs" size="s" pull="right"/></button>
+                <button
+                  class="button is-primary is-outlined"
+                  @cmdedit="cmdEdited"
+                  @click="editCommand(command)"
+                >
+                  Edit<font-awesome-icon icon="cogs" size="s" pull="right" />
+                </button>
               </div>
               <div class="level-item">
-                <button class="button is-danger is-outlined" @click="confirmDelete(command.name)">Delete<font-awesome-icon icon="trash-alt" size="s" pull="right"/></button>
+                <button
+                  class="button is-danger is-outlined"
+                  @click="confirmDelete(command.name)"
+                >
+                  Delete<font-awesome-icon
+                    icon="trash-alt"
+                    size="s"
+                    pull="right"
+                  />
+                </button>
               </div>
             </div>
-
           </nav>
           <p>{{ command.description }}</p>
         </div>
       </div>
-
     </div>
-
 
     <b-modal :active.sync="toggleAdd" has-modal-card>
       <div class="modal-card">
@@ -64,28 +94,73 @@
         </header>
         <section class="modal-card-body">
           <form id="custcmd" @submit.prevent="validateForm">
-            <b-field :type="{ 'is-danger': errors.has('command name') }" :message="errors.first('command name')" custom-class="has-text-white" label="Command Name">
-              <b-input v-validate="'required|max:12'" v-model="custCommand.name" name="command name"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('command name') }"
+              :message="errors.first('command name')"
+              custom-class="has-text-white"
+              label="Command Name"
+            >
+              <b-input
+                v-validate="'required|max:12'"
+                v-model="custCommand.name"
+                name="command name"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('description') }" :message="errors.first('description')" custom-class="has-text-white" label="Command Description">
-              <b-input v-validate="'required|max:40'" v-model="custCommand.description" name="description"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('description') }"
+              :message="errors.first('description')"
+              custom-class="has-text-white"
+              label="Command Description"
+            >
+              <b-input
+                v-validate="'required|max:40'"
+                v-model="custCommand.description"
+                name="description"
+              />
             </b-field>
-            <b-field :type="{ 'is-danger': errors.has('response') }" :message="errors.first('response')" custom-class="has-text-white" label="Command Response">
-              <b-input v-validate="'required|max:2000'" v-model="custCommand.template" name="response" type="textarea"/>
+            <b-field
+              :type="{ 'is-danger': errors.has('response') }"
+              :message="errors.first('response')"
+              custom-class="has-text-white"
+              label="Command Response"
+            >
+              <b-input
+                v-validate="'required|max:2000'"
+                v-model="custCommand.template"
+                name="response"
+                type="textarea"
+              />
             </b-field>
-            <b-field custom-class="has-text-white" label="Command Cooldown (Seconds)">
-              <b-input v-model.number="custCommand.cooldown" type="number"/>
+            <b-field
+              custom-class="has-text-white"
+              label="Command Cooldown (Seconds)"
+            >
+              <b-input v-model.number="custCommand.cooldown" type="number" />
             </b-field>
-            <b-field custom-class="has-text-white" label="Command Required Permission (Optional)">
+            <b-field
+              custom-class="has-text-white"
+              label="Command Required Permission (Optional)"
+            >
               <b-select v-model="custCommand.requiredPerms">
-                <optgroup v-for="(key, category) in permissions" :key="category" :label="category">
-                  <option v-for="perm of permissions[category]" :key="perm.name" :value="perm.name">{{ perm.name }}</option>
+                <optgroup
+                  v-for="(key, category) in permissions"
+                  :key="category"
+                  :label="category"
+                >
+                  <option
+                    v-for="perm of permissions[category]"
+                    :key="perm.name"
+                    :value="perm.name"
+                  >{{ perm.name }}</option
+                  >
                 </optgroup>
               </b-select>
             </b-field>
             <b-field>
               <b-switch v-model="custCommand.deleteCmmand" type="is-primary">
-                <p class="has-text-white has-text-weight-bold">Delete Command after execution?</p>
+                <p class="has-text-white has-text-weight-bold">
+                  Delete Command after execution?
+                </p>
               </b-switch>
             </b-field>
             <b-field>
@@ -96,8 +171,12 @@
           </form>
         </section>
         <footer class="modal-card-foot">
-          <button class="button" type="button" @click="toggleAdd = false">Close</button>
-          <button class="button is-primary" type="submit" form="custcmd">Add</button>
+          <button class="button" type="button" @click="toggleAdd = false">
+            Close
+          </button>
+          <button class="button is-primary" type="submit" form="custcmd">
+            Add
+          </button>
         </footer>
       </div>
     </b-modal>

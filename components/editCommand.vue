@@ -5,28 +5,73 @@
         <p class="modal-card-title">Edit Command</p>
       </header>
       <section class="modal-card-body">
-        <b-field :type="{ 'is-danger': errors.has('command name') }" :message="errors.first('command name')" custom-class="has-text-white" label="Command Name">
-          <b-input v-validate="'required|max:12'" v-model="cmd.name" name="command name"/>
+        <b-field
+          :type="{ 'is-danger': errors.has('command name') }"
+          :message="errors.first('command name')"
+          custom-class="has-text-white"
+          label="Command Name"
+        >
+          <b-input
+            v-validate="'required|max:12'"
+            v-model="cmd.name"
+            name="command name"
+          />
         </b-field>
-        <b-field :type="{ 'is-danger': errors.has('description') }" :message="errors.first('description')" custom-class="has-text-white" label="Command Description">
-          <b-input v-validate="'required|max:40'" v-model="cmd.description" name="description"/>
+        <b-field
+          :type="{ 'is-danger': errors.has('description') }"
+          :message="errors.first('description')"
+          custom-class="has-text-white"
+          label="Command Description"
+        >
+          <b-input
+            v-validate="'required|max:40'"
+            v-model="cmd.description"
+            name="description"
+          />
         </b-field>
-        <b-field :type="{ 'is-danger': errors.has('response') }" :message="errors.first('response')" custom-class="has-text-white" label="Command Response">
-          <b-input v-validate="'required|max:2000'" v-model="cmd.template" name="response" type="textarea"/>
+        <b-field
+          :type="{ 'is-danger': errors.has('response') }"
+          :message="errors.first('response')"
+          custom-class="has-text-white"
+          label="Command Response"
+        >
+          <b-input
+            v-validate="'required|max:2000'"
+            v-model="cmd.template"
+            name="response"
+            type="textarea"
+          />
         </b-field>
-        <b-field custom-class="has-text-white" label="Command Cooldown (Seconds)">
-          <b-input v-model.number="cmd.cooldown" type="number"/>
+        <b-field
+          custom-class="has-text-white"
+          label="Command Cooldown (Seconds)"
+        >
+          <b-input v-model.number="cmd.cooldown" type="number" />
         </b-field>
-        <b-field custom-class="has-text-white" label="Command Required Permission (Optional)">
+        <b-field
+          custom-class="has-text-white"
+          label="Command Required Permission (Optional)"
+        >
           <b-select v-model="cmd.requiredPerms">
-            <optgroup v-for="(key, category) in permissions" :key="category" :label="category">
-              <option v-for="perm of permissions[category]" :key="perm.name" :value="perm.name">{{ perm.name }}</option>
+            <optgroup
+              v-for="(key, category) in permissions"
+              :key="category"
+              :label="category"
+            >
+              <option
+                v-for="perm of permissions[category]"
+                :key="perm.name"
+                :value="perm.name"
+              >{{ perm.name }}</option
+              >
             </optgroup>
           </b-select>
         </b-field>
         <b-field>
           <b-switch v-model="cmd.deleteCommand" type="is-primary">
-            <p class="has-text-white has-text-weight-bold">Delete Command after execution?</p>
+            <p class="has-text-white has-text-weight-bold">
+              Delete Command after execution?
+            </p>
           </b-switch>
         </b-field>
         <b-field>
@@ -36,14 +81,15 @@
         </b-field>
       </section>
       <footer class="modal-card-foot">
-        <button class="button" type="button" @click="$parent.close()">Close</button>
-        <button class="button is-primary" type="submit" form="custcmd">Edit</button>
+        <button class="button" type="button" @click="$parent.close()">
+          Close
+        </button>
+        <button class="button is-primary" type="submit" form="custcmd">
+          Edit
+        </button>
       </footer>
     </div>
-    
   </form>
-
-    
 </template>
 
 <script>
@@ -101,5 +147,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
