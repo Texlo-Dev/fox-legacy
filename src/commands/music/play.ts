@@ -104,6 +104,8 @@ export default class FoxCommand extends Command {
         .setColor(this.client.brandColor);
 
       mg.channel.send(embed);
+      player.on("playerUpdate", ({ state: { position } }) =>
+        player.position = position);
       player.on("event", ({ reason }) => {
         if (reason === "FINISHED") {
           player.queue.delete(track.info.identifier);
@@ -122,7 +124,7 @@ export default class FoxCommand extends Command {
     const song: string = args.slice(1).join(" ");
     if (!platform || !["yt", "sc"].includes(platform)) {
       return message.error(
-        "Invalid platform.\nAvailable platforms- \nyt = YouTube\nsc = SoundCloud"
+        "Invalid platform.\nAvailable platforms - \nyt = YouTube\nsc = SoundCloud"
       );
     }
     if (!song) return message.error("Please specify a song to play.");
@@ -150,7 +152,7 @@ export default class FoxCommand extends Command {
     const music: Node = this.client.lavalink;
     let res: TrackResponse;
     const queue: Queue = music.players.get(message.guild.id).queue;
-    if (queue && queue.size > 1 && message.author.upvoter) return message.error("Your song queue limit is currently at 4 songs as a non-upvoter. To increase your queue limit, please upvote the bot on DiscordBots.org, it's free! https://discordbots.org/bot/mrfox");
+    if (queue && queue.size > 1 && !message.author.upvoter) return message.error("Your song queue limit is currently at 2 songs as a non-upvoter. To increase your queue limit, please upvote the bot on DiscordBots.org, it's free! https://discordbots.org/bot/mrfox");
     else if (queue && queue.size > 4 && message.author.patreonTier < 1)
       return message.error("Your song queue limit is currently at 4 songs as a free user. To increase your queue limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam");
     const isLink: RegExpMatchArray =
