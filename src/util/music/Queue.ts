@@ -1,111 +1,91 @@
 import {
+  Collection,
   GuildMember,
   Message,
   TextChannel,
   VoiceChannel,
   VoiceConnection
 } from "discord.js";
+import { Player } from "lavalink";
 import { FoxClient, Song } from "..";
-import { FoxGuild } from "../extensions";
+import { FoxGuild, FoxMessage } from "../extensions";
 
 interface QueueInfo {
-  connection: VoiceConnection;
-  playing: boolean;
   skippers: string[];
-  songs: Song[];
-  textChannel: TextChannel;
-  voiceChannel: VoiceChannel;
 }
 
-export default class Queue implements QueueInfo {
+export default class Queue extends Collection<any, any> implements QueueInfo {
   public client: FoxClient;
-  public connection: VoiceConnection;
-  public playing: boolean;
   public skippers: string[];
-  public songs: Song[];
-  public textChannel: TextChannel;
-  public voiceChannel: VoiceChannel;
 
-  public constructor(client: FoxClient, info: QueueInfo) {
+  public constructor(client: FoxClient) {
+    super();
     this.client = client;
-    this.textChannel = info.textChannel;
-    this.voiceChannel = info.voiceChannel;
-    this.connection = info.connection;
-    this.songs = info.songs;
-    this.skippers = info.skippers;
-    this.playing = info.playing;
+    this.skippers = [];
   }
 
-  public endAllSongs(): boolean | Promise<Message | Message[]> {
-    const serverQueue: Queue = (this.textChannel.guild as FoxGuild).queue;
-    // Check if there are songs in queue to stop.
-    // Doesn't use brackets because Jacz has weird formatting.
-    if (!serverQueue.songs.length) {
-      return this.textChannel.send(
-        "<:nicexmark:495362785010647041>  There is nothing playing for me to stop."
-      );
-    }
-    serverQueue.songs = [];
-    if (!serverQueue.connection) {
-      return undefined;
-    }
-    serverQueue.connection.dispatcher.end();
+  public endAllSongs(message: FoxMessage): Promise<FoxMessage> {
+    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    player.queue = null;
 
-    return true;
+    return player
+      .stop()
+      .then(() => player.leave())
+      .then(() => message.success("Successfully stopped music player."));
   }
 
-  public pause(): Promise<Message | Message[]> {
-    try {
-      this.textChannel.guild.voiceConnection.dispatcher.pause();
-
-      return this.textChannel.send(
-        "<:away:313956277220802560> Successfully paused the current song."
-      );
-    } catch (err) {
-      return this.textChannel.send(`Oops, there was an error! ${err}`);
+  public async pause(message: FoxMessage): Promise<FoxMessage> {
+    if (!message.guild.me.voice.channel) {
+      return message.error(" I must be in a voice channel first.");
     }
+    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    await player.pause();
+
+    return message.success("Successfully paused the current song.");
   }
 
-  public resume(): Promise<Message | Message[]> {
-    try {
-      this.textChannel.guild.voiceConnection.dispatcher.resume();
-
-      return this.textChannel.send(
-        "<:away:313956277220802560> Successfully resumed the current song."
-      );
-    } catch (err) {
-      return this.textChannel.send(`Oops, there was an error! ${err}`);
+  public async resume(message: FoxMessage): Promise<FoxMessage> {
+    if (!message.guild.me.voice.channel) {
+      return message.error(" I must be in a voice channel first.");
     }
+    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    await player.pause(false);
+
+    return message.success("Successfully resumed the current song.");
   }
 
-  public async skip(member: GuildMember): Promise<Message | Message[]> {
-    const serverQueue: Queue = (member.guild as FoxGuild).queue;
-    if (!serverQueue) {
-      return this.textChannel.send(
-        "<:nicexmark:495362785010647041> Sorry, but there was nothing playing for me to skip."
+  public async skip(message: FoxMessage): Promise<any> {
+    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    if (!player) {
+      return message.error(
+        "Sorry, but there was nothing playing for me to skip."
       ); // tslint:disable-line
     }
-    if (serverQueue.skippers.includes(member.id)) {
-      return this.textChannel.send(
-        "<:nicexmark:495362785010647041> Sorry, but you have already voted to skip!"
-      );
+    if (this.skippers.includes(message.member.id)) {
+      return message.error("Sorry, but you have already voted to skip!");
     }
-    await serverQueue.skippers.push(member.id);
+    await this.skippers.push(message.member.id);
     if (
-      serverQueue.skippers.length >
-      Math.floor(member.voice.channel.members.size - 1) / 3
+      this.skippers.length >
+      Math.floor(message.member.voice.channel.members.size - 1) / 3
     ) {
-      serverQueue.connection.dispatcher.end();
+      await player.stop();
+      player.emit("event", { reason: "FINISHED" });
 
-      return this.textChannel.send(
-        "<:check:314349398811475968> Successfully skipped the current song."
-      );
+      return message.success("Successfully skipped the current song.");
     } else {
-      return this.textChannel.send(
-        `<:check:314349398811475968> Your skip has been added! To complete the skip, you need ${Math.ceil(
-          (member.voice.channel.members.size - 1) / 2
-        ) - serverQueue.skippers.length} more votes.`
+      return message.success(
+        `Your skip has been added! To complete the skip, you need ${Math.ceil(
+          (message.member.voice.channel.members.size - 1) / 2
+        ) - this.skippers.length} more votes.`
       ); // tslint:disable-line
     }
+  }
+
+  public async volume(int: number, message: FoxMessage): Promise<FoxMessage> {
+    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    await player.setVolume(int);
+
+    return message.success(`Set the player volume to ${int}%`);
   }
 }

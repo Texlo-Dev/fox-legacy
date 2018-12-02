@@ -1,5 +1,5 @@
 import { Collection, GuildMember, Message, Role } from "discord.js";
-import { FoxGuild } from "../extensions";
+import { FoxGuild, FoxMessage } from "../extensions";
 import { Permissions } from "../Mongo";
 export default class PermStore extends Collection<any, any> {
   public guild: FoxGuild;
@@ -105,7 +105,7 @@ export default class PermStore extends Collection<any, any> {
 
   public check(
     perm: string,
-    member: GuildMember | Role | Message,
+    member: GuildMember | Role | FoxMessage,
     channel?: any
   ): boolean {
     if (member instanceof Role) {

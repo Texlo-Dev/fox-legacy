@@ -20,6 +20,7 @@ export default class FoxCommand extends Command {
   }
 
   public run(message: FoxMessage): Promise<FoxMessage> {
+    return message.error("This command is currently disabled.");
     const serverQueue: Queue = message.guild.queue;
     if (!serverQueue) {
       return message.error(" Nothing is currently playing.");

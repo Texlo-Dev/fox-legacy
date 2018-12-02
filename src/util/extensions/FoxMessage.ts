@@ -211,12 +211,14 @@ export default Structures.extend("Message", mes => {
     }
 
     public async sendPrompt(
-      prompt: string,
+      prompt: string | MessageEmbed,
       time: number,
       filter?: CollectorFilter
     ): Promise<number | string> {
       await this.channel.send(
-        `${prompt}\nYou have ${time /
+        prompt instanceof MessageEmbed
+        ? prompt
+        : `${prompt}\nYou have ${time /
           1000} seconds to respond, or you can cancel by typing \`cancel\`.
             `
       );

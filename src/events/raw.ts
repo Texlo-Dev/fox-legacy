@@ -15,6 +15,10 @@ export default class extends Event {
   }
 
   public async run(event: any): Promise<void> {
+    if (event.t === "VOICE_STATE_UPDATE")
+      this.client.lavalink.voiceStateUpdate(event.d);
+    if (event.t === "VOICE_SERVER_UPDATE")
+      this.client.lavalink.voiceServerUpdate(event.d);
     if (!events.hasOwnProperty(event.t)) {
       return;
     }

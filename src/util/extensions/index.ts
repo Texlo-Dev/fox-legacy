@@ -4,6 +4,7 @@ import {
   CollectorFilter,
   Guild,
   Message,
+  MessageEmbed,
   MessageOptions,
   TextChannel,
   User
@@ -56,7 +57,7 @@ export interface FoxMessage extends Message {
   FoxEmbed(options: any, text: string): Promise<FoxMessage>;
   send(content: any, options?: MessageOptions): Promise<FoxMessage>;
   sendPrompt(
-    prompt: string,
+    prompt: string | MessageEmbed,
     time: number,
     filter?: CollectorFilter
   ): Promise<number | string>;

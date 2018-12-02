@@ -6,20 +6,6 @@ export default class FoxCommand extends Command {
     return message.guild.perms.check("music.dj", message);
   }
 
-  public static async run(message: FoxMessage): Promise<FoxMessage | void> {
-    const member: GuildMember = await message.guild.members.fetch(
-      message.author
-    );
-    if (!member.voice.channel) {
-      return message.error(" You are not currently in a voice channel.");
-    }
-    const serverQueue: Queue = message.guild.queue;
-    if (!serverQueue) {
-      return message.error(" There is nothing playing for me to stop.");
-    }
-    await serverQueue.endAllSongs();
-  }
-
   public constructor(client: FoxClient) {
     super(client, {
       name: "stop",
@@ -28,5 +14,23 @@ export default class FoxCommand extends Command {
       guildOnly: true,
       requiredPerms: ["`music.dj`"]
     });
+  }
+
+  public async run(message: FoxMessage): Promise<FoxMessage> {
+    const member: GuildMember = await message.guild.members.fetch(
+      message.author
+    );
+    if (!member.voice.channel) {
+      return message.error(" You are not currently in a voice channel.");
+    }
+    const player: Queue = this.client.lavalink.players.get(message.guild.id)
+      .queue;
+    if (!player) {
+      return message.error(
+        "Sorry, but there was nothing playing for me to skip."
+      ); // tslint:disable-line
+    }
+
+    return player.endAllSongs(message);
   }
 }

@@ -38,6 +38,7 @@
     "google": "^2.1.0",
     "jaczfetch": "github:MrJacz/jaczfetch",
     "kurasuta": "^0.2.16",
+    "lavalink": "^2.3.0",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.1",
     "mongodb": "^3.1.10",

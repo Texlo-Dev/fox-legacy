@@ -2,8 +2,9 @@
 import translate from "@k3rn31p4nic/google-translate-api";
 import axios, { AxiosResponse } from "axios";
 import { Client, Collection, TextChannel, Util } from "discord.js";
+import { Node } from "lavalink";
 import { CommandStore, EventStore, FoxMusic, Loader, Tools } from "..";
-import { dboatsKey, dbotsKey, devs, isTestFox, ownerID, prefix } from "../../config.json";
+import { dboatsKey, dbotsKey, devs, isTestFox, lavalinkpass, ownerID, prefix } from "../../config.json";
 import { FoxMessage } from "../extensions";
 import * as Mongo from "../Mongo";
 const THRESHOLD: number = 1000 * 60 * 20;
@@ -146,6 +147,7 @@ class FoxClient extends Client {
   public commandsRun: number;
   public events: EventStore;
   public isTestFox: boolean;
+  public lavalink: Node;
   public locales: any;
   public mongo: any;
   public music: FoxMusic;
@@ -212,6 +214,7 @@ class FoxClient extends Client {
       polls: Mongo.Polls,
       patrons: Mongo.Patrons
     };
+
     this.once("ready", async () => this._ready());
   }
 
@@ -219,6 +222,20 @@ class FoxClient extends Client {
     const { loadCommands, loadEvents } = Loader;
     await loadCommands(this);
     await loadEvents(this);
+    this.lavalink = new Node({
+      userID: this.user.id,
+      password: lavalinkpass,
+      shardCount: this.options.totalShardCount,
+      hosts: {
+        rest: "http://localhost:2333",
+        ws: "ws://localhost:2333"
+      },
+      send: (guildID: string, packet: any): Promise<void> => {
+        if (this.guilds.has(guildID)) this.ws.shards.get(this.shard.id).send(packet);
+
+        return undefined;
+      }
+    });
     this.ready = true;
     this.emit("foxReady");
   }

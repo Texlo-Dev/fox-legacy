@@ -1,3 +1,4 @@
+import { Player } from "lavalink";
 import { Command, FoxClient, Queue } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 export default class FoxCommand extends Command {
@@ -5,11 +6,23 @@ export default class FoxCommand extends Command {
     return message.guild.perms.check("music.dj", message);
   }
 
-  public static async run(message: FoxMessage): Promise<FoxMessage> {
-    const serverQueue: Queue = message.guild.queue;
-    if (!serverQueue || !message.guild.voiceConnection) {
-      return message.error("No songs are in the queue. Welp.");
+  public constructor(client: FoxClient) {
+    super(client, {
+      name: "fskip",
+      description: "Forces the skipping of a song.",
+      requiredPerms: ["`music.dj`"],
+      guildOnly: true
+    });
+  }
+
+  public async run(message: FoxMessage): Promise<FoxMessage> {
+    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    if (!player.queue) {
+      return message.error(
+        "Sorry, but there was nothing playing for me to skip."
+      ); // tslint:disable-line
     }
+
     if (
       !message.member.voice.channel ||
       message.member.voice.channel.id !==
@@ -20,17 +33,10 @@ export default class FoxCommand extends Command {
         "You need to be in the bot's voice channel to use this command."
       );
     }
-    message.guild.voiceConnection.dispatcher.end();
+
+    await player.queue.stop();
+    player.emit("event", { reason: "FINISHED" });
 
     return message.send("Force skip successful.");
-  }
-
-  public constructor(client: FoxClient) {
-    super(client, {
-      name: "fskip",
-      description: "Forces the skipping of a song.",
-      requiredPerms: ["`music.dj`"],
-      guildOnly: true
-    });
   }
 }
