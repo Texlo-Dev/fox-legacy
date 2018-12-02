@@ -230,8 +230,9 @@ class FoxClient extends Client {
         rest: "http://localhost:2333",
         ws: "ws://localhost:2333"
       },
-      send: (guildID: string, packet: any): Promise<void> => {
-        if (this.guilds.has(guildID)) this.ws.shards.get(this.shard.id).send(packet);
+      send: (guildID: string, packet: any): void => {
+        const guild: Guild = this.guilds.get(guildID);
+        if (guild) return this.ws.shards.get(guild.shardID).send(packet);
 
         return undefined;
       }
