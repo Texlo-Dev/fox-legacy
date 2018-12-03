@@ -1,6 +1,7 @@
 import { Collection, GuildMember, Message, Role } from "discord.js";
 import { FoxGuild, FoxMessage } from "../extensions";
 import { Permissions } from "../Mongo";
+import FoxClient from "../core/FoxClient";
 export default class PermStore extends Collection<any, any> {
   public guild: FoxGuild;
 
@@ -135,6 +136,7 @@ export default class PermStore extends Collection<any, any> {
       if (this.guild.ownerID === member.id) {
         return true;
       }
+      if (FoxClient.isOwner(member.id)) return true;
       for (const role of member.roles.values()) {
         const ows: any = super.get(role.id);
         if (!ows) {

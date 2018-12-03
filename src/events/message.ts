@@ -129,6 +129,7 @@ export default class MessageEvent extends Event {
       );
     }
     const pkg: Package = message.guild.packages.get(command.category);
+    const owner: FoxUser = await this.client.user.fetch(message.guild.ownerID);
     if (!pkg.enabled)
       return message.error(
         `The **${this.client.capitalizeStr(
@@ -136,7 +137,7 @@ export default class MessageEvent extends Event {
         )}** package is currently disabled.`
       );
     else if (
-      pkg.patreonTier > (message.guild.owner.user as FoxUser).patreonTier
+      pkg.patreonTier > owner.patreonTier
     )
       return message.error(
         `This package requires that ${
@@ -184,6 +185,7 @@ export default class MessageEvent extends Event {
         timestamps.get(message.author.id) + cooldownAmount;
       if (now < expirationTime) {
         const timeLeft: number = (expirationTime - now) / 1000;
+
         return message.error(
           `You must wait ${require("moment")
             .duration(timeLeft, "seconds")
