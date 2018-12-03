@@ -129,7 +129,7 @@ export default class MessageEvent extends Event {
       );
     }
     const pkg: Package = message.guild.packages.get(command.category);
-    const owner: FoxUser = await this.client.user.fetch(message.guild.ownerID);
+    const owner: FoxUser = await this.client.users.fetch(message.guild.ownerID);
     if (!pkg.enabled)
       return message.error(
         `The **${this.client.capitalizeStr(
