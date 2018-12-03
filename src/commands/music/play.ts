@@ -81,7 +81,7 @@ export default class FoxCommand extends Command {
     }
     player.queue.skippers = [];
     try {
-      await player.join(mg.member.voice.channel.id);
+      await player.join(mg.guild.me.voice.channel.id);
       await player.play(track);
 
       const embed: MessageEmbed = new MessageEmbed()
@@ -247,6 +247,8 @@ export default class FoxCommand extends Command {
       const tnum: number = Number(resp);
       const track: Track = tracks[tnum - 1];
       if (!track) return message.error("Invalid track selected.");
+      if (track.info.length >= 360000 && message.author.patreonTier < 1)
+        return message.error("Your song queue limit is currently at 4 songs as a free user. To increase your queue limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam");
 
       return this.addVideo(track, message);
     }
