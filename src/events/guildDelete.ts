@@ -34,41 +34,7 @@ export default class GuildDelete extends Event {
   public async run(guild: FoxGuild): Promise<void> {
     const client: FoxClient = this.client;
     console.log(`Left ${guild.name}`);
-    await GuildDelete.deleteSettings(guild);
-    /* FoxClient.http("POST", {
-      url: `https://discordbots.org/api/bots/${client.user.id}/stats`,
-      body: {
-        shard_id: client.shard.id,
-        shard_count: client.shard.count,
-        server_count: client.guilds.size
-      },
-      headers: { Authorization: dbotsKey }
-    })
-      .then(() => console.log("Updated dbots.org status."))
-      .catch(console.error);
-
-    /* FoxClient.http("POST", {
-            url: `https://bots.discord.pw/api/bots/${client.user.id}/stats`,
-            body: {
-                shard_id: client.shard.id,
-                shard_count: client.shard.count,
-                server_count: client.guilds.size
-            },
-            headers: { Authorization: discordbotsKey },
-        })
-        .then(() => console.log("Updated bots.discord.pw status."))
-        .catch(console.error);
-
-    const num: number = (await this.client.shard.fetchClientValues(
-      "guilds.size"
-    )).reduce((prev, val) => prev + val, 0);
-    FoxClient.http("POST", {
-      url: `https://discord.boats/api/bot/${client.user.id}`,
-      body: { server_count: num },
-      headers: { Authorization: dboatsKey }
-    })
-      .then(() => console.log("Updated dboats.org status."))
-      .catch(console.error); */
+    await GuildDelete.deleteSettings(guild).catch(() => undefined);
 
     const webhook: WebhookClient = new WebhookClient(
       "364566963621462017",

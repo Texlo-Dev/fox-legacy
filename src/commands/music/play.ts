@@ -67,6 +67,121 @@ export default class FoxCommand extends Command {
     }
   }
 
+  public async fetchMusic(message: FoxMessage, platform: string, song: string): Promise<FoxMessage> {
+    const music: Node = this.client.lavalink;
+    let res: TrackResponse;
+    const isLink: RegExpMatchArray =
+      song.match(/^https?:\/\/(www.youtube.com|youtube.com)/) ||
+      song.match(/^https?:\/\/(www.soundcloud.com|soundcloud.com)/);
+    res = isLink
+      ? await music.load(song)
+      : await music.load(`${platform}search:${encodeURIComponent(song)}`);
+    if (!res.tracks || !res.tracks.length)
+      return message.error("No tracks were found.");
+    if (isLink && !res.playlistInfo.name)
+      return this.addVideo(res.tracks[0], message);
+    else if (isLink) {
+      return this.handlePlaylist(res, message);
+    } else {
+      const tracks: Track[] = res.tracks.slice(0, 10);
+      let num: number = 0;
+      const embed: MessageEmbed = new MessageEmbed()
+        .setAuthor("Music Selection", this.client.user.displayAvatarURL())
+        .setDescription(
+          `Here are the top ${
+            tracks.length
+          } results for **${song}**:\n${tracks
+            .map(v => `**${++num}** - ${v.info.title} by ${v.info.author}`)
+            .join("\n")}\n\nPlease enter a number from 1-${tracks.length}.`
+        )
+        .setColor(this.client.brandColor)
+        .setTimestamp()
+        .setFooter(this.client.user.username);
+      const resp: string | number = await message.sendPrompt(embed, 15000);
+      // tslint:disable-next-line:switch-default
+      switch (resp) {
+        case undefined:
+          return message.error("No response detected, so cancelled command.");
+        case 0:
+          return message.error("Cancelling command.");
+      }
+      const tnum: number = Number(resp);
+      const track: Track = tracks[tnum - 1];
+      if (!track) return message.error("Invalid track selected.");
+      if (track.info.length >= 360000 && message.author.patreonTier < 1)
+        return message.error(
+          "Your song length limit is currently at 5 minutes as a free user. To increase your max song length limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam" // tslint:disable-line
+        );
+
+      return this.addVideo(track, message);
+    }
+  }
+
+  public async handlePlaylist(
+    res: TrackResponse,
+    message: FoxMessage
+  ): Promise<FoxMessage> {
+    let num: number = 0;
+    const music: Node = this.client.lavalink;
+    const tracks: Track[] = res.tracks.slice(0, 10);
+    const embed: MessageEmbed = new MessageEmbed()
+      .setAuthor("Playlist Selection", this.client.user.displayAvatarURL())
+      .setDescription(
+        `Playlist detected. Showing first ${
+          tracks.length
+        } results.\n${tracks
+          .map(v => `**${++num}** - ${v.info.title} by ${v.info.author}`)
+          .join(
+            "\n"
+          )}\n\nType "all" to play all songs, or enter a number from 1-${
+          res.tracks.length
+        }.`
+      )
+      .setColor(this.client.brandColor)
+      .setTimestamp()
+      .setFooter(this.client.user.username);
+    const choice: string | number = await message.sendPrompt(embed, 15000);
+    // tslint:disable-next-line:switch-default
+    switch (choice) {
+      case undefined:
+        return message.error("No response detected, so cancelled command.");
+      case 0:
+        return message.error("Cancelling command.");
+      case "all":
+        for await (const tk of res.tracks) {
+          this.addVideo(tk, message, true);
+        }
+        const playembed: MessageEmbed = new MessageEmbed()
+          .setAuthor("Music Player", this.client.user.displayAvatarURL())
+          .setDescription(
+            `Downloaded Playlist.\n**Playlist Name:** ${
+              res.playlistInfo.name
+            }\n**Song Count:** ${
+              res.tracks.length
+            }\n**Total Play Time:** ${duration(
+              res.tracks
+                .map(r => r.info.length)
+                .reduce((prev, val) => prev + val, 0),
+              "milliseconds"
+            ).format("h [hours, ] m [minutes].")}`
+          )
+          .setColor(this.client.brandColor)
+          .setTimestamp()
+          .setFooter(this.client.user.username);
+        await message.channel.send({ embed: playembed });
+        const player: Player = music.players.get(message.guild.id);
+        if (!player.playing)
+          await this.playVideo(player.queue.first(), message);
+        break;
+      default:
+        const pnum: number = Number(choice);
+        const selected: Track = res.tracks[pnum - 1];
+        if (!selected) return message.error("Invalid track selected.");
+
+        return this.addVideo(selected, message);
+    }
+  }
+
   public async playVideo(track: Track, mg: FoxMessage): Promise<FoxMessage> {
     const music: Node = this.client.lavalink;
     const player: Player = music.players.get(mg.guild.id);
@@ -111,7 +226,7 @@ export default class FoxCommand extends Command {
 
       mg.channel.send(embed);
       player.once("event", ({ reason }) => {
-        if (reason === "REPLACED" || reason === "FINISHED") {
+        if (reason === "FINISHED") {
           player.queue.delete(track.info.identifier);
           player.queue.skippers = [];
           setTimeout(() => this.playVideo(player.queue.first(), mg), 2000);
@@ -154,117 +269,16 @@ export default class FoxCommand extends Command {
     }
 
     const music: Node = this.client.lavalink;
-    let res: TrackResponse;
     const queue: Queue = music.players.get(message.guild.id).queue;
     if (queue && queue.size > 1 && !message.author.upvoter)
       return message.error(
-        "Your song queue limit is currently at 2 songs as a non-upvoter. To increase your queue limit, please upvote the bot on DiscordBots.org, it's free! https://discordbots.org/bot/mrfox"
+        "Your song queue limit is currently at 2 songs as a non-upvoter. To increase your queue limit, please upvote the bot on DiscordBots.org, it's free! https://discordbots.org/bot/mrfox" // tslint:disable-line
       );
     else if (queue && queue.size > 4 && message.author.patreonTier < 1)
       return message.error(
-        "Your song queue limit is currently at 4 songs as a free user. To increase your queue limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam"
+        "Your song queue limit is currently at 4 songs as a free user. To increase your queue limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam" // tslint:disable-line
       );
-    const isLink: RegExpMatchArray =
-      song.match(/^https?:\/\/(www.youtube.com|youtube.com)/) ||
-      song.match(/^https?:\/\/(www.soundcloud.com|soundcloud.com)/);
-    res = isLink
-      ? await music.load(song)
-      : await music.load(`${platform}search:${encodeURIComponent(song)}`);
-    if (!res.tracks || !res.tracks.length)
-      return message.error("No tracks were found.");
-    if (isLink && !res.playlistInfo.name)
-      return this.addVideo(res.tracks[0], message);
-    else if (isLink) {
-      let num: number = 0;
-      const tracks: Track[] = res.tracks.slice(0, 10);
-      const embed: MessageEmbed = new MessageEmbed()
-        .setAuthor("Playlist Selection", this.client.user.displayAvatarURL())
-        .setDescription(
-          `Playlist detected. Showing first ${
-            tracks.length
-          } results.\n${tracks
-            .map(v => `**${++num}** - ${v.info.title} by ${v.info.author}`)
-            .join(
-              "\n"
-            )}\n\nType "all" to play all songs, or enter a number from 1-${
-            res.tracks.length
-          }.`
-        )
-        .setColor(this.client.brandColor)
-        .setTimestamp()
-        .setFooter(this.client.user.username);
-      const choice: string | number = await message.sendPrompt(embed, 15000);
-      // tslint:disable-next-line:switch-default
-      switch (choice) {
-        case undefined:
-          return message.error("No response detected, so cancelled command.");
-        case 0:
-          return message.error("Cancelling command.");
-        case "all":
-          for await (const tk of res.tracks) {
-            this.addVideo(tk, message, true);
-          }
-          const playembed: MessageEmbed = new MessageEmbed()
-            .setAuthor("Music Player", this.client.user.displayAvatarURL())
-            .setDescription(
-              `Downloaded Playlist.\n**Playlist Name:** ${
-                res.playlistInfo.name
-              }\n**Song Count:** ${
-                res.tracks.length
-              }\n**Total Play Time:** ${duration(
-                res.tracks
-                  .map(r => r.info.length)
-                  .reduce((prev, val) => prev + val, 0),
-                "milliseconds"
-              ).format("h [hours, ] m [minutes].")}`
-            )
-            .setColor(this.client.brandColor)
-            .setTimestamp()
-            .setFooter(this.client.user.username);
-          await message.channel.send({ embed: playembed });
-          const player: Player = music.players.get(message.guild.id);
-          if (!player.playing)
-            await this.playVideo(player.queue.first(), message);
-          break;
-        default:
-          const pnum: number = Number(choice);
-          const selected: Track = res.tracks[pnum - 1];
-          if (!selected) return message.error("Invalid track selected.");
 
-          return this.addVideo(selected, message);
-      }
-    } else {
-      const tracks: Track[] = res.tracks.slice(0, 10);
-      let num: number = 0;
-      const embed: MessageEmbed = new MessageEmbed()
-        .setAuthor("Music Selection", this.client.user.displayAvatarURL())
-        .setDescription(
-          `Here are the top ${
-            tracks.length
-          } results for **${song}**:\n${tracks
-            .map(v => `**${++num}** - ${v.info.title} by ${v.info.author}`)
-            .join("\n")}\n\nPlease enter a number from 1-${tracks.length}.`
-        )
-        .setColor(this.client.brandColor)
-        .setTimestamp()
-        .setFooter(this.client.user.username);
-      const resp: string | number = await message.sendPrompt(embed, 15000);
-      // tslint:disable-next-line:switch-default
-      switch (resp) {
-        case undefined:
-          return message.error("No response detected, so cancelled command.");
-        case 0:
-          return message.error("Cancelling command.");
-      }
-      const tnum: number = Number(resp);
-      const track: Track = tracks[tnum - 1];
-      if (!track) return message.error("Invalid track selected.");
-      if (track.info.length >= 360000 && message.author.patreonTier < 1)
-        return message.error(
-          "Your song queue limit is currently at 4 songs as a free user. To increase your queue limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam"
-        );
-
-      return this.addVideo(track, message);
-    }
+    return this.fetchMusic(message, platform, song);
   }
 }

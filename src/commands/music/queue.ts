@@ -43,7 +43,7 @@ export default class FoxCommand extends Command {
       "milliseconds"
     ).format("m:ss", { trim: false });
 
-    const paginated: any = FoxClient.paginate(serverQueue.array(), page, 10);
+    const paginated: any = FoxClient.paginate(serverQueue.array(), page, 11);
     let num: number = (paginated.page - 1) * 10;
     paginated.items.shift();
     const embed: MessageEmbed = new MessageEmbed()
