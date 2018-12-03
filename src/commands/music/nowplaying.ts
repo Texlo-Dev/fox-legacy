@@ -21,7 +21,7 @@ export default class FoxCommand extends Command {
   }
 
   public run(message: FoxMessage): Promise<FoxMessage> {
-    const player: Queue = this.client.lavalink.players.get(message.guild.id);
+    const player: Queue = this.client.music.players.get(message.guild.id);
     if (!player.queue) {
       return message.error(
         "Sorry, but there was nothing playing for me to skip."

@@ -43,7 +43,7 @@ export default class FoxCommand extends Command {
       .addField("Total Shards", this.client.options.totalShardCount, true)
       .addField("Users", `${users.toLocaleString()}`, true)
       .addField("Channels", channel.toLocaleString(), true)
-      .addField("Voice Connections", this.client.lavalink.players.size, true)
+      .addField("Voice Connections", this.client.music.players.size, true)
       .addField(
         "Uptime",
         duration(this.client.uptime).format("d[d], h[h], m[m], s[s]"),

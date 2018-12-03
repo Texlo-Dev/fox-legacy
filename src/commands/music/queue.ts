@@ -28,7 +28,7 @@ export default class FoxCommand extends Command {
     if (!page) {
       page = 1;
     }
-    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    const player: Player = this.client.music.players.get(message.guild.id);
     const serverQueue: Queue = player.queue;
     if (!serverQueue || !serverQueue.size) {
       return message.error(" It looks like there are no songs in the queue.");

@@ -23,7 +23,7 @@ export default class FoxCommand extends Command {
     if (!member.voice.channel) {
       return message.error(" You are not currently in a voice channel.");
     }
-    const player: Queue = this.client.lavalink.players.get(message.guild.id)
+    const player: Queue = this.client.music.players.get(message.guild.id)
       .queue;
     if (!player) {
       return message.error(

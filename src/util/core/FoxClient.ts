@@ -155,10 +155,9 @@ class FoxClient extends Client {
   public commandsRun: number;
   public events: EventStore;
   public isTestFox: boolean;
-  public lavalink: Node;
   public locales: any;
   public mongo: any;
-  public music: FoxMusic;
+  public music: Node;
   public packages: string[];
   public permissions: any;
   public ready: boolean;
@@ -182,7 +181,6 @@ class FoxClient extends Client {
     });
     this.tools = Tools;
     this.packages = [];
-    this.music = new FoxMusic(this);
     this.commandPrefix = prefix;
     this.commands = new CommandStore(this);
     this.events = new EventStore();
@@ -230,7 +228,7 @@ class FoxClient extends Client {
     const { loadCommands, loadEvents } = Loader;
     await loadCommands(this);
     await loadEvents(this);
-    this.lavalink = new Node({
+    this.music = new Node({
       userID: this.user.id,
       password: lavalinkpass,
       shardCount: this.options.totalShardCount,
@@ -246,7 +244,7 @@ class FoxClient extends Client {
       }
     }).on(
       "playerUpdate",
-      ({ guildId, state: { position } }) => (this.lavalink.players.get(guildId).position = position)
+      ({ guildId, state: { position } }) => (this.music.players.get(guildId).position = position)
     );
     this.ready = true;
     this.emit("foxReady");

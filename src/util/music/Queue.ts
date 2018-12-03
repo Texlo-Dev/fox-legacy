@@ -25,7 +25,7 @@ export default class Queue extends Collection<any, any> implements QueueInfo {
   }
 
   public endAllSongs(message: FoxMessage): Promise<FoxMessage> {
-    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    const player: Player = this.client.music.players.get(message.guild.id);
     player.queue = null;
 
     return player
@@ -38,7 +38,7 @@ export default class Queue extends Collection<any, any> implements QueueInfo {
     if (!message.guild.me.voice.channel) {
       return message.error(" I must be in a voice channel first.");
     }
-    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    const player: Player = this.client.music.players.get(message.guild.id);
     await player.pause();
 
     return message.success("Successfully paused the current song.");
@@ -48,14 +48,14 @@ export default class Queue extends Collection<any, any> implements QueueInfo {
     if (!message.guild.me.voice.channel) {
       return message.error(" I must be in a voice channel first.");
     }
-    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    const player: Player = this.client.music.players.get(message.guild.id);
     await player.pause(false);
 
     return message.success("Successfully resumed the current song.");
   }
 
   public async skip(message: FoxMessage): Promise<any> {
-    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    const player: Player = this.client.music.players.get(message.guild.id);
     if (!player) {
       return message.error(
         "Sorry, but there was nothing playing for me to skip."
@@ -83,7 +83,7 @@ export default class Queue extends Collection<any, any> implements QueueInfo {
   }
 
   public async volume(int: number, message: FoxMessage): Promise<FoxMessage> {
-    const player: Player = this.client.lavalink.players.get(message.guild.id);
+    const player: Player = this.client.music.players.get(message.guild.id);
     await player.setVolume(int);
 
     return message.success(`Set the player volume to ${int}%`);

@@ -33,7 +33,7 @@ export default class FoxCommand extends Command {
       return message.error("I must be in a voice channel first.");
     }
 
-    const player: Queue = this.client.lavalink.players.get(message.guild.id)
+    const player: Queue = this.client.music.players.get(message.guild.id)
       .queue;
     if (!player) {
       return message.error(

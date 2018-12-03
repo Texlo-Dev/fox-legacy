@@ -30,7 +30,7 @@ export default class FoxCommand extends Command {
     mg: FoxMessage,
     playlist: boolean = false
   ): Promise<FoxMessage> {
-    const music: Node = this.client.lavalink;
+    const music: Node = this.client.music;
     const player: Player = music.players.get(mg.guild.id);
     if (!player.queue) {
       track.info.requestor = mg.member;
@@ -67,15 +67,19 @@ export default class FoxCommand extends Command {
     }
   }
 
-  public async fetchMusic(message: FoxMessage, platform: string, song: string): Promise<FoxMessage> {
-    const music: Node = this.client.lavalink;
+  public async fetchMusic(
+    message: FoxMessage,
+    platform: string,
+    song: string
+  ): Promise<FoxMessage> {
+    const music: Node = this.client.music;
     let res: TrackResponse;
     const isLink: RegExpMatchArray =
       song.match(/^https?:\/\/(www.youtube.com|youtube.com)/) ||
       song.match(/^https?:\/\/(www.soundcloud.com|soundcloud.com)/);
     res = isLink
       ? await music.load(song)
-      : await music.load(`${platform}search:${encodeURIComponent(song)}`);
+      : await music.load(`${platform}search:${song}`);
     if (!res.tracks || !res.tracks.length)
       return message.error("No tracks were found.");
     if (isLink && !res.playlistInfo.name)
@@ -122,7 +126,7 @@ export default class FoxCommand extends Command {
     message: FoxMessage
   ): Promise<FoxMessage> {
     let num: number = 0;
-    const music: Node = this.client.lavalink;
+    const music: Node = this.client.music;
     const tracks: Track[] = res.tracks.slice(0, 10);
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Playlist Selection", this.client.user.displayAvatarURL())
@@ -183,7 +187,7 @@ export default class FoxCommand extends Command {
   }
 
   public async playVideo(track: Track, mg: FoxMessage): Promise<FoxMessage> {
-    const music: Node = this.client.lavalink;
+    const music: Node = this.client.music;
     const player: Player = music.players.get(mg.guild.id);
     if (!track) {
       await player.stop();
@@ -237,11 +241,10 @@ export default class FoxCommand extends Command {
     }
   }
 
-  // tslint:disable-next-line:cyclomatic-complexity
   public async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
     const platform: string = args[0];
     const song: string = args.slice(1).join(" ");
-    if (!platform || !["yt", "sc"].includes(platform)) {
+    if (!platform || !["yt", "sc"].includes(platform.toLowerCase())) {
       return message.error(
         "Invalid platform.\nAvailable platforms - \nyt = YouTube\nsc = SoundCloud"
       );
@@ -268,7 +271,7 @@ export default class FoxCommand extends Command {
       );
     }
 
-    const music: Node = this.client.lavalink;
+    const music: Node = this.client.music;
     const queue: Queue = music.players.get(message.guild.id).queue;
     if (queue && queue.size > 1 && !message.author.upvoter)
       return message.error(
