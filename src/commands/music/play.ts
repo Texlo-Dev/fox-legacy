@@ -73,15 +73,21 @@ export default class FoxCommand extends Command {
     if (!track) {
       await player.stop();
       await player.leave();
+      music.players.delete(mg.guild.id);
       player.queue = null;
 
       return mg.send(
         "<:dnd:313956276893646850> Queue has finished, leaving voice channel."
       );
     }
+    if (player.playing) return;
     player.queue.skippers = [];
     try {
-      await player.join(mg.guild.me.voice.channel ? mg.guild.me.voice.channel.id : mg.member.voice.channel.id);
+      await player.join(
+        mg.guild.me.voice.channel
+          ? mg.guild.me.voice.channel.id
+          : mg.member.voice.channel.id
+      );
       await player.play(track);
 
       const embed: MessageEmbed = new MessageEmbed()
@@ -104,10 +110,8 @@ export default class FoxCommand extends Command {
         .setColor(this.client.brandColor);
 
       mg.channel.send(embed);
-      player.on("playerUpdate", ({ state: { position } }) =>
-        player.position = position);
-      player.on("event", ({ reason }) => {
-        if (reason === "FINISHED") {
+      player.once("event", ({ reason }) => {
+        if (reason === "REPLACED" || reason === "FINISHED") {
           player.queue.delete(track.info.identifier);
           player.queue.skippers = [];
           setTimeout(() => this.playVideo(player.queue.first(), mg), 2000);
@@ -152,9 +156,14 @@ export default class FoxCommand extends Command {
     const music: Node = this.client.lavalink;
     let res: TrackResponse;
     const queue: Queue = music.players.get(message.guild.id).queue;
-    if (queue && queue.size > 1 && !message.author.upvoter) return message.error("Your song queue limit is currently at 2 songs as a non-upvoter. To increase your queue limit, please upvote the bot on DiscordBots.org, it's free! https://discordbots.org/bot/mrfox");
+    if (queue && queue.size > 1 && !message.author.upvoter)
+      return message.error(
+        "Your song queue limit is currently at 2 songs as a non-upvoter. To increase your queue limit, please upvote the bot on DiscordBots.org, it's free! https://discordbots.org/bot/mrfox"
+      );
     else if (queue && queue.size > 4 && message.author.patreonTier < 1)
-      return message.error("Your song queue limit is currently at 4 songs as a free user. To increase your queue limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam");
+      return message.error(
+        "Your song queue limit is currently at 4 songs as a free user. To increase your queue limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam"
+      );
     const isLink: RegExpMatchArray =
       song.match(/^https?:\/\/(www.youtube.com|youtube.com)/) ||
       song.match(/^https?:\/\/(www.soundcloud.com|soundcloud.com)/);
@@ -178,7 +187,7 @@ export default class FoxCommand extends Command {
             .join(
               "\n"
             )}\n\nType "all" to play all songs, or enter a number from 1-${
-            tracks.length
+            res.tracks.length
           }.`
         )
         .setColor(this.client.brandColor)
@@ -200,19 +209,22 @@ export default class FoxCommand extends Command {
             .setDescription(
               `Downloaded Playlist.\n**Playlist Name:** ${
                 res.playlistInfo.name
-              }\n**Song Count:** ${res.tracks.length}\n**Total Play Time:** ${duration(
-                res.tracks.map(r => r.info.length)
-                .reduce((prev, val) => prev + val, 0), "milliseconds")
-                .format(
-                "h [hours, ] m [minutes]."
-              )}`
+              }\n**Song Count:** ${
+                res.tracks.length
+              }\n**Total Play Time:** ${duration(
+                res.tracks
+                  .map(r => r.info.length)
+                  .reduce((prev, val) => prev + val, 0),
+                "milliseconds"
+              ).format("h [hours, ] m [minutes].")}`
             )
             .setColor(this.client.brandColor)
             .setTimestamp()
             .setFooter(this.client.user.username);
           await message.channel.send({ embed: playembed });
           const player: Player = music.players.get(message.guild.id);
-          if (!player.playing) await this.playVideo(player.queue.first(), message);
+          if (!player.playing)
+            await this.playVideo(player.queue.first(), message);
           break;
         default:
           const pnum: number = Number(choice);
@@ -248,7 +260,9 @@ export default class FoxCommand extends Command {
       const track: Track = tracks[tnum - 1];
       if (!track) return message.error("Invalid track selected.");
       if (track.info.length >= 360000 && message.author.patreonTier < 1)
-        return message.error("Your song queue limit is currently at 4 songs as a free user. To increase your queue limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam");
+        return message.error(
+          "Your song queue limit is currently at 4 songs as a free user. To increase your queue limit, please consider upgrading to a Bronze Fox Patreon or higher here:https://www.patreon.com/foxdevteam"
+        );
 
       return this.addVideo(track, message);
     }

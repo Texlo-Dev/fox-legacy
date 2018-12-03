@@ -4,7 +4,15 @@ import axios, { AxiosResponse } from "axios";
 import { Client, Collection, TextChannel, Util } from "discord.js";
 import { Node } from "lavalink";
 import { CommandStore, EventStore, FoxMusic, Loader, Tools } from "..";
-import { dboatsKey, dbotsKey, devs, isTestFox, lavalinkpass, ownerID, prefix } from "../../config.json";
+import {
+  dboatsKey,
+  dbotsKey,
+  devs,
+  isTestFox,
+  lavalinkpass,
+  ownerID,
+  prefix
+} from "../../config.json";
 import { FoxMessage } from "../extensions";
 import * as Mongo from "../Mongo";
 const THRESHOLD: number = 1000 * 60 * 20;
@@ -236,7 +244,10 @@ class FoxClient extends Client {
 
         return undefined;
       }
-    });
+    }).on(
+      "playerUpdate",
+      ({ guildId, state: { position } }) => (this.lavalink.players.get(guildId).position = position)
+    );
     this.ready = true;
     this.emit("foxReady");
   }
@@ -317,8 +328,10 @@ class FoxClient extends Client {
   }
 
   public async postStats(): Promise<void> {
-    const servercount: any[] = await this.shard.fetchClientValues("guilds.size");
-    for (const [shard, count]  of servercount.entries()) {
+    const servercount: any[] = await this.shard.fetchClientValues(
+      "guilds.size"
+    );
+    for (const [shard, count] of servercount.entries()) {
       FoxClient.http("POST", {
         url: `https://discordbots.org/api/bots/${this.user.id}/stats`,
         body: {
@@ -327,15 +340,15 @@ class FoxClient extends Client {
           server_count: count
         },
         headers: { Authorization: dbotsKey }
-      })
-      .catch(console.error);
+      }).catch(console.error);
 
       FoxClient.http("POST", {
         url: `https://discord.boats/api/bot/${this.user.id}`,
-        body: { server_count: servercount.reduce((prev, val) => prev + val, 0) },
+        body: {
+          server_count: servercount.reduce((prev, val) => prev + val, 0)
+        },
         headers: { Authorization: dboatsKey }
-      })
-      .catch(console.error);
+      }).catch(console.error);
     }
   }
 

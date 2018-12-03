@@ -8,7 +8,7 @@ const app: any = polka();
 
 export default (client: FoxClient) => {
   app.use(cors());
-  app.use(_json());
+  app.use(_json({ extended: true }));
   app.use(urlencoded());
 
   app.use((req: ClientRequest, res: ServerResponse, next: any) => {
