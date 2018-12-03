@@ -81,7 +81,7 @@ export default class FoxCommand extends Command {
     }
     player.queue.skippers = [];
     try {
-      await player.join(mg.guild.me.voice.channel.id);
+      await player.join(mg.guild.me.voice.channel ? mg.guild.me.voice.id : mg.member.voice.channel.id);
       await player.play(track);
 
       const embed: MessageEmbed = new MessageEmbed()
