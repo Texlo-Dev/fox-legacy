@@ -32,7 +32,7 @@ export default class FoxCommand extends Command {
       );
     }
 
-    await player.queue.stop();
+    await player.stop();
     player.emit("event", { reason: "FINISHED" });
 
     return message.send("Force skip successful.");
