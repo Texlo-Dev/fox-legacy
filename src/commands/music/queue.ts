@@ -43,7 +43,7 @@ export default class FoxCommand extends Command {
       "milliseconds"
     ).format("m:ss", { trim: false });
 
-    const paginated: any = FoxClient.paginate(serverQueue.array(), page, 7);
+    const paginated: any = FoxClient.paginate(serverQueue.array(), page, 6);
     let num: number = (paginated.page - 1) * 6;
     paginated.items.shift();
     const embed: MessageEmbed = new MessageEmbed()
@@ -61,7 +61,7 @@ export default class FoxCommand extends Command {
           .map(
             (song: Track) =>
               `**${
-                paginated.items[0] === song ? "Up Next:" : `#${++num} -`
+                paginated.page === 1 && paginated.items[0] === song ? "Up Next:" : `#${++num} -`
               }** [${song.info.title}](${song.info.uri}) as requested by ${
                 song.info.requestor.displayName
               } (${duration(song.info.length, "milliseconds").format("m:ss", {
