@@ -1,7 +1,7 @@
 import { Collection, GuildMember, Message, Role } from "discord.js";
+import { FoxClient } from "../../util";
 import { FoxGuild, FoxMessage } from "../extensions";
 import { Permissions } from "../Mongo";
-import FoxClient from "../core/FoxClient";
 export default class PermStore extends Collection<any, any> {
   public guild: FoxGuild;
 

@@ -149,20 +149,20 @@ export default class FoxCommand extends Command {
         .setTimestamp()
         .setColor(this.client.brandColor)
         .setAuthor(`${pkg.name} Package`, this.client.user.displayAvatarURL())
-        .addField("Description", pkg.description)
-        .addField(
+        .addField("Description", pkg.description);
+      if (filtered.size) {
+        embed.addField(
           "Commands",
           `${filtered
             .map(f => f.name)
             .sort()
             .join(", ") || "None"}
-          ${
-            filtered.size
-              ? `\nTo view detailed command info, type \`${prefix}help <command>\`. Ex. \`f)help level\``
-              : "".trim()
-          }
-          `
-        )
+
+          To view detailed command info, type \`${prefix}help <command>\`. Ex. \`f)help level\`
+        `
+        );
+      }
+      embed
         .addField(
           "Permissions",
           pkg.permissions.map(p => `\`${p.name}\``).join(", ") || "None"
