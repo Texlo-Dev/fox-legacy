@@ -70,19 +70,18 @@ export default class FoxCommand extends Command {
         );
       }
       let output = `
-                Welcome to ${
-                  this.client.user.username
-                }, an easy-to-use, multipurpose Discord bot!
-                I am serving: **${res.toLocaleString()}** servers.
-                Command format for ${
-                  message.guild ? `this server` : "this DM"
-                }: \`${prefix}<commandname>\`.
-                Command Count: **${this.client.commands.size}**.
-                [Add me to your server](https://mrfoxbot.xyz/servers) | [${
-                  this.client.user.username
-                } support server](https://discord.gg/DfsqmaV) | [Donate to us!](https://www.patreon.com/user?u=7413177)
-
-                `;
+Welcome to ${
+this.client.user.username
+}, an easy-to-use, multipurpose Discord bot!
+I am serving: **${res.toLocaleString()}** servers.
+Command format for ${
+message.guild ? `this server` : "this DM"
+}: \`${prefix}<commandname>\`.
+Command Count: **${this.client.commands.size}**.
+[Add me to your server](https://mrfoxbot.xyz/servers) | [${
+this.client.user.username
+} support server](https://discord.gg/DfsqmaV) | [Donate to us!](https://www.patreon.com/user?u=7413177)
+`;
       /* const categories: object = Array.from(myCommands.keys()).reduce(
         (prev, key) => {
           const command: Command = myCommands.get(key);

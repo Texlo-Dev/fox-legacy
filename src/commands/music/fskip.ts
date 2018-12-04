@@ -35,6 +35,6 @@ export default class FoxCommand extends Command {
     await player.stop();
     player.emit("event", { reason: "FINISHED" });
 
-    return message.send("Force skip successful.");
+    return message.success("Force skip successful.");
   }
 }
