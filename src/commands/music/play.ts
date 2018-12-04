@@ -221,7 +221,6 @@ export default class FoxCommand extends Command {
           "Now Playing",
           `[${track.info.title}](${track.info.uri})`
         )
-        .addField("Name", track.info.title)
         .addField("Author", track.info.author, true)
         .addField(
           "Length",
