@@ -27,7 +27,6 @@ export default class Queue extends Collection<any, any> implements QueueInfo {
   public async endAllSongs(message: FoxMessage): Promise<FoxMessage> {
     const player: Player = this.client.music.players.get(message.guild.id);
     player.queue = null;
-    this.client.music.players.delete(message.guild.id);
     await player.stop();
     await player.leave();
 

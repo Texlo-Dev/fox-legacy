@@ -80,7 +80,7 @@ export default class FoxCommand extends Command {
     if (isLink && !res.playlistInfo.name)
       return this.addVideo(res.tracks[0], message);
     else if (isLink) {
-      return this.handlePlaylist(res, message);
+      return this.handlePlaylist(res, message, song);
     } else {
       const tracks: Track[] = res.tracks.slice(0, 10);
       let num: number = 0;
@@ -118,7 +118,8 @@ export default class FoxCommand extends Command {
 
   public async handlePlaylist(
     res: TrackResponse,
-    message: FoxMessage
+    message: FoxMessage,
+    song: string
   ): Promise<FoxMessage> {
     let num: number = 0;
     const music: Node = this.client.music;
@@ -155,8 +156,8 @@ export default class FoxCommand extends Command {
             "Playlist Downloaded!",
             this.client.user.displayAvatarURL()
           )
-          .addField("Playlist Name", res.playlistInfo.name)
-          .addField("Song Count", res.tracks.length)
+          .addField("Playlist Name", `[${res.playlistInfo.name}](${song})`, true)
+          .addField("Song Count", res.tracks.length, true)
           .addField(
             "Total Play Time",
             duration(
@@ -164,11 +165,12 @@ export default class FoxCommand extends Command {
                 .map(r => r.info.length)
                 .reduce((prev, val) => prev + val, 0),
               "milliseconds"
-            ).format("h [hours, ] m [minutes].")
+            ).format("h [hours, ] m [minutes]."),
+            true
           )
           .setColor(this.client.brandColor)
           .setTimestamp()
-          .setFooter(this.client.user.username);
+          .setFooter(`Requested by ${message.member.displayColor}`, message.author.displayAvatarURL());
         await message.channel.send({ embed: playembed });
         const player: Player = music.players.get(message.guild.id);
         if (!player.playing)

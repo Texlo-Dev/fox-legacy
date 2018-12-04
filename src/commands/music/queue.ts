@@ -1,5 +1,5 @@
 import { MessageEmbed } from "discord.js";
-import { Player } from "lavalink";
+import { Player, Track } from "lavalink";
 import { duration } from "moment";
 import { Command, FoxClient, Queue } from "../../util";
 import { FoxMessage } from "../../util/extensions";
@@ -43,14 +43,36 @@ export default class FoxCommand extends Command {
       "milliseconds"
     ).format("m:ss", { trim: false });
 
-    const paginated: any = FoxClient.paginate(serverQueue.array(), page, 11);
-    let num: number = (paginated.page - 1) * 10;
+    const paginated: any = FoxClient.paginate(serverQueue.array(), page, 7);
+    let num: number = (paginated.page - 1) * 6;
     paginated.items.shift();
     const embed: MessageEmbed = new MessageEmbed()
       .setColor(this.client.brandColor)
       .setTimestamp()
-      .setAuthor("Music Queue", this.client.user.displayAvatarURL())
-      .setDescription(`
+      .setAuthor(
+        `Music Queue ${
+          paginated.maxPage > 1 ? `(Page ${paginated.page})` : "".trim()
+        }`,
+        this.client.user.displayAvatarURL()
+      )
+      .addField(
+        "Songs",
+        paginated.items
+          .map(
+            (song: Track) =>
+              `**${
+                paginated.items[0] === song ? "Up Next:" : `#${++num} -`
+              }** [${song.info.title}](${song.info.uri}) as requested by ${
+                song.info.requestor.displayName
+              } (${duration(song.info.length, "milliseconds").format("m:ss", {
+                trim: false
+              })})`
+          )
+          .join("\n") || "No upcoming songs."
+      )
+      .addField("Now Playing", serverQueue.first().info.title, true)
+      .addField("Queue Time Remaining", totalQueue, true);
+    /* .setDescription(`
 **Current songs, page ${paginated.page}:**
 
 ${paginated.items
@@ -73,7 +95,7 @@ ${
       paginated.maxPage > 1
         ? `\nType \`${prefix}queue [pagenumber]\` to see a specific page.`
         : "".trim()
-    }`);
+    }`)*/
 
     return message.send({ embed });
   }
