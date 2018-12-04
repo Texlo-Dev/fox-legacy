@@ -1,4 +1,6 @@
 // tslint:disable-next-line:file-name-casing
+import { Collection } from "discord.js";
+import { Command, FoxPermission } from "..";
 import { Options } from "../../types";
 import { FoxGuild } from "../extensions";
 import { GuildSettings } from "../Mongo";
@@ -22,6 +24,14 @@ export default class Package {
     this.guild = guild;
   }
 
+  public get commands(): Collection<string, Command> {
+    return this.guild.client.commands.filter(c => c.category === this.name);
+  }
+
+  public get permissions(): Collection<string, FoxPermission> {
+    return this.guild.client.permissions.filter(c => c.category === this.name);
+  }
+
   public _setEnabled(): boolean {
     if (this.name === "Core") {
       this.enabled = true;
@@ -36,12 +46,10 @@ export default class Package {
   }
 
   public async disable(): Promise<boolean> {
-    const query: GuildSettings = await GuildSettings.findOne(
-      {
-        guildID: this.guild.id,
-        type: "settings"
-      }
-    );
+    const query: GuildSettings = await GuildSettings.findOne({
+      guildID: this.guild.id,
+      type: "settings"
+    });
     if (!query) {
       return false;
     }
@@ -61,12 +69,10 @@ export default class Package {
   }
 
   public async enable(): Promise<boolean> {
-    const query: GuildSettings = await GuildSettings.findOne(
-      {
-        guildID: this.guild.id,
-        type: "settings"
-      }
-    );
+    const query: GuildSettings = await GuildSettings.findOne({
+      guildID: this.guild.id,
+      type: "settings"
+    });
     if (!query) {
       return false;
     }
