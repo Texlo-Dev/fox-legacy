@@ -57,7 +57,7 @@ ${paginated.items
       .map(
         song =>
           `**#${++num} -** [${song.info.title}](${
-            song.info.url
+            song.info.uri
           }) as requested by ${song.info.requestor.displayName} (${duration(
             song.info.length,
             "milliseconds"

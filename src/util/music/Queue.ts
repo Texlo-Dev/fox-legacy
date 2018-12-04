@@ -24,14 +24,14 @@ export default class Queue extends Collection<any, any> implements QueueInfo {
     this.skippers = [];
   }
 
-  public endAllSongs(message: FoxMessage): Promise<FoxMessage> {
+  public async endAllSongs(message: FoxMessage): Promise<FoxMessage> {
     const player: Player = this.client.music.players.get(message.guild.id);
     player.queue = null;
+    this.client.music.players.delete(message.guild.id);
+    await player.stop();
+    await player.leave();
 
-    return player
-      .stop()
-      .then(() => player.leave())
-      .then(() => message.success("Successfully stopped music player."));
+    return message.success("Successfully stopped music player.");
   }
 
   public async pause(message: FoxMessage): Promise<FoxMessage> {

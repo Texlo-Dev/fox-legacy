@@ -1,5 +1,5 @@
 import { MessageEmbed } from "discord.js";
-import { Track } from "lavalink";
+import { Player, Track } from "lavalink";
 import { duration } from "moment";
 import "moment-duration-format";
 import { Command, FoxClient, Queue, Song } from "../../util";
@@ -21,7 +21,7 @@ export default class FoxCommand extends Command {
   }
 
   public run(message: FoxMessage): Promise<FoxMessage> {
-    const player: Queue = this.client.music.players.get(message.guild.id);
+    const player: Player = this.client.music.players.get(message.guild.id);
     if (!player.queue) {
       return message.error(
         "Sorry, but there was nothing playing for me to skip."
@@ -48,11 +48,14 @@ export default class FoxCommand extends Command {
         song.info.requestor.user.displayAvatarURL()
       )
       .setTimestamp()
-      .setDescription(
-        `**${song.info.title}**\nAuthor: **${
-          song.info.author
-        }**\nProgress: **${songTime}/${songDuration} (About ${remaining} left)**`
-      ) // tslint:disable-line
+      .addField(
+        "Song Name",
+        `[${song.info.title} by ${song.info.author}](${song.info.uri})`
+      )
+      .addField(
+        "Progress",
+        `${songTime}/${songDuration} (${remaining} remaining)`
+      )
       .setColor(this.client.brandColor);
 
     return message.send({ embed });

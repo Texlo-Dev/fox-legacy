@@ -43,23 +43,18 @@ export default class FoxCommand extends Command {
       player.queue.set(track.info.identifier, track);
       if (playlist) return;
       const embed: MessageEmbed = new MessageEmbed()
-        .setAuthor("Music", this.client.user.displayAvatarURL())
+        .setAuthor("Song Added To Queue", this.client.user.displayAvatarURL())
         .setTimestamp()
         .setFooter(
           `Requested by ${mg.member.displayName}`,
           mg.member.user.displayAvatarURL()
         )
-        .setDescription(
-          `Successfully added **${
-            track.info.title
-          }** to the queue!\nAuthor: **${
-            track.info.author
-          }**\nLength: **${duration(track.info.length, "milliseconds").format(
-            "m:ss",
-            {
-              trim: false
-            }
-          )}**`
+        .addField("Author", track.info.author, true)
+        .addField(
+          "Length",
+          duration(track.info.length, "milliseconds").format("m:ss", {
+            trim: false
+          })
         )
         .setColor(this.client.brandColor);
 
@@ -156,18 +151,20 @@ export default class FoxCommand extends Command {
           this.addVideo(tk, message, true);
         }
         const playembed: MessageEmbed = new MessageEmbed()
-          .setAuthor("Music Player", this.client.user.displayAvatarURL())
-          .setDescription(
-            `Downloaded Playlist.\n**Playlist Name:** ${
-              res.playlistInfo.name
-            }\n**Song Count:** ${
-              res.tracks.length
-            }\n**Total Play Time:** ${duration(
+          .setAuthor(
+            "Playlist Downloaded!",
+            this.client.user.displayAvatarURL()
+          )
+          .addField("Playlist Name", res.playlistInfo.name)
+          .addField("Song Count", res.tracks.length)
+          .addField(
+            "Total Play Time",
+            duration(
               res.tracks
                 .map(r => r.info.length)
                 .reduce((prev, val) => prev + val, 0),
               "milliseconds"
-            ).format("h [hours, ] m [minutes].")}`
+            ).format("h [hours, ] m [minutes].")
           )
           .setColor(this.client.brandColor)
           .setTimestamp()
@@ -210,21 +207,21 @@ export default class FoxCommand extends Command {
       await player.play(track);
 
       const embed: MessageEmbed = new MessageEmbed()
-        .setAuthor("Music", this.client.user.displayAvatarURL())
+        .setAuthor("Music Player", this.client.user.displayAvatarURL())
         .setTimestamp()
         .setFooter(
           `Requested by ${mg.member.displayName}`,
           mg.member.user.displayAvatarURL()
         )
-        .setDescription(
-          `Now Playing - **${track.info.title}**\nAuthor: **${
-            track.info.author
-          }**\nLength: **${duration(track.info.length, "milliseconds").format(
-            "m:ss",
-            {
-              trim: false
-            }
-          )}**`
+        .addField(
+          "Now Playing",
+          `[${track.info.title} by ${track.info.author}](${track.info.uri})`
+        )
+        .addField(
+          "Length",
+          duration(track.info.length, "milliseconds").format("m:ss", {
+            trim: false
+          })
         )
         .setColor(this.client.brandColor);
 
@@ -242,9 +239,9 @@ export default class FoxCommand extends Command {
   }
 
   public async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
-    const platform: string = args[0];
+    const platform: string = args[0].toLowerCase();
     const song: string = args.slice(1).join(" ");
-    if (!platform || !["yt", "sc"].includes(platform.toLowerCase())) {
+    if (!platform || !["yt", "sc"].includes(platform)) {
       return message.error(
         "Invalid platform.\nAvailable platforms - \nyt = YouTube\nsc = SoundCloud"
       );
