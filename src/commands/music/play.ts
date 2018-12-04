@@ -49,12 +49,14 @@ export default class FoxCommand extends Command {
           `Requested by ${mg.member.displayName}`,
           mg.member.user.displayAvatarURL()
         )
+        .addField("Name", track.info.title)
         .addField("Author", track.info.author, true)
         .addField(
           "Length",
           duration(track.info.length, "milliseconds").format("m:ss", {
             trim: false
-          })
+          }),
+          true
         )
         .setColor(this.client.brandColor);
 
