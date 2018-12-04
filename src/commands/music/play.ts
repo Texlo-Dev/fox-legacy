@@ -219,13 +219,16 @@ export default class FoxCommand extends Command {
         )
         .addField(
           "Now Playing",
-          `[${track.info.title} by ${track.info.author}](${track.info.uri})`
+          `[${track.info.title}](${track.info.uri})`
         )
+        .addField("Name", track.info.title)
+        .addField("Author", track.info.author, true)
         .addField(
           "Length",
           duration(track.info.length, "milliseconds").format("m:ss", {
             trim: false
-          })
+          }),
+          true
         )
         .setColor(this.client.brandColor);
 
