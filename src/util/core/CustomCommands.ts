@@ -78,7 +78,7 @@ export default class CustomCommands extends Collection<any, any> {
       template: data.template
     };
 
-    const entry: any = new CustomCommands(obj);
+    const entry: CCMongo = new CCMongo(obj);
     try {
       await entry.save();
       const command: CustomCommand = new CustomCommand(this.guild, obj);

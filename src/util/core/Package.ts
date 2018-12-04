@@ -1,6 +1,6 @@
 // tslint:disable-next-line:file-name-casing
 import { Collection } from "discord.js";
-import { Command, FoxPermission } from "..";
+import { Command, CustomCommand, FoxPermission } from "..";
 import { Options } from "../../types";
 import { FoxGuild } from "../extensions";
 import { GuildSettings } from "../Mongo";
@@ -24,8 +24,10 @@ export default class Package {
     this.guild = guild;
   }
 
-  public get commands(): Collection<string, Command> {
-    return this.guild.client.commands.filter(c => c.category === this.name);
+  public get commands(): Collection<string, Command | CustomCommand> {
+    if (this.name === "Custom Commands") return this.guild.commands;
+    else
+      return this.guild.client.commands.filter(c => c.category === this.name);
   }
 
   public get permissions(): Collection<string, FoxPermission> {

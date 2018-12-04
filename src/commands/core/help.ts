@@ -27,7 +27,7 @@ export default class FoxCommand extends Command {
       const res: number = (await this.client.shard.broadcastEval(
         "this.guilds.size"
       )).reduce((prev, val) => prev + val, 0);
-      if (message.guild) {
+      /* if (message.guild) {
         const filtered: Collection<
           string,
           Command
@@ -68,19 +68,19 @@ export default class FoxCommand extends Command {
                     to get started.
                 `
         );
-      }
+      } /*
       let output = `
 Welcome to ${
-this.client.user.username
-}, an easy-to-use, multipurpose Discord bot!
+        this.client.user.username
+      }, an easy-to-use, multipurpose Discord bot!
 I am serving: **${res.toLocaleString()}** servers.
 Command format for ${
-message.guild ? `this server` : "this DM"
-}: \`${prefix}<commandname>\`.
+        message.guild ? `this server` : "this DM"
+      }: \`${prefix}<commandname>\`.
 Command Count: **${this.client.commands.size}**.
 [Add me to your server](https://mrfoxbot.xyz/servers) | [${
-this.client.user.username
-} support server](https://discord.gg/DfsqmaV) | [Donate to us!](https://www.patreon.com/user?u=7413177)
+        this.client.user.username
+      } support server](https://discord.gg/DfsqmaV) | [Donate to us!](https://www.patreon.com/user?u=7413177)
 `;
       /* const categories: object = Array.from(myCommands.keys()).reduce(
         (prev, key) => {
@@ -157,7 +157,7 @@ this.client.user.username
             .sort()
             .join(", ") || "None"}
 
-          To view detailed command info, type \`${prefix}help <command>\`. Ex. \`f)help level\`
+To view detailed command info, type \`${prefix}help <command>\`. Ex. \`f)help level\`
         `
         );
       }
