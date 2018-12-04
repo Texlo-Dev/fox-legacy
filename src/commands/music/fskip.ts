@@ -24,9 +24,7 @@ export default class FoxCommand extends Command {
     }
 
     if (
-      !message.member.voice.channel ||
-      message.member.voice.channel.id !==
-        message.guild.voiceConnection.channel.id
+      !message.member.voice.channel
     ) {
       // tslint:disable-line
       return message.error(
