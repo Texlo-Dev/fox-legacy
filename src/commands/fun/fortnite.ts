@@ -20,21 +20,17 @@ export default class FoxCommand extends Command {
     [platform, ...name]: string[]
   ): Promise<FoxMessage> {
     if (!platform) {
-      return msg.send(
-        `<:nicexmark:495362785010647041>  You must specify a platform. Valid platforms: ${platforms.join(
-          " "
-        )}`
+      return msg.error(
+        `You must specify a platform. Valid platforms: ${platforms.join(", ")}`
       ); // tslint:disable-line
     } else if (!platforms.includes(platform)) {
-      return msg.send(
-        `<:nicexmark:495362785010647041>  You must specify a valid platform. Valud platforms: ${platforms.join(
-          " "
+      return msg.error(
+        `You must specify a valid platform. Valud platforms: ${platforms.join(
+          ", "
         )}`
       ); //tslint:disable-line
     } else if (name.length === 0) {
-      return msg.send(
-        "<:nicexmark:495362785010647041>  You must specify a name!"
-      );
+      return msg.error("You must specify a name!");
     }
 
     const { data: res }: any = await FoxClient.http("GET", {
@@ -151,7 +147,8 @@ export default class FoxCommand extends Command {
   public constructor(client: FoxClient) {
     super(client, {
       name: "fortnite",
-      description: "Shows fortnite status"
+      description: "Shows your Fortnite stats",
+      usage: "<platform> <username>"
     });
   }
 }

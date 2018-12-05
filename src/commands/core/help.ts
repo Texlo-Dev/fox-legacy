@@ -68,7 +68,7 @@ export default class FoxCommand extends Command {
                     to get started.
                 `
         );
-      } /*
+      } */
       let output = `
 Welcome to ${
         this.client.user.username

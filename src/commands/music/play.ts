@@ -17,7 +17,7 @@ export default class FoxCommand extends Command {
   public constructor(client: FoxClient) {
     super(client, {
       name: "play",
-      description: "Plays some music from youtube.",
+      description: "Plays some music from a preferred streaming service.",
       usage: "<platform> <name|link>",
       guildOnly: true,
       aliases: ["yt"],
