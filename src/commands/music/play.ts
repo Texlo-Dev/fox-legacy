@@ -49,7 +49,7 @@ export default class FoxCommand extends Command {
           `Requested by ${mg.member.displayName}`,
           mg.member.user.displayAvatarURL()
         )
-        .addField("Name", track.info.title)
+        .addField("Name", `[${track.info.title}](${track.info.uri})`)
         .addField("Author", track.info.author, true)
         .addField(
           "Length",
