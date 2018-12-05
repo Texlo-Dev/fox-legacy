@@ -122,12 +122,7 @@ export default class GuildCreate extends Event {
       .setThumbnail(guild.iconURL())
       .addField("Server Name", guild.name, true)
       .addField("Member Count", guild.memberCount, true)
-      .addField("Server Owner", guild.owner.user.tag, true)
-      .setDescription(
-        `**Server name:** ${guild.name}
-                **Server member count:** ${guild.memberCount}
-                **Server Owner:** ${guild.owner.user.tag}`
-      );
+      .addField("Server Owner", guild.owner.user.tag, true);
     webhook.send({ embeds: [embe] });
   }
 }
