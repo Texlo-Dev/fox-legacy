@@ -36,18 +36,15 @@ export default class extends Event {
       .setFooter(message.client.user.username)
       .setThumbnail(message.author.displayAvatarURL())
       .setColor(this.client.brandColor)
-      .setDescription(
-        `
-
-                **Purged by:** ${message.command.executor.tag}
-                **Channel:** ${message.channel}
-                **Purge Count**: ${msgs.size}
-                **Archive Link**: ${await FoxClient.haste(
-                  msgs
-                    .map(m => `${m.member.displayName} - ${m.content}`)
-                    .join("\n"),
-                  "bash"
-                )}` // tslint:disable-line
+      .addField("Purged By", message.command.executor.tag, true)
+      .addField("Channel", message.channel, true)
+      .addField("Purge Count", msgs.size, true)
+      .addField(
+        "Archive Link",
+        await FoxClient.haste(
+          msgs.map(m => `${m.member.displayName} - ${m.content}`).join("\n"),
+          "bash"
+        )
       )
       .setFooter(message.client.user.username);
     if (!modlog) {

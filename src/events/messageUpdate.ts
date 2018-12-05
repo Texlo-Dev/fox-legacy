@@ -64,18 +64,11 @@ export default class MUpdate extends Event {
       .setFooter(client.user.username)
       .setThumbnail(oldMessage.author.displayAvatarURL())
       .setColor(0xe0ad1a)
-      .setDescription(
-        `
-
-                **Channel:** ${oldMessage.channel}
-                **Author:** ${oldMessage.author.tag}
-                **Old Message:**
-                ${oldMessage.content}
-                **New message:**
-                ${newMessage.content}
-
-                **Message ID:** ${oldMessage.id}`
-      )
+      .addField("Channel", oldMessage.channel, true)
+      .addField("Author", oldMessage.author.tag, true)
+      .addField("Old Message", oldMessage.content)
+      .addField("New Message", newMessage.content)
+      .addField("Message ID", oldMessage.id)
       .setFooter(oldMessage.client.user.username);
     if (modlog) {
       const serverlog: TextChannel = oldMessage.guild.channels.get(

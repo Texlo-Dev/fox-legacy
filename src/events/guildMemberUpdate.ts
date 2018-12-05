@@ -13,15 +13,15 @@ export default class extends Event {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Member Updated", newMem.client.user.displayAvatarURL())
       .setThumbnail(newMem.user.avatarURL())
-      .setDescription(
-        `\n**User:** ${newMem.user.tag}\n**Nickname:** ${
-          newMem.nickname ? newMem.nickname : "None"
-        }\n**Roles:** ${newMem.roles
+      .addField("Member", `${newMem.user.tag} (${newMem.id})`, true)
+      .addField("Nickname", newMem.nickname ? newMem.nickname : "None", true)
+      .addField(
+        "Roles",
+        newMem.roles
           .filter(f => f.id !== newMem.guild.id)
           .map(r => r.name)
-          .join(", ") || "None"}`
-      ) // tslint:disable-line
-      .setFooter(`ID: ${newMem.id}`)
+          .join(", ") || "None"
+      )
       .setTimestamp()
       .setColor(0x96d036)
       .setFooter(newMem.client.user.username);

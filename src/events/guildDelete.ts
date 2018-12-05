@@ -32,7 +32,6 @@ export default class GuildDelete extends Event {
   }
 
   public async run(guild: FoxGuild): Promise<void> {
-    const client: FoxClient = this.client;
     console.log(`Left ${guild.name}`);
     await GuildDelete.deleteSettings(guild).catch(() => undefined);
 
@@ -48,11 +47,9 @@ export default class GuildDelete extends Event {
       )
       .setTitle("Left a server..")
       .setThumbnail(guild.iconURL())
-      .setDescription(
-        `**Server name:** ${guild.name}\n**Server member count:** ${
-          guild.memberCount
-        }\n**Server Owner:** ${guild.owner.user.tag}`
-      ); // tslint:disable-line
+      .addField("Server Name", guild.name, true)
+      .addField("Member Count", guild.memberCount, true)
+      .addField("Server Owner", guild.owner.user.tag, true);
     webhook.send({ embeds: [embed] });
   }
 }

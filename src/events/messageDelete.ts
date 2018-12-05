@@ -41,16 +41,14 @@ export default class extends Event {
       .setFooter(message.client.user.username)
       .setThumbnail(message.author.displayAvatarURL())
       .setColor(this.client.brandColor)
-      .setDescription(
-        `
-                **Channel:** ${message.channel}
-                **Author:** ${message.author.tag}
-                **Deleted By:** ${logs.entries.first().executor.tag}
-                **Content:**
-                ${message.content}
-
-                **Message ID:** ${message.id}`
-      )
+      .addField("Channel", message.channel, true)
+      .addField("Author", message.author.tag, true);
+    if (logs.entries.first().executor.id !== message.author.tag) {
+      embed.addField("Deleted By", logs.entries.first().executor.id);
+    }
+    embed
+      .addField("Content", message.content)
+      .addField("Message ID", message.id)
       .setFooter(message.client.user.username);
     if (modlog) {
       const serverlog: TextChannel = message.guild.channels.get(

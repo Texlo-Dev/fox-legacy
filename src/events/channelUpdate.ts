@@ -35,11 +35,9 @@ export default class extends Event {
       .setThumbnail(audit.entries.first().executor.displayAvatarURL())
       .setFooter(guild.client.user.username)
       .setColor(this.client.brandColor)
-      .setDescription(
-        `\n**Old Channel:** ${oChannel}\n**New Channel:** ${nChannel}\n**Updated By:** ${
-          audit.entries.first().executor.tag
-        }`
-      ); // tslint:disable-line
+      .addField("Old Channel", oChannel, true)
+      .addField("New Channel", nChannel, true)
+      .addField("Updated By", audit.entries.first().executor.tag, true);
     const cl: TextChannel = guild.channels.get(log.id) as TextChannel;
     if (cl) {
       cl.send(embed);

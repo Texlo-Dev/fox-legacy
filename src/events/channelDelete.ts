@@ -32,6 +32,8 @@ export default class extends Event {
       .setThumbnail(audit.entries.first().executor.displayAvatarURL())
       .setFooter(guild.client.user.username)
       .setColor(this.client.brandColor)
+      .addField("Channel", channel.name, true)
+      .addField("Deletor", audit.entries.first().executor.tag, true)
       .setDescription(
         `\n**Channel:** ${channel.name}\n**Deletor:** ${
           audit.entries.first().executor.tag

@@ -42,16 +42,14 @@ export default class extends Event {
       .setThumbnail(oState.member.user.displayAvatarURL())
       .setFooter(channel.guild.client.user.username)
       .setColor(this.client.brandColor)
-      .setDescription(
-        `
-                **Member:** ${oState.member.user.tag}
-                ${
-                  oState.channel && nState.channel
-                    ? `**Went From:** ${oState.channel.name}
-                **To:** ${nState.channel.name}`
-                    : `**Channel:** ${channel.name}`
-                }`
-      );
+      .addField("Member", oState.member.user.tag, true);
+    if (oState.channel && nState.channel) {
+      embed
+        .addField("Went From", oState.channel.name, true)
+        .addField("To", nState.channel.name, true);
+    } else {
+      embed.addField("Channel", channel.name, true);
+    }
     const cl: TextChannel = guild.channels.get(log.id) as TextChannel;
     if (cl) {
       cl.send(embed);

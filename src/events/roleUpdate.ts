@@ -26,10 +26,9 @@ export default class extends Event {
       .setTimestamp()
       .setThumbnail(audit.entries.first().executor.displayAvatarURL())
       .setFooter(guild.client.user.username)
-      .setColor(this.client.brandColor).setDescription(`
-            **Old Role:** ${oRole}
-            **New Role:** ${nRole}
-            **Updated By:** ${audit.entries.first().executor.tag}`);
+      .addField("Old Role", oRole, true)
+      .addField("New Role", nRole, true)
+      .addField("Updated By", audit.entries.first().executor.tag, true);
     const channel: TextChannel = guild.channels.get(log.id) as TextChannel;
     if (channel) {
       channel.send(embed);

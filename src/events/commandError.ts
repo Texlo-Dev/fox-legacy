@@ -1,5 +1,6 @@
 import { MessageEmbed, WebhookClient } from "discord.js";
 import { Event, FoxClient, FoxMessage } from "../util";
+import { FoxMessage } from "../util/extensions";
 
 export default class extends Event {
   public constructor(client: FoxClient) {
@@ -9,11 +10,12 @@ export default class extends Event {
     });
   }
 
-  public run(message: FoxMessage, err: Error) {
-    const embed = new MessageEmbed()
+  public run(message: FoxMessage, err: Error): void {
+    const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Command Error", message.client.user.displayAvatarURL())
-      .setDescription(
-        `There was an error executing this command: \n\`\`\`${
+      .addField(
+        "Error",
+        `\`\`${
           FoxClient.isOwner(message.author.id)
             ? err.stack.split(",")[0]
             : err.message
@@ -24,7 +26,7 @@ export default class extends Event {
       .setFooter(message.client.user.username);
     message.send({ embed });
 
-    const webhook = new WebhookClient(
+    const webhook: WebhookClient = new WebhookClient(
       "489542923923226627",
       "C7j3qUi1_0cUz0nxRKmh9HXeing7Xj9HbjJ28G7hz2KYSnai_XDORuXvEQqSCazf1zWj"
     );

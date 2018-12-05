@@ -32,11 +32,9 @@ export default class extends Event {
       .setThumbnail(audit.entries.first().executor.displayAvatarURL())
       .setFooter(guild.client.user.username)
       .setColor(this.client.brandColor)
-      .setDescription(
-        `\n**Old Emoji:** ${oEmoji} ${oEmoji.name}\n**New Emoji:** ${nEmoji} ${
-          nEmoji.name
-        }\n**Updated By:** ${audit.entries.first().executor.tag}`
-      ); // tslint:disable-line
+      .addField("Old Emoji", `${oEmoji} ${oEmoji.name}`, true)
+      .addField("New Emoji", `${nEmoji} ${nEmoji.name}`, true)
+      .addField("Updated By", audit.entries.first().executor.tag, true);
     const ch: TextChannel = guild.channels.get(log.id) as TextChannel;
     if (ch) {
       ch.send(embed);

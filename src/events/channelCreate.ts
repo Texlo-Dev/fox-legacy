@@ -34,11 +34,8 @@ export default class extends Event {
       .setThumbnail(audit.entries.first().executor.displayAvatarURL())
       .setFooter(guild.client.user.username)
       .setColor(this.client.brandColor)
-      .setDescription(
-        `\n**Channel:** ${channel}\n**Creator:** ${
-          audit.entries.first().executor.tag
-        }`
-      );
+      .addField("Channel", channel, true)
+      .addField("Creator", audit.entries.first().executor.tag), true;
     const cl: TextChannel = guild.channels.get(log.id) as TextChannel;
     if (cl) {
       cl.send(embed);

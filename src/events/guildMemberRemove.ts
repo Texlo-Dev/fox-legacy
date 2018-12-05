@@ -91,6 +91,8 @@ export default class extends Event {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Member Left", member.client.user.displayAvatarURL())
       .setThumbnail(member.user.displayAvatarURL())
+      .addField("Member Name", `${member.user.tag} (${member.id})`, true)
+      .addField("Joined At", dateFormat(member.joinedAt), true)
       .setDescription(
         `\n**Member Name:** ${member.user.tag}\n**ID:** ${
           member.id

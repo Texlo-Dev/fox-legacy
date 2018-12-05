@@ -59,12 +59,8 @@ export default class NewMember extends Event {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Member Joined", member.client.user.displayAvatarURL())
       .setThumbnail(member.user.displayAvatarURL())
-      .setDescription(
-        `
-                **Member Name:** ${member.user.tag}
-                **ID:** ${member.id}
-                **Account Created:** ${dateformat(member.user.createdAt)}`
-      )
+      .addField("Member Name", `${member.user.tag} (${member.id})`)
+      .addField("Account Created", dateformat(member.user.createdAt))
       .setTimestamp()
       .setColor(3534687)
       .setFooter(member.client.user.username);

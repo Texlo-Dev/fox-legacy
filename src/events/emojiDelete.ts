@@ -32,11 +32,8 @@ export default class extends Event {
       .setThumbnail(audit.entries.first().executor.displayAvatarURL())
       .setFooter(guild.client.user.username)
       .setColor(this.client.brandColor)
-      .setDescription(
-        `\n**Emoji:** ${emoji} ${emoji.name}\n**Deletor:** ${
-          audit.entries.first().executor.tag
-        }`
-      );
+      .addField("Emoji", `${emoji} ${emoji.name}`, true)
+      .addField("Deletor", audit.entries.first().executor.tag, true);
     const ch: TextChannel = guild.channels.get(log.id) as TextChannel;
     if (ch) {
       ch.send(embed);

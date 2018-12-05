@@ -120,6 +120,9 @@ export default class GuildCreate extends Event {
       .setFooter(`Shard ${client.shard.id} • ${guild.client.user.username}`)
       .setTitle("Joined a server.")
       .setThumbnail(guild.iconURL())
+      .addField("Server Name", guild.name, true)
+      .addField("Member Count", guild.memberCount, true)
+      .addField("Server Owner", guild.owner.user.tag, true)
       .setDescription(
         `**Server name:** ${guild.name}
                 **Server member count:** ${guild.memberCount}
