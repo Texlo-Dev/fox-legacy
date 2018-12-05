@@ -66,8 +66,24 @@ export default class MUpdate extends Event {
       .setColor(0xe0ad1a)
       .addField("Channel", oldMessage.channel, true)
       .addField("Author", oldMessage.author.tag, true)
-      .addField("Old Message", oldMessage.content)
-      .addField("New Message", newMessage.content)
+      .addField(
+        "Old Message",
+        oldMessage.content.length > 1024
+          ? await FoxClient.haste(oldMessage.content, "txt").catch(
+              () => "Failed to post content to Hastebin."
+            )
+          : oldMessage.content,
+        true
+      )
+      .addField(
+        "New Message",
+        newMessage.content.length > 1024
+          ? await FoxClient.haste(newMessage.content, "txt").catch(
+              () => "Failed to post content to Hastebin."
+            )
+          : newMessage.content,
+        true
+      )
       .addField("Message ID", oldMessage.id)
       .setFooter(oldMessage.client.user.username);
     if (modlog) {

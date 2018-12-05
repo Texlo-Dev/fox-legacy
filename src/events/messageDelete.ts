@@ -44,10 +44,18 @@ export default class extends Event {
       .addField("Channel", message.channel, true)
       .addField("Author", message.author.tag, true);
     if (logs.entries.first().executor.id !== message.author.tag) {
-      embed.addField("Deleted By", logs.entries.first().executor.id);
+      embed.addField("Deleted By", logs.entries.first().executor.tag);
     }
     embed
-      .addField("Content", message.content)
+      .addField(
+        "Content",
+        message.content.length > 1024
+          ? await FoxClient.haste(message.content, "txt").catch(
+              () => "Failed to post content to Hastebin."
+            )
+          : message.content,
+        true
+      )
       .addField("Message ID", message.id)
       .setFooter(message.client.user.username);
     if (modlog) {
