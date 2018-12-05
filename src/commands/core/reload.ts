@@ -20,15 +20,27 @@ export default class FoxCommand extends Command {
   ): Promise<void | FoxMessage> {
     const command: string = args[0];
     if (!command) {
-      return message.send("Please specify a command to reload.");
+      return message.error("Please specify a command to reload.");
     }
     const cmd: Command = this.client.commands.get(command);
     if (!cmd) {
       return message.send(`I cannot find the command \`${command}\``);
     }
-    const m: FoxMessage = await message.send(`Attempting to reload ${command}`);
-    await cmd
+    const m: FoxMessage = await message.send(
+      `Attempting to reload ${command}.`
+    );
+    cmd
       .reload()
+      .then(() =>
+        m.edit({
+          embed: message.FoxEmbed({
+            header: "Reload Command",
+            description: `<:check:314349398811475968> Successfully reloaded the command **${
+              cmd.name
+            }**.`
+          })
+        })
+      )
       .catch(e =>
         m.edit({
           embed: message.FoxEmbed(
@@ -39,14 +51,7 @@ export default class FoxCommand extends Command {
           )
         })
       ); // tslint:disable-line
-    m.edit({
-      embed: message.FoxEmbed({
-        header: "Reload Command",
-        description: `<:check:314349398811475968> Successfully reloaded the command **${
-          cmd.name
-        }**.`
-      })
-    });
+
     if (this.client.shard) {
       await this.client.shard.broadcastEval(`
             const command = this.commands.get('${command}');
