@@ -47,11 +47,12 @@ export default class FoxCommand extends Command {
       )
       .setFooter(`User ID: ${entry.get("userID")}`)
       .setTimestamp(new Date(entry.get("createdAt")))
+      .setThumbnail(user.displayAvatarURL())
       .setColor("RANDOM")
       .setTitle(`Case ${entry.get("caseNum")} - ${entry.get("action")}`)
       .addField("Member", `${user.tag} (${id})`, true);
     if (entry.get("points")) {
-      embed.addField("Points", entry.get("points"));
+      embed.addField("Points", entry.get("points"), true);
     }
     if (entry.get("time")) {
       embed.addField(
