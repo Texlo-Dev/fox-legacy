@@ -105,7 +105,7 @@ export default class FoxCommand extends Command {
       .addField("Reason", reason, true)
       .setThumbnail(mem.user.displayAvatarURL())
       .setFooter(
-        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        `Mod: ${message.author.tag} • Case#${caseInt} `,
         message.author.displayAvatarURL()
       );
     if (!modlog) {

@@ -1,9 +1,10 @@
 import dateFormat from "dateformat";
 import { MessageEmbed, User } from "discord.js";
+import { duration as _duration } from "moment";
+import "moment-duration-format";
 import { Command, FoxClient } from "../../util";
 import { FoxMessage } from "../../util/extensions";
 import { ModActions } from "../../util/Mongo";
-dateFormat(new Date(), "ddd, mmm d, yyyy, at h MM TT");
 
 export default class FoxCommand extends Command {
   public static hasPermission(message: FoxMessage): boolean {
@@ -44,12 +45,24 @@ export default class FoxCommand extends Command {
         mod ? `Moderator: ${mod.tag}` : "Invalid User",
         mod ? mod.displayAvatarURL() : this.client.user.displayAvatarURL()
       )
-      .setFooter(this.client.user.username)
+      .setFooter(`User ID: ${entry.get("userID")}`)
       .setTimestamp(new Date(entry.get("createdAt")))
       .setColor("RANDOM")
       .setTitle(`Case ${entry.get("caseNum")} - ${entry.get("action")}`)
-      .addField("Member", `${user.tag} (${id})`, true)
-      .addField("Reason", entry.get("reasonFor"), true);
+      .addField("Member", `${user.tag} (${id})`, true);
+    if (entry.get("points")) {
+      embed.addField("Points", entry.get("Points"));
+    }
+    if (entry.get("time")) {
+      embed.addField(
+        "Duration",
+        _duration(entry.get("time"), "milliseconds").format(
+          "d [days], h [hours], m [minutes]"
+        ),
+        true
+      );
+    }
+    embed.addField("Reason", entry.get("reasonFor"), true);
 
     return message.send({ embed });
   }

@@ -134,7 +134,7 @@ export default class FoxCommand extends Command {
       .addField("Reason", reason, true)
       .setThumbnail(mem.user.displayAvatarURL())
       .setFooter(
-        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        `Mod: ${message.author.tag} • Case#${caseInt} `,
         message.author.displayAvatarURL()
       );
 
@@ -148,9 +148,7 @@ export default class FoxCommand extends Command {
       guildID: message.guild.id,
       caseNum: caseInt,
       userID: mem.user.id,
-      action: `Muted for ${_duration(time, "milliseconds").format(
-        "d [days], h [hours], m [minutes]"
-      )}`,
+      action: `Muted`,
       reasonFor: reason,
       modID: message.author.id,
       time: unmuteTime,

@@ -87,7 +87,7 @@ export default class FoxCommand extends Command {
       .addField("Reason", reason, true)
       .setThumbnail(member.user.displayAvatarURL())
       .setFooter(
-        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        `Mod: ${message.author.tag} • Case#${caseInt} `,
         message.author.displayAvatarURL()
       );
     message.send(`Successfully de-warned **${member.user.tag}** :ok_hand:`);

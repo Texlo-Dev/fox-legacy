@@ -91,7 +91,7 @@ export default class FoxCommand extends Command {
       .addField("Reason", reason, true)
       .setThumbnail(member.user.displayAvatarURL())
       .setFooter(
-        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        `Mod: ${message.author.tag} • Case#${caseInt} `,
         message.author.displayAvatarURL()
       );
     message.send(
@@ -113,7 +113,7 @@ export default class FoxCommand extends Command {
       reasonFor: reason,
       createdAt: message.createdAt,
       embedID: m ? m.id : undefined,
-      action: `Warned (${points} points)`
+      action: "Warned"
     });
     await entry.save();
     if (message.guild.config.msgAfterMod) {

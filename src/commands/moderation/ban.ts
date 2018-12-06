@@ -110,7 +110,7 @@ export default class FoxCommand extends Command {
       .addField("Reason", reason, true)
       .setThumbnail(banUser.displayAvatarURL())
       .setFooter(
-        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        `Mod: ${message.author.tag} • Case#${caseInt} `,
         message.author.displayAvatarURL()
       );
     await message.send(
