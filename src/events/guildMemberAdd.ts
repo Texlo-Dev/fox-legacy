@@ -59,11 +59,11 @@ export default class NewMember extends Event {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Member Joined", member.client.user.displayAvatarURL())
       .setThumbnail(member.user.displayAvatarURL())
-      .addField("Member Name", `${member.user.tag} (${member.id})`)
+      .addField("Member Name", `${member.user.tag}`)
       .addField("Account Created", dateformat(member.user.createdAt))
       .setTimestamp()
       .setColor(3534687)
-      .setFooter(member.client.user.username);
+      .setFooter(`Member ID: ${member.id} • ${member.client.user.username}`);
     const serverlog: TextChannel = member.guild.channels.get(
       modlog.id
     ) as TextChannel;

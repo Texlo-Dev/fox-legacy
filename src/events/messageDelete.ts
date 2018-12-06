@@ -57,7 +57,9 @@ export default class extends Event {
         true
       )
       .addField("Message ID", message.id)
-      .setFooter(message.client.user.username);
+      .setFooter(
+        `Member ID: ${message.author.id} • ${this.client.user.username}`
+      );
     if (modlog) {
       const serverlog: TextChannel = message.guild.channels.get(
         modlog.id

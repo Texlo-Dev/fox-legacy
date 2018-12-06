@@ -13,7 +13,7 @@ export default class extends Event {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Member Updated", newMem.client.user.displayAvatarURL())
       .setThumbnail(newMem.user.avatarURL())
-      .addField("Member", `${newMem.user.tag} (${newMem.id})`, true)
+      .addField("Member", `${newMem.user.tag}`, true)
       .addField("Nickname", newMem.nickname ? newMem.nickname : "None", true)
       .addField(
         "Roles",
@@ -24,7 +24,7 @@ export default class extends Event {
       )
       .setTimestamp()
       .setColor(0x96d036)
-      .setFooter(newMem.client.user.username);
+      .setFooter(`Member ID: ${member.id} • ${member.client.user.username}`);
     const guild: FoxGuild = oMem.guild as FoxGuild;
     const modlog: TextChannel = guild.config.serverlogChannel;
     if (!modlog) {

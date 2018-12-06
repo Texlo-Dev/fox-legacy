@@ -49,6 +49,10 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setColor(this.client.brandColor)
       .setTimestamp()
+      .setFooter(
+        `${message.guild.config.prefix}queue <num> for a specific page.`,
+        message.author.displayAvatarURL()
+      )
       .setAuthor(
         `Music Queue ${
           paginated.maxPage > 1 ? `(Page ${paginated.page})` : "".trim()

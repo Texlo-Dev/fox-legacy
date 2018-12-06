@@ -85,7 +85,9 @@ export default class MUpdate extends Event {
         true
       )
       .addField("Message ID", oldMessage.id)
-      .setFooter(oldMessage.client.user.username);
+      .setFooter(
+        `Member ID: ${oldMessage.author.id} • ${this.client.user.username}`
+      );
     if (modlog) {
       const serverlog: TextChannel = oldMessage.guild.channels.get(
         modlog.id

@@ -91,11 +91,11 @@ export default class extends Event {
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor("Member Left", member.client.user.displayAvatarURL())
       .setThumbnail(member.user.displayAvatarURL())
-      .addField("Member Name", `${member.user.tag} (${member.id})`, true)
+      .addField("Member Name", `${member.user.tag}`, true)
       .addField("Joined At", dateFormat(member.joinedAt), true)
       .setTimestamp()
       .setColor(this.client.brandColor)
-      .setFooter(member.client.user.username);
+      .setFooter(`Member ID: ${member.id} • ${member.client.user.username}`);
     const serverlog: TextChannel = member.guild.channels.get(
       modlog.id
     ) as TextChannel;
