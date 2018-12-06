@@ -148,11 +148,13 @@ export default class FoxCommand extends Command {
       guildID: message.guild.id,
       caseNum: caseInt,
       userID: mem.user.id,
-      action: `Muted`,
+      action: `Muted for ${_duration(time, "milliseconds").format(
+        "d [days], h [hours], m [minutes]"
+      )}`,
       reasonFor: reason,
       modID: message.author.id,
       time: unmuteTime,
-      shard: this.client.shard.id,
+      shard: message.guild.shardID,
       isMute: true,
       hasLeft: false,
       embedID: m ? m.id : undefined,
