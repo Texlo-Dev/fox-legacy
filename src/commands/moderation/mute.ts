@@ -122,7 +122,7 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setTimestamp()
       .setColor("RANDOM")
-      .addField("Member Muted.", this.client.user.displayAvatarURL())
+      .setAuthor("Member Muted.", this.client.user.displayAvatarURL())
       .addField("Member", `${mem.user.tag} (${mem.id})`, true)
       .addField(
         "Duration",

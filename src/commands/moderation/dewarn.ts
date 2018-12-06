@@ -81,7 +81,7 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setTimestamp()
       .setColor("RANDOM")
-      .addField("Member De-Warned.", this.client.user.displayAvatarURL())
+      .setAuthor("Member De-Warned.", this.client.user.displayAvatarURL())
       .addField("Member", `${member.user.tag} (${member.id})`, true)
       .addField("Points", points, true)
       .addField("Reason", reason, true)

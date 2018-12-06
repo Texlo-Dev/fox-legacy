@@ -61,7 +61,7 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setTimestamp()
       .setColor("RANDOM")
-      .addField("User Unbanned.", this.client.user.displayAvatarURL())
+      .setAuthor("User Unbanned.", this.client.user.displayAvatarURL())
       .addField("User", banUser.tag, true)
       .addField("Reason", reason, true)
       .setThumbnail(banUser.displayAvatarURL())

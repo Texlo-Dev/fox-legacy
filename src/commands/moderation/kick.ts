@@ -83,7 +83,7 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setTimestamp()
       .setColor("RANDOM")
-      .addField("Member Kicked.", this.client.user.displayAvatarURL())
+      .setAuthor("Member Kicked.", this.client.user.displayAvatarURL())
       .addField("Member", `${member.user.tag} (${member.id})`, true)
       .addField("Reason", reason, true)
       .setThumbnail(member.user.displayAvatarURL())
