@@ -51,7 +51,7 @@ export default class FoxCommand extends Command {
       .setTitle(`Case ${entry.get("caseNum")} - ${entry.get("action")}`)
       .addField("Member", `${user.tag} (${id})`, true);
     if (entry.get("points")) {
-      embed.addField("Points", entry.get("Points"));
+      embed.addField("Points", entry.get("points"));
     }
     if (entry.get("time")) {
       embed.addField(
