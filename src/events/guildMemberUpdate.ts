@@ -24,7 +24,7 @@ export default class extends Event {
       )
       .setTimestamp()
       .setColor(0x96d036)
-      .setFooter(`Member ID: ${member.id} • ${member.client.user.username}`);
+      .setFooter(`Member ID: ${newMem.id} • ${newMem.client.user.username}`);
     const guild: FoxGuild = oMem.guild as FoxGuild;
     const modlog: TextChannel = guild.config.serverlogChannel;
     if (!modlog) {
