@@ -56,6 +56,10 @@ export default class FoxCommand extends Command {
     if (!newReason) {
       return message.error("Please provide a new reason for the case.");
     }
+    if (newReason.length > 1024)
+      return message.error(
+        "Please make your new reason less than 1024 characters."
+      );
     const mID: string = modCase.get("embedID");
     if (!mID) {
       return message.error(

@@ -63,7 +63,10 @@ export default class FoxCommand extends Command {
       );
     }
     let modlog: TextChannel = message.guild.config.modlogChannel
-      ? await this.channel(message.guild.config.modlogChannel.id, message).catch(() => undefined)
+      ? await this.channel(
+          message.guild.config.modlogChannel.id,
+          message
+        ).catch(() => undefined)
       : undefined;
     const enabled: boolean = message.guild.config.modLogging;
     if (!enabled) {
@@ -102,13 +105,14 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setTimestamp()
       .setColor("RANDOM")
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
-      .setDescription(
-        `**Action:** Ban\n**Member:** ${
-          (await this.client.users.fetch(member.id)).tag
-        } (${member.id})\n**Reason:** ${reason}`
-      ) // tslint:disable-line
-      .setFooter(`Case#${caseInt}`);
+      .addField("Member Banned.", this.client.user.displayAvatarURL())
+      .addField("Member", banUser.tag, true)
+      .addField("Reason", reason, true)
+      .setThumbnail(banUser.displayAvatarURL())
+      .setFooter(
+        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        message.author.displayAvatarURL()
+      );
     await message.send(
       `I have banned **${
         (await this.client.users.fetch(member.id)).tag

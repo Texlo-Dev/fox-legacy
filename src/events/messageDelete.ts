@@ -43,7 +43,7 @@ export default class extends Event {
       .setColor(this.client.brandColor)
       .addField("Channel", message.channel, true)
       .addField("Author", message.author.tag, true);
-    if (logs.entries.first().executor.id !== message.author.tag) {
+    if (logs.entries.first().executor.id !== message.author.id) {
       embed.addField("Deleted By", logs.entries.first().executor.tag);
     }
     embed

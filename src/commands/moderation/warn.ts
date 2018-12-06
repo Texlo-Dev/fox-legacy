@@ -85,15 +85,15 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setTimestamp()
       .setColor("RANDOM")
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
-      .setDescription(
-        `**Action:** Warn
-            **Member:** ${member.user.tag} (${member.user.id})
-            **Points:** ${points}
-            **Reason:** ${reason}
-            `
-      )
-      .setFooter(`Case#${caseInt}`);
+      .addField("Member Warned.", this.client.user.displayAvatarURL())
+      .addField("Member", `${member.user.tag} (${member.id})`, true)
+      .addField("Points", points, true)
+      .addField("Reason", reason, true)
+      .setThumbnail(member.user.displayAvatarURL())
+      .setFooter(
+        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        message.author.displayAvatarURL()
+      );
     message.send(
       `I have warned **${
         member.user.tag

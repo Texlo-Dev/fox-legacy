@@ -119,20 +119,26 @@ export default class FoxCommand extends Command {
       ); // tslint:disable-line
     }
 
-    const unmuteTime: number = Date.now() + time;
     const embed: MessageEmbed = new MessageEmbed()
-      .setColor("RANDOM")
       .setTimestamp()
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
-      .setDescription(
-        `**Action:** Mute\n**Member:** ${mem.user.tag} (${
-          mem.user.id
-        })\n**Time:** ${_duration(time, "milliseconds").format(
+      .setColor("RANDOM")
+      .addField("Member Muted.", this.client.user.displayAvatarURL())
+      .addField("Member", `${mem.user.tag} (${mem.id})`, true)
+      .addField(
+        "Duration",
+        _duration(time, "milliseconds").format(
           "d [days], h [hours], m [minutes]"
-        )}\n**Reason:** ${reason}`
-      ) // tslint:disable-line
-      .setFooter(`Case#${caseInt}`);
+        ),
+        true
+      )
+      .addField("Reason", reason, true)
+      .setThumbnail(mem.user.displayAvatarURL())
+      .setFooter(
+        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        message.author.displayAvatarURL()
+      );
 
+    const unmuteTime: number = Date.now() + time;
     const m: Message | Message[] = modlog
       ? ((await (message.guild.channels.get(modlog.id) as TextChannel).send({
           embed

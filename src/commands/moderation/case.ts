@@ -41,22 +41,15 @@ export default class FoxCommand extends Command {
       .catch(() => undefined);
     const embed: MessageEmbed = new MessageEmbed()
       .setAuthor(
-        mod ? mod.tag : "Invalid User",
+        mod ? `Moderator: ${mod.tag}` : "Invalid User",
         mod ? mod.displayAvatarURL() : this.client.user.displayAvatarURL()
       )
       .setFooter(this.client.user.username)
-      .setTimestamp()
+      .setTimestamp(new Date(entry.get("createdAt")))
       .setColor("RANDOM")
-      .setTitle(`Case#${entry.get("caseNum")}`)
-      .setDescription(
-        `**Member:** ${user.tag} (ID: ${id})
-            **Action:** ${entry.get("action")}
-            **Reason:** ${entry.get("reasonFor")}
-            **Date:** ${dateFormat(
-              entry.get("createdAt"),
-              "ddd mmm d, yyyy, 'at' h:MM TT Z"
-            )}`
-      );
+      .setTitle(`Case ${entry.get("caseNum")} - ${entry.get("action")}`)
+      .addField("Member", `${user.tag} (${id})`, true)
+      .addField("Reason", entry.get("reasonFor"), true);
 
     return message.send({ embed });
   }

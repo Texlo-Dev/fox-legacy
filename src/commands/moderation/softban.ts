@@ -80,13 +80,14 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setTimestamp()
       .setColor("RANDOM")
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
-      .setDescription(
-        `**Action:** Softban\n**Member:** ${mem.user.tag} (${
-          mem.id
-        })\n**Reason:** ${reason}`
-      )
-      .setFooter(`Case#${caseInt}`);
+      .addField("Member Softbanned.", this.client.user.displayAvatarURL())
+      .addField("Member", `${mem.user.tag} (${mem.id})`, true)
+      .addField("Reason", reason, true)
+      .setThumbnail(mem.user.displayAvatarURL())
+      .setFooter(
+        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        message.author.displayAvatarURL()
+      );
     message.send(
       `I have softbanned **${
         mem.user.tag

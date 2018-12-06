@@ -55,48 +55,24 @@ export default class FoxCommand extends Command {
         }`,
         this.client.user.displayAvatarURL()
       )
+      .addField("Now Playing", serverQueue.first().info.title, true)
+      .addField("Queue Time Remaining", totalQueue, true)
       .addField(
         "Songs",
         paginated.items
           .map(
             (song: Track) =>
-              `**${
-                paginated.page === 1 && paginated.items[0] === song ? "Up Next:" : `#${++num} -`
-              }** [${song.info.title}](${song.info.uri}) as requested by ${
-                song.info.requestor.displayName
-              } (${duration(song.info.length, "milliseconds").format("m:ss", {
+              `**${++num}** - [${song.info.title}](${
+                song.info.uri
+              }) as requested by ${song.info.requestor.displayName} (${duration(
+                song.info.length,
+                "milliseconds"
+              ).format("m:ss", {
                 trim: false
               })})`
           )
           .join("\n") || "No upcoming songs."
-      )
-      .addField("Now Playing", serverQueue.first().info.title, true)
-      .addField("Queue Time Remaining", totalQueue, true);
-    /* .setDescription(`
-**Current songs, page ${paginated.page}:**
-
-${paginated.items
-      .map(
-        song =>
-          `**#${++num} -** [${song.info.title}](${
-            song.info.uri
-          }) as requested by ${song.info.requestor.displayName} (${duration(
-            song.info.length,
-            "milliseconds"
-          ).format("m:ss", {
-            trim: false
-          })})`
-      )
-      .join("\n") || "No upcoming songs."}
-
-**Now Playing:** ${serverQueue.first().info.title}
-**Total Queue Time Remaining:** ${totalQueue}
-${
-      paginated.maxPage > 1
-        ? `\nType \`${prefix}queue [pagenumber]\` to see a specific page.`
-        : "".trim()
-    }`)*/
-
+      );
     return message.send({ embed });
   }
 }

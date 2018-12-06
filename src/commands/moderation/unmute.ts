@@ -98,15 +98,16 @@ export default class FoxCommand extends Command {
     }
 
     const embed: MessageEmbed = new MessageEmbed()
-      .setColor("RANDOM")
       .setTimestamp()
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
-      .setDescription(
-        `**Action:** Unmute\n**Member:** ${mem.user.tag} (${
-          mem.user.id
-        })}\n**Reason:** ${reason}`
-      )
-      .setFooter(`Case#${caseInt}`);
+      .setColor("RANDOM")
+      .addField("Member Unmuted.", this.client.user.displayAvatarURL())
+      .addField("Member", `${mem.user.tag} (${mem.id})`, true)
+      .addField("Reason", reason, true)
+      .setThumbnail(mem.user.displayAvatarURL())
+      .setFooter(
+        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        message.author.displayAvatarURL()
+      );
     if (!modlog) {
       return message.send(
         `I have unmuted **${

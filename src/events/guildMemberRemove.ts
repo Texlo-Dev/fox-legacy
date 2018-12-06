@@ -93,11 +93,6 @@ export default class extends Event {
       .setThumbnail(member.user.displayAvatarURL())
       .addField("Member Name", `${member.user.tag} (${member.id})`, true)
       .addField("Joined At", dateFormat(member.joinedAt), true)
-      .setDescription(
-        `\n**Member Name:** ${member.user.tag}\n**ID:** ${
-          member.id
-        }\n**Joined At:** ${dateFormat(member.joinedAt)}`
-      ) // tslint:disable-line
       .setTimestamp()
       .setColor(this.client.brandColor)
       .setFooter(member.client.user.username);

@@ -23,17 +23,24 @@ export default class FoxCommand extends Command {
     const tag: Tags[] = await Tags.find({
       guildID: message.guild.id
     });
+    const mytags: string =
+      tag
+        .filter(t => t.get("author") === message.author.id)
+        .map(tg => tg.get("tagName"))
+        .sort()
+        .join(", ") || "No Tags.";
     const str: string =
       tag
-        .map(tag => tag.get("tagName"))
+        .filter(t => t.get("author") !== message.author.id)
+        .map(tg => tg.get("tagName"))
         .sort()
-        .join(", ") || "Sorry, I couldn't find any tags!";
+        .join(", ") || "No Tags.";
     const embed: MessageEmbed = new MessageEmbed()
       .setFooter(`${this.client.user.username} v${version} by rTexel`)
       .setColor(this.client.brandColor)
-      .setAuthor("All Tags", this.client.user.displayAvatarURL())
-      .setTimestamp()
-      .setDescription(`❯ Tags for **${message.guild.name}**:\n\n**${str}**`);
+      .addField("Your Created Tags", mytags)
+      .addField("All Server Tags", str)
+      .setAuthor("Tags", this.client.user.displayAvatarURL());
 
     return message.send({ embed });
   }

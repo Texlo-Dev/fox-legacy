@@ -81,13 +81,15 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setTimestamp()
       .setColor("RANDOM")
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
-      .setDescription(
-        `**Action:** De-warn\n**Member:** ${member.user.tag} (${
-          member.user.id
-        })\n**Points:** ${points}\n**Reason:** ${reason}`
-      ) // tslint:disable-line
-      .setFooter(`Case#${caseInt}`);
+      .addField("Member De-Warned.", this.client.user.displayAvatarURL())
+      .addField("Member", `${member.user.tag} (${member.id})`, true)
+      .addField("Points", points, true)
+      .addField("Reason", reason, true)
+      .setThumbnail(member.user.displayAvatarURL())
+      .setFooter(
+        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        message.author.displayAvatarURL()
+      );
     message.send(`Successfully de-warned **${member.user.tag}** :ok_hand:`);
     const m: any = await (message.guild.channels.get(
       modlog.id

@@ -43,15 +43,18 @@ export default class FoxCommand extends Command {
         .setColor(this.client.brandColor)
         .setTimestamp()
         .setFooter(`Requested by ${message.author.tag}`)
-        .setDescription(stripIndents`
-                **Level:** ${entry.get("level")}
-                **Current XP/To Next Level:** ${entry.get("xp")}/${entry.get(
-        "tonextlevel"
-      )} (${entry.get("totalXP")} total)
-                **Rank:** #${await message.guild.leveling.rankOf(
-                  member
-                )} out of ${message.guild.memberCount} total members
-                `);
+        .addField("Level", entry.get("level"), true)
+        .addField(
+          "Current XP/To Next Level",
+          `${entry.get("xp")}/${entry.get("tonextlevel")}`,
+          true
+        )
+        .addField(
+          "Rank",
+          `#${await message.guild.leveling.rankOf(member)}/${
+            message.guild.memberCount
+          } members`
+        );
 
       return message.send({ embed });
     } else {
@@ -69,15 +72,19 @@ export default class FoxCommand extends Command {
         .setColor(this.client.brandColor)
         .setTimestamp()
         .setFooter(`Requested by ${message.author.tag}`)
-        .setDescription(stripIndents`
-                **Level:** ${entry.get("level")}
-                **XP/To Next Level:** ${entry.get("xp")}/${entry.get(
-        "tonextlevel"
-      )} (${entry.get("totalXP").toLocaleString()} total)
-                **Rank:** #${await message.guild.leveling.rankOf(
-                  message.member
-                )} out of ${message.guild.memberCount} total members
-                `);
+        .addField("Level", entry.get("level"), true)
+        .addField(
+          "Current XP/To Next Level",
+          `${entry.get("xp")}/${entry.get("tonextlevel")}`,
+          true
+        )
+        .addField(
+          "Rank",
+          `#${await message.guild.leveling.rankOf(message.member)}/${
+            message.guild.memberCount
+          } members`
+        );
+
       return message.send({ embed });
     }
   }

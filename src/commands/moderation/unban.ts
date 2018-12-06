@@ -61,13 +61,14 @@ export default class FoxCommand extends Command {
     const embed: MessageEmbed = new MessageEmbed()
       .setTimestamp()
       .setColor("RANDOM")
-      .setAuthor(message.author.tag, message.author.displayAvatarURL())
-      .setDescription(
-        `**Action:** Unban\n**User:** ${
-          (await this.client.users.fetch(id)).tag
-        } (${id})\n**Reason:** ${reason}`
-      ) // tslint:disable-line
-      .setFooter(`Case#${caseInt}`);
+      .addField("User Unbanned.", this.client.user.displayAvatarURL())
+      .addField("User", banUser.tag, true)
+      .addField("Reason", reason, true)
+      .setThumbnail(banUser.displayAvatarURL())
+      .setFooter(
+        `Acting Moderator: ${message.author.tag} • Case#${caseInt} `,
+        message.author.displayAvatarURL()
+      );
     if (!modlog) {
       return message.send(
         `Successfully unbanned **${
