@@ -54,15 +54,6 @@ export default class FoxCommand extends Command {
     if (entry.get("points")) {
       embed.addField("Points", entry.get("points"), true);
     }
-    if (entry.get("time")) {
-      embed.addField(
-        "Duration",
-        _duration(entry.get("time"), "milliseconds").format(
-          "d [days], h [hours], m [minutes]"
-        ),
-        true
-      );
-    }
     embed.addField("Reason", entry.get("reasonFor"), true);
 
     return message.send({ embed });
