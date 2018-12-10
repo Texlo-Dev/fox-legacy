@@ -132,9 +132,7 @@ export default class MessageEvent extends Event {
     const owner: FoxUser = await this.client.users.fetch(message.guild.ownerID);
     if (!pkg.enabled)
       return message.error(
-        `The **${this.client.capitalizeStr(
-          command.category
-        )}** package is currently disabled.`
+        `The **${command.category.capitalize()}** package is currently disabled.`
       );
     else if (
       pkg.patreonTier > owner.patreonTier

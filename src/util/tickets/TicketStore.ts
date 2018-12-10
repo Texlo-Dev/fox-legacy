@@ -10,7 +10,7 @@ import {
   VoiceChannel
 } from "discord.js";
 import { FoxClient } from "..";
-import { TicketOptions } from "../../types";
+import { TicketOptions } from "../../interfaces";
 import { FoxGuild, FoxUser } from "../extensions";
 import { Tickets } from "../Mongo";
 import Ticket from "./Ticket";

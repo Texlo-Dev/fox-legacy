@@ -29,7 +29,7 @@ export default async (req, res, next) => {
   if (result === "Failed") {
     return res.json(500, { error: "Failed at Authorization check." });
   }
-  result = result.filter(res => res);
+  result = result.filter(res => res)[0];
   if (!result) {
     return res.json(401, {
       error: "You are unauthorized to edit this server's settings."

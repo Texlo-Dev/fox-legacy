@@ -112,7 +112,7 @@ router.get("/:pkg", authMiddleware, async (req, res) => {
     "addmoney",
     "removemoney"
   ];
-  pkg = req.client.capitalizeStr(decodeURIComponent(pkg));
+  pkg = decodeURIComponent(pkg).capitalize();
   let commands = req.client.commands.filter(cmd => cmd.category === pkg);
   commands = commands.filter(c => excludedCommands.indexOf(c.name) < 0);
   commands.forEach(command => {

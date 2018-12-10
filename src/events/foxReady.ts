@@ -52,11 +52,10 @@ export default class extends Event {
     const client: FoxClient = this.client;
     if (client.shard.id === 0) {
       import("../api").then(a => a.default(client));
+      import("../foxapi/main").then(a => a.default(client));
     } // tslint:disable-line
     const games: string[] = [
-      `with ${
-        client.guilds.size
-      } servers`,
+      `with ${client.guilds.size} servers`,
       "Donate to keep us going: https://www.patreon.com/foxdevteam",
       null,
       `In the Fox Den | ${client.commandPrefix}help`,

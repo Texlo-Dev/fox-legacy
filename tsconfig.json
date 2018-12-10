@@ -1,23 +1,17 @@
 {
   "compilerOptions": {
-      "removeComments": false,
-      "experimentalDecorators": true,
-      "resolveJsonModule": true,
-      "esModuleInterop": true,
-      "sourceMap": false,
-      "noImplicitAny": false,
-      "target": "es2018",
-      "lib": ["es6", "es7", "es2018"],
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "outDir": "build"
+    "removeComments": false,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "noImplicitAny": false,
+    "target": "es2018",
+    "lib": ["es6", "es7", "es2018"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "build"
   },
-  "exclude": [
-      "node_modules",
-      "build",
-      "src/types"
-  ],
-  "include": [
-      "src/**/*"
-  ]
+  "exclude": ["node_modules", "build", "src/types"],
+  "include": ["src/**/*"]
 }

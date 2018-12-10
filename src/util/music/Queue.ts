@@ -6,7 +6,7 @@ import {
   VoiceChannel,
   VoiceConnection
 } from "discord.js";
-import { Player } from "lavalink";
+import { Player, Track } from "lavalink";
 import { FoxClient, Song } from "..";
 import { FoxGuild, FoxMessage } from "../extensions";
 
@@ -17,6 +17,7 @@ interface QueueInfo {
 export default class Queue extends Collection<any, any> implements QueueInfo {
   public client: FoxClient;
   public skippers: string[];
+  public songs: Track[];
 
   public constructor(client: FoxClient) {
     super();

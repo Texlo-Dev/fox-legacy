@@ -1,11 +1,4 @@
-import {
-  Guild,
-  GuildMember,
-  Message,
-  StringResolvable,
-  User
-} from "discord.js";
-
+// tslint:disable:interface-name
 export interface Options {
   client?: FoxClient;
   description: string;

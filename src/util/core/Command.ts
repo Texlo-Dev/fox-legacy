@@ -11,7 +11,7 @@ const regexs = {
 };
 import { Channel, GuildMember, Message, Role, User } from "discord.js";
 import { FoxClient } from "..";
-import { CommandInfo } from "../../types";
+import { CommandInfo } from "../../interfaces";
 import { FoxMessage, FoxUser } from "../extensions";
 class Command implements CommandInfo {
   public aliases?: string[];

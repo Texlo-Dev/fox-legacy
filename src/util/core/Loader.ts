@@ -16,7 +16,7 @@ export const loadCommands: (client: FoxClient) => void = async (
         }
         const cmd: any = await import(`${process.cwd()}/build/commands/${folder}/${file}`);
         const command: Command = new cmd.default(client);
-        command.category = client.capitalizeStr(folder);
+        command.category = folder.capitalize();
         await client.commands.set(command);
         if (client.packages.indexOf(command.category) > -1) {
           continue;

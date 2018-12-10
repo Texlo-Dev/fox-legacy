@@ -1,5 +1,5 @@
 import { Message, MessageEmbed, TextChannel } from "discord.js";
-import { TicketOptions } from "../../types";
+import { TicketOptions } from "../../interfaces";
 import { FoxGuild, FoxUser } from "../extensions";
 import { Tickets } from "../Mongo";
 import TicketStore from "./TicketStore";

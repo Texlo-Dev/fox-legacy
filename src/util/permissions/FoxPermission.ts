@@ -1,5 +1,5 @@
 import { FoxClient } from "..";
-import { Options } from "../../types";
+import { Options } from "../../interfaces";
 interface PermOptions extends Options {
   category: string;
 }

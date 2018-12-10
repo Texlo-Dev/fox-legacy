@@ -5,9 +5,11 @@ export default class FoxCommand extends Command {
     return message.guild.perms.check("automod.badwords", message);
   }
 
-  public static async run(message: FoxMessage, args: string[]): Promise<FoxMessage> {
-    await message.delete()
-    .catch(() => 0);
+  public static async run(
+    message: FoxMessage,
+    args: string[]
+  ): Promise<FoxMessage> {
+    await message.delete().catch(() => 0);
     const word: string = args.join(" ");
     if (!word) {
       return message.error("Please specify a bad word to add.");

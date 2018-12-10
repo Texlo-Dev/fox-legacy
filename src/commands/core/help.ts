@@ -124,10 +124,10 @@ Command Count: **${this.client.commands.size}**.
         );
       message.send({ embed }).catch(() => 0);
     } else if (
-      message.guild.packages.has(this.client.capitalizeStr(args.join(" ")))
+      message.guild.packages.has(args.join(" ").capitalize())
     ) {
       const pkg: Package = message.guild.packages.get(
-        this.client.capitalizeStr(args.join(" "))
+        args.join(" ").capitalize()
       );
       if (!pkg.enabled)
         return message.error(

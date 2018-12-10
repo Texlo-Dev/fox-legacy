@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { CustOptions } from "../../types";
+import { CustOptions } from "../../interfaces";
 import { FoxGuild, FoxMessage } from "../extensions";
 import { CustomCommands } from "../Mongo";
 

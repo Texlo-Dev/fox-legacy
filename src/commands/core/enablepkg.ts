@@ -27,19 +27,22 @@ export default class FoxCommand extends Command {
     if (!pkg) {
       return message.send("x: Please specify a package to enable.");
     }
-    if (!message.guild.packages.has(this.client.capitalizeStr(pkg))) {
+    if (!message.guild.packages.has(pkg.capitalize())) {
       return message.error("This isn't a valid package.");
     }
-    message.guild.packages.get(this.client.capitalizeStr(pkg)).enable();
-    const embed: MessageEmbed = new MessageEmbed()
-      .setAuthor("Enable Package", this.client.user.displayAvatarURL())
-      .setTimestamp()
-      .setFooter(this.client.user.username)
-      .setColor(this.client.brandColor).setDescription(`
-                <:check:314349398811475968> Successfully enabled the **${this.client.capitalizeStr(
-                  pkg
-                )}** package.
-            `);
-    message.send({ embed });
+    message.guild.packages
+      .get(pkg.capitalize())
+      .enable()
+      .then(() =>
+        message.send(
+          new MessageEmbed()
+            .setAuthor("Enable Package", this.client.user.displayAvatarURL())
+            .setTimestamp()
+            .setFooter(this.client.user.username)
+            .setColor(this.client.brandColor).setDescription(`
+    <:check:314349398811475968> Successfully enabled the **${pkg.capitalize()}** package.
+    `)
+        )
+      );
   }
 }

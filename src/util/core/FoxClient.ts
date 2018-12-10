@@ -1,7 +1,7 @@
 // tslint:disable:no-parameter-reassignment no-magic-numbers interface-name
 import translate from "@k3rn31p4nic/google-translate-api";
 import axios, { AxiosResponse } from "axios";
-import { Client, Collection, TextChannel, Util } from "discord.js";
+import { Client, Collection, TextChannel, Util, WSEventType } from "discord.js";
 import { Node } from "lavalink";
 import { CommandStore, EventStore, FoxMusic, Loader, Tools } from "..";
 import {
@@ -168,14 +168,14 @@ class FoxClient extends Client {
     super({
       disableEveryone: true,
       disabledEvents: [
-        "TYPING_START",
-        "TYPING_STOP",
-        "GUILD_SYNC",
-        "RELATIONSHIP_ADD",
-        "RELATIONSHIP_REMOVE",
-        "USER_SETTINGS_UPDATE",
-        "USER_NOTE_UPDATE",
-        "VOICE_SERVER_UPDATE"
+        "TYPING_START" as WSEventType,
+        "TYPING_STOP" as WSEventType,
+        "GUILD_SYNC" as WSEventType,
+        "RELATIONSHIP_ADD" as WSEventType,
+        "RELATIONSHIP_REMOVE" as WSEventType,
+        "USER_SETTINGS_UPDATE" as WSEventType,
+        "USER_NOTE_UPDATE" as WSEventType,
+        "VOICE_SERVER_UPDATE" as WSEventType
       ],
       ...options
     });
@@ -248,13 +248,6 @@ class FoxClient extends Client {
     );
     this.ready = true;
     this.emit("foxReady");
-  }
-
-  public capitalizeStr(string: string): string {
-    return string.replace(
-      /\w\S*/g,
-      txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-    );
   }
 
   public clean(text: string): string {

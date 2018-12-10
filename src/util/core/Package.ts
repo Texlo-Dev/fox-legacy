@@ -1,7 +1,7 @@
 // tslint:disable-next-line:file-name-casing
 import { Collection } from "discord.js";
 import { Command, CustomCommand, FoxPermission } from "..";
-import { Options } from "../../types";
+import { Options } from "../../interfaces";
 import { FoxGuild } from "../extensions";
 import { GuildSettings } from "../Mongo";
 

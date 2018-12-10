@@ -35,9 +35,7 @@ export default class FoxCommand extends Command {
       .addPatreon(possibleTiers[tier])
       .then(() =>
         message.send(
-          `Successfully added ${user.tag} as a **${this.client.capitalizeStr(
-            tier
-          )}** tier.`
+          `Successfully added ${user.tag} as a **${tier.capitalize()}** tier.`
         )
       )
       .catch(err =>
