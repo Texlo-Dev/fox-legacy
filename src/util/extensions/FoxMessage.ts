@@ -50,7 +50,7 @@ export default Structures.extend("Message", mes => {
           : content;
 
       return this.channel.send(
-        `<:nicexmark:495362785010647041> ${content}`,
+        `<:error:521523180213370880> ${content}`,
         options
       );
     }
@@ -252,7 +252,7 @@ export default Structures.extend("Message", mes => {
           : content;
 
       return this.channel.send(
-        `<:checkmark:495362807731060757> ${content}`,
+        `<:success:521523126664822805> ${content}`,
         options
       );
     }
