@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { FoxClient } from "../util";
-
+import { EvalContext } from "./types/evalcontext";
 @Injectable()
 export class FoxService {
   public async botEval(
@@ -24,7 +24,7 @@ export class FoxService {
   }
   // tslint:disable:cyclomatic-complexity
   public async evalContext(
-    context: string,
+    context: EvalContext,
     client: FoxClient,
     args: any
   ): Promise<any> {
@@ -157,6 +157,16 @@ export class FoxService {
       case "GET_LEVELING": {
         script =
           "if (guild) { guild.leveling._loadSettings().then(() => guild.leveling.minify())}";
+        break;
+      }
+
+      case "GET_PACKAGES": {
+        script = "if (guild) { guild.packages }";
+        break;
+      }
+
+      case "GET_POLLS": {
+        script = "if (guild) { guild.polls.array() }";
         break;
       }
 
